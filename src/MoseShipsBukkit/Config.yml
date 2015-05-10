@@ -1,0 +1,47 @@
+#Welcome to the Ships 5+ config. The vessels default data has moved 
+#into the folder labled 'VesselTypes'.
+
+#With this config you are able to change a lot including what
+#supported plugins are enabled, the AutoPilot, default water level,
+#etc.
+
+#The plugin support is now in generation 2, this means you are able
+#to change a few more features other then enabling the plugin support.
+
+AutoPilot:
+  #This is the height that the vessels will fly at when autopilot is  
+  #enabled. It does this to reduce the chance of hitting a mountain.
+  height: 120
+  #Repeat is the delay that the autopilot move command is activated.
+  repeat: 130
+  #Enable Autopilot
+  enabled: false
+
+EOT:
+  #This is how quickly EOT vessels will move
+  repeat: 130
+
+World:
+  #If a water based vessel is leaving a water trail behind it, change 
+  #this to match the default water level of your worlds (will be
+  #changable per world in a later update).
+  defaultWaterLevel: 23
+
+FactionsSupport:
+  #If you have the factions plugin and you don't want Ships destroying 
+  #the faction land, enable this. Place below the areas you wish Ships
+  #to be able to fly in. 
+  enabled: false
+  FlyAreas:
+    - Wilderness
+
+WorldGuardSupport:
+  #If you have WorldGuard plugin and you don't want Ships destroying 
+  #the region, enable this. Custom region flags maybe supported in a
+  #later version.
+  enabled: false
+
+WorldBorderSupport:
+  #If you wish to keep your ships within the WorldBorder boundries you 
+  #you have set with WorldBorder plugin, then enable this feature.
+  enabled: false
