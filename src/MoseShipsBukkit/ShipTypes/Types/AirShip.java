@@ -145,6 +145,7 @@ public class AirShip extends VesselType implements RequiredBlock, RequiredBlockP
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 		config.set("ShipsData.Type", "Airship");
+		config.set("ShipsData.Protected", vessel.isProtected());
 		config.set("ShipsData.Config.Block.Percent", getPercent());
 		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
 		config.set("ShipsData.Config.Block.Min", getMinBlocks());

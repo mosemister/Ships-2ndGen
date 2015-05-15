@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -62,217 +61,26 @@ public class ShipsAutoRuns {
 				for(Vessel vessel : Vessel.getVessels()){
 					Location loc = vessel.getSign().getLocation();
 					Location loc2 = vessel.getAutoPilotTo();
+					YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 					if (loc2 != null){
 						vessel.updateStructure();
-						BlockFace facing = vessel.getFacingDirection();
-						Bukkit.getConsoleSender().sendMessage(vessel.getName() + " / " + loc.getX() + "," + loc.getZ() + " / " + loc2.getX() + "," + loc2.getZ());
-						if (facing.equals(BlockFace.SOUTH)){
-							if (loc.getX() > loc2.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_RIGHT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getX() > loc.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_RIGHT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getZ() > loc2.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_BACKWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getZ() > loc.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_FORWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getY() > loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-									vessel.setAutoPilotTo(null);
-								}
-							}else if (loc.getY() < loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_DOWN, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
+						if (loc.getY() >= config.getInt("AutoPilot.height")){
+							Location loc3 = new Location(loc2.getWorld(), loc2.getX(), loc.getY(), loc2.getZ());
+							if ((loc3.getX() == loc.getX()) && (loc3.getZ() == loc.getZ())){
+								if (!vessel.safelyMoveTowardsLocation(loc2, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
+									vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
 									vessel.setAutoPilotTo(null);
 								}
 							}else{
-								vessel.setAutoPilotTo(null);
+								if (!vessel.safelyMoveTowardsLocation(loc3, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
+									vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
+									vessel.setAutoPilotTo(null);
+								}
 							}
-						}else if (facing.equals(BlockFace.WEST)){
-							if (loc.getZ() > loc2.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_LEFT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getZ() > loc.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_RIGHT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getX() > loc2.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_FORWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getX() > loc.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_BACKWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getY() > loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-									vessel.setAutoPilotTo(null);
-								}
-							}else if (loc.getY() < loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_DOWN, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-									vessel.setAutoPilotTo(null);
-								}
-							}else{
-								vessel.setAutoPilotTo(null);
-							}
-						}else if (facing.equals(BlockFace.EAST)){
-							if (loc.getZ() > loc2.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_LEFT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getZ() > loc.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_RIGHT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getX() > loc2.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_BACKWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getX() > loc.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_FORWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getY() > loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-									vessel.setAutoPilotTo(null);
-								}
-							}else if (loc.getY() < loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_DOWN, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-									vessel.setAutoPilotTo(null);
-								}
-							}else{
-								vessel.setAutoPilotTo(null);
-							}
-						}else if (facing.equals(BlockFace.NORTH)){
-							if (loc.getX() > loc2.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_RIGHT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getX() > loc.getX()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.ROTATE_RIGHT, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getZ() > loc2.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_FORWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc2.getZ() > loc.getZ()){
-								if (loc.getY() < config.getInt("AutoPilot.height")){
-									if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}else{
-									if (!vessel.moveVessel(MovementMethod.MOVE_BACKWARD, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-										vessel.setAutoPilotTo(null);
-									}
-								}
-							}else if (loc.getY() > loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_UP, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-									vessel.setAutoPilotTo(null);
-								}
-							}else if (loc.getY() < loc2.getY()){
-								if (!vessel.moveVessel(MovementMethod.MOVE_DOWN, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
-									vessel.setAutoPilotTo(null);
-								}
-							}else{
-								vessel.setAutoPilotTo(null);
+						}else{
+							if (!vessel.safelyMoveTowardsLocation(loc2, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
+								vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
+								vessel.setAutoPilotTo(null);	
 							}
 						}
 					}

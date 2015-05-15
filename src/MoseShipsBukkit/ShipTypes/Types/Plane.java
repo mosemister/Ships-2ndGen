@@ -46,6 +46,7 @@ public class Plane extends VesselType implements RequiredBlock, RequiredBlockPer
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 		config.set("ShipsData.Type", "Plane");
+		config.set("ShipsData.Protected", vessel.isProtected());
 		config.set("ShipsData.Config.Block.Percent", getPercent());
 		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
 		config.set("ShipsData.Config.Block.Min", getMinBlocks());

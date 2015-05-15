@@ -54,18 +54,29 @@ public class Ships extends JavaPlugin{
 		for (VesselType type : VesselType.values()){
 			type.loadDefault();
 		}
-		VesselLoader.loadVessels();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		if (config.getBoolean("AutoPilot.enabled")){
 			ShipsAutoRuns.AutoMove();
 			new AutoPilot();
 		}
+		afterBoot();
 	}
 	
 	public void onDisable(){
 		for (Vessel vessel : Vessel.getVessels()){
 			vessel.save();
 		}
+	}
+	
+	public void afterBoot(){
+		Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable(){
+
+			@Override
+			public void run() {
+				VesselLoader.loadVessels();
+			}
+			
+		}, 0);
 	}
 	
 	public static void activateCommands(){

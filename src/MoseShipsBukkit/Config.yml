@@ -1,5 +1,5 @@
 #Welcome to the Ships 5+ config. The vessels default data has moved 
-#into the folder labled 'VesselTypes'.
+#into the folder labelled 'VesselTypes'.
 
 #With this config you are able to change a lot including what
 #supported plugins are enabled, the AutoPilot, default water level,
@@ -16,16 +16,49 @@ AutoPilot:
   repeat: 130
   #Enable Autopilot
   enabled: false
+  
+Signs:
+  #This will force the owners name on the licence sign. It is
+  #updated when the vessel moves.
+  ForceUsernameOnLicenceSign: false
 
 EOT:
   #This is how quickly EOT vessels will move
   repeat: 130
+  
+Inventory:
+  #enabling this may cause a glitch where players can dupe there 
+  #inventory's, but its a cool feature
+  keepInventorysOpen: false
 
 World:
   #If a water based vessel is leaving a water trail behind it, change 
   #this to match the default water level of your worlds (will be
-  #changable per world in a later update).
-  defaultWaterLevel: 23
+  #changeable per world in a later update).
+  defaultWaterLevel: 63
+  #Protected Vessels allows users to protect their Ships. This may cause
+  #Lag. 
+  ProtectedVessels:
+    #BlockBreak protects the vessel from being destroyed by players.
+    BlockBreak: false
+    #Stops others from snooping through a Ships inventory
+    InventoryOpen: false
+    #Stops vessels from burning to a crisp
+    FireProtect2: false
+    ExplodeProtect:
+      #Stops Creepers from blowing up the Ships. 
+      #this will still do damage to the players
+      Creeper: false
+      #Stops Creepers from blowing up the Ships.
+      #this will still do damage to the players
+      TNT: false
+    EntityProtect:
+      #Stops enderDragons from doing damage to vessels.
+      Enderdragon: false
+      #Stops Wither from doing damage to vessels.
+      Wither: false
+      #Stops enderman picking up/placing blocks on your vessels
+      EnderMan: false
 
 FactionsSupport:
   #If you have the factions plugin and you don't want Ships destroying 
@@ -42,6 +75,6 @@ WorldGuardSupport:
   enabled: false
 
 WorldBorderSupport:
-  #If you wish to keep your ships within the WorldBorder boundries you 
+  #If you wish to keep your ships within the WorldBorder boundaries you 
   #you have set with WorldBorder plugin, then enable this feature.
   enabled: false

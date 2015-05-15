@@ -23,7 +23,7 @@ public class Fixes extends CommandLauncher{
 		}else{
 			if (args[1].equalsIgnoreCase("teleport")){
 				Block block = player.getLocation().getBlock().getRelative(0, -1, 0);
-				Vessel vessel = Vessel.getVessel(block);
+				Vessel vessel = Vessel.getVessel(block, false);
 				if (vessel == null){
 					player.sendMessage(Ships.runShipsMessage("must be standing on your vessel", true));
 				}else{
@@ -31,13 +31,12 @@ public class Fixes extends CommandLauncher{
 						vessel.setTeleportLoc(player.getLocation());
 						player.sendMessage(Ships.runShipsMessage("new teleport location has been set for " + vessel.getName(), false));
 					}else{
-						player.sendMessage(Ships.runShipsMessage("must be standing on your vessel", true));
+						player.sendMessage(Ships.runShipsMessage("must be your vessel", true));
 					}
 				}
-			}
-			if (args[1].equalsIgnoreCase("facing")){
+			}else if (args[1].equalsIgnoreCase("facing")){
 				Block block = player.getLocation().getBlock().getRelative(0, -1, 0);
-				Vessel vessel = Vessel.getVessel(block);
+				Vessel vessel = Vessel.getVessel(block, false);
 				if (vessel == null){
 					player.sendMessage(Ships.runShipsMessage("must be standing on your vessel", true));
 				}else{
@@ -45,7 +44,7 @@ public class Fixes extends CommandLauncher{
 						vessel.setFacingDirection(Ships.getPlayerFacingDirection(player));
 						player.sendMessage(Ships.runShipsMessage("Ship moving direction should be fixed", false));
 					}else{
-						player.sendMessage(Ships.runShipsMessage("must be standing on your vessel", true));
+						player.sendMessage(Ships.runShipsMessage("must be your vessel", true));
 					}
 				}
 			}

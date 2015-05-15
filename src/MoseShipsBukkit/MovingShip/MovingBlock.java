@@ -1,5 +1,6 @@
 package MoseShipsBukkit.MovingShip;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -59,6 +60,20 @@ public class MovingBlock {
 			double Z = block.getLocation().getZ() + shift;
 			Location loc = new Location(block.getWorld(), Z, Y, X);
 			MOVETO = loc;
+		}else if (move.equals(MovementMethod.MOVE_POSITIVE_X)){
+			Block block2 = block.getRelative(move.getSpeed(), 0, 0);
+			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.MOVE_POSITIVE_Z)){
+			Block block2 = block.getRelative(0, 0, move.getSpeed());
+			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.MOVE_NEGATIVE_X)){
+			Block block2 = block.getRelative(-move.getSpeed(), 0, 0);
+			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.MOVE_NEGATIVE_Z)){
+			Block block2 = block.getRelative(0, 0, -move.getSpeed());
+			MOVETO = block2.getLocation();
+		}else{
+			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Something went wrong, maybe a custom [API] MovementMethod. (" + move + ")", true));
 		}
 	}
 	
@@ -107,6 +122,20 @@ public class MovingBlock {
 			double Z = block.getLocation().getZ() + shift;
 			Location loc = new Location(block.getWorld(), Z, Y, X);
 			MOVETO = loc;
+		}else if (move.equals(MovementMethod.MOVE_POSITIVE_X)){
+			Block block2 = block.getRelative(move.getSpeed(), 0, 0);
+			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.MOVE_POSITIVE_Z)){
+			Block block2 = block.getRelative(0, 0, move.getSpeed());
+			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.MOVE_NEGATIVE_X)){
+			Block block2 = block.getRelative(-move.getSpeed(), 0, 0);
+			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.MOVE_NEGATIVE_Z)){
+			Block block2 = block.getRelative(0, 0, -move.getSpeed());
+			MOVETO = block2.getLocation();
+		}else{
+			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Something went wrong, maybe a custom [API] MovementMethod. (" + move + ")", true));
 		}
 	}
 	

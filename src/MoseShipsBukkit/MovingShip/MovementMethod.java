@@ -16,7 +16,11 @@ public enum MovementMethod {
 	MOVE_LEFT("Move Left"),
 	MOVE_RIGHT("Move Right"),
 	MOVE_UP("Move Up"),
-	MOVE_DOWN("Move Down");
+	MOVE_DOWN("Move Down"),
+	MOVE_POSITIVE_X("Move +X"),
+	MOVE_POSITIVE_Z("Move +Z"),
+	MOVE_NEGATIVE_X("Move -X"),
+	MOVE_NEGATIVE_Z("Move -Z");
 	
 	int SPEED;
 	String DIRECTION;
@@ -46,6 +50,21 @@ public enum MovementMethod {
 		DIRECTION = direction;
 	}
 	
+	public static MovementMethod getMovementDirection(BlockFace face){
+		if (face.equals(BlockFace.NORTH)){
+			return MovementMethod.MOVE_NEGATIVE_Z;
+		}else if (face.equals(BlockFace.SOUTH)){
+			return MovementMethod.MOVE_POSITIVE_Z;
+		}else if (face.equals(BlockFace.EAST)){
+			return MovementMethod.MOVE_POSITIVE_X;
+		}else if (face.equals(BlockFace.SOUTH)){
+			return MovementMethod.MOVE_NEGATIVE_X;
+		}else{
+			new IOException("getMovementDirection does not support that BlockFace.");
+			return null;
+		}
+	}
+	
 	public static MovementMethod getMovingDirection(Vessel vessel, BlockFace blockface){
 		BlockFace vesselFace = vessel.getFacingDirection();
 		if (vesselFace.equals(blockface)){
@@ -57,7 +76,7 @@ public enum MovementMethod {
 		}else if (Ships.getSideFace(vesselFace, false).equals(blockface)){
 			return MovementMethod.MOVE_RIGHT;
 		}else{
-			new IOException("getDirection does not support that BlockFace");
+			new IOException("getMovingDirection does not support that BlockFace.");
 			return null;
 		}
 	}

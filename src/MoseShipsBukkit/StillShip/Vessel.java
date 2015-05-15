@@ -54,6 +54,7 @@ public class Vessel {
 	Location TELEPORTLOCATION;
 	BlockFace DIRECTION;
 	Location AUTOPILOTTO;
+	boolean PROTECTVESSEL;
 	
 	static List<Vessel> LOADEDVESSELS = new ArrayList<Vessel>();
 	
@@ -143,6 +144,89 @@ public class Vessel {
 		LOADEDVESSELS.remove(this);
 		File file = getFile();
 		file.delete();
+	}
+	
+	public boolean isProtected(){
+		return PROTECTVESSEL;
+	}
+	
+	public void setProtectVessel(boolean args){
+		PROTECTVESSEL = args;
+	}
+	
+	public boolean safelyMoveTowardsLocation(Location moveTo, int speed, Player player){
+		Location loc = this.getSign().getLocation();
+		BlockFace face = this.getFacingDirection();
+		MovementMethod move = MovementMethod.getMovementDirection(face);
+		boolean value = false;
+		if (loc.getY() == moveTo.getY()){
+			if (loc.getX() == moveTo.getX()){
+				//try Z
+				if (loc.getZ() == moveTo.getZ()){
+					return false;
+				}
+				if (loc.getZ() > moveTo.getZ()){
+					if ((loc.getZ() + speed) > moveTo.getZ()){
+						value = moveVessel(MovementMethod.MOVE_NEGATIVE_Z, 1, player);
+					}else{
+						if (move.equals(MovementMethod.MOVE_NEGATIVE_Z)){
+							value = moveVessel(MovementMethod.MOVE_NEGATIVE_Z, speed, player);
+						}else{
+							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				}else{
+					if ((loc.getZ() - speed) < moveTo.getZ()){
+						value = moveVessel(MovementMethod.MOVE_POSITIVE_Z, 1, player);
+					}else{
+						if (move.equals(MovementMethod.MOVE_POSITIVE_Z)){
+							value = moveVessel(MovementMethod.MOVE_POSITIVE_Z, speed, player);
+						}else{
+							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				}
+			}else{
+				//try X
+				if (loc.getX() > moveTo.getX()){
+					if ((loc.getX() + speed) > moveTo.getX()){
+						value = moveVessel(MovementMethod.MOVE_NEGATIVE_X, 1, player);
+					}else{
+						if (move.equals(MovementMethod.MOVE_NEGATIVE_X)){
+							value = moveVessel(MovementMethod.MOVE_NEGATIVE_X, speed, player);
+						}else{
+							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				}else{
+					if ((loc.getX() - speed) < moveTo.getX()){
+						value = moveVessel(MovementMethod.MOVE_POSITIVE_X, 1, player);
+					}else{
+						if (move.equals(MovementMethod.MOVE_POSITIVE_X)){
+							value = moveVessel(MovementMethod.MOVE_POSITIVE_X, speed, player);
+						}else{
+							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				}
+			}
+		}else{
+			//try Y
+			if (loc.getY() > moveTo.getY()){
+				if ((loc.getY() + speed) > moveTo.getY()){
+					value = moveVessel(MovementMethod.MOVE_UP, 1, player);
+				}else{
+					value = moveVessel(MovementMethod.MOVE_UP, speed, player);
+				}
+			}else{
+				if ((loc.getY() - speed) > moveTo.getY()){
+					value = moveVessel(MovementMethod.MOVE_DOWN, 1, player);
+				}else{
+					value = moveVessel(MovementMethod.MOVE_DOWN, speed, player);
+				}
+			}
+		}
+		return value;
 	}
 	
 	public boolean moveVessel(MovementMethod move, int speed, Player player){
@@ -246,8 +330,10 @@ public class Vessel {
 	@SuppressWarnings("deprecation")
 	boolean isBlocked(MovingBlock block){
 		Location loc = block.getMovingTo();
+		Block block2 = loc.getBlock();
 		if (!isPartOfVessel(loc)){
-			if (MaterialsList.getMaterialsList().contains(loc.getBlock().getType(), loc.getBlock().getData(), false)){
+			MaterialsList matList = MaterialsList.getMaterialsList();
+			if (matList.contains(block2.getType(), block2.getData(), false)){
 				return false;
 			}else if (isMoveInBlock(loc)){
 				return false;
@@ -332,12 +418,14 @@ public class Vessel {
 		updateLocation(mBlock.getMovingTo(), getSign());
 		for	(Entity entity : getEntitys()){
 			Inventory inv = null;
-			if (entity instanceof Player){
-				Player player = (Player)entity;
-				Inventory inv2 = player.getOpenInventory().getTopInventory();
-				if (!inv2.getTitle().equals("container.crafting")){
-					inv = inv2;
-					player.closeInventory();
+			if (config.getBoolean("Inventory.keepInventorysOpen")){
+				if (entity instanceof Player){
+					Player player = (Player)entity;
+					Inventory inv2 = player.getOpenInventory().getTopInventory();
+					if (!inv2.getTitle().equals("container.crafting")){
+						inv = inv2;
+						player.closeInventory();
+					}
 				}
 			}
 			Location loc = entity.getLocation();
@@ -350,10 +438,12 @@ public class Vessel {
 			loc2.setPitch(loc.getPitch());
 			loc2.setYaw(loc.getYaw());
 			entity.teleport(loc2);
-			if (entity instanceof Player){
-				if (inv != null){
-					Player player = (Player)entity;
-					player.openInventory(inv);
+			if (config.getBoolean("Inventory.keepInventorysOpen")){
+				if (entity instanceof Player){
+					if (inv != null){
+						Player player = (Player)entity;
+						player.openInventory(inv);
+					}
 				}
 			}
 		}
@@ -451,6 +541,10 @@ public class Vessel {
 			if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
 				SIGN = sign;
 				updateLocation(getTeleportLocation(), sign);
+				YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+				if (config.getBoolean("Signs.ForceUsernameOnLicenceSign")){
+					sign.setLine(3, ChatColor.GREEN + this.getOwner().getName());
+				}
 			}
 		}
 	}
@@ -577,18 +671,28 @@ public class Vessel {
 		return null;
 	}
 	
-	public static Vessel getVessel(Block block){
-		List<Block> blocks = Ships.getBaseStructure(block);
-		for(Block block2 : blocks){
-			if (block2.getState() instanceof Sign){
-				Sign sign = (Sign)block2.getState();
-				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
-					Vessel vessel = getVessel(sign);
-					if (vessel == null){
-						return null;
-					}else{
-						ShipsStructure structure = new ShipsStructure(blocks);
-						vessel.setStructure(structure);
+	public static Vessel getVessel(Block block, boolean newStructure){
+		if (newStructure){
+			List<Block> blocks = Ships.getBaseStructure(block);
+			for(Block block2 : blocks){
+				if (block2.getState() instanceof Sign){
+					Sign sign = (Sign)block2.getState();
+					if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
+						Vessel vessel = getVessel(sign);
+						if (vessel == null){
+							return null;
+						}else{
+							ShipsStructure structure = new ShipsStructure(blocks);
+							vessel.setStructure(structure);
+							return vessel;
+						}
+					}
+				}
+			}
+		}else{
+			for (Vessel vessel : LOADEDVESSELS){
+				for (Block block2 : vessel.getStructure().getAllBlocks()){
+					if (block2.equals(block)){
 						return vessel;
 					}
 				}

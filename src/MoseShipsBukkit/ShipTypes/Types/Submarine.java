@@ -47,6 +47,7 @@ public class Submarine extends VesselType implements Fuel, RequiredBlock, Requir
 		ConfigurationSection config = configuration.createSection("ShipsData");
 		config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
 		config.set("Type", "Submarine");
+		config.set("Protected", vessel.isProtected());
 		config.set("Config.Block.Percent", getPercent());
 		config.set("Config.Block.Max", getMaxBlocks());
 		config.set("Config.Block.Min", getMinBlocks());

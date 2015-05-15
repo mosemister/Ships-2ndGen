@@ -36,6 +36,7 @@ public class Marsship extends VesselType implements RequiredBlock, RequiredBlock
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 		config.set("ShipsData.Type", "Marsship");
+		config.set("ShipsData.Protected", vessel.isProtected());
 		config.set("ShipsData.Config.Block.Percent", getPercent());
 		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
 		config.set("ShipsData.Config.Block.Min", getMinBlocks());
