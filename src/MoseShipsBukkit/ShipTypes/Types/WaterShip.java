@@ -17,6 +17,7 @@ import MoseShipsBukkit.ShipTypes.VesselType;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlock;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlockPercent;
 import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class WaterShip extends VesselType implements RequiredBlock, RequiredBlockPercent{
 	
@@ -38,11 +39,19 @@ public class WaterShip extends VesselType implements RequiredBlock, RequiredBloc
 			if (this.isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())){
 				return true;
 			}else{
-				player.sendMessage(Ships.runShipsMessage("Needs more " + getRequiredBlock().get(0).name(), true));
+				if (player != null){
+					if (Messages.isEnabled()){
+						player.sendMessage(Ships.runShipsMessage(Messages.getNeeds(getRequiredBlock().get(0).name()), true));
+					}
+				}
 				return false;
 			}
 		}else{
-			player.sendMessage(Ships.runShipsMessage("Must be in water", true));
+			if (player != null){
+				if (Messages.isEnabled()){
+					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Water"), true));
+				}
+			}
 			return false;
 		}
 	}

@@ -3,11 +3,16 @@ package MoseShipsBukkit.Utils.OtherPlugins;
 import java.util.List;
 import java.util.Map.Entry;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
@@ -19,9 +24,13 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.wimbli.WorldBorder.BorderData;
 
+import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
 public class OtherPlugins {
+	
+	public static Economy ECO = null;
 	
 	public static boolean isWorldGuardLoaded(){
 		Plugin plugin = Bukkit.getPluginManager().getPlugin("WorldGuard");
@@ -95,6 +104,46 @@ public class OtherPlugins {
 		}
 	}
 	
+	public static boolean isGriefPreventionLoaded(){
+		Plugin plugin = Bukkit.getPluginManager().getPlugin("GriefPrevention");
+		if (plugin == null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
+	public void setupVault() {
+	    Plugin vault =  Bukkit.getPluginManager().getPlugin("Vault");
+	    if (vault != null && vault instanceof net.milkbowl.vault.Vault) {
+	        if (setupEconomy()) {
+	            Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Vault is enabled in config, however, vault failed to find Eco plugin.", true));
+	        }
+	    }
+	}
+	  
+	private boolean setupEconomy(){
+		RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+		if (economyProvider != null) {
+			ECO = economyProvider.getProvider();
+		} else {
+			return false;
+		}
+		return (ECO != null);
+	}
+	
+	public static double pay(Vessel vessel){
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+		if (config.getBoolean("VaultSupport.enabled")){
+			double money = vessel.getCost();
+			if (ECO.getBalance(vessel.getOwner()) >= money){
+				ECO.depositPlayer(vessel.getOwner(), money);
+			}
+			return money;
+		}
+		return 0;
+	}
+	
 	public static boolean isLocationOnFactionsLand(Location loc){
 		Faction land = BoardColl.get().getFactionAt(PS.valueOf(loc));
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
@@ -105,6 +154,26 @@ public class OtherPlugins {
 			}
 		}
 		return true;
+	}
+	
+	public static boolean isLocationInGriefPreventionClaim(Location loc, Vessel vessel){
+		Claim claim = GriefPrevention.instance.dataStore.getClaimAt(loc, false, null);
+		if (claim != null){
+			YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+			if (config.getBoolean("GriefPreventionPluginSupport.OwnerBypass")){
+				if (claim.ownerID.equals(vessel.getOwner().getUniqueId())){
+					return false;
+				}else if (config.getLongList("GriefPreventionPluginSupport.FlyAreas").contains(claim.getID())){
+					return false;
+				}
+				return true;
+			}
+			if (config.getLongList("GriefPreventionPluginSupport.FlyAreas").contains(claim.getID())){
+				return false;
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	public static boolean isLocationInWorldGuardRegion(Location loc){

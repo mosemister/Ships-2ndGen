@@ -17,6 +17,7 @@ import MoseShipsBukkit.ShipTypes.VesselType;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.ChargePlates;
 import MoseShipsBukkit.StillShip.SpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class SolarShip extends VesselType implements ChargePlates{
 
@@ -127,7 +128,9 @@ public class SolarShip extends VesselType implements ChargePlates{
 								return true;
 							}else{
 								if (player != null){
-									player.sendMessage(Ships.runShipsMessage("Need more charge.", true));
+									if (Messages.isEnabled()){
+										player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
+									}
 								}
 								return false;
 							}
@@ -137,19 +140,25 @@ public class SolarShip extends VesselType implements ChargePlates{
 					}
 				}else{
 					if (player != null){
-						player.sendMessage(Ships.runShipsMessage("Needs to be in air.", true));
+						if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
+						}
 					}
 					return false;
 				}
 			}else{
 				if (player != null){
-					player.sendMessage(Ships.runShipsMessage("Ship is too big.", true));
+					if (Messages.isEnabled()){
+						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+					}
 				}
 				return false;
 			}
 		}else{
 			if (player != null){
-				player.sendMessage(Ships.runShipsMessage("Ship is too small.", true));
+				if (Messages.isEnabled()){
+					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+				}
 			}
 			return false;
 		}

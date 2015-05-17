@@ -49,7 +49,7 @@ public class ShipsAutoRuns {
 				}
 			}
 			
-		}, 0, config.getLong("EOT.repeat"));
+		}, 0, config.getLong("Structure.Signs.EOT.repeat"));
 	}
 	
 	public static void AutoMove(){
@@ -64,7 +64,7 @@ public class ShipsAutoRuns {
 					YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 					if (loc2 != null){
 						vessel.updateStructure();
-						if (loc.getY() >= config.getInt("AutoPilot.height")){
+						if (loc.getY() >= config.getInt("Structure.Signs.AutoPilot.height")){
 							Location loc3 = new Location(loc2.getWorld(), loc2.getX(), loc.getY(), loc2.getZ());
 							if ((loc3.getX() == loc.getX()) && (loc3.getZ() == loc.getZ())){
 								if (!vessel.safelyMoveTowardsLocation(loc2, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
@@ -87,7 +87,7 @@ public class ShipsAutoRuns {
 				}
 			}
 			
-		}, 0, config.getInt("AutoPilot.repeat"));
+		}, 0, config.getInt("Structure.Signs.AutoPilot.repeat"));
 	}
 
 }

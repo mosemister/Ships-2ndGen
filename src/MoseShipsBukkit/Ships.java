@@ -34,6 +34,7 @@ import MoseShipsBukkit.Utils.ShipsAutoRuns;
 import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Ships extends JavaPlugin{
 	
@@ -49,6 +50,7 @@ public class Ships extends JavaPlugin{
 		new MaterialsList();
 		MaterialsList.getMaterialsList().save();
 		activateCommands();
+		Messages.refreshMessages();
 		//FlyThrough.activateFlyThrough();
 		ShipsAutoRuns.EOTMove();
 		for (VesselType type : VesselType.values()){

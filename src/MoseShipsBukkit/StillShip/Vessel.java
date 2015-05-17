@@ -3,7 +3,6 @@ package MoseShipsBukkit.StillShip;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -35,13 +34,10 @@ import MoseShipsBukkit.Events.ShipMoveEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipTypes.VesselType;
-import MoseShipsBukkit.ShipTypes.Types.AirShip;
-import MoseShipsBukkit.ShipTypes.Types.SolarShip;
-import MoseShipsBukkit.ShipTypes.Types.Submarine;
-import MoseShipsBukkit.ShipTypes.Types.WaterShip;
 import MoseShipsBukkit.Utils.BlockConverter;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 import MoseShipsBukkit.Utils.OtherPlugins.OtherPlugins;
 
 public class Vessel {
@@ -55,6 +51,7 @@ public class Vessel {
 	BlockFace DIRECTION;
 	Location AUTOPILOTTO;
 	boolean PROTECTVESSEL;
+	double COST;
 	
 	static List<Vessel> LOADEDVESSELS = new ArrayList<Vessel>();
 	
@@ -150,6 +147,10 @@ public class Vessel {
 		return PROTECTVESSEL;
 	}
 	
+	public double getCost(){
+		return COST;
+	}
+	
 	public void setProtectVessel(boolean args){
 		PROTECTVESSEL = args;
 	}
@@ -230,7 +231,7 @@ public class Vessel {
 	}
 	
 	public boolean moveVessel(MovementMethod move, int speed, Player player){
-		if ((player.hasPermission("ships." + getName() + ".use")) || (player.hasPermission("ships." + getVesselType().getName() + ".use")) || (player.hasPermission("ships.*.use"))){
+		if ((player == null) || (player.hasPermission("ships." + getName() + ".use")) || (player.hasPermission("ships." + getVesselType().getName() + ".use")) || (player.hasPermission("ships.*.use"))){
 			if (speed != 0){
 				move.setSpeed(speed);
 			}
@@ -239,7 +240,9 @@ public class Vessel {
 				MovingBlock block2 = new MovingBlock(block, this, move);
 				if (isBlocked(block2)){
 					if (player != null){
-						player.sendMessage(Ships.runShipsMessage("Found " + block2.getMovingTo().getBlock().getType().name() + " in way", true));
+						if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
 					}
 					return false;
 				}else{
@@ -250,7 +253,9 @@ public class Vessel {
 				MovingBlock block2 = new MovingBlock(block, this, move);
 				if (isBlocked(block2)){
 					if (player != null){
-						player.sendMessage(Ships.runShipsMessage("Found " + block2.getMovingTo().getBlock().getType().name() + " in way", true));
+						if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
 					}
 					return false;
 				}else{
@@ -261,7 +266,9 @@ public class Vessel {
 				MovingBlock block2 = new MovingBlock(block, this, move);
 				if (isBlocked(block2)){
 					if (player != null){
-						player.sendMessage(Ships.runShipsMessage("Found " + block2.getMovingTo().getBlock().getType().name() + " in way", true));
+						if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
 					}
 					return false;
 				}else{
@@ -274,44 +281,71 @@ public class Vessel {
 				if (config.getBoolean("FactionsSupport.enabled")){
 					if (OtherPlugins.isFactionsLoaded()){
 						if (OtherPlugins.isLocationOnFactionsLand(block.getMovingTo())){
-							player.sendMessage(Ships.runShipsMessage("Faction in way", true));
+							if (player != null){
+								if (Messages.isEnabled()){
+									player.sendMessage(Ships.runShipsMessage("Faction in way.", true));
+								}
+							}
 							return false;
 						}
 					}else{
-						console.sendMessage(Ships.runShipsMessage("Ships has Factions enabled but can not hook into it", true));
+						console.sendMessage(Ships.runShipsMessage("Ships has Factions enabled but can not hook into it.", true));
 					}
 				}
 				if (config.getBoolean("WorldGuardSupport.enabled")){
 					if (OtherPlugins.isWorldGuardLoaded()){
 						if (OtherPlugins.isLocationInWorldGuardRegion(block.getMovingTo())){
-							player.sendMessage(Ships.runShipsMessage("Region in way", true));
+							if (player != null){
+								if (Messages.isEnabled()){
+									player.sendMessage(Ships.runShipsMessage("Region in way.", true));
+								}
+							}
 							return false;
 						}
 					}else{
-						console.sendMessage(Ships.runShipsMessage("Ships has WorldGuard enabled but can not hook into it", true));
+						console.sendMessage(Ships.runShipsMessage("Ships has WorldGuard enabled but can not hook into it.", true));
 					}
 				}
 				if (config.getBoolean("WorldBorderSupport.enabled")){
 					if (OtherPlugins.isWorldBorderLoaded()){
 						if (OtherPlugins.isLocationOutOfWorldBorder(block.getMovingTo())){
-							player.sendMessage(Ships.runShipsMessage("Edge of map", true));
+							if (player != null){
+								if (Messages.isEnabled()){
+									player.sendMessage(Ships.runShipsMessage("Edge of map.", true));
+								}
+							}
 							return false;
 						}
 					}else{
-						console.sendMessage(Ships.runShipsMessage("Ships has WorldBorder enabled but can not hook into it", true));
+						console.sendMessage(Ships.runShipsMessage("Ships has WorldBorder enabled but can not hook into it.", true));
+					}
+				}
+				if (config.getBoolean("GriefPreventionPluginSupport.enabled")){
+					if (OtherPlugins.isGriefPreventionLoaded()){
+						if (OtherPlugins.isLocationInGriefPreventionClaim(block.getMovingTo(), this)){
+							if (player != null){
+								if (Messages.isEnabled()){
+									player.sendMessage(Ships.runShipsMessage("Claim in way.", true));
+								}
+							}
+						}
 					}
 				}
 				if (config.getBoolean("TownySupport.enabled")){
 					if (OtherPlugins.isTownyLoaded()){
 						if (OtherPlugins.isTownyHookLoaded()){
 							if (OtherPlugins.isLocationInTownyLand(block.getMovingTo())){
-								player.sendMessage(Ships.runShipsMessage("Town in way", true));
+								if (player != null){
+									if (Messages.isEnabled()){
+										player.sendMessage(Ships.runShipsMessage("Town in way.", true));
+									}
+								}
 							}
 						}else{
-							console.sendMessage(Ships.runShipsMessage("Needs ShipsTownyHook.jar for compatibility with Towny. Download at dev.bukkit.org/bukkit-plugins/ships/files/68", true));
+							console.sendMessage(Ships.runShipsMessage("Needs ShipsTownyHook.jar for compatibility with Towny. Download at dev.bukkit.org/bukkit-plugins/ships/files/.", true));
 						}
 					}else{
-						console.sendMessage(Ships.runShipsMessage("Ships has Towny enabled but can not hook into it", true));
+						console.sendMessage(Ships.runShipsMessage("Ships has Towny enabled but can not hook into it.", true));
 					}
 				}
 			}
@@ -573,17 +607,14 @@ public class Vessel {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void reload(){
 		File file = getFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		Messages.refreshMessages();
 		OfflinePlayer owner =  Bukkit.getOfflinePlayer(UUID.fromString(config.getString("ShipsData.Player.Name")));
 		String vesselTypeS = config.getString("ShipsData.Type");
-		int percent = config.getInt("ShipsData.Config.Block.Percent");
 		int max = config.getInt("ShipsData.Config.Block.Max");
 		int min = config.getInt("ShipsData.Config.Block.Min");
-		int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
-		List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
 		int engine = config.getInt("ShipsData.Config.Speed.Engine");
 		String locS = config.getString("ShipsData.Location.Sign");
 		String teleportS = config.getString("ShipsData.Location.Teleport");
@@ -607,41 +638,7 @@ public class Vessel {
 							type.setDefaultSpeed(engine);
 							type.setMaxBlocks(max);
 							type.setMinBlocks(min);
-							if (type instanceof AirShip){
-								AirShip air = (AirShip)type;
-								air.setPercent(percent);
-								air.setFuelTakeAmount(consumption);
-								if (fuelsL.size() != 0){
-									Map<Material, Byte> fuels = new HashMap<Material, Byte>();
-									for (String fuelS : fuelsL){
-										String[] fuelM = fuelS.split(",");
-										fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
-									}
-									air.setFuel(fuels);
-								}
-							}else
-							//SOLARSHIP
-							if(type instanceof SolarShip){
-								//TODO solarShip loaded objects
-							}else
-							//SUBMARINE
-							if (type instanceof Submarine){
-								Submarine sub = (Submarine)type;
-								sub.setPercent(percent);
-								sub.setFuelTakeAmount(consumption);
-								if (fuelsL.size() != 0){
-									Map<Material, Byte> fuels = new HashMap<Material, Byte>();
-									for (String fuelS : fuelsL){
-										String[] fuelM = fuelS.split(",");
-										fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
-									}
-									sub.setFuel(fuels);
-								}
-							}else
-							//WATERSHIP
-							if (type instanceof WaterShip){
-								//TODO Watership loaded objects
-							}
+							type.loadFromNewVesselFile(this, file);
 						}
 					}
 				}

@@ -24,6 +24,7 @@ import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlock;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlockPercent;
 import MoseShipsBukkit.StillShip.SpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Submarine extends VesselType implements Fuel, RequiredBlock, RequiredBlockPercent{
 
@@ -205,28 +206,48 @@ public class Submarine extends VesselType implements Fuel, RequiredBlock, Requir
 								this.takeFuel(getFuel(), vessel, getFuelTakeAmount());
 								return true;
 							}else{
-								player.sendMessage(Ships.runShipsMessage("Needs more fuel", true));
+								if (player != null){
+									if (Messages.isEnabled()){
+										player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
+									}
+								}
 								return false;
 							}
 						}
 					}else{
-						List<String> materials = new ArrayList<String>();
-						for(Material material : getRequiredBlock()){
-							materials.add(material.name());
+						if (player != null){
+							List<String> materials = new ArrayList<String>();
+							for(Material material : getRequiredBlock()){
+								materials.add(material.name());
+							}
+							if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(getOffBy(blocks,  getRequiredBlock(), getPercent()), "(of either) " + materials.toString()), true));
+							}
 						}
-						player.sendMessage(Ships.runShipsMessage("Needs more (of either) " + materials, true));
 						return false;
 					}
 				}else{
-					player.sendMessage(Ships.runShipsMessage("Must be in water", true));
+					if (player != null){
+						if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Water"), true));
+						}
+					}
 					return false;
 				}
 			}else{
-				player.sendMessage(Ships.runShipsMessage("Your vessel is " + blocks.size() + " and needs to be " + getMinBlocks() + " or more", true));
+				if (player != null){
+					if (Messages.isEnabled()){
+						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+					}
+				}
 				return false;
 			}
 		}else{
-			player.sendMessage(Ships.runShipsMessage("Your vessel is " + blocks.size() + " and needs to be " + getMaxBlocks() + " or less", true));
+			if (player != null){
+				if (Messages.isEnabled()){
+					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+				}
+			}
 			return false;
 		}
 	}

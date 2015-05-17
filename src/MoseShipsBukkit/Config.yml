@@ -8,23 +8,22 @@
 #The plugin support is now in generation 2, this means you are able
 #to change a few more features other then enabling the plugin support.
 
-AutoPilot:
-  #This is the height that the vessels will fly at when autopilot is  
-  #enabled. It does this to reduce the chance of hitting a mountain.
-  height: 120
-  #Repeat is the delay that the autopilot move command is activated.
-  repeat: 130
-  #Enable Autopilot
-  enabled: false
-  
-Signs:
-  #This will force the owners name on the licence sign. It is
-  #updated when the vessel moves.
-  ForceUsernameOnLicenceSign: false
-
-EOT:
-  #This is how quickly EOT vessels will move
-  repeat: 130
+Structure:
+  Signs:
+    #This will force the owners name on the licence sign. It is
+    #updated when the vessel moves.
+    ForceUsernameOnLicenceSign: false
+    EOT:
+      #This is how quickly EOT vessels will move
+      repeat: 130
+    AutoPilot:
+      #This is the height that the vessels will fly at when autopilot is  
+      #enabled. It does this to reduce the chance of hitting a mountain.
+      height: 120
+      #Repeat is the delay that the autopilot move command is activated.
+      repeat: 130
+      #Enable Autopilot
+      enabled: false
   
 Inventory:
   #enabling this may cause a glitch where players can dupe there 
@@ -60,6 +59,39 @@ World:
       #Stops enderman picking up/placing blocks on your vessels
       EnderMan: false
 
+Messages:
+  #enable if messages appear for users
+  enabled: true
+  #change the Ship is too small message. 
+  #%currentSize% displays the size of the vessel
+  #%minForVessel% displays the min amount of blocks needed for the vessel
+  ShipTooSmall: 'The current size of your vessel is %currentSize%, Your vessel needs to be %minForVessel% or higher.'
+  #change the Ship is too large message. 
+  #%currentSize% displays the size of the vessel
+  #%minForVessel% displays the min amount of blocks needed for the vessel
+  ShipTooBig: 'The current size of your vessel is %currentSize%, Your vessel needs to be %maxForVessel% or higher.'  
+  #change the Ship needs more fuel. 
+  #%fuel% displays the fuel type needed, that maybe fuel or light
+  OutOfFuel: 'Your vessel is out of %fuel%.'
+  #change the Must be in air. 
+  #%material% displays the material the vessel must be in.
+  MustBeIn: 'Your vessel must be in %material%.'
+  #change the Ship needs Burner. 
+  #%material% displays the material needed
+  Needs: 'Your vessel needs %material%.'
+  #change the Ship is off by X amount of wool
+  #%amount% displays the amount the player is off by
+  #%material% displays the material(s) required by the vessel
+  OffBy: 'Your vessel needs %amount% of %material%.'
+  #change the found material in way. 
+  #%material% displays the material that is in way
+  FoundInWay: 'Found %material% in way.'
+
+GriefPreventionPluginSupport:
+  enabled: false
+  OwnerBypass: false
+  FlyAreas: {}
+  
 FactionsSupport:
   #If you have the factions plugin and you don't want Ships destroying 
   #the faction land, enable this. Place below the areas you wish Ships
@@ -77,4 +109,9 @@ WorldGuardSupport:
 WorldBorderSupport:
   #If you wish to keep your ships within the WorldBorder boundaries you 
   #you have set with WorldBorder plugin, then enable this feature.
+  enabled: false
+  
+VaultSupport:
+  #If you wish to attach a Eco plugin to Ships, enable this and add the
+  #plugin 'vault'
   enabled: false

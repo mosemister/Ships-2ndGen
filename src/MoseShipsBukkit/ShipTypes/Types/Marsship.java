@@ -18,6 +18,7 @@ import MoseShipsBukkit.ShipTypes.VesselType;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlock;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlockPercent;
 import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Marsship extends VesselType implements RequiredBlock, RequiredBlockPercent{
 	
@@ -164,7 +165,9 @@ public class Marsship extends VesselType implements RequiredBlock, RequiredBlock
 								return true;
 							}else{
 								if (player != null){
-									player.sendMessage(Ships.runShipsMessage("Needs more light.", true));
+									if (Messages.isEnabled()){
+										player.sendMessage(Ships.runShipsMessage(Messages.getNeeds("Light"), true));
+									}
 								}
 								return false;
 							}
@@ -175,26 +178,33 @@ public class Marsship extends VesselType implements RequiredBlock, RequiredBlock
 							materials.add(material.name());
 						}
 						if (player != null){
-							player.sendMessage(Ships.runShipsMessage("Needs more (of either) " + materials, true));
-							player.sendMessage(Ships.runShipsMessage("You are off by " + getOffBy(blocks,  getRequiredBlock(), getPercent()), true));
+							if (Messages.isEnabled()){
+								player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(getOffBy(blocks,  getRequiredBlock(), getPercent()), materials.toString()), true));
+							}
 						}
 						return false;
 					}
 				}else{
 					if (player != null){
-						player.sendMessage(Ships.runShipsMessage("Must be in Air", true));
+						if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
+						}
 					}
 					return false;
 				}
 			}else{
 				if (player != null){
-					player.sendMessage(Ships.runShipsMessage("Ships is too big.", true));
+					if (Messages.isEnabled()){
+						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+					}
 				}
 				return false;
 			}
 		}else{
 			if (player != null){
-				player.sendMessage(Ships.runShipsMessage("Ships is too small.", true));
+				if (Messages.isEnabled()){
+					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+				}
 			}
 			return false;
 		}
