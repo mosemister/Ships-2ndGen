@@ -155,7 +155,7 @@ public class Marsship extends VesselType implements RequiredBlock, RequiredBlock
 	public boolean CheckRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
 		if (blocks.size() >= getMinBlocks()){
 			if (blocks.size() <= getMaxBlocks()){
-				//if (!isMovingInto(blocks, getMoveInMaterials())){
+				if (!isMovingInto(blocks, getMoveInMaterials())){
 					if (isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())){
 						if (move.equals(MovementMethod.MOVE_DOWN)){
 							return true;
@@ -184,14 +184,14 @@ public class Marsship extends VesselType implements RequiredBlock, RequiredBlock
 						}
 						return false;
 					}
-/*				}else{
+				}else{
 					if (player != null){
 						if (Messages.isEnabled()){
 							player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
 						}
 					}
 					return false;
-				}*/
+				}
 			}else{
 				if (player != null){
 					if (Messages.isEnabled()){
