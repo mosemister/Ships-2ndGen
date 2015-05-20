@@ -33,6 +33,7 @@ import MoseShipsBukkit.ShipTypes.VesselType;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
+import MoseShipsBukkit.World.Wind.Direction;
 
 public class BukkitListeners implements Listener {
 	
@@ -232,8 +233,15 @@ public class BukkitListeners implements Listener {
 				Sign sign = (Sign)event.getClickedBlock().getState();
 				//MOVE SIGN
 				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Move]")){
-					//TODO change from engine to boost
-					//TODO wind
+					if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")){
+						sign.setLine(1, ChatColor.GREEN + "Engine");
+						sign.setLine(2, "{Boost}");
+						sign.update();
+					}else{
+						sign.setLine(1, "{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}");
+						sign.setLine(2, "Boost");
+						sign.update();
+					}
 				}
 				//WHEEL SIGN
 				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Wheel]")){
@@ -292,7 +300,15 @@ public class BukkitListeners implements Listener {
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 					}else{
 						org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
-						vessel.moveVessel(MovementMethod.getMovingDirection(vessel, sign2.getAttachedFace()), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+						if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")){
+							vessel.moveVessel(MovementMethod.getMovingDirection(vessel, sign2.getAttachedFace()), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+						}else{
+							if (Direction.getDirection(vessel.getSign().getWorld()).getDirection().equals(sign2.getAttachedFace())){
+								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, sign2.getAttachedFace()), vessel.getVesselType().getDefaultBoostSpeed(), event.getPlayer());
+							}else{
+								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, sign2.getAttachedFace()), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+							}
+						}
 					}
 				}
 				//WHEEL SIGN

@@ -29,6 +29,8 @@ import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.cnaude.chairs.api.ChairsAPI;
+
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Events.ShipMoveEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
@@ -450,15 +452,29 @@ public class Vessel {
 		MovingBlock mBlock = new MovingBlock(getTeleportLocation().getBlock(), this, move);
 		TELEPORTLOCATION = mBlock.getMovingTo();
 		updateLocation(mBlock.getMovingTo(), getSign());
+		moveEntitys(move);
+		updateStructure();
+	}
+
+	void moveEntitys(MovementMethod move){
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		for	(Entity entity : getEntitys()){
 			Inventory inv = null;
-			if (config.getBoolean("Inventory.keepInventorysOpen")){
-				if (entity instanceof Player){
-					Player player = (Player)entity;
+			boolean isSitting = false;
+			if (entity instanceof Player){
+				Player player = (Player)entity;
+				if (config.getBoolean("Inventory.keepInventorysOpen")){
 					Inventory inv2 = player.getOpenInventory().getTopInventory();
 					if (!inv2.getTitle().equals("container.crafting")){
 						inv = inv2;
 						player.closeInventory();
+					}
+				}
+				if (config.getBoolean("ChairsReloadedSupport.enabled")){
+					if (OtherPlugins.isChairsLoaded()){
+						isSitting = ChairsAPI.isSitting(player);
+					}else{
+						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Chairs support has been enabled but can not find ChairsReloaded", true));
 					}
 				}
 			}
@@ -472,16 +488,18 @@ public class Vessel {
 			loc2.setPitch(loc.getPitch());
 			loc2.setYaw(loc.getYaw());
 			entity.teleport(loc2);
-			if (config.getBoolean("Inventory.keepInventorysOpen")){
-				if (entity instanceof Player){
+			if (entity instanceof Player){
+				Player player = (Player)entity;
+				if (config.getBoolean("Inventory.keepInventorysOpen")){
 					if (inv != null){
-						Player player = (Player)entity;
 						player.openInventory(inv);
 					}
 				}
+				if (isSitting){
+					OtherPlugins.sit(player, loc2);
+				}
 			}
 		}
-		updateStructure();
 	}
 	
 	void clearInventory(MovingBlock block){
@@ -648,6 +666,16 @@ public class Vessel {
 	
 	public static List<Vessel> getVessels(){
 		return LOADEDVESSELS;
+	}
+	
+	public static List<Vessel> getVessels(OfflinePlayer player){
+		List<Vessel> vessels = new ArrayList<Vessel>();
+		for (Vessel vessel : getVessels()){
+			if (vessel.getOwner().equals(player)){
+				vessels.add(vessel);
+			}
+		}
+		return vessels;
 	}
 	
 	public static Vessel getVessel(String name){

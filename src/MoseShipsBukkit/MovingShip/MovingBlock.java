@@ -52,10 +52,11 @@ public class MovingBlock {
 			Location loc = new Location(block.getWorld(), Z, Y, X);
 			MOVETO = loc;
 		}else if (move.equals(MovementMethod.ROTATE_LEFT)){
-			int shift = block.getLocation().getBlockX() - block.getLocation().getBlockZ();
-			double symmetry = block.getLocation().getBlockX();
+			Block block2 = vessel.getSign().getBlock();
+			int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
+			double symmetry = block2.getLocation().getBlockX();
 			
-			double X = block.getLocation().getX() - (block.getLocation().getX() - symmetry)*2.0D + shift;
+			double X = block.getLocation().getX() - (block.getLocation().getX() - symmetry)*2.0D - shift;
 			double Y = block.getLocation().getY();
 			double Z = block.getLocation().getZ() + shift;
 			Location loc = new Location(block.getWorld(), Z, Y, X);
@@ -114,10 +115,11 @@ public class MovingBlock {
 			Location loc = new Location(block.getWorld(), Z, Y, X);
 			MOVETO = loc;
 		}else if (move.equals(MovementMethod.ROTATE_LEFT)){
-			int shift = block.getLocation().getBlockX() - block.getLocation().getBlockZ();
-			double symmetry = block.getLocation().getBlockX();
+			Block block2 = vessel.getSign().getBlock();
+			int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
+			double symmetry = block2.getLocation().getBlockX();
 			
-			double X = block.getLocation().getX() - (block.getLocation().getX() - symmetry)*2.0D + shift;
+			double X = block.getLocation().getX() - (block.getLocation().getX() - symmetry)*2.0D - shift;
 			double Y = block.getLocation().getY();
 			double Z = block.getLocation().getZ() + shift;
 			Location loc = new Location(block.getWorld(), Z, Y, X);

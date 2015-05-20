@@ -2,6 +2,7 @@ package MoseShipsBukkit.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.command.ConsoleCommandSender;
 
 import MoseShipsBukkit.MovingShip.MovementMethod;
 
@@ -9,12 +10,12 @@ import MoseShipsBukkit.MovingShip.MovementMethod;
 public class BlockConverter {
 	
 	public static byte convertRotation(MovementMethod move, int id, byte data){
+		ConsoleCommandSender sender = Bukkit.getConsoleSender();
 		if ((id == Material.WALL_SIGN.getId()) || 
 				(id == Material.FURNACE.getId()) || 
 				(id == Material.BURNING_FURNACE.getId()) ||
 				(id == Material.PISTON_BASE.getId()) ||
 				(id == Material.PISTON_STICKY_BASE.getId()) ||
-				(id == Material.PISTON_EXTENSION.getId()) ||
 				(id == Material.WALL_BANNER.getId()) ||
 				(id == Material.DROPPER.getId()) || 
 				(id == Material.DISPENSER.getId()) ||
@@ -44,7 +45,7 @@ public class BlockConverter {
 				(id == Material.BRICK_STAIRS.getId()) ||
 				(id == Material.DARK_OAK_STAIRS.getId()) || 
 				(id == Material.QUARTZ_STAIRS.getId())){
-			byte data2 = torchValues(move, data);
+			byte data2 = stairValues(move, data);
 			return data2;
 		}
 		if ((id == Material.SIGN_POST.getId()) ||
@@ -58,6 +59,12 @@ public class BlockConverter {
 		}
 		if (id == Material.ANVIL.getId()){
 			byte data2 = anvilValues(move, data);
+			return data2;
+		}
+		if ((id == 64) || (id == 71)){
+			sender.sendMessage("Id: " + id + " | Was data of: " + data);
+			byte data2 = door(move, data);
+			sender.sendMessage("Id: " + id + " | Is now data of: " + data2);
 			return data2;
 		}
 		return data;
@@ -317,6 +324,60 @@ public class BlockConverter {
 		return data;
 	}
 	
+	static byte door(MovementMethod move, byte data){
+		if (move.equals(MovementMethod.ROTATE_RIGHT)){
+			if (data == 3){
+				return 0;
+			}
+			if (data == 0){
+				return 1;
+			}
+			if (data == 1){
+				return 2;
+			}
+			if (data == 2){
+				return 3;
+			}
+			if (data == 4){
+				return 5;
+			}
+			if (data == 5){
+				return 6;
+			}
+			if (data == 6){
+				return 7;
+			}
+			if (data == 7){
+				return 4;
+			}
+		}else if (move.equals(MovementMethod.ROTATE_LEFT)){
+			if (data == 0){
+				return 3;
+			}
+			if (data == 1){
+				return 0;
+			}
+			if (data == 2){
+				return 1;
+			}
+			if (data == 3){
+				return 2;
+			}
+			if (data == 5){
+				return 4;
+			}
+			if (data == 6){
+				return 5;
+			}
+			if (data == 7){
+				return 6;
+			}
+			if (data == 4){
+				return 7;
+			}
+		}
+		return data;
+	}
+	
 	//TODO other blocks
-
 }

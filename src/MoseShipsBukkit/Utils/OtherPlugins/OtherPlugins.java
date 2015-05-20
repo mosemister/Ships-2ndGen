@@ -11,9 +11,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import com.cnaude.chairs.api.ChairsAPI;
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.massivecore.ps.PS;
@@ -104,6 +106,15 @@ public class OtherPlugins {
 		}
 	}
 	
+	public static boolean isChairsLoaded(){
+		Plugin plugin = Bukkit.getPluginManager().getPlugin("Chairs");
+		if (plugin == null){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
 	public static boolean isGriefPreventionLoaded(){
 		Plugin plugin = Bukkit.getPluginManager().getPlugin("GriefPrevention");
 		if (plugin == null){
@@ -142,6 +153,11 @@ public class OtherPlugins {
 			return money;
 		}
 		return 0;
+	}
+	
+	public static boolean sit(Player player, Location loc){
+		boolean result = ChairsAPI.sit(player, loc.getBlock(), loc);
+		return result;
 	}
 	
 	public static boolean isLocationOnFactionsLand(Location loc){

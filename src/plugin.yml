@@ -8,6 +8,8 @@ softdepend:
   - Factions
   - WorldBorder
   - Towny
+  - GriefPrevention
+  - Chairs
 commands:
   Ships:
     usage: /ships

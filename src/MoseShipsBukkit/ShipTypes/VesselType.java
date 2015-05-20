@@ -95,6 +95,7 @@ public abstract class VesselType implements VesselDefaults{
 	public boolean isMovingInto(List<MovingBlock> blocks, List<Material> ignoreList){
 		for(MovingBlock block : blocks){
 			if (!ignoreList.contains(block.getMovingTo().getBlock().getType())){
+				
 				return true;
 			}
 		}

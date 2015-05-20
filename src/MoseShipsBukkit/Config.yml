@@ -111,6 +111,10 @@ WorldBorderSupport:
   #you have set with WorldBorder plugin, then enable this feature.
   enabled: false
   
+ChairsReloadedSupport:
+  #enabling this will keep players set in chairs when the vessel moves
+  enabled: false
+  
 VaultSupport:
   #If you wish to attach a Eco plugin to Ships, enable this and add the
   #plugin 'vault'

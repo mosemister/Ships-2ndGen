@@ -22,16 +22,48 @@ public class ShipsStructure {
 	public ShipsStructure(List<Block> blocks){
 		for(Block block : blocks){
 			int id = block.getTypeId();
-			//   Torch          redstone      fire          ladder       WM sign       lever         stone PP      wood PP           redstoneTorch        stone button      Redstone repeater          TW  hook         TW         wooden button     L PP           H PP            Redstone Comparator         Banner
-			if ((id == 50) || (id == 55) || (id == 51) || (id == 65) || (id == 68) || (id == 69) || (id == 70) || (id == 72) || (id == 75) || (id == 76) || (id == 77) || (id == 93) || (id == 94) || (id == 131) || (id == 132) || (id == 143) || (id == 147) || (id == 148) || (id == 149) || (id == 150) || (id == 177)){
+			if ((id == 50) || 
+					(id == 55) || 
+					(id == 51) || 
+					(id == 64) || 
+					(id == 65) || 
+					(id == 68) || 
+					(id == 69) || 
+					(id == 70) || 
+					(id == 71) || 
+					(id == 72) || 
+					(id == 75) || 
+					(id == 76) || 
+					(id == 77) || 
+					(id == 93) || 
+					(id == 94) || 
+					(id == 96) || 
+					(id == 131) || 
+					(id == 132) || 
+					(id == 143) || 
+					(id == 147) || 
+					(id == 148) || 
+					(id == 149) || 
+					(id == 150) || 
+					(id == 167) || 
+					(id == 177) || 
+					(id == 193) || 
+					(id == 194) || 
+					(id == 195) || 
+					(id == 196) || 
+					(id == 197)){
 				if (block.getState() instanceof Sign){
 					SpecialBlock block2 = new SpecialBlock((Sign)block.getState());
 					SPE_BLOCKS.add(block2);
 				}
 				PRI_BLOCKS.add(block);
 			}
-			//        Chest                 Furnace             Hopper          Dropper       Dispenser
-			else if ((id == 54) || (id == 61) || (id == 62) || (id == 154) || (id == 158) || (id == 23)){
+			else if ((id == 23) ||
+					(id == 54) || 
+					(id == 61) || 
+					(id == 62) || 
+					(id == 154) || 
+					(id == 158)){ 
 				if (block.getState() instanceof Chest){
 					Chest chest = (Chest)block.getState();
 					if (chest.getInventory().getHolder() instanceof DoubleChest){

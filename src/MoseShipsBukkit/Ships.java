@@ -12,6 +12,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,6 +36,7 @@ import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
+import MoseShipsBukkit.World.Wind.Direction;
 
 public class Ships extends JavaPlugin{
 	
@@ -76,6 +78,9 @@ public class Ships extends JavaPlugin{
 			@Override
 			public void run() {
 				VesselLoader.loadVessels();
+				for (World world : Bukkit.getWorlds()){
+					new Direction(world);
+				}
 			}
 			
 		}, 0);
