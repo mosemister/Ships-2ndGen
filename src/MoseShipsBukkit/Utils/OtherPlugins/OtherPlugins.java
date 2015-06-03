@@ -10,6 +10,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -27,6 +28,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.wimbli.WorldBorder.BorderData;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
@@ -241,6 +243,26 @@ public class OtherPlugins {
 				return true;
 			}
 		}
+	}
+	
+	public static List<MovingBlock> OtherSideOfWorldBorder(Vessel vessel, List<MovingBlock> blocks){
+		BorderData worldB = com.wimbli.WorldBorder.Config.Border(vessel.getSign().getWorld().getName());
+		if (worldB == null){
+			return blocks;
+		}else{
+			//teleport 
+		}
+		return blocks;
+	}
+	
+	static MovingBlock getBreachPoint(List<MovingBlock> blocks, World world){
+		BorderData worldB = com.wimbli.WorldBorder.Config.Border(world.getName());
+		for(MovingBlock block : blocks){
+			if (worldB.insideBorder(block.getMovingTo())){
+				
+			}
+		}
+		return null;
 	}
 
 }

@@ -123,5 +123,4 @@ public class ShipsStructure {
 		}
 		return blocks;
 	}
-	
 }

@@ -20,7 +20,9 @@ public enum MovementMethod {
 	MOVE_POSITIVE_X("Move +X"),
 	MOVE_POSITIVE_Z("Move +Z"),
 	MOVE_NEGATIVE_X("Move -X"),
-	MOVE_NEGATIVE_Z("Move -Z");
+	MOVE_NEGATIVE_Z("Move -Z"),
+	TELEPORT("Teleport");
+	
 	
 	int SPEED;
 	String DIRECTION;

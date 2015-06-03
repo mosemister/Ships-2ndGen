@@ -1,36 +1,28 @@
 package MoseShipsBukkit.Events;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.MovingShip.MovingBlock;
+import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.StillShip.Vessel;
 
-@Deprecated
-public class ShipMoveEvent extends Event implements Cancellable{
+public class ShipMovingEvent extends Event implements Cancellable{
 	
 	Player PLAYER;
 	Vessel VESSEL;
 	MovementMethod MOVEMETHOD;
-	List<MovingBlock> MOVINGBLOCKS;
+	MovingStructure MOVINGBLOCKS;
 	boolean CANCELLED;
 	static final HandlerList HANDLERS = new HandlerList();
 	
-	public ShipMoveEvent(Player player, Vessel vessel, MovementMethod method, List<MovingBlock> blocks){
+	public ShipMovingEvent(Player player, Vessel vessel, MovementMethod method, MovingStructure blocks){
 		PLAYER = player;
 		VESSEL = vessel;
 		MOVEMETHOD = method;
 		MOVINGBLOCKS = blocks;
-		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Ships version is too new to handle request correctly. This may result in errors", true));
-		new IOException("Version MissMatch");
 	}
 	
 	public Player getPlayer(){
@@ -45,12 +37,12 @@ public class ShipMoveEvent extends Event implements Cancellable{
 		return MOVEMETHOD;
 	}
 	
-	public List<MovingBlock> getMovingBlocks(){
+	public MovingStructure getStructure(){
 		return MOVINGBLOCKS;
 	}
 	
-	public void setMovingBlocks(List<MovingBlock> blocks){
-		MOVINGBLOCKS = blocks;
+	public void setMovingBlocks(MovingStructure structure){
+		MOVINGBLOCKS = structure;
 	}
 
 	@Override

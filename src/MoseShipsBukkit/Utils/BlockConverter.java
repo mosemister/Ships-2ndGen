@@ -2,7 +2,6 @@ package MoseShipsBukkit.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.command.ConsoleCommandSender;
 
 import MoseShipsBukkit.MovingShip.MovementMethod;
 
@@ -10,7 +9,6 @@ import MoseShipsBukkit.MovingShip.MovementMethod;
 public class BlockConverter {
 	
 	public static byte convertRotation(MovementMethod move, int id, byte data){
-		ConsoleCommandSender sender = Bukkit.getConsoleSender();
 		if ((id == Material.WALL_SIGN.getId()) || 
 				(id == Material.FURNACE.getId()) || 
 				(id == Material.BURNING_FURNACE.getId()) ||
@@ -62,9 +60,7 @@ public class BlockConverter {
 			return data2;
 		}
 		if ((id == 64) || (id == 71)){
-			sender.sendMessage("Id: " + id + " | Was data of: " + data);
 			byte data2 = door(move, data);
-			sender.sendMessage("Id: " + id + " | Is now data of: " + data2);
 			return data2;
 		}
 		return data;

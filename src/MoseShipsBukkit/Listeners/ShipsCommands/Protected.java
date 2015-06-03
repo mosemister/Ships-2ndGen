@@ -23,7 +23,7 @@ public class Protected extends CommandLauncher{
 			player.sendMessage(Ships.runShipsMessage("must be standing on your vessel", true));
 		}else{
 			if (vessel.getOwner().equals(player)){
-				vessel.setProtectVessel(!vessel.isProtected());;
+				vessel.setProtectVessel(!vessel.isProtected());
 				player.sendMessage(Ships.runShipsMessage("Ship Protection has now been changed", false));
 			}else{
 				player.sendMessage(Ships.runShipsMessage("must be your vessel", true));
@@ -40,7 +40,7 @@ public class Protected extends CommandLauncher{
 			if (vessel == null){
 				sender.sendMessage(Ships.runShipsMessage("vessel does not exist", true));
 			}else{
-				vessel.setProtectVessel(!vessel.isProtected());;
+				vessel.setProtectVessel(!vessel.isProtected());
 				sender.sendMessage(Ships.runShipsMessage("Ship Protection has now been changed", false));
 			}
 		}

@@ -1,5 +1,8 @@
 package MoseShipsBukkit.MovingShip;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -73,6 +76,7 @@ public class MovingBlock {
 		}else if (move.equals(MovementMethod.MOVE_NEGATIVE_Z)){
 			Block block2 = block.getRelative(0, 0, -move.getSpeed());
 			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.TELEPORT)){
 		}else{
 			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Something went wrong, maybe a custom [API] MovementMethod. (" + move + ")", true));
 		}
@@ -136,6 +140,8 @@ public class MovingBlock {
 		}else if (move.equals(MovementMethod.MOVE_NEGATIVE_Z)){
 			Block block2 = block.getRelative(0, 0, -move.getSpeed());
 			MOVETO = block2.getLocation();
+		}else if (move.equals(MovementMethod.TELEPORT)){
+			
 		}else{
 			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Something went wrong, maybe a custom [API] MovementMethod. (" + move + ")", true));
 		}
@@ -159,5 +165,13 @@ public class MovingBlock {
 	
 	public Block getBlock(){
 		return BLOCK;
+	}
+	
+	public static List<Block> convertToBlockArray(List<MovingBlock> blocks){
+		List<Block> blocks2 = new ArrayList<Block>(); 
+		for (MovingBlock block : blocks){
+			blocks2.add(block.getBlock());
+		}
+		return blocks2;
 	}
 }

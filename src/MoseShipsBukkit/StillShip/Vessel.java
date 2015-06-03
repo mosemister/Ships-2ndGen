@@ -32,17 +32,19 @@ import org.bukkit.inventory.ItemStack;
 import com.cnaude.chairs.api.ChairsAPI;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.Events.ShipMoveEvent;
+import MoseShipsBukkit.Events.ShipMovingEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
+import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.ShipTypes.VesselType;
 import MoseShipsBukkit.Utils.BlockConverter;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
+import MoseShipsBukkit.Utils.MoseUtils.CustomDataStore;
 import MoseShipsBukkit.Utils.OtherPlugins.OtherPlugins;
 
-public class Vessel {
+public class Vessel extends CustomDataStore{
 	
 	String NAME;
 	OfflinePlayer OWNER;
@@ -155,6 +157,13 @@ public class Vessel {
 	
 	public void setProtectVessel(boolean args){
 		PROTECTVESSEL = args;
+	}
+	
+	public boolean isMoving(){
+		if (getStructure() instanceof MovingStructure){
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean safelyMoveTowardsLocation(Location moveTo, int speed, Player player){
@@ -352,10 +361,12 @@ public class Vessel {
 				}
 			}
 			if (this.getVesselType().CheckRequirements(this, move, blocks, player)){
-				ShipMoveEvent event = new ShipMoveEvent(player, this, move, blocks);
+				MovingStructure structure = new MovingStructure(blocks);
+				this.setStructure(structure);
+				ShipMovingEvent event = new ShipMovingEvent(player, this, move, structure);
 				Bukkit.getPluginManager().callEvent(event);
 				if (!event.isCancelled()){
-					forceMove(move, event.getMovingBlocks());
+					forceMove(move, event.getStructure().getAllMovingBlocks());
 					return true;
 				}
 			}
@@ -411,6 +422,28 @@ public class Vessel {
 			}
 		}
 		return rEntitys;
+	}
+	
+	public void forceTeleport(Location loc){
+		List<MovingBlock> blocks = getTeleportStructure(loc);
+		forceMove(MovementMethod.TELEPORT, blocks);
+	}
+	
+	public void forceMove(MovementMethod move, int speed, Player player){
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		for (Block block : STRUCTURE.getPriorityBlocks()){
+			MovingBlock block2 = new MovingBlock(block, this, move);
+			blocks.add(block2);
+		}
+		for (SpecialBlock block : STRUCTURE.getSpecialBlocks()){
+			MovingBlock block2 = new MovingBlock(block, this, move);
+			blocks.add(block2);
+		}
+		for (Block block : STRUCTURE.getStandardBlocks()){
+			MovingBlock block2 = new MovingBlock(block, this, move);
+			blocks.add(block2);
+		}
+		forceMove(move, blocks);
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -622,6 +655,112 @@ public class Vessel {
 			config.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public Location getLocation(){
+		return getSign().getLocation();
+	}
+	
+	List<MovingBlock> getTeleportStructure(Location loc){
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<Block> structure = getStructure().getAllBlocks();
+		Location loc2 = getLocation();
+		for(Block block : structure){
+			int X = (int)(block.getX() - loc2.getX());
+			int Y = (int)(block.getY() - loc2.getY());
+			int Z = (int)(block.getZ() - loc2.getZ());
+			Block teleport = loc.getBlock().getRelative(X, Y, Z);
+			MovingBlock block2 = new MovingBlock(teleport, this, MovementMethod.TELEPORT);
+			blocks.add(block2);
+		}
+		return blocks;
+	}
+	
+	public int getLength(boolean updateStructure){
+		if (updateStructure){
+			updateStructure();
+		}
+		List<Block> blocks = getStructure().getAllBlocks();
+		if ((getFacingDirection().equals(BlockFace.NORTH) || (getFacingDirection().equals(BlockFace.SOUTH)))){
+			int maxHeight = blocks.get(0).getX();
+			int minHeight = blocks.get(0).getX();
+			for(Block block : blocks){
+				if (block.getX() > maxHeight){
+					maxHeight = block.getX();
+				}
+				if (block.getX() < minHeight){
+					minHeight = block.getX();
+				}
+			}
+			int result = maxHeight - minHeight;
+			return result;
+		}else{
+			int maxHeight = blocks.get(0).getZ();
+			int minHeight = blocks.get(0).getZ();
+			for(Block block : blocks){
+				if (block.getZ() > maxHeight){
+					maxHeight = block.getZ();
+				}
+				if (block.getZ() < minHeight){
+					minHeight = block.getZ();
+				}
+			}
+			int result = maxHeight - minHeight;
+			return result;
+		}
+	}
+	
+	public int getHeight(boolean updateStructure){
+		if (updateStructure){
+			updateStructure();
+		}
+		List<Block> blocks = getStructure().getAllBlocks();
+		int maxHeight = blocks.get(0).getY();
+		int minHeight = blocks.get(0).getY();
+		for(Block block : blocks){
+			if (block.getY() > maxHeight){
+				maxHeight = block.getY();
+			}
+			if (block.getY() < minHeight){
+				minHeight = block.getY();
+			}
+		}
+		int result = maxHeight - minHeight;
+		return result;
+	}
+	
+	public int getWidth(boolean updateStructure){
+		if (updateStructure){
+			updateStructure();
+		}
+		List<Block> blocks = getStructure().getAllBlocks();
+		if ((getFacingDirection().equals(BlockFace.WEST) || (getFacingDirection().equals(BlockFace.EAST)))){
+			int maxHeight = blocks.get(0).getX();
+			int minHeight = blocks.get(0).getX();
+			for(Block block : blocks){
+				if (block.getX() > maxHeight){
+					maxHeight = block.getX();
+				}
+				if (block.getX() < minHeight){
+					minHeight = block.getX();
+				}
+			}
+			int result = maxHeight - minHeight;
+			return result;
+		}else{
+			int maxHeight = blocks.get(0).getZ();
+			int minHeight = blocks.get(0).getZ();
+			for(Block block : blocks){
+				if (block.getZ() > maxHeight){
+					maxHeight = block.getZ();
+				}
+				if (block.getZ() < minHeight){
+					minHeight = block.getZ();
+				}
+			}
+			int result = maxHeight - minHeight;
+			return result;
 		}
 	}
 	
