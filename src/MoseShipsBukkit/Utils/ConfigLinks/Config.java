@@ -65,6 +65,16 @@ public class Config {
 		return version;
 	}
 	
+	public boolean containsIgnoreList(int lastest){
+		Integer[] list = {5001, 5002, 5003};
+		for (int A : list){
+			if (lastest == A){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public boolean updateCheck(){
 		String latest = getLatestVersionString().replace(".", "");
 		String current = getConfigVersionString();
@@ -80,7 +90,18 @@ public class Config {
 		int latestN = Integer.parseInt(latest);
 		int currentN = Integer.parseInt(current);
 		int result = latestN - currentN;
-		if (result == 0){
+		if ((result == 0) || (containsIgnoreList(latestN))){
+			if (containsIgnoreList(latestN)){
+				try{
+					File file2 = getFile();
+					YamlConfiguration config2 = YamlConfiguration.loadConfiguration(file2);
+					config2.set("Version", getLatestVersionString());
+					config2.save(file2);
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			return false;
 		}else{
 			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Your config maybe out of date. \n"

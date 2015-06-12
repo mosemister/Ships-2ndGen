@@ -10,27 +10,22 @@ import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Furnace;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipTypes.VesselType;
-import MoseShipsBukkit.ShipTypes.NormalRequirements.Fuel;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlock;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlockPercent;
-import MoseShipsBukkit.StillShip.SpecialBlock;
+import MoseShipsBukkit.ShipTypes.SubType.FuelVesselType;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class AirShip extends VesselType implements RequiredBlock, RequiredBlockPercent, Fuel{
+public class AirShip extends FuelVesselType implements RequiredBlock, RequiredBlockPercent{
 
-	Map<Material, Byte> FUEL;
-	int FOUNDFUEL;
 	int PERCENT;
 	List<Material> REQUIREDBLOCK;
 	List<Material> MOVEINBLOCK;
@@ -38,27 +33,7 @@ public class AirShip extends VesselType implements RequiredBlock, RequiredBlockP
 	int MINBLOCKS;
 	
 	public AirShip() {
-		super("Airship", 2, 3, true);
-	}
-
-	@Override
-	public Map<Material, Byte> getFuel() {
-		return FUEL;
-	}
-
-	@Override
-	public int getFuelTakeAmount() {
-		return FOUNDFUEL;
-	}
-
-	@Override
-	public void setFuel(Map<Material, Byte> fuels) {
-		FUEL = fuels;
-	}
-
-	@Override
-	public void setFuelTakeAmount(int A) {
-		FOUNDFUEL = A;
+		super("Airship", 2, 3, true, true);
 	}
 
 	@Override
@@ -261,33 +236,6 @@ public class AirShip extends VesselType implements RequiredBlock, RequiredBlockP
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public int getFuelCount(Vessel vessel) {
-		int count = 0;
-		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
-			if (block.getBlock().getState() instanceof Furnace){
-				Furnace furnace = (Furnace)block.getBlock().getState();
-				ItemStack item = furnace.getInventory().getFuel();
-				if (item != null){
-					Map<Material, Byte> fuels = getFuel();
-					for (Entry<Material, Byte> fuel : fuels.entrySet()){
-						if (fuel.getKey().equals(item.getType())){
-							if (fuel.getValue() == -1){
-								count = (count + item.getAmount());
-							}else{
-								if (fuel.getValue() == item.getData().getData()){
-									count = (count + item.getAmount());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return count;
 	}
 
 	@Override

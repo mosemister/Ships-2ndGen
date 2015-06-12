@@ -143,7 +143,7 @@ public class BukkitListeners implements Listener {
 				if (vessel == null){
 					event.getPlayer().sendMessage(Ships.runShipsMessage("Unknown ship", true));
 				}else{
-					if (event.getPlayer().equals(vessel.getOwner())){
+					if ((event.getPlayer().equals(vessel.getOwner())) || (event.getPlayer().hasPermission("ships.break.bypass")) || (event.getPlayer().hasPermission("ships.*"))){
 						vessel.remove();
 						event.getPlayer().sendMessage(Ships.runShipsMessage(vessel.getName() + " has been removed.", false));
 					}else{
@@ -332,6 +332,16 @@ public class BukkitListeners implements Listener {
 				//EOT SIGN
 				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[E.O.T]")){
 					event.getPlayer().sendMessage(Ships.runShipsMessage("Moves the vessel in the same direction until this E.O.T sign is changed.", false));
+				}
+				//licence sign
+				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
+					Vessel vessel = Vessel.getVessel(sign);
+					if (vessel == null){
+						event.getPlayer().sendMessage(Ships.runShipsMessage("A issue has occured. Sign is not licenced", false));
+						sign.getBlock().breakNaturally();
+					}else{
+						event.getPlayer().sendMessage(Ships.runShipsMessage("Vessel is owned by " + vessel.getOwner().getName(), false));
+					}
 				}
 			}
 		}

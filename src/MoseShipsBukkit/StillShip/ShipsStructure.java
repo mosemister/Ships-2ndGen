@@ -62,6 +62,7 @@ public class ShipsStructure {
 					(id == 54) || 
 					(id == 61) || 
 					(id == 62) || 
+					(id == 146) || 
 					(id == 154) || 
 					(id == 158)){ 
 				if (block.getState() instanceof Chest){

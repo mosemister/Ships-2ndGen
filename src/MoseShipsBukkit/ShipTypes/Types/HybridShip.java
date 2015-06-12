@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -18,21 +19,25 @@ import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipTypes.VesselType;
+import MoseShipsBukkit.ShipTypes.NormalRequirements.ChargePlates;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlock;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlockPercent;
 import MoseShipsBukkit.ShipTypes.SubType.FuelVesselType;
+import MoseShipsBukkit.StillShip.SpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Plane extends FuelVesselType implements RequiredBlock, RequiredBlockPercent{
-
+public class HybridShip extends FuelVesselType implements RequiredBlock, RequiredBlockPercent, ChargePlates{
+	
 	int MAXBLOCKS;
 	int MINBLOCKS;
-	int PERCENT;
-	List<Material> REQUIREDBLOCKS = new ArrayList<Material>();
-	
-	public Plane() {
-		super("Plane", 5, 6, true, true);
+	int BLOCKPERCENT;
+	int TAKEAMOUNT;
+	int MAXAMOUNT;
+	List<Material> REQUIRED;
+
+	public HybridShip() {
+		super("HybridShip", 2, 3, true, false);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -41,7 +46,7 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
-		config.set("ShipsData.Type", "Plane");
+		config.set("ShipsData.Type", "HybridShip");
 		config.set("ShipsData.Protected", vessel.isProtected());
 		config.set("ShipsData.Config.Block.Percent", getPercent());
 		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
@@ -52,6 +57,8 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 		}
 		config.set("ShipsData.Config.Fuel.Fuels", fuels);
 		config.set("ShipsData.Config.Fuel.Consumption", getFuelTakeAmount());
+		config.set("Fuel.MaxLimitPerCell", getChargeMaxAmount());
+		config.set("ShipsData.Config.Fuel.CellConsumption", getChargeTakeAmount());
 		config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
 		Sign sign = vessel.getSign();
 		Location loc = vessel.getTeleportLocation();
@@ -62,6 +69,7 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 		}catch(IOException e){
 			e.printStackTrace();
 		}
+		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -69,23 +77,26 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 	public void createConfig() {
 		File file = getFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		config.set("Speed.Engine", 5);
-		config.set("Speed.Boost", 6);
-		config.set("Blocks.Max", 3750);
-		config.set("Blocks.Min", 1);
-		config.set("Blocks.requiredPercent", 50);
+		config.set("ShipsData.Config.Speed.Engine", 2);
+		config.set("ShipsData.Config.Speed.Boost", 3);
+		config.set("ShipsData.Config.Blocks.Max", 3750);
+		config.set("ShipsData.Config.Blocks.Min", 1);
+		config.set("ShipsData.Config.Blocks.requiredPercent", 60);
 		List<Integer> requiredBlocks = new ArrayList<Integer>();
-		requiredBlocks.add(42);
-		config.set("Blocks.requiredBlocks", requiredBlocks);
+		requiredBlocks.add(35);
+		config.set("ShipsData.Config.Blocks.requiredBlocks", requiredBlocks);
 		List<String> fuel = new ArrayList<String>();
-		fuel.add(Material.COAL_BLOCK.getId() + ",-1");
-		config.set("Fuel.Fuels", fuel);
-		config.set("Fuel.TakeAmount", 2);
+		fuel.add(Material.COAL.getId() + ",-1");
+		config.set("ShipsData.Config.Fuel.Fuels", fuel);
+		config.set("ShipsData.Config.Fuel.TakeAmount", 1);
+		config.set("ShipsData.Config.Fuel.MaxLimitPerCell", 100);
+		config.set("ShipsData.Config.Fuel.CellConsumption", 10);
 		try {
 			config.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	@SuppressWarnings("deprecation")
@@ -96,13 +107,13 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 			createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		this.setDefaultSpeed(config.getInt("Speed.Engine"));
-		this.setDefaultBoostSpeed(config.getInt("Speed.Boost"));
-		this.setPercent(config.getInt("Blocks.requiredPercent"));
-		this.setMaxBlocks(config.getInt("Blocks.Max"));
-		this.setMinBlocks(config.getInt("Blocks.Min"));
+		this.setDefaultSpeed(config.getInt("ShipsData.Config.Speed.Engine"));
+		this.setDefaultBoostSpeed(config.getInt("ShipsData.Config.Speed.Boost"));
+		this.setPercent(config.getInt("ShipsData.Config.Blocks.requiredPercent"));
+		this.setMaxBlocks(config.getInt("ShipsData.Config.Blocks.Max"));
+		this.setMinBlocks(config.getInt("ShipsData.Config.Blocks.Min"));
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for(int id : config.getIntegerList("Blocks.requiredBlocks")){
+		for(int id : config.getIntegerList("ShipsData.Config.Blocks.requiredBlocks")){
 			Material material = Material.getMaterial(id);
 			requiredmaterials.add(material);
 		}
@@ -115,38 +126,24 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 		this.setFuel(fuels);
 		this.setRequiredBlock(requiredmaterials);
 		this.setFuelTakeAmount(take);
+		this.setChargeMaxAmount(config.getInt("ShipsData.Config.Fuel.MaxLimitPerCell"));
+		this.setChargeTakeAmount(config.getInt("ShipsData.Config.Fuel.CellConsumption"));
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
+		
 	}
 
 	@Override
 	public File getFile() {
-		File file = new File("plugins/Ships/Configuration/VesselTypes/Plane.yml");
+		File file = new File("plugins/Ships/Configuration/VesselTypes/HybridShip.yml");
 		return file;
 	}
 
+	@Deprecated
 	@Override
 	public Vessel loadFromClassicVesselFile(Vessel vessel, File file) {
-		VesselType type = vessel.getVesselType();
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Plane){
-			Plane plane = (Plane)type;
-			List<Integer> fuels = config.getIntegerList("ShipsData.Config.Fuel.Fuels");
-			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
-			int percent = config.getInt("ShipsData.Config.Block.Percent");
-			plane.setPercent(percent);
-			plane.setFuelTakeAmount(consumption);
-			HashMap<Material, Byte> fuelsR = new HashMap<Material, Byte>();
-			for (int id : fuels){
-				@SuppressWarnings("deprecation")
-				Material material = Material.getMaterial(id);
-				fuelsR.put(material, (byte)-1);
-			}
-			plane.setFuel(fuelsR);
-			vessel.setVesselType(plane);
-		}
-		return vessel;
+		return null;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -154,22 +151,26 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 	public Vessel loadFromNewVesselFile(Vessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Plane){
-			Plane plane = (Plane)type;
+		if (type instanceof HybridShip){
+			HybridShip hybrid = (HybridShip)type;
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
-			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
+			int fuelConsumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
-			plane.setPercent(percent);
-			plane.setFuelTakeAmount(consumption);
+			int consumption = config.getInt("ShipsData.Config.Fuel.CellConsumption");
+			int maxFuelCount = config.getInt("ShipsData.Config.Fuel.MaxLimitPerCell");
+			hybrid.setChargeMaxAmount(maxFuelCount);
+			hybrid.setChargeTakeAmount(consumption);
+			hybrid.setPercent(percent);
+			hybrid.setFuelTakeAmount(fuelConsumption);
 			if (fuelsL.size() != 0){
 				Map<Material, Byte> fuels = new HashMap<Material, Byte>();
 				for (String fuelS : fuelsL){
 					String[] fuelM = fuelS.split(",");
 					fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
 				}
-				plane.setFuel(fuels);
+				hybrid.setFuel(fuels);
 			}
-			vessel.setVesselType(plane);
+			vessel.setVesselType(hybrid);
 		}
 		return vessel;
 	}
@@ -187,24 +188,30 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 	@Override
 	public void setMaxBlocks(int amount) {
 		MAXBLOCKS = amount;
+		
 	}
 
 	@Override
 	public void setMinBlocks(int amount) {
 		MINBLOCKS = amount;
+		
 	}
 
 	@Override
 	public boolean CheckRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
 		if (blocks.size() <= getMaxBlocks()){
 			if (blocks.size() >= getMinBlocks()){
-				if (isMovingInto(blocks, getMoveInMaterials())){
-					if (isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())){
-						//if (isMaterialInMovingFrom(blocks, Material.DROPPER)){
-							if (move.equals(MovementMethod.MOVE_DOWN)){
-								return true;
-							}else{
-								if (this.checkFuel(getFuel(), vessel, getFuelTakeAmount())){
+				if (this.isMovingInto(blocks, getMoveInMaterials())){
+					if (this.isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())){
+						if (move.equals(MovementMethod.MOVE_DOWN)){
+							return true;
+						}else{
+							long time = vessel.getTeleportLocation().getWorld().getTime();
+							if (time > 13000){
+								if (checkCharge(vessel)){
+									takeCharge(vessel);
+									return true;
+								}else if (this.checkFuel(getFuel(), vessel, getFuelTakeAmount())){
 									this.takeFuel(getFuel(), vessel, getFuelTakeAmount());
 									return true;
 								}else{
@@ -215,13 +222,10 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 									}
 									return false;
 								}
+							}else{
+								return true;
 							}
-						/*}else{
-							if (player != null){
-								player.sendMessage(Ships.runShipsMessage("Needs engine", true));
-							}
-							return false;
-						}*/
+						}
 					}else{
 						List<String> materials = new ArrayList<String>();
 						for(Material material : getRequiredBlock()){
@@ -229,7 +233,7 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 						}
 						if (player != null){
 							if (Messages.isEnabled()){
-								player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(getOffBy(blocks,  getRequiredBlock(), getPercent()), materials.toString()), true));
+								player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(getOffBy(blocks,  getRequiredBlock(), getPercent()), "(of either) " + materials.toString()), true));
 							}
 						}
 						return false;
@@ -262,24 +266,84 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 
 	@Override
 	public int getPercent() {
-		return PERCENT;
+		return BLOCKPERCENT;
 	}
 
 	@Override
 	public void setPercent(int percent) {
-		PERCENT = percent;
+		BLOCKPERCENT = percent;
+		
+	}
+
+	@Override
+	public int getChargeTakeAmount() {
+		return TAKEAMOUNT;
+	}
+
+	@Override
+	public int getChargeMaxAmount() {
+		return MAXAMOUNT;
+	}
+
+	@Override
+	public void takeCharge(Vessel vessel) {
+		int count = 0;
+		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+			if (block.getBlock().getState() instanceof Sign){
+				Sign sign = (Sign)block.getBlock().getState();
+				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Cell]")){
+					int amount = Integer.parseInt(sign.getLine(2));
+					if (amount >= getChargeTakeAmount()){
+						count = count + getChargeTakeAmount();
+						sign.setLine(2, amount - getChargeTakeAmount() + "");
+					}
+				}
+			}
+			if (count == getChargeTakeAmount()){
+				return;
+			}
+		}
+	}
+	
+	public boolean checkCharge(Vessel vessel){
+		int count = 0;
+		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+			if (block.getBlock().getState() instanceof Sign){
+				Sign sign = (Sign)block.getBlock().getState();
+				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Cell]")){
+					int amount = Integer.parseInt(sign.getLine(2));
+					if (amount >= getChargeTakeAmount()){
+						count = count + getChargeTakeAmount();
+						sign.setLine(2, amount - getChargeTakeAmount() + "");
+					}
+				}
+			}
+		}
+		if (count >= this.getChargeTakeAmount()){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void setChargeTakeAmount(int A) {
+		TAKEAMOUNT = A;
+	}
+
+	@Override
+	public void setChargeMaxAmount(int A) {
+		MAXAMOUNT = A;
 		
 	}
 
 	@Override
 	public List<Material> getRequiredBlock() {
-		return REQUIREDBLOCKS;
+		return REQUIRED;
 	}
 
 	@Override
 	public void setRequiredBlock(List<Material> material) {
-		REQUIREDBLOCKS = material;
-		
+		REQUIRED = material;
 	}
 
 }

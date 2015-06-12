@@ -10,6 +10,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import MoseShipsBukkit.Ships;
@@ -97,6 +98,7 @@ public class VesselLoader {
 	
 	public static boolean newLoader(File file){
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		ConsoleCommandSender sender = Bukkit.getConsoleSender();
 		try{
 			UUID uuid = UUID.fromString(config.getString("ShipsData.Player.Name"));
 			OfflinePlayer owner =  Bukkit.getOfflinePlayer(uuid);
@@ -125,10 +127,20 @@ public class VesselLoader {
 								type.setMinBlocks(min);
 								type.loadFromNewVesselFile(vessel, file);
 								return true;
+							}else{
+								sender.sendMessage("Vesseltype failed");
 							}
+						}else{
+							sender.sendMessage("sign location failed");
 						}
+					}else{
+						sender.sendMessage("teleport location = null");
 					}
+				}else{
+					sender.sendMessage("sign location = null");
 				}
+			}else{
+				sender.sendMessage("vesseltype = null");
 			}
 		}catch(IllegalArgumentException e){
 		}

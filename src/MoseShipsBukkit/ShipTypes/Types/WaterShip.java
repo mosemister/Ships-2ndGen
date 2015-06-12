@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -29,8 +31,6 @@ public class WaterShip extends VesselType implements RequiredBlock, RequiredBloc
 	
 	public WaterShip() {
 		super("Ship", 5, 6, false);
-		REQUIREDBLOCK.add(Material.WOOL);
-		MOVEINBLOCK.add(Material.WATER);
 	}
 
 	@Override
@@ -79,16 +79,20 @@ public class WaterShip extends VesselType implements RequiredBlock, RequiredBloc
 
 	@Override
 	public void save(Vessel vessel) {
-		File file = new File("plugins/Ships/VesselData/" + vessel.getName());
+		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		ConfigurationSection config = configuration.createSection("ShipsData");
 		config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
-		config.set("Type", "Submarine");
+		config.set("Type", "Ship");
 		config.set("Protected", vessel.isProtected());
 		config.set("Config.Block.Percent", getPercent());
 		config.set("Config.Block.Max", getMaxBlocks());
 		config.set("Config.Block.Min", getMinBlocks());
 		config.set("Config.Speed.Engine", getDefaultSpeed());
+		Sign sign = vessel.getSign();
+		Location loc = vessel.getTeleportLocation();
+		config.set("Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+		config.set("Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
 		try{
 			configuration.save(file);
 		}catch(IOException e){
@@ -163,6 +167,7 @@ public class WaterShip extends VesselType implements RequiredBlock, RequiredBloc
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.WATER);
 		moveIn.add(Material.STATIONARY_WATER);
+		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
 		
 	}

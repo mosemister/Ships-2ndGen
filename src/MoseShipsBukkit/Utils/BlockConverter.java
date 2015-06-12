@@ -4,11 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import MoseShipsBukkit.MovingShip.MovementMethod;
+import MoseShipsBukkit.MovingShip.MovingBlock;
 
 @SuppressWarnings("deprecation")
 public class BlockConverter {
 	
-	public static byte convertRotation(MovementMethod move, int id, byte data){
+	public static byte convertRotation(MovementMethod move, MovingBlock block, byte data){
+		int id = block.getId();
 		if ((id == Material.WALL_SIGN.getId()) || 
 				(id == Material.FURNACE.getId()) || 
 				(id == Material.BURNING_FURNACE.getId()) ||
@@ -20,9 +22,17 @@ public class BlockConverter {
 				(id == Material.HOPPER.getId()) ||
 				(id == Material.LEVER.getId()) ||
 				(id == Material.WOOD_BUTTON.getId()) ||
-				(id == Material.STONE_BUTTON.getId())){
+				(id == Material.STONE_BUTTON.getId()) ||
+				(id == Material.LADDER.getId()) ||
+				(id == Material.ENDER_CHEST.getId())){
 			byte data2 = quadValues(move, data);
 			return data2;
+		}
+		if (block.getSpecialBlock() != null){
+			if (block.getSpecialBlock().getType().equals("chest")){
+				byte data2 = quadValues(move, data);
+				return data2;
+			}
 		}
 		if ((id == Material.LOG.getId()) || 
 				(id == Material.LOG_2.getId())){
@@ -65,6 +75,37 @@ public class BlockConverter {
 		}
 		return data;
 	}
+	
+	static byte LaddersFix(MovementMethod move, byte data){
+	    if (move.equals(MovementMethod.ROTATE_RIGHT)){
+	    	if (data == 4) {
+	    		return 2;
+	    	}
+	    	if (data == 2) {
+	    		return 5;
+	    	}
+	    	if (data == 5) {
+	    		return 3;
+	    	}
+	    	if (data == 3) {
+	    		return 4;
+	    	}
+	    }else{
+	    	if (data == 2) {
+	    		return 4;
+	    	}
+	    	if (data == 5) {
+	    		return 2;
+	    	}
+	    	if (data == 3) {
+	    		return 5;
+	    	}
+	    	if (data == 4) {
+	    		return 3;
+	    	}
+	    }
+	    return data;
+	  }
 	
 	static byte anvilValues(MovementMethod move, byte data){
 		if (data == 0){

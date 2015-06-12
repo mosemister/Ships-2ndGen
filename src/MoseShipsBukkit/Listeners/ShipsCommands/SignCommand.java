@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.ConsoleCommandSender;
@@ -31,6 +32,7 @@ public class SignCommand extends CommandLauncher{
 	public void playerCommand(Player player, String[] args) {
 		if (args.length == 1){
 			player.sendMessage(ChatColor.GOLD + "/Ships sign track [seconds]" + ChatColor.AQUA + "; shows sign connections.");
+			player.sendMessage(ChatColor.GOLD + "/Ships sign transfer <new player>" + ChatColor.AQUA + "; transfers the ownership of a vessel.");
 		}else if (args[1].equalsIgnoreCase("track")){
 			Block block = player.getTargetBlock(null, 6);
 			if (block.getState() instanceof Sign){
@@ -87,6 +89,31 @@ public class SignCommand extends CommandLauncher{
 				}
 			}else{
 				player.sendMessage(Ships.runShipsMessage("Ships sign must be on target block", true));
+			}
+		}else if (args[1].equalsIgnoreCase("Transfer")){
+			if (args.length >= 3){
+				if ((player.hasPermission("ships.command.sign.transfer")) || (player.hasPermission("ships.*")) || (player.hasPermission("ships.command.*"))){
+					Block block = player.getTargetBlock(null, 6);
+					if (block.getState() instanceof Sign){
+						Sign sign = (Sign)block.getState();
+						if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
+							Vessel vessel = Vessel.getVessel(sign);
+							if (vessel != null){
+								OfflinePlayer user = Bukkit.getOfflinePlayer(args[2]);
+								vessel.setOwner(user);
+							}else{
+								player.sendMessage(Ships.runShipsMessage("error occured, no licenced vessel to that sign", true));
+								sign.getBlock().breakNaturally();
+							}
+						}
+					}else{
+						player.sendMessage(Ships.runShipsMessage("must be looking at Ships licence sign", true));
+					}
+				}else{
+					player.sendMessage(Ships.runShipsMessage("lack required permissions", true));
+				}
+			}else{
+				player.sendMessage(Ships.runShipsMessage("/ships sign transfer <new player>", true));
 			}
 		}
 	}

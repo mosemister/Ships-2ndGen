@@ -28,7 +28,7 @@ public class Marsship extends VesselType implements RequiredBlock, RequiredBlock
 	int PERCENT;
 
 	public Marsship() {
-		super("Marsship", 2, 3, true);
+		super("Marsship", 2, 3, true, true);
 	}
 
 	@Override

@@ -37,6 +37,7 @@ public abstract class VesselType implements VesselDefaults{
 	int DEFAULTBOOSTSPEED;
 	boolean ISAUTOPILOTALLOWED;
 	List<Material> MOVEIN;
+	boolean CANFALL;
 	
 	static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
 	
@@ -47,6 +48,14 @@ public abstract class VesselType implements VesselDefaults{
 		DEFAULTSPEED = speed;
 		DEFAULTBOOSTSPEED = boost;
 		ISAUTOPILOTALLOWED = isAutoPilot;
+	}
+	
+	public VesselType(String name, int speed, int boost, boolean isAutoPilot, boolean canFall){
+		TYPENAME = name;
+		DEFAULTSPEED = speed;
+		DEFAULTBOOSTSPEED = boost;
+		ISAUTOPILOTALLOWED = isAutoPilot;
+		CANFALL = canFall;
 	}
 	
 	public String getName(){

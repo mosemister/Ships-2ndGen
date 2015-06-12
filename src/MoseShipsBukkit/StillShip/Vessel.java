@@ -117,6 +117,10 @@ public class Vessel extends CustomDataStore{
 		return STRUCTURE;
 	}
 	
+	public void setOwner(OfflinePlayer user){
+		OWNER = user;
+	}
+	
 	public void setAutoPilotTo(Location moveTo){
 		AUTOPILOTTO = moveTo;
 	}
@@ -473,7 +477,7 @@ public class Vessel extends CustomDataStore{
 			MovingBlock block = blocks.get(A);
 			Block bBlock = block.getMovingTo().getBlock();
 			if ((move.equals(MovementMethod.ROTATE_LEFT) || (move.equals(MovementMethod.ROTATE_RIGHT)))){
-				byte data = BlockConverter.convertRotation(move, block.getId(), block.getData());
+				byte data = BlockConverter.convertRotation(move, block, block.getData());
 				bBlock.setTypeIdAndData(block.getId(), data, false);
 			}else{
 				bBlock.setTypeIdAndData(block.getId(), block.getData(), false);

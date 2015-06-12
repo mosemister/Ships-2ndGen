@@ -30,7 +30,7 @@ public class SolarShip extends VesselType implements ChargePlates{
 	
 	
 	public SolarShip() {
-		super("SolarShip", 2, 3, true);
+		super("SolarShip", 2, 3, true, true);
 	}
 
 	@Override
@@ -43,6 +43,8 @@ public class SolarShip extends VesselType implements ChargePlates{
 		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
 		config.set("ShipsData.Config.Block.Min", getMinBlocks());
 		config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
+		config.set("Fuel.Config.MaxLimitPerCell", getChargeMaxAmount());
+		config.set("Fuel.Config.Consumption", getChargeTakeAmount());
 		Sign sign = vessel.getSign();
 		Location loc = vessel.getTeleportLocation();
 		config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
@@ -59,12 +61,12 @@ public class SolarShip extends VesselType implements ChargePlates{
 	public void createConfig() {
 		File file = getFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		config.set("Speed.Engine", 2);
-		config.set("Speed.Boost", 3);
-		config.set("Blocks.Max", 4000);
-		config.set("Blocks.Min", 200);
-		config.set("Fuel.MaxLimitPerCell", 100);
-		config.set("Fuel.Consumption", 10);
+		config.set("ShipsData.Config.Speed.Engine", 2);
+		config.set("ShipsData.Config.Speed.Boost", 3);
+		config.set("ShipsData.Config.Blocks.Max", 4000);
+		config.set("ShipsData.Config.Blocks.Min", 200);
+		config.set("ShipsData.Config.Fuel.MaxLimitPerCell", 100);
+		config.set("ShipsData.Config.Fuel.Consumption", 10);
 		try {
 			config.save(file);
 		} catch (IOException e) {
@@ -79,12 +81,12 @@ public class SolarShip extends VesselType implements ChargePlates{
 			createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		this.setDefaultSpeed(config.getInt("Speed.Engine"));
-		this.setDefaultBoostSpeed(config.getInt("Speed.Boost"));
-		this.setMaxBlocks(config.getInt("Blocks.Max"));
-		this.setMinBlocks(config.getInt("Blocks.Min"));
-		this.setChargeMaxAmount(config.getInt("Fuel.MaxLimitPerCell"));
-		this.setChargeTakeAmount(config.getInt("Fuel.Consumption"));
+		this.setDefaultSpeed(config.getInt("ShipsData.Config.Speed.Engine"));
+		this.setDefaultBoostSpeed(config.getInt("ShipsData.Config.Speed.Boost"));
+		this.setMaxBlocks(config.getInt("ShipsData.Config.Blocks.Max"));
+		this.setMinBlocks(config.getInt("ShipsData.Config.Blocks.Min"));
+		this.setChargeMaxAmount(config.getInt("ShipsData.Config.Fuel.MaxLimitPerCell"));
+		this.setChargeTakeAmount(config.getInt("ShipsData.Config.Fuel.Consumption"));
 	}
 
 	@Override
@@ -232,8 +234,8 @@ public class SolarShip extends VesselType implements ChargePlates{
 		VesselType type = vessel.getVesselType();
 		if (type instanceof SolarShip){
 			SolarShip solarship = (SolarShip)type;
-			int consumption = config.getInt("ShipsData.Fuel.Consumption");
-			int maxFuelCount = config.getInt("ShipsData.Fuel.MaxLimitPerCell");
+			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
+			int maxFuelCount = config.getInt("ShipsData.Config.Fuel.MaxLimitPerCell");
 			solarship.setChargeMaxAmount(maxFuelCount);
 			solarship.setChargeTakeAmount(consumption);
 			vessel.setVesselType(type);
@@ -247,8 +249,8 @@ public class SolarShip extends VesselType implements ChargePlates{
 		VesselType type = vessel.getVesselType();
 		if (type instanceof SolarShip){
 			SolarShip solarship = (SolarShip)type;
-			int consumption = config.getInt("ShipsData.Fuel.Consumption");
-			int maxFuelCount = config.getInt("ShipsData.Fuel.MaxLimitPerCell");
+			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
+			int maxFuelCount = config.getInt("ShipsData.Config.Fuel.MaxLimitPerCell");
 			solarship.setChargeMaxAmount(maxFuelCount);
 			solarship.setChargeTakeAmount(consumption);
 			vessel.setVesselType(type);

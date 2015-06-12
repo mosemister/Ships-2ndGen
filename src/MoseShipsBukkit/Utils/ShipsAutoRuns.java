@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.ShipTypes.Types.AirShip;
+import MoseShipsBukkit.ShipTypes.SubType.FuelVesselType;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
@@ -24,9 +24,9 @@ public class ShipsAutoRuns {
 			@Override
 			public void run() {
 				for(Vessel vessel : Vessel.getVessels()){
-					if (vessel.getVesselType() instanceof AirShip){
-						AirShip airship = (AirShip)vessel.getVesselType();
-						if (airship.getFuelCount(vessel) == 0){
+					if (vessel.getVesselType() instanceof FuelVesselType){
+						FuelVesselType vesselType = (FuelVesselType)vessel.getVesselType();
+						if (vesselType.getFuelCount(vessel) == 0){
 							vessel.moveVessel(MovementMethod.MOVE_DOWN, 1, null);
 						}
 					}

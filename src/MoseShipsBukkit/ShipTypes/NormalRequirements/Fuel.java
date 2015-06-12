@@ -6,6 +6,7 @@ import org.bukkit.Material;
 
 import MoseShipsBukkit.StillShip.Vessel;
 
+@Deprecated
 public interface Fuel {
 	
 	//This is the interface that forces select vessels to use fuel.

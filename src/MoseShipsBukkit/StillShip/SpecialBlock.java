@@ -50,7 +50,11 @@ public class SpecialBlock {
 		for(int A = 0; A < chest.getInventory().getSize(); A++){
 			INVENTORY.put(A, chest.getInventory().getItem(A));
 		}
-		BLOCKTYPE = "chest";
+		if (extraChest){
+			BLOCKTYPE = "double chest";
+		}else{
+			BLOCKTYPE = "chest";
+		}
 		DOUBLECHEST = extraChest;
 	}
 	
@@ -84,6 +88,10 @@ public class SpecialBlock {
 	
 	public boolean isRightChest(){
 		return DOUBLECHEST;
+	}
+	
+	public String getType(){
+		return BLOCKTYPE;
 	}
 	
 	public String getLine(int number){

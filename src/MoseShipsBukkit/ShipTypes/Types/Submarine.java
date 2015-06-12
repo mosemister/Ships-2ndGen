@@ -8,28 +8,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipTypes.VesselType;
-import MoseShipsBukkit.ShipTypes.NormalRequirements.Fuel;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlock;
 import MoseShipsBukkit.ShipTypes.NormalRequirements.RequiredBlockPercent;
-import MoseShipsBukkit.StillShip.SpecialBlock;
+import MoseShipsBukkit.ShipTypes.SubType.FuelVesselType;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Submarine extends VesselType implements Fuel, RequiredBlock, RequiredBlockPercent{
+public class Submarine extends FuelVesselType implements RequiredBlock, RequiredBlockPercent{
 
-	Map<Material, Byte> FUEL;
-	int FOUNDFUEL;
 	int PERCENT;
 	List<Material> REQUIREDBLOCK;
 	List<Material> MOVEINBLOCK;
@@ -59,6 +56,10 @@ public class Submarine extends VesselType implements Fuel, RequiredBlock, Requir
 		config.set("Config.Fuel.Fuels", fuels);
 		config.set("Config.Fuel.Consumption", getFuelTakeAmount());
 		config.set("Config.Speed.Engine", getDefaultSpeed());
+		Sign sign = vessel.getSign();
+		Location loc = vessel.getTeleportLocation();
+		config.set("Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+		config.set("Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
 		try{
 			configuration.save(file);
 		}catch(IOException e){
@@ -120,6 +121,7 @@ public class Submarine extends VesselType implements Fuel, RequiredBlock, Requir
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.WATER);
 		moveIn.add(Material.STATIONARY_WATER);
+		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
 		
 	}
@@ -170,27 +172,6 @@ public class Submarine extends VesselType implements Fuel, RequiredBlock, Requir
 	@Override
 	public void setRequiredBlock(List<Material> material) {
 		REQUIREDBLOCK = material;
-	}
-
-	@Override
-	public Map<Material, Byte> getFuel() {
-		return FUEL;
-	}
-
-	@Override
-	public int getFuelTakeAmount() {
-		return FOUNDFUEL;
-	}
-
-	@Override
-	public void setFuel(Map<Material, Byte> fuels) {
-		FUEL = fuels;
-		
-	}
-
-	@Override
-	public void setFuelTakeAmount(int A) {
-		FOUNDFUEL = A;
 	}
 
 	@Override
@@ -250,33 +231,6 @@ public class Submarine extends VesselType implements Fuel, RequiredBlock, Requir
 			}
 			return false;
 		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public int getFuelCount(Vessel vessel) {
-		int count = 0;
-		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
-			if (block.getBlock().getState() instanceof Furnace){
-				Furnace furnace = (Furnace)block.getBlock().getState();
-				ItemStack item = furnace.getInventory().getFuel();
-				if (item != null){
-					Map<Material, Byte> fuels = getFuel();
-					for (Entry<Material, Byte> fuel : fuels.entrySet()){
-						if (fuel.getKey().equals(item.getType())){
-							if (fuel.getValue() == -1){
-								count = (count + item.getAmount());
-							}else{
-								if (fuel.getValue() == item.getData().getData()){
-									count = (count + item.getAmount());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		return count;
 	}
 
 	@Override

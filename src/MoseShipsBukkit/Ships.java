@@ -53,6 +53,7 @@ public class Ships extends JavaPlugin{
 		MaterialsList.getMaterialsList().save();
 		activateCommands();
 		Messages.refreshMessages();
+		removeOldFiles();
 		//FlyThrough.activateFlyThrough();
 		ShipsAutoRuns.EOTMove();
 		for (VesselType type : VesselType.values()){
@@ -84,6 +85,25 @@ public class Ships extends JavaPlugin{
 			}
 			
 		}, 0);
+	}
+	
+	public void removeOldFiles(){
+		File config = new File("plugins/Ships/config.yml");
+		File messages = new File("plugins/Ships/DebugOptions.yml");
+		File materials = new File("plugins/Ships/Materials.yml");
+		File debug = new File("plugins/Ships/Messages.yml");
+		if (config.exists()){
+			config.delete();
+		}
+		if (messages.exists()){
+			messages.delete();
+		}
+		if (materials.exists()){
+			materials.delete();
+		}
+		if (debug.exists()){
+			debug.delete();
+		}
 	}
 	
 	public static void activateCommands(){
