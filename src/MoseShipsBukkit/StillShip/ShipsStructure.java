@@ -3,6 +3,7 @@ package MoseShipsBukkit.StillShip;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
@@ -11,12 +12,16 @@ import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
 public class ShipsStructure {
 	
 	List<Block> PRI_BLOCKS = new ArrayList<Block>();
 	List<Block> STA_BLOCKS = new ArrayList<Block>();
 	List<SpecialBlock> SPE_BLOCKS = new ArrayList<SpecialBlock>();
+	List<Block> AIR_BLOCKS = new ArrayList<Block>();
 	
 	@SuppressWarnings("deprecation")
 	public ShipsStructure(List<Block> blocks){
@@ -55,10 +60,12 @@ public class ShipsStructure {
 				if (block.getState() instanceof Sign){
 					SpecialBlock block2 = new SpecialBlock((Sign)block.getState());
 					SPE_BLOCKS.add(block2);
+				}else{
+					PRI_BLOCKS.add(block);
 				}
-				PRI_BLOCKS.add(block);
 			}
 			else if ((id == 23) ||
+					(id == 63) || 
 					(id == 54) || 
 					(id == 61) || 
 					(id == 62) || 
@@ -101,6 +108,7 @@ public class ShipsStructure {
 				STA_BLOCKS.add(block);
 			}
 		}
+		injectAllInbetweenAir();
 	}
 
 	public List<Block> getPriorityBlocks(){
@@ -115,6 +123,38 @@ public class ShipsStructure {
 		return SPE_BLOCKS;
 	}
 	
+	public List<Block> getAirBlocks(){
+		return AIR_BLOCKS;
+	}
+	
+	public void injectAllInbetweenAir(){
+		for(Block block : getAllBlocks()){
+			List<Block> blocks = getInbetweenAir(block);
+			if(blocks != null){
+				for(Block block2 : blocks){
+					if (block2.getType().equals(Material.AIR)){
+						AIR_BLOCKS.add(block2);
+					}
+				}
+			}
+		}
+	}
+	
+	public List<Block> getInbetweenAir(Block block){
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+		List<Block> blocks = new ArrayList<Block>();
+		int gap = config.getInt("Structure.StructureLimits.airCheckGap");
+		for(int A = 1; A < gap; A++){
+			Block block2 = block.getRelative(0, -A, 0);
+			if (getAllBlocks().contains(block2)){
+				return blocks;
+			}else if(block2.getType().equals(Material.AIR)){
+				blocks.add(block2);
+			}
+		}
+		return null;
+	}
+	
 	public List<Block> getAllBlocks(){
 		List<Block> blocks = new ArrayList<Block>();
 		blocks.addAll(STA_BLOCKS);
@@ -122,6 +162,7 @@ public class ShipsStructure {
 		for(SpecialBlock block : SPE_BLOCKS){
 			blocks.add(block.getBlock());
 		}
+		blocks.addAll(AIR_BLOCKS);
 		return blocks;
 	}
 }

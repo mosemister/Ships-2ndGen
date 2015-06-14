@@ -176,6 +176,17 @@ public class Submarine extends FuelVesselType implements RequiredBlock, Required
 
 	@Override
 	public boolean CheckRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
+		if (move.equals(MovementMethod.MOVE_UP)){
+			List<Material> material = new ArrayList<Material>();
+			material.add(Material.WATER);
+			material.add(Material.STATIONARY_WATER);
+			if (!this.isMaterialTouchingMovingTo(blocks, material, false)){
+				if (player != null){
+					player.sendMessage(Ships.runShipsMessage("Can not move out the water", true));
+				}
+				return false;
+			}
+		}
 		if (blocks.size() <= getMaxBlocks()){
 			if (blocks.size() >= getMinBlocks()){
 				if (this.isMaterialInMovingTo(blocks, getMoveInMaterials())){
@@ -183,14 +194,21 @@ public class Submarine extends FuelVesselType implements RequiredBlock, Required
 						if (move.equals(MovementMethod.MOVE_DOWN)){
 							return true;
 						}else{
-							if (this.checkFuel(getFuel(), vessel, getFuelTakeAmount())){
-								this.takeFuel(getFuel(), vessel, getFuelTakeAmount());
-								return true;
+							if (vessel.getStructure().getAirBlocks().size() != 0){
+								if (this.checkFuel(getFuel(), vessel, getFuelTakeAmount())){
+									this.takeFuel(getFuel(), vessel, getFuelTakeAmount());
+									return true;
+								}else{
+									if (player != null){
+										if (Messages.isEnabled()){
+											player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
+										}
+									}
+									return false;
+								}
 							}else{
 								if (player != null){
-									if (Messages.isEnabled()){
-										player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
-									}
+									player.sendMessage(Ships.runShipsMessage("No roof detected.", true));
 								}
 								return false;
 							}

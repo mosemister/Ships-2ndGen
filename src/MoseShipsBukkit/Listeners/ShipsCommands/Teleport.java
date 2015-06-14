@@ -39,5 +39,4 @@ public class Teleport extends CommandLauncher{
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
 		
 	}
-
 }

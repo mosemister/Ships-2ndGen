@@ -89,5 +89,4 @@ public class Developer extends CommandLauncher{
 		}
 		return;
 	}
-	
 }

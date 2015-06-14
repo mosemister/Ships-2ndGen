@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceInventory;
@@ -88,6 +90,32 @@ public abstract class VesselType implements VesselDefaults{
 	
 	public boolean isAutoPilotAllowed(){
 		return ISAUTOPILOTALLOWED;
+	}
+	
+	//checks if the new location is touching a list of materials
+	public boolean isMaterialTouchingMovingTo(List<MovingBlock> blocks, List<Material> material, boolean includeHeight){
+		for(MovingBlock block : blocks){
+			for(int X = -1; X < 2; X++){
+				for(int Z = -1; Z < 2; Z++){
+					if (includeHeight){
+						for(int Y = -1; Y < 2; Y++){
+							Block block2 = block.getMovingTo().getBlock().getRelative(X, Y, Z);
+							if (material.contains(block2.getType())){
+								Bukkit.getConsoleSender().sendMessage("Block: " + block2.getType());
+								return true;
+							}
+						}
+					}else{
+						Block block2 = block.getMovingTo().getBlock().getRelative(X, 0, Z);
+						if (material.contains(block2.getType())){
+							Bukkit.getConsoleSender().sendMessage("Block: " + block2.getType());
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	//checks if the vessel is going to be moving into a select few blocks, returns true if vessel is moving into at least 1 material value

@@ -69,6 +69,27 @@ public enum MovementMethod {
 	
 	public static MovementMethod getMovingDirection(Vessel vessel, BlockFace blockface){
 		BlockFace vesselFace = vessel.getFacingDirection();
+		if (blockface.equals(BlockFace.EAST_NORTH_EAST)){
+			blockface = BlockFace.EAST;
+		}else if (blockface.equals(BlockFace.EAST_SOUTH_EAST)){
+			blockface = BlockFace.EAST;
+		}else if (blockface.equals(BlockFace.NORTH_EAST)){
+			blockface = BlockFace.NORTH;
+		}else if (blockface.equals(BlockFace.NORTH_NORTH_EAST)){
+			blockface = BlockFace.NORTH;
+		}else if (blockface.equals(BlockFace.NORTH_NORTH_WEST)){
+			blockface = BlockFace.NORTH;
+		}else if (blockface.equals(BlockFace.SOUTH_EAST)){
+			blockface = BlockFace.SOUTH;
+		}else if (blockface.equals(BlockFace.SOUTH_SOUTH_EAST)){
+			blockface = BlockFace.SOUTH;
+		}else if (blockface.equals(BlockFace.SOUTH_SOUTH_WEST)){
+			blockface = BlockFace.SOUTH;
+		}else if (blockface.equals(BlockFace.WEST_NORTH_WEST)){
+			blockface = BlockFace.WEST;
+		}else if (blockface.equals(BlockFace.WEST_SOUTH_WEST)){
+			blockface = BlockFace.WEST;
+		}
 		if (vesselFace.equals(blockface)){
 			return MovementMethod.MOVE_FORWARD;
 		}else if (vesselFace.getOppositeFace().equals(blockface)){

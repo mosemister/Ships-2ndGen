@@ -247,6 +247,12 @@ public class Vessel extends CustomDataStore{
 	
 	public boolean moveVessel(MovementMethod move, int speed, Player player){
 		if ((player == null) || (player.hasPermission("ships." + getName() + ".use")) || (player.hasPermission("ships." + getVesselType().getName() + ".use")) || (player.hasPermission("ships.*.use"))){
+			if (move == null){
+				if (player != null){
+					player.sendMessage(Ships.runShipsMessage("Can not translate block into move", false));
+					return false;
+				}
+			}
 			if (speed != 0){
 				move.setSpeed(speed);
 			}
@@ -278,6 +284,19 @@ public class Vessel extends CustomDataStore{
 				}
 			}
 			for (Block block : STRUCTURE.getStandardBlocks()){
+				MovingBlock block2 = new MovingBlock(block, this, move);
+				if (isBlocked(block2)){
+					if (player != null){
+						if (Messages.isEnabled()){
+							player.sendMessage(Ships.runShipsMessage(Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
+					}
+					return false;
+				}else{
+					blocks.add(block2);
+				}
+			}
+			for (Block block : STRUCTURE.getAirBlocks()){
 				MovingBlock block2 = new MovingBlock(block, this, move);
 				if (isBlocked(block2)){
 					if (player != null){
@@ -447,6 +466,10 @@ public class Vessel extends CustomDataStore{
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			blocks.add(block2);
 		}
+		for (Block block : STRUCTURE.getAirBlocks()){
+			MovingBlock block2 = new MovingBlock(block, this, move);
+			blocks.add(block2);
+		}
 		forceMove(move, blocks);
 	}
 	
@@ -459,17 +482,11 @@ public class Vessel extends CustomDataStore{
 			MovingBlock block = blocks.get(A);
 			if (block.getSpecialBlock() != null){
 				clearInventory(block);
-				if (block.getBlock().getLocation().getY() > config.getInt("World.defaultWaterLevel")){
-					block.getBlock().setType(Material.AIR);
-				}else{
-					block.getBlock().setType(Material.STATIONARY_WATER);
-				}
+			}
+			if (block.getBlock().getLocation().getY() > config.getInt("World.defaultWaterLevel")){
+				block.getBlock().setType(Material.AIR);
 			}else{
-				if (block.getBlock().getLocation().getY() > config.getInt("World.defaultWaterLevel")){
-					block.getBlock().setType(Material.AIR);
-				}else{
-					block.getBlock().setType(Material.STATIONARY_WATER);
-				}
+				block.getBlock().setType(Material.STATIONARY_WATER);
 			}
 		}
 		//place all blocks (priority last)

@@ -279,7 +279,5 @@ public class Plane extends FuelVesselType implements RequiredBlock, RequiredBloc
 	@Override
 	public void setRequiredBlock(List<Material> material) {
 		REQUIREDBLOCKS = material;
-		
 	}
-
 }

@@ -1,5 +1,5 @@
 name: Ships
-version: 5.0.0.3
+version: 5.0.1.0
 main: MoseShipsBukkit.Ships
 softdepend:
   - WGCustomFlags

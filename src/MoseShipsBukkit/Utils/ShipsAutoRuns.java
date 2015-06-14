@@ -89,5 +89,4 @@ public class ShipsAutoRuns {
 			
 		}, 0, config.getInt("Structure.Signs.AutoPilot.repeat"));
 	}
-
 }

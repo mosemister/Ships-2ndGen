@@ -20,5 +20,4 @@ public class MaterialItem {
 	public byte getData(){
 		return DATA;
 	}
-
 }

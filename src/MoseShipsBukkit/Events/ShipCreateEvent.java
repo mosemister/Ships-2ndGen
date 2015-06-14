@@ -52,5 +52,4 @@ public class ShipCreateEvent extends Event implements Cancellable {
 	public static HandlerList getHandlerList(){
 		return HANDLERS;
 	}
-
 }

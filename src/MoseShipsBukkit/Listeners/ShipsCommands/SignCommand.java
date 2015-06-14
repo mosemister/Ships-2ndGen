@@ -121,6 +121,4 @@ public class SignCommand extends CommandLauncher{
 	@Override
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
 	}
-	
-
 }

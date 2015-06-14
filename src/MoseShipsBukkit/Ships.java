@@ -7,11 +7,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -131,25 +131,27 @@ public class Ships extends JavaPlugin{
 		STACK = new BlockStack();
 		count = 0;
 		prototype2(block);
-		List<Block> stack = STACK.getList();
-		return stack;
+		if (STACK.isVaild()){
+			List<Block> stack = STACK.getList();		
+			return stack;
+		}
+		return new ArrayList<Block>();
 	}
 	
 	//This gets every block connected, It can be abnormal so the count attempts to control it. I called it Prototype for a good reason.
 	@SuppressWarnings("deprecation")
 	static void prototype2(Block block){
-		//this /attempts/ to cap the variable scan at 500, I have seen that it caps the block limmit at 500 but the method is still ran afterwards
-		//for a good while. If you find another way to do this that is more efficent then this way, please contact me asap
+		//this /attempts/ to cap the variable scan at 500, I have seen that it caps the block limit at 500 but the method is still ran afterwards
+		//for a good while. If you find another way to do this that is more efficient then this way, please contact me asap
 		if (count > 500){
 			return;
 		}
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		count++;
 		for(int X = -1; X < 2; X++){
 			for(int Y = -1; Y < 2; Y++){
 				for(int Z = -1; Z < 2; Z++){
 					Block block2 = block.getRelative(X, Y, Z);
-					if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true)) || ((block2.getLocation().getY() <= config.getInt("World.defaultWaterLevel")) && (block2.getType().equals(Material.AIR)))){
+					if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))){
 						if (!STACK.contains(block2)){
 							STACK.addBlock(block2);
 							prototype2(block2);

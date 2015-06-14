@@ -9,6 +9,9 @@
 #to change a few more features other then enabling the plugin support.
 
 Structure:
+  StructureLimits:
+    #This is the limit to the checking tool for air. The higher this value is the taller your WaterBasedVessels can be, but at the cost of server power resources.
+    airCheckGap: 120
   Signs:
     #This will force the owners name on the licence sign. It is
     #updated when the vessel moves.

@@ -42,7 +42,5 @@ public class MovingStructure extends ShipsStructure{
 		blocks.addAll(getSpecialMovingBlocks());
 		blocks.addAll(getStandardMovingBlocks());
 		return blocks;
-		
 	}
-
 }

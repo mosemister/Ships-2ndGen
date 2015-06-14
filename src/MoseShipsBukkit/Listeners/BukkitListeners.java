@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
 import org.bukkit.block.Dropper;
@@ -300,13 +301,19 @@ public class BukkitListeners implements Listener {
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 					}else{
 						org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
-						if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")){
-							vessel.moveVessel(MovementMethod.getMovingDirection(vessel, sign2.getAttachedFace()), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+						BlockFace face;
+						if (sign2.isWallSign()){
+							face = sign2.getAttachedFace();
 						}else{
-							if (Direction.getDirection(vessel.getSign().getWorld()).getDirection().equals(sign2.getAttachedFace())){
-								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, sign2.getAttachedFace()), vessel.getVesselType().getDefaultBoostSpeed(), event.getPlayer());
+							face = sign2.getFacing().getOppositeFace();
+						}
+						if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")){
+							vessel.moveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+						}else{
+							if (Direction.getDirection(vessel.getSign().getWorld()).getDirection().equals(face)){
+								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultBoostSpeed(), event.getPlayer());
 							}else{
-								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, sign2.getAttachedFace()), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
 							}
 						}
 					}
@@ -346,5 +353,4 @@ public class BukkitListeners implements Listener {
 			}
 		}
 	}
-
 }
