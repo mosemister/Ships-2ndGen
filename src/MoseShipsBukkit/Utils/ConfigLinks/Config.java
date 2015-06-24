@@ -117,6 +117,10 @@ public class Config {
 		File file = getFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (file.exists()){
+			int curVersion = getConfigVersionInt();
+			if (curVersion > 5010){
+				config.set("Structure.airCheckGap", 120);
+			}
 			//compare version then update
 			config.set("Version", getLatestVersionString());
 			try {
@@ -136,6 +140,8 @@ public class Config {
 			}
 		}
 	}
+	
+	
 	
 	public static Config getConfig(){
 		return CONFIG;

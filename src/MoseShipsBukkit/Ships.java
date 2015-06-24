@@ -143,7 +143,9 @@ public class Ships extends JavaPlugin{
 	static void prototype2(Block block){
 		//this /attempts/ to cap the variable scan at 500, I have seen that it caps the block limit at 500 but the method is still ran afterwards
 		//for a good while. If you find another way to do this that is more efficient then this way, please contact me asap
-		if (count > 500){
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+		int limit = config.getInt("Structure.StructureLimits.trackLimit");
+		if (count > limit){
 			return;
 		}
 		count++;

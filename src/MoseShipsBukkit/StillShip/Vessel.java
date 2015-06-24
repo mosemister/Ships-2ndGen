@@ -664,7 +664,13 @@ public class Vessel extends CustomDataStore{
 		ShipsStructure structure = new ShipsStructure(Ships.getBaseStructure(getSign().getBlock()));
 		setStructure(structure);
 		org.bukkit.material.Sign sign = (org.bukkit.material.Sign)getSign().getData();
-		setFacingDirection(sign.getAttachedFace());
+		BlockFace face;
+		if (sign.isWallSign()){
+			face = sign.getAttachedFace();
+		}else{
+			face = sign.getFacing().getOppositeFace();
+		}
+		setFacingDirection(face);
 	}
 	
 	public void updateLocation(Location loc, Sign sign){

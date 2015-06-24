@@ -12,6 +12,8 @@ Structure:
   StructureLimits:
     #This is the limit to the checking tool for air. The higher this value is the taller your WaterBasedVessels can be, but at the cost of server power resources.
     airCheckGap: 120
+    #This limits the size of all vessels, higher it goes, the more server resources you needed
+    trackLimit: 5000
   Signs:
     #This will force the owners name on the licence sign. It is
     #updated when the vessel moves.
