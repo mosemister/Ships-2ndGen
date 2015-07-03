@@ -66,7 +66,7 @@ public class Config {
 	}
 	
 	public boolean containsIgnoreList(int lastest){
-		Integer[] list = {5001, 5002, 5003, 5004, 5005};
+		Integer[] list = {5010};
 		for (int A : list){
 			if (lastest == A){
 				return true;
@@ -120,6 +120,7 @@ public class Config {
 			int curVersion = getConfigVersionInt();
 			if (curVersion > 5010){
 				config.set("Structure.airCheckGap", 120);
+				config.set("Structure.trackLimit", 5000);
 			}
 			//compare version then update
 			config.set("Version", getLatestVersionString());
@@ -140,8 +141,6 @@ public class Config {
 			}
 		}
 	}
-	
-	
 	
 	public static Config getConfig(){
 		return CONFIG;
