@@ -28,7 +28,7 @@ import MoseShipsBukkit.Listeners.ShipsCommands.Info;
 import MoseShipsBukkit.Listeners.ShipsCommands.Reload;
 import MoseShipsBukkit.Listeners.ShipsCommands.SignCommand;
 import MoseShipsBukkit.Listeners.ShipsCommands.Teleport;
-import MoseShipsBukkit.ShipTypes.VesselType;
+import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.BlockStack;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
@@ -55,14 +55,23 @@ public class Ships extends JavaPlugin{
 		Messages.refreshMessages();
 		removeOldFiles();
 		//FlyThrough.activateFlyThrough();
-		ShipsAutoRuns.EOTMove();
 		for (VesselType type : VesselType.values()){
 			type.loadDefault();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		if (config.getBoolean("AutoPilot.enabled")){
+		
+		if (config.getBoolean("Structure.Signs.AutoPilot.enabled")){
 			ShipsAutoRuns.AutoMove();
 			new AutoPilot();
+		}
+		if (config.getBoolean("Structure.Signs.EOT.enabled")){
+			ShipsAutoRuns.EOTMove();
+		}
+		if (config.getBoolean("Structure.Sign.Cell.enabled")){
+			ShipsAutoRuns.SolorCell();
+		}
+		if (config.getBoolean("World.Physics.VesselFallOutSky")){
+			ShipsAutoRuns.fallOutSky();
 		}
 		afterBoot();
 	}
@@ -130,6 +139,7 @@ public class Ships extends JavaPlugin{
 	public static List<Block> getBaseStructure(Block block){
 		STACK = new BlockStack();
 		count = 0;
+		STACK.addBlock(block);
 		prototype2(block);
 		if (STACK.isVaild()){
 			List<Block> stack = STACK.getList();		
@@ -149,23 +159,19 @@ public class Ships extends JavaPlugin{
 			return;
 		}
 		count++;
-		for(int X = -1; X < 2; X++){
-			for(int Y = -1; Y < 2; Y++){
-				for(int Z = -1; Z < 2; Z++){
-					Block block2 = block.getRelative(X, Y, Z);
-					if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))){
-						if (!STACK.contains(block2)){
-							STACK.addBlock(block2);
-							prototype2(block2);
-							break;
-						}
-					}
+		BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
+		for(BlockFace face : faces){
+			Block block2 = block.getRelative(face);
+			if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))){
+				if (!STACK.contains(block2)){
+					STACK.addBlock(block2);
+					prototype2(block2);
 				}
-			}
+			}	
 		}
 	}
 	
-	//never know when it could be usful ;)
+	//never know when it could be useful ;)
 	public static BlockFace getPlayerFacingDirection(Player player){
 		float yaw = player.getLocation().getYaw();
 		if ((yaw >= 45) && (yaw < 135)){

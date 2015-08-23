@@ -1,6 +1,8 @@
 package MoseShipsBukkit.Utils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -14,28 +16,27 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.ShipTypes.VesselType;
+import MoseShipsBukkit.ShipsTypes.VesselType;
+import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.StillShip.Vessel;
 
 public class VesselLoader {
 	
 	public static void loadVessels(){
+		CommandSender sender = (CommandSender)Bukkit.getConsoleSender();
+		List<String> success = new ArrayList<String>();
 		File folder = new File("plugins/Ships/VesselData/");
 		File[] files = folder.listFiles();
 		if (files != null){
 			for(File file : files){
 				if (!file.getName().contains(".yml~")){
-					CommandSender sender = (CommandSender)Bukkit.getConsoleSender();
-					if (classicLoader(file)){
-						sender.sendMessage(Ships.runShipsMessage("Classic vessel loaded (" + file.getName().replace(".yml", "") + ")", false));
-					}else if (newLoader(file)){
-						sender.sendMessage(Ships.runShipsMessage("vessel loaded (" + file.getName().replace(".yml", "") + ")", false));
-					}else{
-						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(file.getAbsolutePath() + " can not be loaded due to a unknown reason", true));
+					if ((classicLoader(file)) || (newLoader(file))){
+						success.add(file.getName().replace(".yml", ""));
 					}
 				}
 			}
 		}
+		sender.sendMessage(Ships.runShipsMessage("Loaded the following vessels; " + success, false));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -77,14 +78,16 @@ public class VesselLoader {
 							String typeStringFix = typeString.replace("2", "");
 							VesselType type = VesselType.getTypeByName(typeStringFix);
 							if (type != null){
+								if (type instanceof ClassicVessel){
 								type.setDefaultSpeed(engine);
 								type.setMaxBlocks(max);
 								type.setMinBlocks(min);
 								Vessel vessel = new Vessel(sign, name, type, owner, loc);
-								vessel.getVesselType().loadFromClassicVesselFile(vessel, file);
+								((ClassicVessel)vessel.getVesselType()).loadVesselFromClassicFile(vessel, file);
 								file.delete();
 								vessel.save();
 								return true;
+								}
 							}else{
 								Bukkit.getConsoleSender().sendMessage(ChatColor.RED + sign.getLine(1) + " is no longer supported in Ships 5");
 							}
@@ -125,22 +128,22 @@ public class VesselLoader {
 								type.setDefaultSpeed(engine);
 								type.setMaxBlocks(max);
 								type.setMinBlocks(min);
-								type.loadFromNewVesselFile(vessel, file);
+								type.loadVesselFromFiveFile(vessel, file);
 								return true;
 							}else{
-								sender.sendMessage("Vesseltype failed");
+								sender.sendMessage(Ships.runShipsMessage("VesselType Loader: " + name + " has not loaded. This is because " + vesselTypeS + " has not loaded into Ships VesselType data system. This is a programming issue", true));
 							}
 						}else{
-							sender.sendMessage("sign location failed");
+							sender.sendMessage(Ships.runShipsMessage("VesselType Loader: " + name + " sign can not be located", true));
 						}
 					}else{
-						sender.sendMessage("teleport location = null");
+						sender.sendMessage(Ships.runShipsMessage("VesselType Loader: " + name + " teleport location has failed to load. Check config for 'Teleport' co-ods", true));
 					}
 				}else{
-					sender.sendMessage("sign location = null");
+					sender.sendMessage(Ships.runShipsMessage("VesselType Loader: " + name + " sign location has failed to load. Check config for 'Sign' co-ods", true));
 				}
 			}else{
-				sender.sendMessage("vesseltype = null");
+				sender.sendMessage(Ships.runShipsMessage("VesselType Loader: " + name + " VesselType has not been found in data file. Check config for 'Type'", true));
 			}
 		}catch(IllegalArgumentException e){
 		}

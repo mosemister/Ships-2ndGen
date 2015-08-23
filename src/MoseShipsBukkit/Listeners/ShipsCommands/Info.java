@@ -28,6 +28,8 @@ public class Info extends CommandLauncher{
 		player.sendMessage(getFormat("Chairs Reloaded Support", "" + config.getBoolean("ChairsReloadedSupport.enabled")));
 		player.sendMessage(getFormat("Vault Support", "" + config.getBoolean("VaultSupport.enabled")));
 		player.sendMessage(getFormat("Worlds wind direction", Direction.getDirection(player.getWorld()).getDirection().name()));
+		player.sendMessage(getFormat("Ships track limit", config.getInt("Structure.StructureLimits.trackLimit")));
+		player.sendMessage(getFormat("Submarine air check limit", config.getInt("Structure.StructureLimits.airCheckGap")));
 		player.sendMessage(ChatColor.GOLD + "---[Protected Vessels]---");
 		player.sendMessage(getFormat("Block Break", "" + config.getBoolean("World.ProtectedVessels.BlockBreak")));
 		player.sendMessage(getFormat("Inventory Protect", "" + config.getBoolean("World.ProtectedVessels.InventoryOpen")));
@@ -50,6 +52,8 @@ public class Info extends CommandLauncher{
 		sender.sendMessage(getFormat("Grief Prevention Support", "" + config.getBoolean("GriefPreventionPluginSupport.enabled")));
 		sender.sendMessage(getFormat("Chairs Reloaded Support", "" + config.getBoolean("ChairsReloadedSupport.enabled")));
 		sender.sendMessage(getFormat("Vault Support", "" + config.getBoolean("VaultSupport.enabled")));
+		sender.sendMessage(getFormat("Ships track limit", config.getInt("Structure.StructureLimits.trackLimit")));
+		sender.sendMessage(getFormat("Submarine air check limit", config.getInt("Structure.StructureLimits.airCheckGap")));
 		sender.sendMessage(ChatColor.GOLD + "---[Protected Vessels]---");
 		sender.sendMessage(getFormat("Block Break", "" + config.getBoolean("World.ProtectedVessels.BlockBreak")));
 		sender.sendMessage(getFormat("Inventory Protect", "" + config.getBoolean("World.ProtectedVessels.InventoryOpen")));
@@ -66,7 +70,7 @@ public class Info extends CommandLauncher{
 		
 	}
 	
-	public static String getFormat(String message, String result){
+	public static String getFormat(String message, Object result){
 		String ret = ChatColor.GOLD + "[" + message + "] " + ChatColor.AQUA + result;
 		return ret;
 	}

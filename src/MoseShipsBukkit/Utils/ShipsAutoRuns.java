@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.ShipTypes.SubType.FuelVesselType;
+import MoseShipsBukkit.ShipsTypes.HookTypes.Cell;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
@@ -18,17 +18,32 @@ public class ShipsAutoRuns {
 	
 	public static HashMap<Vessel, Player> EOTAUTORUN = new HashMap<Vessel, Player>();
 	
+	public static void SolorCell(){
+		final YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable(){
+
+			@Override
+			public void run() {
+				for(Vessel vessel : Vessel.getVessels()){
+					if(vessel.getVesselType() instanceof Cell){
+						Cell plates = (Cell)vessel.getVesselType();
+						plates.addCellPower();
+					}
+				}
+				
+			}
+			
+		}, 0, config.getInt("Structure.Signs.Cell.repeat"));
+	}
+	
 	public static void fallOutSky(){
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable(){
 
 			@Override
 			public void run() {
 				for(Vessel vessel : Vessel.getVessels()){
-					if (vessel.getVesselType() instanceof FuelVesselType){
-						FuelVesselType vesselType = (FuelVesselType)vessel.getVesselType();
-						if (vesselType.getFuelCount(vessel) == 0){
-							vessel.moveVessel(MovementMethod.MOVE_DOWN, 1, null);
-						}
+					if (vessel.getVesselType().shouldFall(vessel)){
+						vessel.moveVessel(MovementMethod.MOVE_DOWN, 1, null);
 					}
 				}
 				

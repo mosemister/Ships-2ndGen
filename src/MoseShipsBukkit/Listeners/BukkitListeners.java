@@ -30,7 +30,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Events.ShipCreateEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.ShipTypes.VesselType;
+import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.Vessel;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
@@ -52,7 +52,6 @@ public class BukkitListeners implements Listener {
 				}
 			}
 		}
-		
 	}
 	
 	@EventHandler
@@ -167,7 +166,7 @@ public class BukkitListeners implements Listener {
 	public static void signCreation(SignChangeEvent event){
 		//Ships sign
 		if (event.getLine(0).equalsIgnoreCase("[Ships]")){
-			VesselType type = VesselType.getTypeByName(event.getLine(1));
+			VesselType type = VesselType.getTypeByName(event.getLine(1)).clone();
 			if (type != null){
 				if ((event.getPlayer().hasPermission("ships." + type.getName() + ".make")) || (event.getPlayer().hasPermission("ships.*.make")) || (event.getPlayer().hasPermission("ships.*"))){
 					if (Vessel.getVessel(event.getLine(2)) == null){
@@ -225,6 +224,12 @@ public class BukkitListeners implements Listener {
 			event.setLine(2, "-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-");
 			return;
 		}
+		//CELL
+		if (event.getLine(0).equalsIgnoreCase("[Cell]")){
+			event.setLine(0, ChatColor.YELLOW + "[Cell]");
+			event.setLine(1, ChatColor.GREEN + "0");
+			return;
+		}
 	}
 	
 	@EventHandler
@@ -262,6 +267,7 @@ public class BukkitListeners implements Listener {
 						vessel.moveVessel(MovementMethod.MOVE_DOWN, 1, event.getPlayer());
 					}
 				}
+				//EOT SIGN
 				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[E.O.T]")){
 					if (sign.getLine(1).equals("-[" + ChatColor.GREEN + "AHEAD" + ChatColor.BLACK + "]-")){
 						sign.setLine(1, ChatColor.GREEN + "AHEAD");
@@ -347,7 +353,11 @@ public class BukkitListeners implements Listener {
 						event.getPlayer().sendMessage(Ships.runShipsMessage("A issue has occured. Sign is not licenced", false));
 						sign.getBlock().breakNaturally();
 					}else{
-						event.getPlayer().sendMessage(Ships.runShipsMessage("Vessel is owned by " + vessel.getOwner().getName(), false));
+						if (vessel.getOwner().equals(event.getPlayer())){
+							vessel.displayInfo(event.getPlayer());
+						}else{
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Vessel is owned by " + vessel.getOwner().getName(), false));
+						}
 					}
 				}
 			}

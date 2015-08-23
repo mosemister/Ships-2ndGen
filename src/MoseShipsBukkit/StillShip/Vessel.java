@@ -36,7 +36,8 @@ import MoseShipsBukkit.Events.ShipMovingEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.MovingShip.MovingStructure;
-import MoseShipsBukkit.ShipTypes.VesselType;
+import MoseShipsBukkit.ShipsTypes.VesselType;
+import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
 import MoseShipsBukkit.Utils.BlockConverter;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
@@ -383,7 +384,7 @@ public class Vessel extends CustomDataStore{
 					}
 				}
 			}
-			if (this.getVesselType().CheckRequirements(this, move, blocks, player)){
+			if (this.getVesselType().checkRequirements(this, move, blocks, player)){
 				MovingStructure structure = new MovingStructure(blocks);
 				this.setStructure(structure);
 				ShipMovingEvent event = new ShipMovingEvent(player, this, move, structure);
@@ -704,7 +705,7 @@ public class Vessel extends CustomDataStore{
 		return blocks;
 	}
 	
-	public int getLength(boolean updateStructure){
+	public int getLength(boolean updateStructure) throws IOException{
 		if (updateStructure){
 			updateStructure();
 		}
@@ -712,52 +713,64 @@ public class Vessel extends CustomDataStore{
 		if ((getFacingDirection().equals(BlockFace.NORTH) || (getFacingDirection().equals(BlockFace.SOUTH)))){
 			int maxHeight = blocks.get(0).getX();
 			int minHeight = blocks.get(0).getX();
-			for(Block block : blocks){
-				if (block.getX() > maxHeight){
-					maxHeight = block.getX();
+			try{
+				for(Block block : blocks){
+					if (block.getX() > maxHeight){
+						maxHeight = block.getX();
+					}
+					if (block.getX() < minHeight){
+						minHeight = block.getX();
+					}
 				}
-				if (block.getX() < minHeight){
-					minHeight = block.getX();
-				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
 			}
 			int result = maxHeight - minHeight;
 			return result;
 		}else{
 			int maxHeight = blocks.get(0).getZ();
 			int minHeight = blocks.get(0).getZ();
-			for(Block block : blocks){
-				if (block.getZ() > maxHeight){
-					maxHeight = block.getZ();
+			try{
+				for(Block block : blocks){
+					if (block.getZ() > maxHeight){
+						maxHeight = block.getZ();
+					}
+					if (block.getZ() < minHeight){
+						minHeight = block.getZ();
+					}
 				}
-				if (block.getZ() < minHeight){
-					minHeight = block.getZ();
-				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
 			}
 			int result = maxHeight - minHeight;
 			return result;
 		}
 	}
 	
-	public int getHeight(boolean updateStructure){
+	public int getHeight(boolean updateStructure) throws IOException{
 		if (updateStructure){
 			updateStructure();
 		}
 		List<Block> blocks = getStructure().getAllBlocks();
 		int maxHeight = blocks.get(0).getY();
 		int minHeight = blocks.get(0).getY();
-		for(Block block : blocks){
-			if (block.getY() > maxHeight){
-				maxHeight = block.getY();
+		try{
+			for(Block block : blocks){
+				if (block.getY() > maxHeight){
+					maxHeight = block.getY();
+				}
+				if (block.getY() < minHeight){
+					minHeight = block.getY();
+				}
 			}
-			if (block.getY() < minHeight){
-				minHeight = block.getY();
-			}
+		}catch(IndexOutOfBoundsException e){
+			throw new IOException("Need to update structure");
 		}
 		int result = maxHeight - minHeight;
 		return result;
 	}
 	
-	public int getWidth(boolean updateStructure){
+	public int getWidth(boolean updateStructure) throws IOException{
 		if (updateStructure){
 			updateStructure();
 		}
@@ -765,29 +778,51 @@ public class Vessel extends CustomDataStore{
 		if ((getFacingDirection().equals(BlockFace.WEST) || (getFacingDirection().equals(BlockFace.EAST)))){
 			int maxHeight = blocks.get(0).getX();
 			int minHeight = blocks.get(0).getX();
-			for(Block block : blocks){
-				if (block.getX() > maxHeight){
-					maxHeight = block.getX();
+			try{
+				for(Block block : blocks){
+					if (block.getX() > maxHeight){
+						maxHeight = block.getX();
+					}
+					if (block.getX() < minHeight){
+						minHeight = block.getX();
+					}
 				}
-				if (block.getX() < minHeight){
-					minHeight = block.getX();
-				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
 			}
 			int result = maxHeight - minHeight;
 			return result;
 		}else{
 			int maxHeight = blocks.get(0).getZ();
 			int minHeight = blocks.get(0).getZ();
-			for(Block block : blocks){
-				if (block.getZ() > maxHeight){
-					maxHeight = block.getZ();
+			try{
+				for(Block block : blocks){
+					if (block.getZ() > maxHeight){
+						maxHeight = block.getZ();
+					}
+					if (block.getZ() < minHeight){
+						minHeight = block.getZ();
+					}
 				}
-				if (block.getZ() < minHeight){
-					minHeight = block.getZ();
-				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
 			}
 			int result = maxHeight - minHeight;
 			return result;
+		}
+	}
+	
+	public void displayInfo(Player player){
+		player.sendMessage(ChatColor.YELLOW + "[Type]" + ChatColor.AQUA + TYPE.getName());
+		if (TYPE instanceof Fuel){
+			for(Entry<Material, Byte> entry : ((Fuel)TYPE).getFuel().entrySet()){
+				if (entry.getValue() == -1){
+					player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + entry.getKey().name() + ":" + entry.getValue());
+				}else{
+					player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + entry.getKey().name());
+				}
+			}
+			player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + ((Fuel)TYPE).getTotalFuel(this));
 		}
 	}
 	
@@ -822,7 +857,7 @@ public class Vessel extends CustomDataStore{
 							type.setDefaultSpeed(engine);
 							type.setMaxBlocks(max);
 							type.setMinBlocks(min);
-							type.loadFromNewVesselFile(this, file);
+							type.loadVesselFromFiveFile(this, file);
 						}
 					}
 				}
