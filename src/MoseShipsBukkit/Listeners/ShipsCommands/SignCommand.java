@@ -83,12 +83,14 @@ public class SignCommand extends CommandLauncher{
 								player.sendMessage(Ships.runShipsMessage("[seconds] must be whole number", true));
 							}
 						}
+					}else{
+						player.sendMessage(Ships.runShipsMessage("Vessel not found on sign", true));
 					}
 				}else{
-					player.sendMessage(Ships.runShipsMessage("Ships sign must be on target block", true));
+					player.sendMessage(Ships.runShipsMessage("You must be looking at the ships sign", true));
 				}
 			}else{
-				player.sendMessage(Ships.runShipsMessage("Ships sign must be on target block", true));
+				player.sendMessage(Ships.runShipsMessage("You must be looking at the ships sign", true));
 			}
 		}else if (args[1].equalsIgnoreCase("Transfer")){
 			if (args.length >= 3){

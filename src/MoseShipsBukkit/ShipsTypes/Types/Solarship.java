@@ -53,49 +53,31 @@ public class Solarship extends VesselType implements Cell{
 	@Override
 	public boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player) {
 		VesselTypeUtils utils = new VesselTypeUtils();
-		if(blocks.size() >= getMinBlocks()){
-			if (blocks.size() <= getMaxBlocks()){
-				if (utils.isMovingInto(blocks, getMoveInMaterials())){
-					if (move.equals(MovementMethod.MOVE_DOWN)){
+		if (utils.isMovingInto(blocks, getMoveInMaterials())){
+			if (move.equals(MovementMethod.MOVE_DOWN)){
+				return true;
+			}else{
+				long time = vessel.getTeleportLocation().getWorld().getTime();
+				if (time > 13000){
+					if (getTotalCellPower(vessel) >= TAKE){
+						removeCellPower(vessel);
 						return true;
 					}else{
-						long time = vessel.getTeleportLocation().getWorld().getTime();
-						if (time > 13000){
-							if (getTotalCellPower(vessel) >= TAKE){
-								removeCellPower(vessel);
-								return true;
-							}else{
-								if (player != null){
-									if (Messages.isEnabled()){
-										player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
-									}
-								}
-								return false;
+						if (player != null){
+							if (Messages.isEnabled()){
+								player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
 							}
-						}else{
-							return true;
 						}
+						return false;
 					}
 				}else{
-					if (player != null){
-						if (Messages.isEnabled()){
-							player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
-						}
-					}
-					return false;
+					return true;
 				}
-			}else{
-				if (player != null){
-					if (Messages.isEnabled()){
-						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
-					}
-				}
-				return false;
 			}
 		}else{
 			if (player != null){
 				if (Messages.isEnabled()){
-					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
 				}
 			}
 			return false;

@@ -116,7 +116,8 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 
 	@Override
 	public VesselType clone() {
-		Marsship mars =  (Marsship)this.clone();
+		Marsship mars =  new Marsship();
+		cloneVesselTypeData(mars);
 		mars.REQUIREDBLOCKS = REQUIREDBLOCKS;
 		mars.PERCENT = PERCENT;
 		return mars;

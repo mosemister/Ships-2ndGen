@@ -164,6 +164,8 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
+			air.setMaxBlocks(config.getInt("ShipsData.Config.Block.Max"));
+			air.setMinBlocks(config.getInt("ShipsData.Config.Block.Min"));
 			air.PERCENT = percent;
 			air.TAKE = consumption;
 			if (fuelsL.size() != 0){

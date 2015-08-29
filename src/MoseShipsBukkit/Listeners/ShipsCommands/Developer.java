@@ -20,29 +20,32 @@ public class Developer extends CommandLauncher{
 	public void playerCommand(Player player, String[] args) {
 	}
 
+	public void help(ConsoleCommandSender sender){
+		sender.sendMessage(ChatColor.GOLD + "/ships developer loadedVessels");
+		sender.sendMessage(ChatColor.GOLD + "/ships developer Vesseltypes");
+		sender.sendMessage(ChatColor.GOLD + "/ships developer CVesseltypes");
+		sender.sendMessage(ChatColor.GOLD + "/ships developer materialsList");
+		sender.sendMessage(ChatColor.GOLD + "/ships developer ramMaterials");
+		
+		sender.sendMessage(ChatColor.GOLD + "/ships developer all");
+	}
+	
 	@Override
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
 		if (args.length == 1){
-			sender.sendMessage(ChatColor.GOLD + "/ships developer loadedVessels");
-			sender.sendMessage(ChatColor.GOLD + "/ships developer Vesseltypes");
-			sender.sendMessage(ChatColor.GOLD + "/ships developer materialsList");
-			sender.sendMessage(ChatColor.GOLD + "/ships developer ramMaterials");
-			
-			sender.sendMessage(ChatColor.GOLD + "/ships developer all");
+			help(sender);
 		}else{
 			if (args[1].equalsIgnoreCase("loadedVessels")){
 				displayLoadedVessels(sender);
-			}
-			if (args[1].equalsIgnoreCase("Vesseltypes")){
+			}else if (args[1].equalsIgnoreCase("Vesseltypes")){
 				displayVesselTypes(sender);
-			}
-			if (args[1].equalsIgnoreCase("materialsList")){
+			}else if (args[1].equalsIgnoreCase("CVesseltypes")){
+				displayCustomVesselTypes(sender);
+			}else if (args[1].equalsIgnoreCase("materialsList")){
 				displayMaterialsList(sender);
-			}
-			if (args[1].equalsIgnoreCase("ramMaterials")){
+			}else if (args[1].equalsIgnoreCase("ramMaterials")){
 				displayRAMMaterialsList(sender);
-			}
-			if (args[1].equalsIgnoreCase("all")){
+			}else if (args[1].equalsIgnoreCase("all")){
 				sender.sendMessage("-----[LoadedVessels]-----");
 				displayLoadedVessels(sender);
 				sender.sendMessage("-----[Types]-----");
@@ -51,6 +54,7 @@ public class Developer extends CommandLauncher{
 				displayMaterialsList(sender);
 				sender.sendMessage("-----[RAM]-----");
 				displayRAMMaterialsList(sender);
+			}else{
 			}
 		}
 	}
@@ -79,6 +83,14 @@ public class Developer extends CommandLauncher{
 			sender.sendMessage(vessel.getName() + " | " + vessel.getVesselType().getName() + " | " + vessel.getOwner().getName() + " | " + (int)vessel.getTeleportLocation().getX() + "," + (int)vessel.getTeleportLocation().getY() + "," + (int)vessel.getTeleportLocation().getZ() + "," + vessel.getTeleportLocation().getWorld().getName());
 		}
 		sender.sendMessage("Total number of Vessels loaded: " + Vessel.getVessels().size());
+		return;
+	}
+	
+	public void displayCustomVesselTypes(ConsoleCommandSender sender){
+		sender.sendMessage("<Type> | <Normal speed>");
+		for(VesselType vessel : VesselType.customValues()){
+			sender.sendMessage(vessel.getName() + " | " + vessel.getDefaultSpeed());
+		}
 		return;
 	}
 	

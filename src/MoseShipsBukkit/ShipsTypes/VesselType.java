@@ -9,9 +9,11 @@ import javax.annotation.Nullable;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public abstract class VesselType{
 
@@ -98,6 +100,27 @@ public abstract class VesselType{
 		MAX_BLOCKS = A;
 	}
 	
+	public boolean attemptToMove(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player){
+		if(blocks.size() <= getMaxBlocks()){
+			if(blocks.size() >= getMinBlocks()){
+				return checkRequirements(vessel, move, blocks, player);
+			}else{
+				if (player != null){
+					if (Messages.isEnabled()){
+						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+					}
+				}
+				return false;
+			}
+		}else{
+			if (player != null){
+				if (Messages.isEnabled()){
+					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+				}
+			}
+			return false;
+		}
+	}
 	
 	//adds custom vessels to Ships (newer method)
 	public void inject(){
@@ -114,11 +137,6 @@ public abstract class VesselType{
 		return null;
 	}
 	
-	//adds custom vessels to Ships (older method)
-	public static void injectCustomVesselType(VesselType type){
-		CUSTOMVESSELS.add(type);
-	}
-	
 	//gets all the custom vesselTypes
 	public static List<VesselType> customValues(){
 		List<VesselType> types = CUSTOMVESSELS;
@@ -127,7 +145,8 @@ public abstract class VesselType{
 	
 	//gets all vesselTypes no matter if they are custom or not
 	public static List<VesselType> values(){
-		List<VesselType> types = CUSTOMVESSELS;
+		List<VesselType> types = new ArrayList<VesselType>();
+		types.addAll(CUSTOMVESSELS);
 		for(VesselTypes type : VesselTypes.values()){
 			types.add(type.get());
 		}

@@ -151,7 +151,8 @@ public class Plane extends VesselType implements Fuel, RequiredMaterial, Classic
 
 	@Override
 	public VesselType clone() {
-		Plane plane = (Plane)this.clone();
+		Plane plane = new Plane();
+		cloneVesselTypeData(plane);
 		plane.TAKE = TAKE;
 		plane.PERCENT = PERCENT;
 		plane.FUELS = FUELS;
@@ -205,10 +206,28 @@ public class Plane extends VesselType implements Fuel, RequiredMaterial, Classic
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void createConfig() {
-		// TODO Auto-generated method stub
-		
+		File file = getTypeFile();
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		config.set("Speed.Engine", 5);
+		config.set("Speed.Boost", 6);
+		config.set("Blocks.Max", 3750);
+		config.set("Blocks.Min", 1);
+		config.set("Blocks.requiredPercent", 50);
+		List<Integer> requiredBlocks = new ArrayList<Integer>();
+		requiredBlocks.add(42);
+		config.set("Blocks.requiredBlocks", requiredBlocks);
+		List<String> fuel = new ArrayList<String>();
+		fuel.add(Material.COAL_BLOCK.getId() + ",-1");
+		config.set("Fuel.Fuels", fuel);
+		config.set("Fuel.TakeAmount", 2);
+		try {
+			config.save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("deprecation")

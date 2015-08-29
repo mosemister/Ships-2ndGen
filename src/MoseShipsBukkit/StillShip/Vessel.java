@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -39,6 +38,7 @@ import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
 import MoseShipsBukkit.Utils.BlockConverter;
+import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
@@ -73,6 +73,21 @@ public class Vessel extends CustomDataStore{
 		type.save(this);
 	}
 	
+	public Vessel(Sign sign, String name, VesselType type, Player player, boolean save){
+		NAME = name;
+		TYPE = type;
+		SIGN = sign;
+		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
+		org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
+		DIRECTION = sign2.getFacing();
+		OWNER = player;
+		TELEPORTLOCATION = player.getLocation();
+		LOADEDVESSELS.add(this);
+		if (save){
+			type.save(this);
+		}
+	}
+	
 	public Vessel(Sign sign, String name, VesselType type, OfflinePlayer player, Location loc){
 		NAME = name;
 		TYPE = type;
@@ -84,6 +99,21 @@ public class Vessel extends CustomDataStore{
 		TELEPORTLOCATION = loc;
 		LOADEDVESSELS.add(this);
 		type.save(this);
+	}
+	
+	public Vessel(Sign sign, String name, VesselType type, OfflinePlayer player, Location loc, boolean save){
+		NAME = name;
+		TYPE = type;
+		SIGN = sign;
+		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
+		org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
+		DIRECTION = sign2.getFacing();
+		OWNER = player;
+		TELEPORTLOCATION = loc;
+		LOADEDVESSELS.add(this);
+		if (save){
+			type.save(this);
+		}
 	}
 	
 	public BlockFace getFacingDirection(){
@@ -384,7 +414,7 @@ public class Vessel extends CustomDataStore{
 					}
 				}
 			}
-			if (this.getVesselType().checkRequirements(this, move, blocks, player)){
+			if (this.getVesselType().attemptToMove(this, move, blocks, player)){
 				MovingStructure structure = new MovingStructure(blocks);
 				this.setStructure(structure);
 				ShipMovingEvent event = new ShipMovingEvent(player, this, move, structure);
@@ -827,42 +857,16 @@ public class Vessel extends CustomDataStore{
 	}
 	
 	public void reload(){
-		File file = getFile();
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		Messages.refreshMessages();
-		OfflinePlayer owner =  Bukkit.getOfflinePlayer(UUID.fromString(config.getString("ShipsData.Player.Name")));
-		String vesselTypeS = config.getString("ShipsData.Type");
-		int max = config.getInt("ShipsData.Config.Block.Max");
-		int min = config.getInt("ShipsData.Config.Block.Min");
-		int engine = config.getInt("ShipsData.Config.Speed.Engine");
-		String locS = config.getString("ShipsData.Location.Sign");
-		String teleportS = config.getString("ShipsData.Location.Teleport");
-		String name = file.getName().replace(".yml", "");
-		if (vesselTypeS != null){
-			if (locS != null){
-				if (teleportS != null){
-					String[] locM = locS.split(",");
-					Location loc = new Location(Bukkit.getWorld(locM[3]), Integer.parseInt(locM[0]), Integer.parseInt(locM[1]), Integer.parseInt(locM[2]));
-					if (loc.getBlock().getState() instanceof Sign){
-						Sign sign = (Sign)loc.getBlock().getState();
-						String[] teleportM = teleportS.split(",");
-						Location teleport = new Location(Bukkit.getWorld(teleportM[3]), Integer.parseInt(teleportM[0]), Integer.parseInt(teleportM[1]), Integer.parseInt(teleportM[2]));
-						VesselType vesselType = VesselType.getTypeByName(vesselTypeS);
-						if (vesselType != null){
-							this.TELEPORTLOCATION = teleport;
-							this.SIGN = sign;
-							this.NAME = name;
-							this.OWNER = owner; 
-							VesselType type = this.getVesselType();
-							type.setDefaultSpeed(engine);
-							type.setMaxBlocks(max);
-							type.setMinBlocks(min);
-							type.loadVesselFromFiveFile(this, file);
-						}
-					}
-				}
+		LOADEDVESSELS.remove(this);
+		final File file = getFile();
+		Ships.getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(Ships.getPlugin(), new Runnable(){
+
+			@Override
+			public void run() {
+				VesselLoader.newLoader(file);
 			}
-		}
+			
+		}, 0);
 	}
 	
 	public static List<Vessel> getVessels(){

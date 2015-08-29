@@ -61,49 +61,31 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	@Override
 	public boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		if (blocks.size() <= getMaxBlocks()){
-			if (blocks.size() >= getMinBlocks()){
-				if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())){
-					if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())){
-						if (move.equals(MovementMethod.MOVE_DOWN)){
-							return true;
-						}else{
-							if (util.checkFuel(getFuel(), vessel, TAKE)){
-								util.takeFuel(getFuel(), vessel, TAKE);
-								return true;
-							}else{
-								if (player != null){
-									if (Messages.isEnabled()){
-										player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
-									}
-								}
-								return false;
-							}
-						}
+		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())){
+			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())){
+				if (move.equals(MovementMethod.MOVE_DOWN)){
+					return true;
+				}else{
+					if (util.checkFuel(getFuel(), vessel, TAKE)){
+						util.takeFuel(getFuel(), vessel, TAKE);
+						return true;
 					}else{
 						if (player != null){
-							List<String> materials = new ArrayList<String>();
-							for(Material material : getRequiredMaterial()){
-								materials.add(material.name());
-							}
 							if (Messages.isEnabled()){
-							player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(util.getOffBy(blocks,  getRequiredMaterial(), getRequiredPercent()), "(of either) " + materials.toString()), true));
+								player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
 							}
 						}
 						return false;
 					}
-				}else{
-					if (player != null){
-						if (Messages.isEnabled()){
-							player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Water"), true));
-						}
-					}
-					return false;
 				}
 			}else{
 				if (player != null){
+					List<String> materials = new ArrayList<String>();
+					for(Material material : getRequiredMaterial()){
+						materials.add(material.name());
+					}
 					if (Messages.isEnabled()){
-						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+					player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(util.getOffBy(blocks,  getRequiredMaterial(), getRequiredPercent()), "(of either) " + materials.toString()), true));
 					}
 				}
 				return false;
@@ -111,11 +93,12 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		}else{
 			if (player != null){
 				if (Messages.isEnabled()){
-					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Water"), true));
 				}
 			}
 			return false;
 		}
+
 	}
 
 	@Override

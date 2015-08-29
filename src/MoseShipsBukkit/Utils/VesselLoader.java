@@ -121,14 +121,14 @@ public class VesselLoader {
 							Sign sign = (Sign)loc.getBlock().getState();
 							String[] teleportM = teleportS.split(",");
 							Location teleport = new Location(Bukkit.getWorld(teleportM[3]), Double.parseDouble(teleportM[0]), Double.parseDouble(teleportM[1]), Double.parseDouble(teleportM[2]));
-							VesselType vesselType = VesselType.getTypeByName(vesselTypeS);
+							VesselType vesselType = VesselType.getTypeByName(vesselTypeS).clone();
 							if (vesselType != null){
-								Vessel vessel = new Vessel(sign, name, vesselType, owner, teleport);
-								VesselType type = vessel.getVesselType();
-								type.setDefaultSpeed(engine);
-								type.setMaxBlocks(max);
-								type.setMinBlocks(min);
-								type.loadVesselFromFiveFile(vessel, file);
+								Vessel vessel = new Vessel(sign, name, vesselType, owner, teleport, false);
+								vesselType.setDefaultSpeed(engine);
+								vesselType.setMaxBlocks(max);
+								vesselType.setMinBlocks(min);
+								vesselType.loadVesselFromFiveFile(vessel, file);
+								vessel.save();
 								return true;
 							}else{
 								sender.sendMessage(Ships.runShipsMessage("VesselType Loader: " + name + " has not loaded. This is because " + vesselTypeS + " has not loaded into Ships VesselType data system. This is a programming issue", true));
