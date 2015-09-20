@@ -24,7 +24,9 @@ import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
+import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Submarine extends VesselType implements Fuel, RequiredMaterial, ClassicVessel{
@@ -40,16 +42,16 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public boolean removeFuel(Vessel vessel) {
+	public boolean removeFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		boolean ret = util.takeFuel(FUEL, vessel, TAKE);
 		return ret;
 	}
 
 	@Override
-	public int getTotalFuel(Vessel vessel) {
+	public int getTotalFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		int ret = util.getTotalAmountOfFuel(FUEL, vessel, TAKE);
+		int ret = util.getTotalAmountOfFuel(FUEL, vessel);
 		return ret;
 	}
 
@@ -59,7 +61,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())){
 			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())){
@@ -102,7 +104,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public boolean shouldFall(Vessel vessel) {
+	public boolean shouldFall(ProtectedVessel vessel) {
 		return false;
 	}
 
@@ -124,7 +126,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(Vessel vessel, File file) {
+	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Submarine){
@@ -147,7 +149,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void loadVesselFromFiveFile(Vessel vessel, File file) {
+	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Submarine){
@@ -228,7 +230,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void save(Vessel vessel) {
+	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		ConfigurationSection config = configuration.createSection("ShipsData");

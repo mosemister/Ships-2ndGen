@@ -12,7 +12,8 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public abstract class VesselType{
@@ -27,14 +28,14 @@ public abstract class VesselType{
 	
 	static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
 	
-	public abstract boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player);
-	public abstract boolean shouldFall(Vessel vessel);
+	public abstract boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player);
+	public abstract boolean shouldFall(ProtectedVessel vessel);
 	public abstract File getTypeFile();
 	public abstract VesselType clone();
-	public abstract void loadVesselFromFiveFile(Vessel vessel, File file);
+	public abstract void loadVesselFromFiveFile(ProtectedVessel vessel, File file);
 	public abstract void createConfig();
 	public abstract void loadDefault();
-	public abstract void save(Vessel vessel);
+	public abstract void save(ProtectedVessel vessel);
 	
 	public VesselType(String name, List<Material> movein, int speed, int boost, boolean isAutoPilot){
 		TYPENAME = name;
@@ -100,7 +101,7 @@ public abstract class VesselType{
 		MAX_BLOCKS = A;
 	}
 	
-	public boolean attemptToMove(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player){
+	public boolean attemptToMove(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player){
 		if(blocks.size() <= getMaxBlocks()){
 			if(blocks.size() >= getMinBlocks()){
 				return checkRequirements(vessel, move, blocks, player);

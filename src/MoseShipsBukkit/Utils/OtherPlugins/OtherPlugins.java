@@ -29,7 +29,8 @@ import com.wimbli.WorldBorder.BorderData;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
+import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
 public class OtherPlugins {
@@ -145,7 +146,7 @@ public class OtherPlugins {
 		return (ECO != null);
 	}
 	
-	public static double pay(Vessel vessel){
+	public static double pay(MovableVessel vessel){
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		if (config.getBoolean("VaultSupport.enabled")){
 			double money = vessel.getCost();
@@ -174,7 +175,7 @@ public class OtherPlugins {
 		return true;
 	}
 	
-	public static boolean isLocationInGriefPreventionClaim(Location loc, Vessel vessel){
+	public static boolean isLocationInGriefPreventionClaim(Location loc, BaseVessel vessel){
 		Claim claim = GriefPrevention.instance.dataStore.getClaimAt(loc, false, null);
 		if (claim != null){
 			YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
@@ -245,7 +246,7 @@ public class OtherPlugins {
 		}
 	}
 	
-	public static List<MovingBlock> OtherSideOfWorldBorder(Vessel vessel, List<MovingBlock> blocks){
+	public static List<MovingBlock> OtherSideOfWorldBorder(BaseVessel vessel, List<MovingBlock> blocks){
 		BorderData worldB = com.wimbli.WorldBorder.Config.Border(vessel.getSign().getWorld().getName());
 		if (worldB == null){
 			return blocks;

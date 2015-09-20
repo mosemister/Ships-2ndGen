@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Listeners.CommandLauncher;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class Fixes extends CommandLauncher{
 

@@ -1,6 +1,6 @@
 package MoseShipsBukkit.ShipsTypes.HookTypes;
 
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public interface Cell {
 	
@@ -11,12 +11,12 @@ public interface Cell {
 	 * event will be cancelled. If returns 'true'
 	 * then it will continue the move event</p>
 	 */
-	public boolean removeCellPower(Vessel vessel);
+	public boolean removeCellPower(BaseVessel vessel);
 	
 	/**
 	 * gets the total amount of cell power
 	 */
-	public int getTotalCellPower(Vessel vessel);
+	public int getTotalCellPower(BaseVessel vessel);
 	
 	/**
 	 * adds cell power
@@ -24,6 +24,6 @@ public interface Cell {
 	 * <p>power is determined by the vesselType</p>
 	 */
 	
-	public void addCellPower();
+	public void addCellPower(BaseVessel vessel);
 
 }

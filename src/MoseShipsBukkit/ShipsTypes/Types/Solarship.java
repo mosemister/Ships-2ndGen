@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -20,7 +22,9 @@ import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Cell;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
+import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Solarship extends VesselType implements Cell{
@@ -33,25 +37,31 @@ public class Solarship extends VesselType implements Cell{
 	}
 
 	@Override
-	public boolean removeCellPower(Vessel vessel) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeCellPower(BaseVessel vessel) {
+		VesselTypeUtils util = new VesselTypeUtils();
+		if (util.takeWholeNumberFromSign(ChatColor.YELLOW + "[Cell]", 2, vessel, TAKE)){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override
-	public int getTotalCellPower(Vessel vessel) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getTotalCellPower(BaseVessel vessel) {
+		VesselTypeUtils util = new VesselTypeUtils();
+		int A = util.getTotalAmountWholeOnSign(ChatColor.YELLOW + "[Cell]", 2, vessel);
+		return A;
 	}
 
 	@Override
-	public void addCellPower() {
-		// TODO Auto-generated method stub
-		
+	public void addCellPower(BaseVessel vessel) {
+		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("add cell power for solarship ran", false));
+		VesselTypeUtils util = new VesselTypeUtils();
+		util.addWholeNumberFromSign(ChatColor.YELLOW + "[Cell]", 2, vessel, 1, MAX);
 	}
 
 	@Override
-	public boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player) {
 		VesselTypeUtils utils = new VesselTypeUtils();
 		if (utils.isMovingInto(blocks, getMoveInMaterials())){
 			if (move.equals(MovementMethod.MOVE_DOWN)){
@@ -85,8 +95,10 @@ public class Solarship extends VesselType implements Cell{
 	}
 
 	@Override
-	public boolean shouldFall(Vessel vessel) {
-		// TODO Auto-generated method stub
+	public boolean shouldFall(ProtectedVessel vessel) {
+		if (getTotalCellPower(vessel) == 0){
+			return true;
+		}
 		return false;
 	}
 
@@ -98,12 +110,15 @@ public class Solarship extends VesselType implements Cell{
 
 	@Override
 	public VesselType clone() {
-		// TODO Auto-generated method stub
-		return null;
+		Solarship ship = new Solarship();
+		this.cloneVesselTypeData(ship);
+		ship.TAKE = this.TAKE;
+		ship.MAX = this.MAX;
+		return ship;
 	}
 
 	@Override
-	public void loadVesselFromFiveFile(Vessel vessel, File file) {
+	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
 		if (type instanceof Solarship){
@@ -149,7 +164,7 @@ public class Solarship extends VesselType implements Cell{
 	}
 
 	@Override
-	public void save(Vessel vessel) {
+	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());

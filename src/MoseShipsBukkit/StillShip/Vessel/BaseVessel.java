@@ -1,0 +1,280 @@
+package MoseShipsBukkit.StillShip.Vessel;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+
+import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.MovingShip.MovingStructure;
+import MoseShipsBukkit.ShipsTypes.VesselType;
+import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
+import MoseShipsBukkit.StillShip.ShipsStructure;
+import MoseShipsBukkit.Utils.MoseUtils.CustomDataStore;
+
+public class BaseVessel extends CustomDataStore{
+	
+	String NAME;
+	OfflinePlayer OWNER;
+	VesselType TYPE;
+	ShipsStructure STRUCTURE;
+	Sign SIGN;
+	Location TELEPORTLOCATION;
+	BlockFace DIRECTION;
+	Location AUTOPILOTTO;
+	
+	BaseVessel(Sign sign, String name, VesselType type, Player player){
+		NAME = name;
+		TYPE = type;
+		SIGN = sign;
+		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
+		org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
+		DIRECTION = sign2.getFacing();
+		OWNER = player;
+		TELEPORTLOCATION = player.getLocation();
+	}
+	
+	BaseVessel(Sign sign, String name, VesselType type, OfflinePlayer player, Location loc){
+		NAME = name;
+		TYPE = type;
+		SIGN = sign;
+		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
+		org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
+		DIRECTION = sign2.getFacing();
+		OWNER = player;
+		TELEPORTLOCATION = loc;
+		/*LOADEDVESSELS.add(this)
+		type.save(this)*/
+	}
+	
+	public BlockFace getFacingDirection(){
+		return DIRECTION;
+	}
+	
+	public OfflinePlayer getOwner(){
+		return OWNER;
+	}
+	
+	public VesselType getVesselType(){
+		return TYPE;
+	}
+	
+	public String getName(){
+		return NAME;
+	}
+	
+	public Location getTeleportLocation(){
+		return TELEPORTLOCATION;
+	}
+	
+	public Location getAutoPilotTo(){
+		return AUTOPILOTTO;
+	}
+	
+	public Sign getSign(){
+		return SIGN;
+	}
+	
+	public ShipsStructure getStructure(){
+		return STRUCTURE;
+	}
+	
+	public Location getLocation(){
+		return getSign().getLocation();
+	}
+	
+	public File getFile(){
+		File file = new File("plugins/Ships/VesselData/" + this.getName() + ".yml");
+		return file;
+	}
+	
+	public void setOwner(OfflinePlayer user){
+		OWNER = user;
+	}
+	
+	public void setAutoPilotTo(Location moveTo){
+		AUTOPILOTTO = moveTo;
+	}
+	
+	public void setStructure(ShipsStructure blocks){
+		STRUCTURE = blocks;
+	}
+	
+	public void setTeleportLoc(Location loc){
+		TELEPORTLOCATION = loc;
+	}
+	
+	public void setFacingDirection(BlockFace facing){
+		DIRECTION = facing;
+	}
+	
+	public void setVesselType(VesselType type){
+		TYPE = type;
+	}
+	
+	public boolean isMoving(){
+		if (getStructure() instanceof MovingStructure){
+			return true;
+		}
+		return false;
+	}
+	
+	public void updateLocation(Location loc, Sign sign){
+		File file = getFile();
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+		this.SIGN = sign;
+		config.set("ShipsData.Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
+		this.TELEPORTLOCATION = loc;
+		try {
+			config.save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateStructure(){
+		ShipsStructure structure = new ShipsStructure(Ships.getBaseStructure(getSign().getBlock()));
+		setStructure(structure);
+		org.bukkit.material.Sign sign = (org.bukkit.material.Sign)getSign().getData();
+		BlockFace face;
+		if (sign.isWallSign()){
+			face = sign.getAttachedFace();
+		}else{
+			face = sign.getFacing().getOppositeFace();
+		}
+		setFacingDirection(face);
+	}
+	
+	public void displayInfo(Player player){
+		player.sendMessage(ChatColor.YELLOW + "[Type]" + ChatColor.AQUA + TYPE.getName());
+		if (TYPE instanceof Fuel){
+			for(Entry<Material, Byte> entry : ((Fuel)TYPE).getFuel().entrySet()){
+				if (entry.getValue() == -1){
+					player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + entry.getKey().name() + ":" + entry.getValue());
+				}else{
+					player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + entry.getKey().name());
+				}
+			}
+			player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + ((Fuel)TYPE).getTotalFuel(this));
+		}
+	}
+	
+	public int getLength(boolean updateStructure) throws IOException{
+		if (updateStructure){
+			updateStructure();
+		}
+		List<Block> blocks = getStructure().getAllBlocks();
+		if ((getFacingDirection().equals(BlockFace.NORTH) || (getFacingDirection().equals(BlockFace.SOUTH)))){
+			int maxHeight = blocks.get(0).getX();
+			int minHeight = blocks.get(0).getX();
+			try{
+				for(Block block : blocks){
+					if (block.getX() > maxHeight){
+						maxHeight = block.getX();
+					}
+					if (block.getX() < minHeight){
+						minHeight = block.getX();
+					}
+				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
+			}
+			int result = maxHeight - minHeight;
+			return result;
+		}else{
+			int maxHeight = blocks.get(0).getZ();
+			int minHeight = blocks.get(0).getZ();
+			try{
+				for(Block block : blocks){
+					if (block.getZ() > maxHeight){
+						maxHeight = block.getZ();
+					}
+					if (block.getZ() < minHeight){
+						minHeight = block.getZ();
+					}
+				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
+			}
+			int result = maxHeight - minHeight;
+			return result;
+		}
+	}
+	
+	public int getHeight(boolean updateStructure) throws IOException{
+		if (updateStructure){
+			updateStructure();
+		}
+		List<Block> blocks = getStructure().getAllBlocks();
+		int maxHeight = blocks.get(0).getY();
+		int minHeight = blocks.get(0).getY();
+		try{
+			for(Block block : blocks){
+				if (block.getY() > maxHeight){
+					maxHeight = block.getY();
+				}
+				if (block.getY() < minHeight){
+					minHeight = block.getY();
+				}
+			}
+		}catch(IndexOutOfBoundsException e){
+			throw new IOException("Need to update structure");
+		}
+		int result = maxHeight - minHeight;
+		return result;
+	}
+	
+	public int getWidth(boolean updateStructure) throws IOException{
+		if (updateStructure){
+			updateStructure();
+		}
+		List<Block> blocks = getStructure().getAllBlocks();
+		if ((getFacingDirection().equals(BlockFace.WEST) || (getFacingDirection().equals(BlockFace.EAST)))){
+			int maxHeight = blocks.get(0).getX();
+			int minHeight = blocks.get(0).getX();
+			try{
+				for(Block block : blocks){
+					if (block.getX() > maxHeight){
+						maxHeight = block.getX();
+					}
+					if (block.getX() < minHeight){
+						minHeight = block.getX();
+					}
+				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
+			}
+			int result = maxHeight - minHeight;
+			return result;
+		}else{
+			int maxHeight = blocks.get(0).getZ();
+			int minHeight = blocks.get(0).getZ();
+			try{
+				for(Block block : blocks){
+					if (block.getZ() > maxHeight){
+						maxHeight = block.getZ();
+					}
+					if (block.getZ() < minHeight){
+						minHeight = block.getZ();
+					}
+				}
+			}catch(IndexOutOfBoundsException e){
+				throw new IOException("Need to update structure");
+			}
+			int result = maxHeight - minHeight;
+			return result;
+		}
+	}
+
+}

@@ -19,7 +19,7 @@ import MoseShipsBukkit.Listeners.CommandLauncher;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.StillShip.SpecialBlock;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class SignCommand extends CommandLauncher{
 

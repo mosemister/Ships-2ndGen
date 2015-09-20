@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.bukkit.block.BlockFace;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public enum MovementMethod {
 	

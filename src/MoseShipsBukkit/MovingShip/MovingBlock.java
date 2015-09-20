@@ -10,7 +10,7 @@ import org.bukkit.block.BlockFace;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.StillShip.SpecialBlock;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class MovingBlock {
 	
@@ -21,7 +21,7 @@ public class MovingBlock {
 	Location MOVETO;
 	
 	@SuppressWarnings("deprecation")
-	public MovingBlock(Block block, Vessel vessel, MovementMethod move){
+	public MovingBlock(Block block, BaseVessel vessel, MovementMethod move){
 		BLOCK = block;
 		ID = block.getTypeId();
 		DATA = block.getData();
@@ -83,7 +83,7 @@ public class MovingBlock {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public MovingBlock(SpecialBlock sBlock, Vessel vessel, MovementMethod move){
+	public MovingBlock(SpecialBlock sBlock, BaseVessel vessel, MovementMethod move){
 		Block block = sBlock.getBlock();
 		SPE_BLOCK = sBlock;
 		BLOCK = block;

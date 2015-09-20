@@ -7,12 +7,12 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Listeners.CommandLauncher;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
-public class Protected extends CommandLauncher{
+public class Protect extends CommandLauncher{
 
-	public Protected() {
-		super("Protected", "", "Toggle protectedVessels for your vessel", "ships.command.protectedVessel", true, true);
+	public Protect() {
+		super("Protect", "", "Toggle protectedVessels for your vessel", "ships.command.protectedVessel", true, true);
 	}
 
 	@Override

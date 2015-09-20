@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Cell;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
 public class ShipsAutoRuns {
@@ -19,15 +19,18 @@ public class ShipsAutoRuns {
 	public static HashMap<Vessel, Player> EOTAUTORUN = new HashMap<Vessel, Player>();
 	
 	public static void SolorCell(){
+		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("SolarCell active", false));
 		final YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable(){
 
 			@Override
 			public void run() {
 				for(Vessel vessel : Vessel.getVessels()){
+					Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("vessel found" + vessel.getName(), false));
 					if(vessel.getVesselType() instanceof Cell){
+						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Vessel is cell type", false));
 						Cell plates = (Cell)vessel.getVesselType();
-						plates.addCellPower();
+						plates.addCellPower(vessel);
 					}
 				}
 				

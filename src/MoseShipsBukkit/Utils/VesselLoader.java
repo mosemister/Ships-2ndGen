@@ -18,7 +18,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class VesselLoader {
 	

@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Listeners.CommandLauncher;
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.MaterialItem;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
 

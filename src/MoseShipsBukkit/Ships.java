@@ -29,7 +29,7 @@ import MoseShipsBukkit.Listeners.ShipsCommands.Reload;
 import MoseShipsBukkit.Listeners.ShipsCommands.SignCommand;
 import MoseShipsBukkit.Listeners.ShipsCommands.Teleport;
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.BlockStack;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
 import MoseShipsBukkit.Utils.VesselLoader;

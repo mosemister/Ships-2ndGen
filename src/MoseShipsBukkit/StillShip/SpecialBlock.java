@@ -17,6 +17,8 @@ import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
+
 public class SpecialBlock {
 	
 	Block BLOCK;
@@ -200,7 +202,6 @@ public class SpecialBlock {
 			if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
 				Vessel vessel = Vessel.getVessel(sign);
 				if (vessel != null){
-					vessel.SIGN = sign;
 					vessel.updateLocation(vessel.getTeleportLocation(), sign);
 				}
 			}

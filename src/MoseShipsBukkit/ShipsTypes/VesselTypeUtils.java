@@ -8,12 +8,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Furnace;
+import org.bukkit.block.Sign;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.ItemStack;
 
+import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.StillShip.SpecialBlock;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class VesselTypeUtils {
 	
@@ -70,7 +72,7 @@ public class VesselTypeUtils {
 	
 	//checks if the vessel has enough fuel to be taken 
 	@SuppressWarnings("deprecation")
-	public boolean checkFuel(Map<Material, Byte> fuel, Vessel vessel, int take){
+	public boolean checkFuel(Map<Material, Byte> fuel, BaseVessel vessel, int take){
 		if (fuel != null){
 			int count = 0;
 			for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
@@ -109,8 +111,40 @@ public class VesselTypeUtils {
 		return true;
 	}
 	
+	public int getWholeNumberFromSign(String line1, int lineReadNo, BaseVessel vessel, int take) throws NumberFormatException{
+		int count = 0;
+		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+			if (block.getBlock().getState() instanceof Sign){
+				Sign sign = (Sign)block.getBlock().getState();
+				if (sign.getLine(0).equals(line1)){
+					int value = Integer.parseInt(sign.getLine(lineReadNo));
+					if (value - take >= 0){
+						count = (count + take);
+					}
+				}
+			}
+		}
+		return count;
+	}
+	
+	public double getDoubleNumberFromSign(String line1, int lineReadNo, BaseVessel vessel, int take) throws NumberFormatException{
+		double count = 0;
+		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+			if (block.getBlock().getState() instanceof Sign){
+				Sign sign = (Sign)block.getBlock().getState();
+				if (sign.getLine(0).equals(line1)){
+					double value = Double.parseDouble(sign.getLine(lineReadNo));
+					if (value - take >= 0){
+						count = (count + take);
+					}
+				}
+			}
+		}
+		return count;
+	}
+	
 	@SuppressWarnings("deprecation")
-	public int getTotalAmountOfFuel(Map<Material, Byte> fuel, Vessel vessel, int take){
+	public int getTotalAmountOfFuel(Map<Material, Byte> fuel, BaseVessel vessel){
 		if (fuel != null){
 			int count = 0;
 			for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
@@ -123,18 +157,10 @@ public class VesselTypeUtils {
 							if (entry.getKey().equals(item.getType())){
 								if(entry.getValue() != -1){
 									if (entry.getValue() == item.getData().getData()){
-										if (item.getAmount() - take >= 0){
-											count = (count + take);
-										}else{
-											count = count + item.getAmount();
-										}
+										count = (count + item.getAmount());
 									}
 								}else{
-									if (item.getAmount() - take >= 0){
-										count = (count + take);
-									}else{
-										count = count + item.getAmount();
-									}
+									count = (count + item.getAmount());
 								}
 							}
 						}
@@ -146,9 +172,37 @@ public class VesselTypeUtils {
 		return 0;
 	}
 	
+	public int getTotalAmountWholeOnSign(String line1, int readline, BaseVessel vessel) throws NumberFormatException{
+		int count = 0;
+		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+			if (block.getBlock().getState() instanceof Sign){
+				Sign sign = (Sign)block.getBlock().getState();
+				if (sign.getLine(0).equals(line1)){
+					int value = Integer.parseInt(sign.getLine(readline));
+					count = (count +value);
+				}
+			}
+		}
+		return count;
+	}
+	
+	public double getTotalAmountDoubleOnSign(String line1, int readline, BaseVessel vessel) throws NumberFormatException{
+		double count = 0;
+		for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+			if (block.getBlock().getState() instanceof Sign){
+				Sign sign = (Sign)block.getBlock().getState();
+				if (sign.getLine(0).equals(line1)){
+					double value = Double.parseDouble(sign.getLine(readline));
+					count = (count +value);
+				}
+			}
+		}
+		return count;
+	}
+	
 	//does the same as above only takes the fuel away instead of checking it
 	@SuppressWarnings("deprecation")
-	public boolean takeFuel(Map<Material, Byte> fuel, Vessel vessel, int take){
+	public boolean takeFuel(Map<Material, Byte> fuel, BaseVessel vessel, int take){
 		if (fuel != null){
 			int count = 0;
 			while (count != take){
@@ -202,6 +256,108 @@ public class VesselTypeUtils {
 			return false;
 			}
 		return true;
+	}
+	
+	public boolean takeWholeNumberFromSign(String line1, int A, BaseVessel vessel, int take) throws NumberFormatException{
+		int count = 0;
+		while (count != take){
+			for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+				if (block.getBlock().getState() instanceof Sign){
+					Sign sign = (Sign)block.getBlock().getState();
+					if(sign.getLine(0).equals(line1)){
+						int value = Integer.parseInt(sign.getLine(A));
+						if (value - take > 0){
+							count = (count + take);
+							sign.setLine(A, value - take + "");
+							sign.update();
+							return true;
+						}
+					}
+				}
+			}
+		}
+		if (count >= take){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean takeDoubleNumberFromSign(String line1, int A, BaseVessel vessel, int take) throws NumberFormatException{
+		double count = 0;
+		while (count != take){
+			for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+				if (block.getBlock().getState() instanceof Sign){
+					Sign sign = (Sign)block.getBlock().getState();
+					if(sign.getLine(0).equals(line1)){
+						double value = Double.parseDouble(sign.getLine(A));
+						if (value - take > 0){
+							count = (count + take);
+							sign.setLine(A, value - take + "");
+							sign.update();
+							return true;
+						}
+					}
+				}
+			}
+		}
+		if (count >= take){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean addWholeNumberFromSign(String line1, int A, BaseVessel vessel, int add, int max) throws NumberFormatException{
+		int count = 0;
+		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Count: " + count + " Add: " + add + " Max: " + max, false));
+		while (count != add){
+			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("count != " + add, false));
+			for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+				Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("special block found", false));
+				if (block.getBlock().getState() instanceof Sign){
+					Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("block instanceof sign", false));
+					Sign sign = (Sign)block.getBlock().getState();
+					if(sign.getLine(0).equals(line1)){
+						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("line 1 is correct", false));
+						int value = Integer.parseInt(sign.getLine(A));
+						if (value + add <= max){
+							Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("value != max" + add, false));
+							count = (count + add);
+							sign.setLine(A, value + add + "");
+							sign.update();
+							return true;
+						}
+					}
+				}
+			}
+		}
+		if (count >= add){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean addDoubleNumberFromSign(String line1, int A, BaseVessel vessel, int add, int max) throws NumberFormatException{
+		double count = 0;
+		while (count != add){
+			for(SpecialBlock block : vessel.getStructure().getSpecialBlocks()){
+				if (block.getBlock().getState() instanceof Sign){
+					Sign sign = (Sign)block.getBlock().getState();
+					if(sign.getLine(0).equals(line1)){
+						double value = Double.parseDouble(sign.getLine(A));
+						if (value + add <= max){
+							count = (count + add);
+							sign.setLine(A, value + add + "");
+							sign.update();
+							return true;
+						}
+					}
+				}
+			}
+		}
+		if (count >= add){
+			return true;
+		}
+		return false;
 	}
 	
 	//checks vessels current state and checks if the selected material is in that state

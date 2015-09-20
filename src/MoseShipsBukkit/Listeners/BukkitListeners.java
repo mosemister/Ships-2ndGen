@@ -29,9 +29,10 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Events.ShipCreateEvent;
+import MoseShipsBukkit.Events.ShipsSignCreation;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.World.Wind.Direction;
@@ -138,26 +139,37 @@ public class BukkitListeners implements Listener {
 		}
 		if (event.getBlock().getState() instanceof Sign){
 			Sign sign = (Sign)event.getBlock().getState();
-			if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
-				Vessel vessel = Vessel.getVessel(sign);
-				if (vessel == null){
-					event.getPlayer().sendMessage(Ships.runShipsMessage("Unknown ship", true));
+			signBreakEvent(sign, event);
+		}
+		BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
+		for(BlockFace face : faces){
+			Block block = event.getBlock().getRelative(face);
+			if (block.getState() instanceof Sign){
+				signBreakEvent((Sign)block.getState(), event);
+			}
+		}
+	}
+	
+	public static void signBreakEvent(Sign sign, BlockBreakEvent event){
+		if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
+			Vessel vessel = Vessel.getVessel(sign);
+			if (vessel == null){
+				event.getPlayer().sendMessage(Ships.runShipsMessage("Unknown ship", true));
+			}else{
+				if ((event.getPlayer().equals(vessel.getOwner())) || (event.getPlayer().hasPermission("ships.break.bypass")) || (event.getPlayer().hasPermission("ships.*"))){
+					vessel.remove();
+					event.getPlayer().sendMessage(Ships.runShipsMessage(vessel.getName() + " has been removed.", false));
 				}else{
-					if ((event.getPlayer().equals(vessel.getOwner())) || (event.getPlayer().hasPermission("ships.break.bypass")) || (event.getPlayer().hasPermission("ships.*"))){
-						vessel.remove();
-						event.getPlayer().sendMessage(Ships.runShipsMessage(vessel.getName() + " has been removed.", false));
-					}else{
-						event.getPlayer().sendMessage(Ships.runShipsMessage(vessel.getName() + "does not belong to you.", true));
-						event.setCancelled(true);
-					}
+					event.getPlayer().sendMessage(Ships.runShipsMessage(vessel.getName() + "does not belong to you.", true));
+					event.setCancelled(true);
 				}
-			}else if (sign.getLine(0).equals(ChatColor.YELLOW + "[E.O.T]")){
-				Vessel vessel = Vessel.getVessel(sign.getBlock(), false);
-				if (vessel == null){
-					event.getPlayer().sendMessage(Ships.runShipsMessage("Unknown ship", true));
-				}else{
-					ShipsAutoRuns.EOTAUTORUN.remove(vessel);
-				}
+			}
+		}else if (sign.getLine(0).equals(ChatColor.YELLOW + "[E.O.T]")){
+			Vessel vessel = Vessel.getVessel(sign.getBlock(), false);
+			if (vessel == null){
+				event.getPlayer().sendMessage(Ships.runShipsMessage("Unknown ship", true));
+			}else{
+				ShipsAutoRuns.EOTAUTORUN.remove(vessel);
 			}
 		}
 	}
@@ -169,24 +181,28 @@ public class BukkitListeners implements Listener {
 			VesselType type = VesselType.getTypeByName(event.getLine(1)).clone();
 			if (type != null){
 				if ((event.getPlayer().hasPermission("ships." + type.getName() + ".make")) || (event.getPlayer().hasPermission("ships.*.make")) || (event.getPlayer().hasPermission("ships.*"))){
-					if (Vessel.getVessel(event.getLine(2)) == null){
-						Vessel vessel = new Vessel((Sign)event.getBlock().getState(),event.getLine(2), type, event.getPlayer());
-						ShipCreateEvent event2 = new ShipCreateEvent(event.getPlayer(), (Sign)event.getBlock().getState(), vessel);
-						Bukkit.getPluginManager().callEvent(event2);
-						if (!event2.isCancelled()){
-							event.setLine(0, ChatColor.YELLOW + "[Ships]");
-							event.setLine(1, ChatColor.BLUE + event.getLine(1));
-							event.setLine(2, ChatColor.GREEN + event.getLine(2));
-							YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-							if (config.getBoolean("Signs.ForceUsernameOnLicenceSign")){
-								event.setLine(3, ChatColor.GREEN + event.getPlayer().getName());
+					ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), ChatColor.YELLOW + "[Ships]", (Sign)event.getBlock().getState(), event.getPlayer(), event.getLine(0));
+					Bukkit.getPluginManager().callEvent(creation);
+					if (!creation.isCancelled()){
+						if (Vessel.getVessel(event.getLine(2)) == null){
+							Vessel vessel = new Vessel((Sign)event.getBlock().getState(),event.getLine(2), type, event.getPlayer());
+							ShipCreateEvent event2 = new ShipCreateEvent(event.getPlayer(), (Sign)event.getBlock().getState(), vessel);
+							Bukkit.getPluginManager().callEvent(event2);
+							if (!event2.isCancelled()){
+								event.setLine(0, creation.getSignTypeResult());
+								event.setLine(1, ChatColor.BLUE + event.getLine(1));
+								event.setLine(2, ChatColor.GREEN + event.getLine(2));
+								YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+								if (config.getBoolean("Signs.ForceUsernameOnLicenceSign")){
+									event.setLine(3, ChatColor.GREEN + event.getPlayer().getName());
+								}
 							}
+							return;
+						}else{
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Name taken", true));
+							event.setCancelled(true);
+							return;
 						}
-						return;
-					}else{
-						event.getPlayer().sendMessage(Ships.runShipsMessage("Name taken", true));
-						event.setCancelled(true);
-						return;
 					}
 				}
 			}else{
@@ -197,37 +213,57 @@ public class BukkitListeners implements Listener {
 		}
 		//Move sign
 		if ((event.getLine(0).equalsIgnoreCase("[Move]")) || (event.getLine(0).equalsIgnoreCase("[Engine]"))){
-			event.setLine(0, ChatColor.YELLOW + "[Move]");
-			event.setLine(1, "{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}");
-			event.setLine(2, "Boost");
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), ChatColor.YELLOW + "[Move]", (Sign)event.getBlock().getState(), event.getPlayer(), event.getLine(0));
+			Bukkit.getPluginManager().callEvent(creation);
+			if (!creation.isCancelled()){
+				event.setLine(0, ChatColor.YELLOW + "[Move]");
+				event.setLine(1, "{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}");
+				event.setLine(2, "Boost");
+			}
 			return;
 		}
 		//Wheel sign
 		if (event.getLine(0).equalsIgnoreCase("[Wheel]")){
-			event.setLine(0, ChatColor.YELLOW + "[Wheel]");
-			event.setLine(1, ChatColor.RED + "\\\\ || //");
-			event.setLine(2, ChatColor.RED + "==    ==");
-			event.setLine(3, ChatColor.RED + "// || \\\\");
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), ChatColor.YELLOW + "[Wheel]", (Sign)event.getBlock().getState(), event.getPlayer(), event.getLine(0));
+			Bukkit.getPluginManager().callEvent(creation);
+			if (!creation.isCancelled()){
+				event.setLine(0, ChatColor.YELLOW + "[Wheel]");
+				event.setLine(1, ChatColor.RED + "\\\\ || //");
+				event.setLine(2, ChatColor.RED + "==    ==");
+				event.setLine(3, ChatColor.RED + "// || \\\\");
+			}
 			return;
 		}
 		//Altitude
 		if ((event.getLine(0).equalsIgnoreCase("[Burner]")) || (event.getLine(0).equalsIgnoreCase("[Altitude]"))){
-			event.setLine(0, ChatColor.YELLOW + "[Altitude]");
-			event.setLine(2, "[right] up");
-			event.setLine(3, "[left] down");
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), ChatColor.YELLOW + "[Altitude]", (Sign)event.getBlock().getState(), event.getPlayer(), event.getLine(0));
+			Bukkit.getPluginManager().callEvent(creation);
+			if (!creation.isCancelled()){
+				event.setLine(0, ChatColor.YELLOW + "[Altitude]");
+				event.setLine(2, "[right] up");
+				event.setLine(3, "[left] down");
+			}
 			return;
 		}
 		//EOT
 		if (event.getLine(0).equalsIgnoreCase("[EOT]")){
-			event.setLine(0, ChatColor.YELLOW + "[E.O.T]");
-			event.setLine(1, ChatColor.GREEN + "AHEAD");
-			event.setLine(2, "-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-");
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), ChatColor.YELLOW + "[E.O.T]", (Sign)event.getBlock().getState(), event.getPlayer(), event.getLine(0));
+			Bukkit.getPluginManager().callEvent(creation);
+			if (!creation.isCancelled()){
+				event.setLine(0, ChatColor.YELLOW + "[E.O.T]");
+				event.setLine(1, ChatColor.GREEN + "AHEAD");
+				event.setLine(2, "-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-");
+			}
 			return;
 		}
 		//CELL
 		if (event.getLine(0).equalsIgnoreCase("[Cell]")){
-			event.setLine(0, ChatColor.YELLOW + "[Cell]");
-			event.setLine(1, ChatColor.GREEN + "0");
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), ChatColor.YELLOW + "[Cell]", (Sign)event.getBlock().getState(), event.getPlayer(), event.getLine(0));
+			Bukkit.getPluginManager().callEvent(creation);
+			if (!creation.isCancelled()){
+				event.setLine(0, ChatColor.YELLOW + "[Cell]");
+				event.setLine(1, ChatColor.GREEN + "0");
+			}
 			return;
 		}
 	}

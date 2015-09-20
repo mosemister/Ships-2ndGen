@@ -34,6 +34,9 @@ Structure:
       repeat: 130
       #Enable Autopilot
       enabled: false
+    Cell:
+      repeat: 130
+      enabled: false
   
 Inventory:
   #enabling this may cause a glitch where players can dupe there 

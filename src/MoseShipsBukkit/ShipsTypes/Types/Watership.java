@@ -20,7 +20,8 @@ import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Watership extends VesselType implements RequiredMaterial, ClassicVessel{
@@ -34,7 +35,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	}
 
 	@Override
-	public boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())){
 			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())){
@@ -58,7 +59,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	}
 
 	@Override
-	public boolean shouldFall(Vessel vessel) {
+	public boolean shouldFall(ProtectedVessel vessel) {
 		return false;
 	}
 
@@ -76,7 +77,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(Vessel vessel, File file) {
+	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
 		if (type instanceof Watership){
@@ -88,7 +89,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	}
 
 	@Override
-	public void loadVesselFromFiveFile(Vessel vessel, File file) {
+	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
 		if (type instanceof Watership){
@@ -144,7 +145,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	}
 
 	@Override
-	public void save(Vessel vessel) {
+	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		ConfigurationSection config = configuration.createSection("ShipsData");

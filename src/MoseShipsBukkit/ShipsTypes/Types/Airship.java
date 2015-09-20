@@ -24,7 +24,9 @@ import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
+import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Airship extends VesselType implements Fuel, RequiredMaterial, ClassicVessel{
@@ -48,16 +50,16 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	}
 
 	@Override
-	public boolean removeFuel(Vessel vessel) {
+	public boolean removeFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		boolean ret = util.takeFuel(FUEL, vessel, TAKE);
 		return ret;
 	}
 
 	@Override
-	public int getTotalFuel(Vessel vessel) {
+	public int getTotalFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		int ret = util.getTotalAmountOfFuel(FUEL, vessel, TAKE);
+		int ret = util.getTotalAmountOfFuel(FUEL, vessel);
 		return ret;
 	}
 	
@@ -67,7 +69,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	}
 
 	@Override
-	public boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMovingInto(blocks, getMoveInMaterials())){
 			if (util.isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())){
@@ -118,9 +120,9 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	}
 
 	@Override
-	public boolean shouldFall(Vessel vessel) {
+	public boolean shouldFall(ProtectedVessel vessel) {
 		MovingStructure stru = (MovingStructure)vessel.getStructure();
-		if (checkRequirements(vessel, MovementMethod.MOVE_DOWN, stru.getAllMovingBlocks(), null)){
+		if (checkRequirements((MovableVessel)vessel, MovementMethod.MOVE_DOWN, stru.getAllMovingBlocks(), null)){
 			return true;
 		}
 		return false;
@@ -133,7 +135,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(Vessel vessel, File file) {
+	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Airship){
@@ -156,7 +158,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void loadVesselFromFiveFile(Vessel vessel, File file) {
+	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Airship){
@@ -250,7 +252,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void save(Vessel vessel) {
+	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());

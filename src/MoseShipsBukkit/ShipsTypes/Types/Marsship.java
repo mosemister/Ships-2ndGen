@@ -21,7 +21,8 @@ import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Marsship extends VesselType implements RequiredMaterial, ClassicVessel{
@@ -44,7 +45,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	}
 
 	@Override
-	public boolean checkRequirements(Vessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (blocks.size() >= getMinBlocks()){
 			if (blocks.size() <= getMaxBlocks()){
@@ -104,7 +105,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	}
 
 	@Override
-	public boolean shouldFall(Vessel vessel) {
+	public boolean shouldFall(ProtectedVessel vessel) {
 		return false;
 	}
 
@@ -124,7 +125,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(Vessel vessel, File file) {
+	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Marsship){
@@ -137,7 +138,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	}
 
 	@Override
-	public void loadVesselFromFiveFile(Vessel vessel, File file) {
+	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Marsship){
@@ -193,7 +194,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	}
 
 	@Override
-	public void save(Vessel vessel) {
+	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
