@@ -1,5 +1,6 @@
 package MoseShipsBukkit.Events;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -11,14 +12,14 @@ import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 
 public class ShipMovingEvent extends Event implements Cancellable{
 	
-	Player PLAYER;
+	OfflinePlayer PLAYER;
 	MovableVessel VESSEL;
 	MovementMethod MOVEMETHOD;
 	MovingStructure MOVINGBLOCKS;
 	boolean CANCELLED;
 	static final HandlerList HANDLERS = new HandlerList();
 	
-	public ShipMovingEvent(Player player, MovableVessel vessel, MovementMethod method, MovingStructure blocks){
+	public ShipMovingEvent(OfflinePlayer player, MovableVessel vessel, MovementMethod method, MovingStructure blocks){
 		PLAYER = player;
 		VESSEL = vessel;
 		MOVEMETHOD = method;
@@ -26,6 +27,10 @@ public class ShipMovingEvent extends Event implements Cancellable{
 	}
 	
 	public Player getPlayer(){
+		return PLAYER.getPlayer();
+	}
+	
+	public OfflinePlayer getOfflinePlayer(){
 		return PLAYER;
 	}
 	

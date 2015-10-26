@@ -19,10 +19,12 @@ public class MovingBlock {
 	int ID;
 	byte DATA;
 	Location MOVETO;
+	MovementMethod MOVEMETHOD;
 	
 	@SuppressWarnings("deprecation")
 	public MovingBlock(Block block, BaseVessel vessel, MovementMethod move){
 		BLOCK = block;
+		MOVEMETHOD = move;
 		ID = block.getTypeId();
 		DATA = block.getData();
 		BlockFace facing = vessel.getFacingDirection();
@@ -165,6 +167,10 @@ public class MovingBlock {
 	
 	public Block getBlock(){
 		return BLOCK;
+	}
+	
+	public MovementMethod getMethod(){
+		return MOVEMETHOD;
 	}
 	
 	public static List<Block> convertToBlockArray(List<MovingBlock> blocks){

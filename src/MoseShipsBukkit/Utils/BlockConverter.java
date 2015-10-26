@@ -11,6 +11,7 @@ public class BlockConverter {
 	
 	public static byte convertRotation(MovementMethod move, MovingBlock block, byte data){
 		int id = block.getId();
+		System.out.println("convert rotation (" + id + ")");
 		if ((id == Material.WALL_SIGN.getId()) || 
 				(id == Material.FURNACE.getId()) || 
 				(id == Material.BURNING_FURNACE.getId()) ||
@@ -21,8 +22,6 @@ public class BlockConverter {
 				(id == Material.DISPENSER.getId()) ||
 				(id == Material.HOPPER.getId()) ||
 				(id == Material.LEVER.getId()) ||
-				(id == Material.WOOD_BUTTON.getId()) ||
-				(id == Material.STONE_BUTTON.getId()) ||
 				(id == Material.LADDER.getId()) ||
 				(id == Material.ENDER_CHEST.getId())){
 			byte data2 = quadValues(move, data);
@@ -67,6 +66,11 @@ public class BlockConverter {
 		}
 		if (id == Material.ANVIL.getId()){
 			byte data2 = anvilValues(move, data);
+			return data2;
+		}
+		if ((id == 77) || 
+				(id == 143)){
+			byte data2 = button(move, data);
 			return data2;
 		}
 		if ((id == 64) || (id == 71)){
@@ -283,7 +287,7 @@ public class BlockConverter {
 				return 1;
 			}
 		}
-		if (move.equals(move)){
+		if (MovementMethod.ROTATE_LEFT.equals(move)){
 			if (data == 1){
 				return 4;
 			}
@@ -411,6 +415,32 @@ public class BlockConverter {
 			}
 			if (data == 4){
 				return 7;
+			}
+		}
+		return data;
+	}
+	
+	static byte button(MovementMethod move, byte data){
+		System.out.println("Current Data = " + data);
+		if (MovementMethod.ROTATE_RIGHT.equals(move)){
+			if (data == 3){
+				return 2;
+			}else if (data == 2){
+				return 4;
+			}else if (data == 4){
+				return 1;
+			}else if (data == 1){
+				return 3;
+			}
+		}else if (MovementMethod.ROTATE_LEFT.equals(move)){
+			if (data == 3){
+				return 1;
+			}else if (data == 1){
+				return 4;
+			}else if (data == 4){
+				return 2;
+			}else if (data == 2){
+				return 3;
 			}
 		}
 		return data;

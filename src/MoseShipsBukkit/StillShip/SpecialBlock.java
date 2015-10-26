@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Dispenser;
@@ -16,12 +17,15 @@ import org.bukkit.block.Sign;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Door;
 
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
+@SuppressWarnings("deprecation")
 public class SpecialBlock {
 	
 	Block BLOCK;
+	Block BLOCK2;
 	String LINE1;
 	String LINE2;
 	String LINE3;
@@ -37,6 +41,17 @@ public class SpecialBlock {
 		LINE3 = sign.getLine(2);
 		LINE4 = sign.getLine(3);
 		BLOCKTYPE = "sign";
+	}
+	
+	public SpecialBlock(Door door, Block block){
+		if (!door.isTopHalf()){
+			BLOCK = block;
+			BLOCK2 = block.getRelative(0, 1, 0);
+		}else{
+			BLOCK2 = block;
+			BLOCK = block.getRelative(0, -1, 0);
+		}
+		BLOCKTYPE = "Door";
 	}
 	
 	public SpecialBlock(Furnace furnace){
@@ -111,6 +126,21 @@ public class SpecialBlock {
 
 	public Map<Integer, ItemStack> getItems(){
 		return INVENTORY;
+	}
+	
+	public void removeBlock(boolean isWater){
+		clearInventory(BLOCK);
+		if (isWater){
+			if (BLOCK2 != null){
+				BLOCK2.setType(Material.STATIONARY_WATER);
+			}
+			BLOCK.setType(Material.STATIONARY_WATER);
+		}else{
+			if (BLOCK2 != null){
+				BLOCK2.setType(Material.AIR);
+			}
+			BLOCK.setType(Material.AIR);
+		}
 	}
 	
 	public void clearInventory(Block block){
@@ -241,6 +271,9 @@ public class SpecialBlock {
 			return block2;
 		}else if (block.getState() instanceof Dispenser){
 			SpecialBlock block2 = new SpecialBlock((Dispenser)block.getState());
+			return block2;
+		}else if (block.getState().getData() instanceof Door){
+			SpecialBlock block2 = new SpecialBlock((Door)block.getState().getData(), block);
 			return block2;
 		}
 		return null;

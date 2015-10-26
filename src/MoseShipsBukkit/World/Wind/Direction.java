@@ -16,8 +16,9 @@ public class Direction {
 	
 	public Direction(World world){
 		Random random = new Random();
-		int number = random.nextInt(19);
-		BlockFace direction = BlockFace.values()[number];
+		BlockFace[] faces = {BlockFace.UP, BlockFace.DOWN, BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH};
+		int number = random.nextInt(faces.length);
+		BlockFace direction = faces[number];
 		WORLD = world;
 		DIRECTION = direction;
 		DIRECTIONS.add(this);

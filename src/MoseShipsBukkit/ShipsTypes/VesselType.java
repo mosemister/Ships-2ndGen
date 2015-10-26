@@ -7,6 +7,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
@@ -101,14 +102,16 @@ public abstract class VesselType{
 		MAX_BLOCKS = A;
 	}
 	
-	public boolean attemptToMove(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player){
+	public boolean attemptToMove(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable OfflinePlayer player){
 		if(blocks.size() <= getMaxBlocks()){
 			if(blocks.size() >= getMinBlocks()){
-				return checkRequirements(vessel, move, blocks, player);
+				return checkRequirements(vessel, move, blocks, player.getPlayer());
 			}else{
 				if (player != null){
 					if (Messages.isEnabled()){
-						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+						if (player.isOnline()){
+							player.getPlayer().sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+						}
 					}
 				}
 				return false;
@@ -116,7 +119,9 @@ public abstract class VesselType{
 		}else{
 			if (player != null){
 				if (Messages.isEnabled()){
-					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+					if (player.isOnline()){
+						player.getPlayer().sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+					}
 				}
 			}
 			return false;

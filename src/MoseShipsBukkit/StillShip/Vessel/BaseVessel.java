@@ -2,7 +2,10 @@ package MoseShipsBukkit.StillShip.Vessel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
@@ -13,13 +16,17 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.MovingShip.AutoPilotData;
 import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
 import MoseShipsBukkit.StillShip.ShipsStructure;
+import MoseShipsBukkit.StillShip.Vectors.BlockVector;
+import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 import MoseShipsBukkit.Utils.MoseUtils.CustomDataStore;
 
 public class BaseVessel extends CustomDataStore{
@@ -31,7 +38,21 @@ public class BaseVessel extends CustomDataStore{
 	Sign SIGN;
 	Location TELEPORTLOCATION;
 	BlockFace DIRECTION;
-	Location AUTOPILOTTO;
+	AutoPilotData AUTOPILOTDATA;
+	Map<OfflinePlayer, BlockVector> PLAYER_LOCATION = new HashMap<OfflinePlayer, BlockVector>();
+	
+	BaseVessel(Sign sign, OfflinePlayer owner, Location teleport) throws InvalidSignException{
+		OWNER = owner;
+		TELEPORTLOCATION = teleport;
+		SIGN = sign;
+		NAME = sign.getLine(2).replace(ChatColor.GREEN + "", "");
+		DIRECTION = ((org.bukkit.material.Sign)sign.getData()).getFacing();
+		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
+		TYPE = VesselType.getTypeByName(sign.getLine(1).replace(ChatColor.BLUE + "", ""));
+		if (TYPE == null){
+			throw new InvalidSignException(1, sign);
+		}
+	}
 	
 	BaseVessel(Sign sign, String name, VesselType type, Player player){
 		NAME = name;
@@ -77,8 +98,8 @@ public class BaseVessel extends CustomDataStore{
 		return TELEPORTLOCATION;
 	}
 	
-	public Location getAutoPilotTo(){
-		return AUTOPILOTTO;
+	public AutoPilotData getAutoPilotData(){
+		return AUTOPILOTDATA;
 	}
 	
 	public Sign getSign(){
@@ -98,12 +119,20 @@ public class BaseVessel extends CustomDataStore{
 		return file;
 	}
 	
+	public Map<OfflinePlayer, BlockVector> getBlockLocation(){
+		return PLAYER_LOCATION;
+	}
+	
+	public void setBlockLocation(Map<OfflinePlayer, BlockVector> vector){
+		PLAYER_LOCATION = vector;
+	}
+	
 	public void setOwner(OfflinePlayer user){
 		OWNER = user;
 	}
 	
-	public void setAutoPilotTo(Location moveTo){
-		AUTOPILOTTO = moveTo;
+	public void setAutoPilotTo(AutoPilotData moveTo){
+		AUTOPILOTDATA = moveTo;
 	}
 	
 	public void setStructure(ShipsStructure blocks){
@@ -158,6 +187,9 @@ public class BaseVessel extends CustomDataStore{
 	
 	public void displayInfo(Player player){
 		player.sendMessage(ChatColor.YELLOW + "[Type]" + ChatColor.AQUA + TYPE.getName());
+		player.sendMessage(ChatColor.YELLOW + "[BlockCount]" + ChatColor.AQUA + STRUCTURE.getAllBlocks().size());
+		player.sendMessage(ChatColor.YELLOW + "[Max/Min BlockCount]" + ChatColor.AQUA + TYPE.getMaxBlocks() + "/" + TYPE.getMinBlocks());
+		player.sendMessage(ChatColor.YELLOW + "[Location]" + ChatColor.AQUA + "X:" + SIGN.getX() + " Y:" + SIGN.getY() + " Z:" + SIGN.getZ());
 		if (TYPE instanceof Fuel){
 			for(Entry<Material, Byte> entry : ((Fuel)TYPE).getFuel().entrySet()){
 				if (entry.getValue() == -1){
@@ -166,7 +198,7 @@ public class BaseVessel extends CustomDataStore{
 					player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + entry.getKey().name());
 				}
 			}
-			player.sendMessage(ChatColor.YELLOW + "[FuelType]" + ChatColor.AQUA + ((Fuel)TYPE).getTotalFuel(this));
+			player.sendMessage(ChatColor.YELLOW + "[Fuel Total]" + ChatColor.AQUA + ((Fuel)TYPE).getTotalFuel(this));
 		}
 	}
 	
@@ -275,6 +307,20 @@ public class BaseVessel extends CustomDataStore{
 			int result = maxHeight - minHeight;
 			return result;
 		}
+	}
+	
+	public List<Entity> getEntities(){
+		List<Entity> entitys = this.getTeleportLocation().getWorld().getEntities();
+		List<Entity> rEntitys = new ArrayList<Entity>();
+		List<Block> blocks = getStructure().getAllBlocks();
+		for (int A = 0; A < entitys.size(); A++){
+			Entity entity = entitys.get(A);
+			Block block = entity.getLocation().getBlock().getRelative(0, -1, 0);
+			if (blocks.contains(block)){
+				rEntitys.add(entity);
+			}
+		}
+		return rEntitys;
 	}
 
 }

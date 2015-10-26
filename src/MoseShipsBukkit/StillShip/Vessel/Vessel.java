@@ -7,6 +7,7 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -15,10 +16,15 @@ import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.ShipsStructure;
 import MoseShipsBukkit.Utils.VesselLoader;
+import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 
 public class Vessel extends MovableVessel{
 	
 	static List<Vessel> LOADEDVESSELS = new ArrayList<Vessel>();
+	
+	public Vessel(Sign sign, OfflinePlayer player, Location loc) throws InvalidSignException{
+		super(sign, player, loc);
+	}
 	
 	public Vessel(Sign sign, String name, VesselType type, Player player){
 		super(sign, name, type, player);
@@ -75,6 +81,16 @@ public class Vessel extends MovableVessel{
 		List<Vessel> vessels = new ArrayList<Vessel>();
 		for (Vessel vessel : getVessels()){
 			if (vessel.getOwner().equals(player)){
+				vessels.add(vessel);
+			}
+		}
+		return vessels;
+	}
+	
+	public static List<Vessel> getVessels(World world){
+		List<Vessel> vessels = new ArrayList<Vessel>();
+		for (Vessel vessel : getVessels()){
+			if (vessel.getLocation().getWorld().equals(world)){
 				vessels.add(vessel);
 			}
 		}

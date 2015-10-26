@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Listeners.CommandLauncher;
+import MoseShipsBukkit.MovingShip.AutoPilotData;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class AutoPilot extends CommandLauncher{
@@ -26,13 +27,14 @@ public class AutoPilot extends CommandLauncher{
 			}else{
 				if (vessel.getVesselType().isAutoPilotAllowed()){
 					World world = vessel.getTeleportLocation().getWorld();
-					if (player.equals(vessel.getOwner())){
+					if ((player.equals(vessel.getOwner())) || (vessel.getSubPilots().contains(player.getUniqueId()))){
 						try{
 							int X = Integer.parseInt(args[2]);
 							int Y = Integer.parseInt(args[3]);
 							int Z = Integer.parseInt(args[4]);
 							Location loc = new Location(world, X, Y, Z);
-							vessel.setAutoPilotTo(loc);
+							AutoPilotData data = new AutoPilotData(vessel, loc, vessel.getVesselType().getDefaultSpeed(), player);
+							vessel.setAutoPilotTo(data);
 							player.sendMessage(Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));
 						}catch(NumberFormatException e){
 							player.sendMessage(Ships.runShipsMessage("X Y Z need to be whole numbers", true));
@@ -64,7 +66,8 @@ public class AutoPilot extends CommandLauncher{
 						int Y = Integer.parseInt(args[3]);
 						int Z = Integer.parseInt(args[4]);
 						Location loc = new Location(world, X, Y, Z);
-						vessel.setAutoPilotTo(loc);
+						AutoPilotData data = new AutoPilotData(vessel, loc, vessel.getVesselType().getDefaultSpeed(), null);
+						vessel.setAutoPilotTo(data);
 						sender.sendMessage(Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));
 					}catch(NumberFormatException e){
 						sender.sendMessage(Ships.runShipsMessage("X Y Z need to be whole numbers", true));

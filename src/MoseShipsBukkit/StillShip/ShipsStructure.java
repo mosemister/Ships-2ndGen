@@ -5,12 +5,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Dispenser;
-import org.bukkit.block.DoubleChest;
-import org.bukkit.block.Dropper;
-import org.bukkit.block.Furnace;
-import org.bukkit.block.Hopper;
 import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -27,7 +21,10 @@ public class ShipsStructure {
 	public ShipsStructure(List<Block> blocks){
 		for(Block block : blocks){
 			int id = block.getTypeId();
-			if ((id == 50) || 
+			SpecialBlock special = SpecialBlock.getSpecialBlock(block);
+			if (special != null){
+				SPE_BLOCKS.add(special);
+			}else if ((id == 50) || 
 					(id == 55) || 
 					(id == 51) || 
 					(id == 64) || 
@@ -62,47 +59,6 @@ public class ShipsStructure {
 					SPE_BLOCKS.add(block2);
 				}else{
 					PRI_BLOCKS.add(block);
-				}
-			}
-			else if ((id == 23) ||
-					(id == 63) || 
-					(id == 54) || 
-					(id == 61) || 
-					(id == 62) || 
-					(id == 146) || 
-					(id == 154) || 
-					(id == 158)){ 
-				if (block.getState() instanceof Chest){
-					Chest chest = (Chest)block.getState();
-					if (chest.getInventory().getHolder() instanceof DoubleChest){
-						DoubleChest dChest = (DoubleChest)chest.getInventory().getHolder();
-						Chest lChest = (Chest)dChest.getLeftSide();
-						if (lChest.equals(chest)){
-							SpecialBlock block2 = new SpecialBlock((Chest)block.getState(), false);
-							SPE_BLOCKS.add(block2);
-						}else{
-							SpecialBlock block2 = new SpecialBlock((Chest)block.getState(), true);
-							SPE_BLOCKS.add(block2);
-						}
-					}else{
-						SpecialBlock block2 = new SpecialBlock((Chest)block.getState(), false);
-						SPE_BLOCKS.add(block2);
-					}
-				}else if (block.getState() instanceof Furnace){
-					SpecialBlock block2 = new SpecialBlock((Furnace)block.getState());
-					SPE_BLOCKS.add(block2);
-				}else if (block.getState() instanceof Sign){
-					SpecialBlock block2 = new SpecialBlock((Sign)block.getState());
-					SPE_BLOCKS.add(block2);
-				}else if (block.getState() instanceof Dropper){
-					SpecialBlock block2 = new SpecialBlock((Dropper)block.getState());
-					SPE_BLOCKS.add(block2);
-				}else if (block.getState() instanceof Hopper){
-					SpecialBlock block2 = new SpecialBlock((Hopper)block.getState());
-					SPE_BLOCKS.add(block2);
-				}else if (block.getState() instanceof Dispenser){
-					SpecialBlock block2 = new SpecialBlock((Dispenser)block.getState());
-					SPE_BLOCKS.add(block2);
 				}
 			}else{
 				STA_BLOCKS.add(block);

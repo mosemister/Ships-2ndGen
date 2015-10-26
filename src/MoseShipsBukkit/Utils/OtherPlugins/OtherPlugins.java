@@ -1,5 +1,6 @@
 package MoseShipsBukkit.Utils.OtherPlugins;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -16,6 +17,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import at.pavlov.cannons.Cannons;
+import at.pavlov.cannons.cannon.Cannon;
+
 import com.cnaude.chairs.api.ChairsAPI;
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
@@ -28,6 +32,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.wimbli.WorldBorder.BorderData;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
@@ -107,6 +112,17 @@ public class OtherPlugins {
 		}else{
 			return true;
 		}
+	}
+	
+	public static Cannons getCannons(){
+		Plugin plugin = Bukkit.getPluginManager().getPlugin("Cannons");
+		if (plugin != null){
+			if (plugin instanceof Cannons){
+				Cannons cannon = (Cannons)plugin;
+				return cannon;
+			}
+		}
+		return null;
 	}
 	
 	public static boolean isChairsLoaded(){
@@ -254,6 +270,20 @@ public class OtherPlugins {
 			//teleport 
 		}
 		return blocks;
+	}
+	
+	public static void moveCannon(MovingBlock block, MovableVessel vessel){
+		HashSet<Cannon> cannons = getCannons().getCannonsAPI().getCannonsInBox(block.getBlock().getLocation(), 1, 1, 1);
+		for(Cannon cannon : cannons){
+			if (block.getMethod().equals(MovementMethod.ROTATE_LEFT)){
+				cannon.rotateLeft(vessel.getSign().getLocation().toVector());
+			}else if (block.getMethod().equals(MovementMethod.ROTATE_RIGHT)){
+				cannon.rotateRight(vessel.getSign().getLocation().toVector());
+			}else{
+				cannon.move(block.getMovingTo().toVector());
+			}
+			cannon.setOnShip(true);
+		}
 	}
 	
 	static MovingBlock getBreachPoint(List<MovingBlock> blocks, World world){

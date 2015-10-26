@@ -1,11 +1,14 @@
 package MoseShipsBukkit.Listeners.ShipsCommands;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Listeners.CommandLauncher;
 import MoseShipsBukkit.ShipsTypes.VesselType;
+import MoseShipsBukkit.StillShip.ShipsStructure;
+import MoseShipsBukkit.StillShip.SpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.MaterialItem;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
@@ -28,6 +31,8 @@ public class Developer extends CommandLauncher{
 		sender.sendMessage(ChatColor.GOLD + "/ships developer ramMaterials");
 		
 		sender.sendMessage(ChatColor.GOLD + "/ships developer all");
+		
+		sender.sendMessage(ChatColor.GOLD + "/ships developer structure <vesselname>");
 	}
 	
 	@Override
@@ -54,6 +59,8 @@ public class Developer extends CommandLauncher{
 				displayMaterialsList(sender);
 				sender.sendMessage("-----[RAM]-----");
 				displayRAMMaterialsList(sender);
+			}else if (args[1].equalsIgnoreCase("structure")){
+				displayVessel(sender, args);
 			}else{
 			}
 		}
@@ -100,5 +107,27 @@ public class Developer extends CommandLauncher{
 			sender.sendMessage(vessel.getName() + " | " + vessel.getDefaultSpeed());
 		}
 		return;
+	}
+	
+	public void displayVessel(ConsoleCommandSender sender, String[] args){
+		if (args.length >= 3){
+			Vessel vessel = Vessel.getVessel(args[2]);
+			if (vessel != null){
+				ShipsStructure structure = vessel.getStructure();
+				sender.sendMessage("----Special Blocks----");
+				for(SpecialBlock sBlock : structure.getSpecialBlocks()){
+					Block block = sBlock.getBlock();
+					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", " + block.getZ() + ", " + block.getWorld().getName());
+				}
+				sender.sendMessage("----Priority blocks----");
+				for(Block block : structure.getPriorityBlocks()){
+					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", " + block.getZ() + ", " + block.getWorld().getName());
+				}
+				sender.sendMessage("----Normal blocks----");
+				for(Block block : structure.getStandardBlocks()){
+					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", " + block.getZ() + ", " + block.getWorld().getName());
+				}
+			}
+		}
 	}
 }

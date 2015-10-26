@@ -5,10 +5,11 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.MovingShip.AutoPilotData;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Cell;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
@@ -16,7 +17,7 @@ import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
 public class ShipsAutoRuns {
 	
-	public static HashMap<Vessel, Player> EOTAUTORUN = new HashMap<Vessel, Player>();
+	public static HashMap<Vessel, OfflinePlayer> EOTAUTORUN = new HashMap<Vessel, OfflinePlayer>();
 	
 	public static void SolorCell(){
 		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("SolarCell active", false));
@@ -61,7 +62,7 @@ public class ShipsAutoRuns {
 
 			@Override
 			public void run() {
-				for (Entry<Vessel, Player> vessel : EOTAUTORUN.entrySet()){
+				for (Entry<Vessel, OfflinePlayer> vessel : EOTAUTORUN.entrySet()){
 					vessel.getKey().updateStructure();
 					vessel.getKey().moveVessel(MovementMethod.MOVE_FORWARD, 2, vessel.getValue());
 				}
@@ -78,25 +79,25 @@ public class ShipsAutoRuns {
 			public void run() {
 				for(Vessel vessel : Vessel.getVessels()){
 					Location loc = vessel.getSign().getLocation();
-					Location loc2 = vessel.getAutoPilotTo();
+					AutoPilotData data = vessel.getAutoPilotData();
 					YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-					if (loc2 != null){
+					if (data != null){
 						vessel.updateStructure();
 						if (loc.getY() >= config.getInt("Structure.Signs.AutoPilot.height")){
-							Location loc3 = new Location(loc2.getWorld(), loc2.getX(), loc.getY(), loc2.getZ());
+							Location loc3 = new Location(data.getMovingTo().getWorld(), data.getMovingTo().getX(), loc.getY(), data.getMovingTo().getZ());
 							if ((loc3.getX() == loc.getX()) && (loc3.getZ() == loc.getZ())){
-								if (!vessel.safelyMoveTowardsLocation(loc2, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
+								if (!vessel.safelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(), data.getPlayer())){
 									vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
 									vessel.setAutoPilotTo(null);
 								}
 							}else{
-								if (!vessel.safelyMoveTowardsLocation(loc3, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
+								if (!vessel.safelyMoveTowardsLocation(loc3, data.getSpeed(), data.getPlayer())){
 									vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
 									vessel.setAutoPilotTo(null);
 								}
 							}
 						}else{
-							if (!vessel.safelyMoveTowardsLocation(loc2, vessel.getVesselType().getDefaultSpeed(), vessel.getOwner().getPlayer())){
+							if (!vessel.safelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(), data.getPlayer())){
 								vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
 								vessel.setAutoPilotTo(null);	
 							}

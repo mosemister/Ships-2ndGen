@@ -36,6 +36,9 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 
 	@Override
 	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
+		if ((move.equals(MovementMethod.MOVE_DOWN) || (move.equals(MovementMethod.MOVE_UP)))){
+			return false;
+		}
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())){
 			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())){

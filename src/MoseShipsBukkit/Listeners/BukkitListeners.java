@@ -1,8 +1,15 @@
 package MoseShipsBukkit.Listeners;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -16,6 +23,7 @@ import org.bukkit.entity.Creeper;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,28 +34,73 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Events.ShipCreateEvent;
 import MoseShipsBukkit.Events.ShipsSignCreation;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.ShipsTypes.VesselType;
+import MoseShipsBukkit.StillShip.Vectors.BlockVector;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
+import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.World.Wind.Direction;
 
 public class BukkitListeners implements Listener {
 	
+	public static void playerLeave(Player player){
+		for (Vessel vessel : Vessel.getVessels()){
+			if (vessel.getEntities().contains(player)){
+				Block block = player.getLocation().getBlock();
+				Sign sign = vessel.getSign();
+				BlockVector vector = new BlockVector(sign.getBlock(), block);
+				File file = vessel.getFile();
+				YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+				List<String> list = config.getStringList("PlayerLocation");
+				if (list == null){
+					list = new ArrayList<String>();
+				}
+				list.add(player.getUniqueId().toString() + "," + vector.toString());
+			}
+		}
+	}
+	
+	@EventHandler
+	public static void playerQuit(PlayerQuitEvent event){
+		playerLeave(event.getPlayer());
+	}
+	
+	@EventHandler
+	public static void playerKickEvent(PlayerKickEvent event){
+		playerLeave(event.getPlayer());
+	}
+	
+	@EventHandler
+	public static void playerJoin(PlayerJoinEvent event){
+		Player player = event.getPlayer();
+		for(Vessel vessel : Vessel.getVessels()){
+			for(Entry<OfflinePlayer, BlockVector> entry : vessel.getBlockLocation().entrySet()){
+				if (entry.getKey().equals(player)){
+					Location loc = entry.getValue().getBlock(vessel.getSign().getBlock()).getLocation();
+					player.teleport(loc);
+				}
+			}
+		}
+	}
+	
 	@EventHandler
 	public static void blockBurn(BlockIgniteEvent event){
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		if (config.getBoolean("World.ProtectedVessels.FireProtect2")){
-			Block block = event.getIgnitingBlock();
+		Block block = event.getIgnitingBlock();
+		if (block != null){
 			if (block.getType().equals(Material.NETHERRACK)){
 				Vessel vessel = Vessel.getVessel(block, false);
 				if (vessel != null){
-					if (vessel.isProtected()){
+					if ((vessel.isProtected() && config.getBoolean("World.ProtectedVessels.FireProtect2")) || (vessel.isInvincible())){
 						event.setCancelled(true);
 					}
 				}
@@ -58,13 +111,11 @@ public class BukkitListeners implements Listener {
 	@EventHandler
 	public static void endermanProtect(EntityChangeBlockEvent event){
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		if (config.getBoolean("World.ProtectedVessels.EntityProtect.EnderMan")){
-			if (event.getEntity() instanceof Enderman){
-				Vessel vessel = Vessel.getVessel(event.getBlock(), false);
-				if (vessel != null){
-					if (vessel.isProtected()){
-						event.setCancelled(true);
-					}
+		if (event.getEntity() instanceof Enderman){
+			Vessel vessel = Vessel.getVessel(event.getBlock(), false);
+			if (vessel != null){
+				if ((vessel.isProtected() && config.getBoolean("World.ProtectedVessels.EntityProtect.EnderMan")) || (vessel.isInvincible())){
+					event.setCancelled(true);
 				}
 			}
 		}
@@ -78,45 +129,39 @@ public class BukkitListeners implements Listener {
 				for(Block block : event.blockList()){
 					Vessel vessel = Vessel.getVessel(block, false);
 					if (vessel != null){
-						if (vessel.isProtected()){
+						if ((vessel.isProtected() || (vessel.isInvincible()))){
 							event.blockList().remove(block);
 						}
 					}
 				}
 			}
 		}
-		if (config.getBoolean("World.ProtectedVessels.ExplodeProtect.TNT")){
-			if (event.getEntityType().equals(EntityType.PRIMED_TNT)){
-				for(Block block : event.blockList()){
-					Vessel vessel = Vessel.getVessel(block, false);
-					if (vessel != null){
-						if (vessel.isProtected()){
-							event.blockList().remove(block);
-						}
+		if (event.getEntityType().equals(EntityType.PRIMED_TNT)){
+			for(Block block : event.blockList()){
+				Vessel vessel = Vessel.getVessel(block, false);
+				if (vessel != null){
+					if ((vessel.isProtected() && config.getBoolean("World.ProtectedVessels.ExplodeProtect.TNT")) || (vessel.isInvincible())){
+						event.blockList().remove(block);
 					}
 				}
 			}
 		}
-		if (config.getBoolean("World.ProtectedVessels.EntityProtect.EnderDragon")){
-			if (event.getEntity() instanceof EnderDragon){
-				for(Block block : event.blockList()){
-					Vessel vessel = Vessel.getVessel(block, false);
-					if (vessel != null){
-						if (vessel.isProtected()){
-							event.blockList().remove(block);
-						}
+		if (event.getEntity() instanceof EnderDragon){
+			for(Block block : event.blockList()){
+				Vessel vessel = Vessel.getVessel(block, false);
+				if (vessel != null){
+					if (((vessel.isProtected() && (config.getBoolean("World.ProtectedVessels.EntityProtect.EnderDragon"))) || (vessel.isInvincible()))){
+						event.blockList().remove(block);
 					}
 				}
 			}
 		}
-		if (config.getBoolean("World.ProtectedVessels.EntityProtect.Wither")){
-			if (event.getEntity() instanceof Wither){
-				for(Block block : event.blockList()){
-					Vessel vessel = Vessel.getVessel(block, false);
-					if (vessel != null){
-						if (vessel.isProtected()){
-							event.blockList().remove(block);
-						}
+		if (event.getEntity() instanceof Wither){
+			for(Block block : event.blockList()){
+				Vessel vessel = Vessel.getVessel(block, false);
+				if (vessel != null){
+					if (((vessel.isProtected()) && (config.getBoolean("World.ProtectedVessels.EntityProtect.Wither"))) || (vessel.isInvincible())){
+						event.blockList().remove(block);
 					}
 				}
 			}
@@ -126,15 +171,15 @@ public class BukkitListeners implements Listener {
 	@EventHandler
 	public static void signBreak(BlockBreakEvent event){
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		if (config.getBoolean("World.ProtectedVessels.BlockBreak")){
-			Vessel vessel = Vessel.getVessel(event.getBlock(), true);
-			if (vessel != null){
-				if (vessel.isProtected()){
-					if (!event.getPlayer().equals(vessel.getOwner())){
-						event.setCancelled(true);
-						event.getPlayer().sendMessage(Ships.runShipsMessage("This Ship has protection on", true));
-					}
+		Vessel vessel = Vessel.getVessel(event.getBlock(), true);
+		if (vessel != null){
+			if ((vessel.isProtected() && (config.getBoolean("World.ProtectedVessels.BlockBreak")))){
+				if (!event.getPlayer().equals(vessel.getOwner())){
+					event.setCancelled(true);
+					event.getPlayer().sendMessage(Ships.runShipsMessage("This Ship has protection on", true));
 				}
+			}else if(vessel.isInvincible()){
+				event.setCancelled(true);
 			}
 		}
 		if (event.getBlock().getState() instanceof Sign){
@@ -178,8 +223,9 @@ public class BukkitListeners implements Listener {
 	public static void signCreation(SignChangeEvent event){
 		//Ships sign
 		if (event.getLine(0).equalsIgnoreCase("[Ships]")){
-			VesselType type = VesselType.getTypeByName(event.getLine(1)).clone();
+			VesselType type = VesselType.getTypeByName(event.getLine(1));
 			if (type != null){
+				type = type.clone();
 				if ((event.getPlayer().hasPermission("ships." + type.getName() + ".make")) || (event.getPlayer().hasPermission("ships.*.make")) || (event.getPlayer().hasPermission("ships.*"))){
 					ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), ChatColor.YELLOW + "[Ships]", (Sign)event.getBlock().getState(), event.getPlayer(), event.getLine(0));
 					Bukkit.getPluginManager().callEvent(creation);
@@ -386,8 +432,16 @@ public class BukkitListeners implements Listener {
 				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
 					Vessel vessel = Vessel.getVessel(sign);
 					if (vessel == null){
-						event.getPlayer().sendMessage(Ships.runShipsMessage("A issue has occured. Sign is not licenced", false));
-						sign.getBlock().breakNaturally();
+						//check for invalid ships
+						Vessel vessel2 = VesselLoader.loadUnloadedVessel(sign);
+						if (vessel2 == null){
+							event.getPlayer().sendMessage(Ships.runShipsMessage("A issue has occured. Sign is not licenced", false));
+							sign.getBlock().breakNaturally();
+						}else{
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Recoved losted vessel, click again to get stats.", false));
+							vessel2.save();
+							vessel2.updateLocation(vessel2.getTeleportLocation(), sign);
+						}
 					}else{
 						if (vessel.getOwner().equals(event.getPlayer())){
 							vessel.displayInfo(event.getPlayer());

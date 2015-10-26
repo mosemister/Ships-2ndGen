@@ -28,6 +28,7 @@ import MoseShipsBukkit.Listeners.ShipsCommands.Info;
 import MoseShipsBukkit.Listeners.ShipsCommands.Reload;
 import MoseShipsBukkit.Listeners.ShipsCommands.SignCommand;
 import MoseShipsBukkit.Listeners.ShipsCommands.Teleport;
+import MoseShipsBukkit.Listeners.ShipsCommands.VesselCommand;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.BlockStack;
@@ -122,6 +123,7 @@ public class Ships extends JavaPlugin{
 		new Teleport();
 		new Fixes();
 		new Info();
+		new VesselCommand();
 	}
 	
 	public static JavaPlugin getPlugin(){
