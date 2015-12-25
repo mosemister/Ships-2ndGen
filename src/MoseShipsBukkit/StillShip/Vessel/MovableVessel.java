@@ -20,7 +20,6 @@ import org.bukkit.block.Dropper;
 import org.bukkit.block.Furnace;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.Sign;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -28,10 +27,9 @@ import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import com.cnaude.chairs.api.ChairsAPI;
-
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Events.ShipAboutToMoveEvent;
+import MoseShipsBukkit.Events.ShipFinishedMovingEvent;
 import MoseShipsBukkit.Events.ShipMovingEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
@@ -40,11 +38,12 @@ import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.ShipsStructure;
 import MoseShipsBukkit.StillShip.SpecialBlock;
 import MoseShipsBukkit.Utils.BlockConverter;
+import MoseShipsBukkit.Utils.Multitasking;
+import MoseShipsBukkit.Utils.Multitasking.ListToObject;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
-import MoseShipsBukkit.Utils.OtherPlugins.OtherPlugins;
 
 public class MovableVessel extends ProtectedVessel{
 
@@ -111,27 +110,6 @@ public class MovableVessel extends ProtectedVessel{
 		return true;
 	}
 	
-	private boolean factionSupport(YamlConfiguration config, MovingBlock block, @Nullable OfflinePlayer player){
-		ConsoleCommandSender console = Bukkit.getConsoleSender();
-		if (config.getBoolean("FactionsSupport.enabled")){
-			if (OtherPlugins.isFactionsLoaded()){
-				if (OtherPlugins.isLocationOnFactionsLand(block.getMovingTo())){
-					if (player != null){
-						if (Messages.isEnabled()){
-							if (player.isOnline()){
-								player.getPlayer().sendMessage(Ships.runShipsMessage("Faction in way.", true));
-							}
-						}
-					}
-					return true;
-				}
-			}else{
-				console.sendMessage(Ships.runShipsMessage("Ships has Factions enabled but can not hook into it.", true));
-			}
-		}
-		return false;
-	}
-	
 	public int getWaterLevel(List<MovingBlock> blocks){
 		int maxValue = 0;
 		for(MovingBlock block : blocks){
@@ -143,91 +121,6 @@ public class MovableVessel extends ProtectedVessel{
 			}
 		}
 		return maxValue;
-	}
-	
-	private boolean worldGuardSupport(YamlConfiguration config, MovingBlock block, @Nullable OfflinePlayer player){
-		ConsoleCommandSender console = Bukkit.getConsoleSender();
-		if (config.getBoolean("WorldGuardSupport.enabled")){
-			if (OtherPlugins.isWorldGuardLoaded()){
-				if (OtherPlugins.isLocationInWorldGuardRegion(block.getMovingTo())){
-					if (player != null){
-						if (Messages.isEnabled()){
-							if (player.isOnline()){
-								player.getPlayer().sendMessage(Ships.runShipsMessage("Region in way.", true));
-							}
-						}
-					}
-					return true;
-				}
-			}else{
-				console.sendMessage(Ships.runShipsMessage("Ships has WorldGuard enabled but can not hook into it.", true));
-			}
-		}
-		return false;
-	}
-	
-	private boolean worldBorderSupport(YamlConfiguration config, MovingBlock block, @Nullable OfflinePlayer player){
-		ConsoleCommandSender console = Bukkit.getConsoleSender();
-		if (config.getBoolean("WorldBorderSupport.enabled")){
-			if (OtherPlugins.isWorldBorderLoaded()){
-				if (OtherPlugins.isLocationOutOfWorldBorder(block.getMovingTo())){
-					if (player != null){
-						if (Messages.isEnabled()){
-							if (player.isOnline()){
-								player.getPlayer().sendMessage(Ships.runShipsMessage("Edge of map.", true));
-							}
-						}
-					}
-					return true;
-				}
-			}else{
-				console.sendMessage(Ships.runShipsMessage("Ships has WorldBorder enabled but can not hook into it.", true));
-			}
-		}
-		return false;
-	}
-	
-	private boolean griefProtectionSupport(YamlConfiguration config, MovingBlock block, @Nullable OfflinePlayer player){
-		if (config.getBoolean("GriefPreventionPluginSupport.enabled")){
-			if (OtherPlugins.isGriefPreventionLoaded()){
-				if (OtherPlugins.isLocationInGriefPreventionClaim(block.getMovingTo(), this)){
-					if (player != null){
-						if (Messages.isEnabled()){
-							if (player.isOnline()){
-								player.getPlayer().sendMessage(Ships.runShipsMessage("Claim in way.", true));
-							}
-						}
-					}
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	private boolean townySupport(YamlConfiguration config, MovingBlock block, @Nullable OfflinePlayer player){
-		ConsoleCommandSender console = Bukkit.getConsoleSender();
-		if (config.getBoolean("TownySupport.enabled")){
-			if (OtherPlugins.isTownyLoaded()){
-				if (OtherPlugins.isTownyHookLoaded()){
-					if (OtherPlugins.isLocationInTownyLand(block.getMovingTo())){
-						if (player != null){
-							if (Messages.isEnabled()){
-								if (player.isOnline()){
-									player.getPlayer().sendMessage(Ships.runShipsMessage("Town in way.", true));
-								}
-							}
-						}
-						return true;
-					}
-				}else{
-					console.sendMessage(Ships.runShipsMessage("Needs ShipsTownyHook.jar for compatibility with Towny. Download at dev.bukkit.org/bukkit-plugins/ships/files/.", true));
-				}
-			}else{
-				console.sendMessage(Ships.runShipsMessage("Ships has Towny enabled but can not hook into it.", true));
-			}
-		}
-		return false;
 	}
 	
 	private boolean hasMovePermissions(@Nullable OfflinePlayer player){
@@ -314,7 +207,6 @@ public class MovableVessel extends ProtectedVessel{
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		for	(Entity entity : getEntities()){
 			Inventory inv = null;
-			boolean isSitting = false;
 			if (entity instanceof Player){
 				Player player = (Player)entity;
 				if (config.getBoolean("Inventory.keepInventorysOpen")){
@@ -322,13 +214,6 @@ public class MovableVessel extends ProtectedVessel{
 					if (!inv2.getTitle().equals("container.crafting")){
 						inv = inv2;
 						player.closeInventory();
-					}
-				}
-				if (config.getBoolean("ChairsReloadedSupport.enabled")){
-					if (OtherPlugins.isChairsLoaded()){
-						isSitting = ChairsAPI.isSitting(player);
-					}else{
-						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Chairs support has been enabled but can not find ChairsReloaded", true));
 					}
 				}
 			}
@@ -340,7 +225,13 @@ public class MovableVessel extends ProtectedVessel{
 			double Z = loc.getZ() - Math.floor(loc.getZ());
 			loc2.add(X, Y, Z);
 			loc2.setPitch(loc.getPitch());
-			loc2.setYaw(loc.getYaw());
+			if (move.equals(MovementMethod.ROTATE_LEFT)){
+				loc2.setYaw(loc.getYaw() + 270);
+			}else if (move.equals(MovementMethod.ROTATE_RIGHT)){
+				loc2.setYaw(loc.getYaw() + 90);
+			}else{
+				loc2.setYaw(loc.getYaw());
+			}
 			entity.teleport(loc2);
 			if (entity instanceof Player){
 				Player player = (Player)entity;
@@ -348,9 +239,6 @@ public class MovableVessel extends ProtectedVessel{
 					if (inv != null){
 						player.openInventory(inv);
 					}
-				}
-				if (isSitting){
-					OtherPlugins.sit(player, loc2);
 				}
 			}
 		}
@@ -431,6 +319,22 @@ public class MovableVessel extends ProtectedVessel{
 		}
 	}
 	
+	private void forceMove(final MovementMethod move, final List<MovingBlock> blocks, boolean multitasking){
+		if (multitasking){
+			final List<ListToObject<MovingBlock>> devide = Multitasking.spiltList(blocks ,Multitasking.CORE_COUNT -1);
+			for(int W = 0; W < (Multitasking.CORE_COUNT -1); W++){
+				final int U = W;
+				new Runnable(){
+					public void run(){
+						forceMove(move, devide.get(U).getList());
+					}
+				}.run();
+			}
+		}else{
+			forceMove(move, blocks);
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
 	private void forceMove(MovementMethod move, List<MovingBlock> blocks){
 		//remove all blocks (priority first)
@@ -449,7 +353,6 @@ public class MovableVessel extends ProtectedVessel{
 					block.getBlock().setType(Material.STATIONARY_WATER);
 				}
 			}
-			OtherPlugins.moveCannon(block, this);
 		}
 		//place all blocks (priority last)
 		for(int A = blocks.size() - 1;A >= 0; A--){
@@ -474,12 +377,20 @@ public class MovableVessel extends ProtectedVessel{
 			if (block.getSpecialBlock() != null){
 				setInventory(block);
 			}
+			if(block.getMovingTo().getZ() == -91){
+				Bukkit.getConsoleSender().sendMessage("----------");
+				Bukkit.getConsoleSender().sendMessage("Original pos = " + block.getBlock().getLocation());
+				Bukkit.getConsoleSender().sendMessage("new Location = " + block.getMovingTo());
+				Bukkit.getConsoleSender().sendMessage("Is now = " + block.getId() + ":" + block.getData());
+			}
 		}
 		MovingBlock mBlock = new MovingBlock(getTeleportLocation().getBlock(), this, move);
 		TELEPORTLOCATION = mBlock.getMovingTo();
 		updateLocation(mBlock.getMovingTo(), getSign());
 		moveEntitys(move);
 		updateStructure();
+		ShipFinishedMovingEvent event = new ShipFinishedMovingEvent(this);
+		Bukkit.getServer().getPluginManager().callEvent(event);
 	}
 	
 	private boolean safeMove(MovementMethod move, @Nullable OfflinePlayer player, boolean sendEvent){
@@ -488,23 +399,6 @@ public class MovableVessel extends ProtectedVessel{
 			return false;
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		for(MovingBlock block : blocks){
-			if (factionSupport(config, block, player)){
-				return false;
-			}
-			if (worldGuardSupport(config, block, player)){
-				return false;
-			}
-			if (worldBorderSupport(config, block, player)){
-				return false;
-			}
-			if (griefProtectionSupport(config, block, player)){
-				return false;
-			}
-			if (townySupport(config, block, player)){
-				return false;
-			}
-		}
 		if (this.getVesselType().attemptToMove(this, move, blocks, player)){
 			MovingStructure structure = new MovingStructure(blocks);
 			this.setStructure(structure);
@@ -516,17 +410,41 @@ public class MovableVessel extends ProtectedVessel{
 				}
 				structure = event.getStructure();
 			}
-			forceMove(move, structure.getAllMovingBlocks());
+			forceMove(move, structure.getAllMovingBlocks(), config.getBoolean("Multitasking.enable"));
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean moveVessel(MovementMethod move, int speed, OfflinePlayer player){
-		return moveVessel(move, speed, player, true);
+	/*@SuppressWarnings("deprecation")
+	public void ASyncMoveVessel(final MovementMethod move, final int speed, final OfflinePlayer player){
+		Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new BukkitRunnable(){
+
+			@Override
+			public void run() {
+				syncMoveVessel(move, speed, player);
+			}
+			
+		}, 0);
+	}*/
+	
+	public boolean syncMoveVessel(MovementMethod move, int speed, OfflinePlayer player){
+		return syncMoveVessel(move, speed, player, true);
 	}
 	
-	public boolean moveVessel(MovementMethod move, int speed, OfflinePlayer player, boolean event){
+	/*@SuppressWarnings("deprecation")
+	public void ASyncMoveVessel(final MovementMethod move, final int speed, final OfflinePlayer player, final boolean event){
+		Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new BukkitRunnable(){
+
+			@Override
+			public void run() {
+				syncMoveVessel(move, speed, player, event);
+			}
+			
+		}, 0);
+	}*/
+	
+	public boolean syncMoveVessel(MovementMethod move, int speed, OfflinePlayer player, boolean event){
 		if (hasMovePermissions(player)){
 			if (move == null){
 				if (player != null){
@@ -558,7 +476,19 @@ public class MovableVessel extends ProtectedVessel{
 		return false;
 	}
 	
-	public boolean safelyMoveTowardsLocation(Location moveTo, int speed, Player player){
+	/*@SuppressWarnings("deprecation")
+	public void ASyncMoveVessel(final Location move, final int speed, final OfflinePlayer player){
+		Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new BukkitRunnable(){
+
+			@Override
+			public void run() {
+				syncSafelyMoveTowardsLocation(move, speed, player);
+			}
+			
+		}, 0);
+	}*/
+	
+	public boolean syncSafelyMoveTowardsLocation(Location moveTo, int speed, OfflinePlayer player){
 		Location loc = this.getSign().getLocation();
 		BlockFace face = this.getFacingDirection();
 		MovementMethod move = MovementMethod.getMovementDirection(face);
@@ -571,22 +501,22 @@ public class MovableVessel extends ProtectedVessel{
 				}
 				if (loc.getZ() > moveTo.getZ()){
 					if ((loc.getZ() + speed) > moveTo.getZ()){
-						value = moveVessel(MovementMethod.MOVE_NEGATIVE_Z, 1, player);
+						value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_Z, 1, player);
 					}else{
 						if (move.equals(MovementMethod.MOVE_NEGATIVE_Z)){
-							value = moveVessel(MovementMethod.MOVE_NEGATIVE_Z, speed, player);
+							value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_Z, speed, player);
 						}else{
-							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
 						}
 					}
 				}else{
 					if ((loc.getZ() - speed) < moveTo.getZ()){
-						value = moveVessel(MovementMethod.MOVE_POSITIVE_Z, 1, player);
+						value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_Z, 1, player);
 					}else{
 						if (move.equals(MovementMethod.MOVE_POSITIVE_Z)){
-							value = moveVessel(MovementMethod.MOVE_POSITIVE_Z, speed, player);
+							value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_Z, speed, player);
 						}else{
-							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
 						}
 					}
 				}
@@ -594,39 +524,39 @@ public class MovableVessel extends ProtectedVessel{
 				//try X
 				if (loc.getX() > moveTo.getX()){
 					if ((loc.getX() + speed) > moveTo.getX()){
-						value = moveVessel(MovementMethod.MOVE_NEGATIVE_X, 1, player);
+						value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_X, 1, player);
 					}else{
 						if (move.equals(MovementMethod.MOVE_NEGATIVE_X)){
-							value = moveVessel(MovementMethod.MOVE_NEGATIVE_X, speed, player);
+							value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_X, speed, player);
 						}else{
-							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
 						}
 					}
 				}else{
 					if ((loc.getX() - speed) < moveTo.getX()){
-						value = moveVessel(MovementMethod.MOVE_POSITIVE_X, 1, player);
+						value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_X, 1, player);
 					}else{
 						if (move.equals(MovementMethod.MOVE_POSITIVE_X)){
-							value = moveVessel(MovementMethod.MOVE_POSITIVE_X, speed, player);
+							value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_X, speed, player);
 						}else{
-							value = moveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
 						}
 					}
 				}
 			}
 		}else{
 			//try Y
-			if (loc.getY() > moveTo.getY()){
+			if (loc.getY() < moveTo.getY()){
 				if ((loc.getY() + speed) > moveTo.getY()){
-					value = moveVessel(MovementMethod.MOVE_UP, 1, player);
+					value = syncMoveVessel(MovementMethod.MOVE_UP, 1, player);
 				}else{
-					value = moveVessel(MovementMethod.MOVE_UP, speed, player);
+					value = syncMoveVessel(MovementMethod.MOVE_UP, speed, player);
 				}
 			}else{
 				if ((loc.getY() - speed) > moveTo.getY()){
-					value = moveVessel(MovementMethod.MOVE_DOWN, 1, player);
+					value = syncMoveVessel(MovementMethod.MOVE_DOWN, 1, player);
 				}else{
-					value = moveVessel(MovementMethod.MOVE_DOWN, speed, player);
+					value = syncMoveVessel(MovementMethod.MOVE_DOWN, speed, player);
 				}
 			}
 		}
@@ -656,7 +586,7 @@ public class MovableVessel extends ProtectedVessel{
 	
 	public void forceTeleport(Location loc){
 		List<MovingBlock> blocks = getTeleportStructure(loc);
-		forceMove(MovementMethod.TELEPORT, blocks);
+		forceMove(MovementMethod.TELEPORT, blocks, YamlConfiguration.loadConfiguration(Config.getConfig().getFile()).getBoolean("Multitasking.enable"));
 	}
 	
 	public void forceMove(MovementMethod move, int speed, Player player){
@@ -677,7 +607,7 @@ public class MovableVessel extends ProtectedVessel{
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			blocks.add(block2);
 		}
-		forceMove(move, blocks);
+		forceMove(move, blocks, YamlConfiguration.loadConfiguration(Config.getConfig().getFile()).getBoolean("Multitasking.enable"));
 	}
 
 }

@@ -11,7 +11,6 @@ public class BlockConverter {
 	
 	public static byte convertRotation(MovementMethod move, MovingBlock block, byte data){
 		int id = block.getId();
-		System.out.println("convert rotation (" + id + ")");
 		if ((id == Material.WALL_SIGN.getId()) || 
 				(id == Material.FURNACE.getId()) || 
 				(id == Material.BURNING_FURNACE.getId()) ||

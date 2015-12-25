@@ -19,11 +19,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import MoseShipsBukkit.GUI.ShipsGUICommand;
 import MoseShipsBukkit.Listeners.BukkitListeners;
 import MoseShipsBukkit.Listeners.Commands;
 import MoseShipsBukkit.Listeners.ShipsCommands.AutoPilot;
 import MoseShipsBukkit.Listeners.ShipsCommands.Developer;
 import MoseShipsBukkit.Listeners.ShipsCommands.Fixes;
+import MoseShipsBukkit.Listeners.ShipsCommands.Help;
 import MoseShipsBukkit.Listeners.ShipsCommands.Info;
 import MoseShipsBukkit.Listeners.ShipsCommands.Reload;
 import MoseShipsBukkit.Listeners.ShipsCommands.SignCommand;
@@ -55,6 +57,7 @@ public class Ships extends JavaPlugin{
 		activateCommands();
 		Messages.refreshMessages();
 		removeOldFiles();
+		ShipsGUICommand.setGUITools();
 		//FlyThrough.activateFlyThrough();
 		for (VesselType type : VesselType.values()){
 			type.loadDefault();
@@ -124,6 +127,7 @@ public class Ships extends JavaPlugin{
 		new Fixes();
 		new Info();
 		new VesselCommand();
+		new Help();
 	}
 	
 	public static JavaPlugin getPlugin(){
@@ -162,6 +166,7 @@ public class Ships extends JavaPlugin{
 		}
 		count++;
 		BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
+		//List<String> material = new ArrayList<String>();
 		for(BlockFace face : faces){
 			Block block2 = block.getRelative(face);
 			if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))){
@@ -169,8 +174,15 @@ public class Ships extends JavaPlugin{
 					STACK.addBlock(block2);
 					prototype2(block2);
 				}
-			}	
+			}/*else{
+				if (!material.contains(block2.getType().name())){
+					material.add(block2.getType().name());
+				}
+			}*/
 		}
+		/*if (material.size() != 0){
+			System.out.println(material);
+		}*/
 	}
 	
 	//never know when it could be useful ;)

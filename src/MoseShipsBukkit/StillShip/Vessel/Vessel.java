@@ -17,6 +17,7 @@ import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.ShipsStructure;
 import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
+import MoseShipsBukkit.Utils.MoseUtils.LimitedList;
 
 public class Vessel extends MovableVessel{
 	
@@ -24,6 +25,8 @@ public class Vessel extends MovableVessel{
 	
 	public Vessel(Sign sign, OfflinePlayer player, Location loc) throws InvalidSignException{
 		super(sign, player, loc);
+		LOADEDVESSELS.add(this);
+		TYPE.save(this);
 	}
 	
 	public Vessel(Sign sign, String name, VesselType type, Player player){
@@ -77,24 +80,24 @@ public class Vessel extends MovableVessel{
 		return LOADEDVESSELS;
 	}
 	
-	public static List<Vessel> getVessels(OfflinePlayer player){
+	public static LimitedList<Vessel> getVessels(OfflinePlayer player){
 		List<Vessel> vessels = new ArrayList<Vessel>();
 		for (Vessel vessel : getVessels()){
 			if (vessel.getOwner().equals(player)){
 				vessels.add(vessel);
 			}
 		}
-		return vessels;
+		return new LimitedList<Vessel>(vessels);
 	}
 	
-	public static List<Vessel> getVessels(World world){
+	public static LimitedList<Vessel> getVessels(World world){
 		List<Vessel> vessels = new ArrayList<Vessel>();
 		for (Vessel vessel : getVessels()){
 			if (vessel.getLocation().getWorld().equals(world)){
 				vessels.add(vessel);
 			}
 		}
-		return vessels;
+		return new LimitedList<Vessel>(vessels);
 	}
 	
 	public static Vessel getVessel(String name){

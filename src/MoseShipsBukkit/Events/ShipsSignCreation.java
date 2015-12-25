@@ -17,6 +17,7 @@ public class ShipsSignCreation extends Event implements Cancellable{
 	String SIGNTEXT;
 	String TEXT;
 	Sign SIGN;
+	static HandlerList LIST = new HandlerList();
 	
 	public ShipsSignCreation(JavaPlugin plugin, String signText, Sign sign){
 		PLUGIN = plugin;
@@ -65,7 +66,11 @@ public class ShipsSignCreation extends Event implements Cancellable{
 
 	@Override
 	public HandlerList getHandlers() {
-		return new HandlerList();
+		return LIST;
+	}
+	
+	public static HandlerList getHandlerList(){
+		return LIST;
 	}
 	
 	

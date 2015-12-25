@@ -15,7 +15,6 @@ import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 public class ProtectedVessel extends BaseVessel{
 
 	boolean PROTECTVESSEL;
-	double COST;
 	List<UUID> SUBPILOTS = new ArrayList<UUID>();
 	boolean INVINCIBLE;
 	
@@ -41,10 +40,6 @@ public class ProtectedVessel extends BaseVessel{
 	
 	public boolean isInvincible(){
 		return INVINCIBLE;
-	}
-	
-	public double getCost(){
-		return COST;
 	}
 	
 	public void setProtectVessel(boolean args){

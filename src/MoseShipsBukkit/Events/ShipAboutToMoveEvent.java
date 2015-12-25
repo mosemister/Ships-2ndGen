@@ -22,6 +22,7 @@ public class ShipAboutToMoveEvent extends Event implements Cancellable{
 	MovableVessel VESSEL;
 	OfflinePlayer PLAYER;
 	boolean CANCEL;
+	static HandlerList LIST = new HandlerList();
 	
 	public ShipAboutToMoveEvent(MovementMethod method, int speed, MovableVessel vessel, @Nullable OfflinePlayer player){
 		METHOD = method;
@@ -75,7 +76,11 @@ public class ShipAboutToMoveEvent extends Event implements Cancellable{
 	
 	@Override
 	public HandlerList getHandlers() {
-		return new HandlerList();
+		return LIST;
+	}
+	
+	public static HandlerList getHandlerList(){
+		return LIST;
 	}
 
 }

@@ -1,5 +1,6 @@
 package MoseShipsBukkit.Listeners.ShipsCommands;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+
+import com.google.common.collect.Sets;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Listeners.CommandLauncher;
@@ -34,7 +37,7 @@ public class SignCommand extends CommandLauncher{
 			player.sendMessage(ChatColor.GOLD + "/Ships sign track [seconds]" + ChatColor.AQUA + "; shows sign connections.");
 			player.sendMessage(ChatColor.GOLD + "/Ships sign transfer <new player>" + ChatColor.AQUA + "; transfers the ownership of a vessel.");
 		}else if (args[1].equalsIgnoreCase("track")){
-			Block block = player.getTargetBlock(null, 6);
+			Block block = player.getTargetBlock(Sets.newConcurrentHashSet(Arrays.asList(Material.AIR)), 5);
 			if (block.getState() instanceof Sign){
 				Sign sign = (Sign)block.getState();
 				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
@@ -95,7 +98,7 @@ public class SignCommand extends CommandLauncher{
 		}else if (args[1].equalsIgnoreCase("Transfer")){
 			if (args.length >= 3){
 				if ((player.hasPermission("ships.command.sign.transfer")) || (player.hasPermission("ships.*")) || (player.hasPermission("ships.command.*"))){
-					Block block = player.getTargetBlock(null, 6);
+					Block block = player.getTargetBlock(Sets.newConcurrentHashSet(Arrays.asList(Material.AIR)), 5);
 					if (block.getState() instanceof Sign){
 						Sign sign = (Sign)block.getState();
 						if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){

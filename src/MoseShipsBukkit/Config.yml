@@ -75,6 +75,9 @@ World:
       #enables the ability for vessels to fall out of the sky
       enabled: false
 
+Multitasking:
+  enable: false
+
 Messages:
   #enable if messages appear for users
   enabled: true

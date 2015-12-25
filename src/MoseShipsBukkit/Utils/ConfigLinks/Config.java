@@ -45,7 +45,10 @@ public class Config {
 	}
 	
 	public int getConfigVersionInt(){
-		int version = Integer.parseInt(getConfigVersion() + "");
+		String versionString = getConfigVersionString().replace(".", "");
+		
+		System.out.println(versionString);
+		int version = Integer.parseInt(versionString);
 		return version;
 	}
 	
@@ -61,7 +64,7 @@ public class Config {
 	}
 	
 	public int getLatestVersionInt(){
-		int version = Integer.parseInt(getLatestVersion() + "");
+		int version = Integer.parseInt(getLatestVersionString().replace(".", ""));
 		return version;
 	}
 	

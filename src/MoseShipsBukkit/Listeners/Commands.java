@@ -1,6 +1,5 @@
 package MoseShipsBukkit.Listeners;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,17 +15,8 @@ public class Commands implements CommandExecutor{
 		if (sender instanceof Player){
 			Player player = (Player)sender;
 			if (args.length == 0){
-				for(CommandLauncher command : CommandLauncher.getCommands()){
-					if (command.isPlayerCommand()){
-						if (command.getPermissions() != null){
-							if (player.hasPermission(command.getPermissions())){
-								player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs() + ChatColor.AQUA + ": " + command.getDescription());
-							}
-						}else{
-							player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs() + ChatColor.AQUA + ": " + command.getDescription());
-						}
-					}
-				}
+				CommandLauncher command = CommandLauncher.getCommand("help").get(0);
+				command.playerCommand(player, args);
 				return true;
 			}else{
 				for(CommandLauncher command : CommandLauncher.getCommands()){
@@ -54,11 +44,8 @@ public class Commands implements CommandExecutor{
 		}else if (sender instanceof ConsoleCommandSender){
 			ConsoleCommandSender console = (ConsoleCommandSender)sender;
 			if (args.length == 0){
-				for(CommandLauncher command : CommandLauncher.getCommands()){
-					if (command.isConsoleCommand()){
-						console.sendMessage(ChatColor.GOLD + command.getCommand() + ChatColor.AQUA + ": " + command.getDescription());
-					}
-				}
+				CommandLauncher command = CommandLauncher.getCommand("help").get(0);
+				command.consoleCommand(console, args);
 				return true;
 			}else{
 				for(CommandLauncher command : CommandLauncher.getCommands()){

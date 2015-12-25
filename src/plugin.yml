@@ -1,15 +1,6 @@
 name: Ships
-version: 5.0.1.0
+version: 5.0.1.1
 main: MoseShipsBukkit.Ships
-softdepend:
-  - WGCustomFlags
-  - WorldGuard
-  - Valut
-  - Factions
-  - WorldBorder
-  - Towny
-  - GriefPrevention
-  - Chairs
 commands:
   Ships:
     usage: /ships

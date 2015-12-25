@@ -33,14 +33,18 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Events.ShipCreateEvent;
 import MoseShipsBukkit.Events.ShipsSignCreation;
+import MoseShipsBukkit.GUI.ShipsGUICommand;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.Vectors.BlockVector;
@@ -186,13 +190,13 @@ public class BukkitListeners implements Listener {
 			Sign sign = (Sign)event.getBlock().getState();
 			signBreakEvent(sign, event);
 		}
-		BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
+		/*BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
 		for(BlockFace face : faces){
 			Block block = event.getBlock().getRelative(face);
 			if (block.getState() instanceof Sign){
 				signBreakEvent((Sign)block.getState(), event);
 			}
-		}
+		}*/
 	}
 	
 	public static void signBreakEvent(Sign sign, BlockBreakEvent event){
@@ -231,6 +235,7 @@ public class BukkitListeners implements Listener {
 					Bukkit.getPluginManager().callEvent(creation);
 					if (!creation.isCancelled()){
 						if (Vessel.getVessel(event.getLine(2)) == null){
+							System.out.println("<Debug> Vessel name not in use");
 							Vessel vessel = new Vessel((Sign)event.getBlock().getState(),event.getLine(2), type, event.getPlayer());
 							ShipCreateEvent event2 = new ShipCreateEvent(event.getPlayer(), (Sign)event.getBlock().getState(), vessel);
 							Bukkit.getPluginManager().callEvent(event2);
@@ -242,6 +247,8 @@ public class BukkitListeners implements Listener {
 								if (config.getBoolean("Signs.ForceUsernameOnLicenceSign")){
 									event.setLine(3, ChatColor.GREEN + event.getPlayer().getName());
 								}
+							}else{
+								vessel.remove();
 							}
 							return;
 						}else{
@@ -337,7 +344,7 @@ public class BukkitListeners implements Listener {
 					if (vessel == null){
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 					}else{
-						vessel.moveVessel(MovementMethod.ROTATE_LEFT, 0, event.getPlayer());
+						vessel.syncMoveVessel(MovementMethod.ROTATE_LEFT, 0, event.getPlayer());
 					}
 				}
 				//ALTITUDE SIGN
@@ -346,7 +353,7 @@ public class BukkitListeners implements Listener {
 					if (vessel == null){
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 					}else{
-						vessel.moveVessel(MovementMethod.MOVE_DOWN, 1, event.getPlayer());
+						vessel.syncMoveVessel(MovementMethod.MOVE_DOWN, 1, event.getPlayer());
 					}
 				}
 				//EOT SIGN
@@ -396,12 +403,12 @@ public class BukkitListeners implements Listener {
 							face = sign2.getFacing().getOppositeFace();
 						}
 						if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")){
-							vessel.moveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+							vessel.syncMoveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
 						}else{
 							if (Direction.getDirection(vessel.getSign().getWorld()).getDirection().equals(face)){
-								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultBoostSpeed(), event.getPlayer());
+								vessel.syncMoveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultBoostSpeed(), event.getPlayer());
 							}else{
-								vessel.moveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
+								vessel.syncMoveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
 							}
 						}
 					}
@@ -412,7 +419,7 @@ public class BukkitListeners implements Listener {
 					if (vessel == null){
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 					}else{
-						vessel.moveVessel(MovementMethod.ROTATE_RIGHT, 0, event.getPlayer());
+						vessel.syncMoveVessel(MovementMethod.ROTATE_RIGHT, 0, event.getPlayer());
 					}
 				}
 				//ALTITUDE SIGN
@@ -421,7 +428,7 @@ public class BukkitListeners implements Listener {
 					if (vessel == null){
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 					}else{
-						vessel.moveVessel(MovementMethod.MOVE_UP, 1, event.getPlayer());
+						vessel.syncMoveVessel(MovementMethod.MOVE_UP, 1, event.getPlayer());
 					}
 				}
 				//EOT SIGN
@@ -439,7 +446,6 @@ public class BukkitListeners implements Listener {
 							sign.getBlock().breakNaturally();
 						}else{
 							event.getPlayer().sendMessage(Ships.runShipsMessage("Recoved losted vessel, click again to get stats.", false));
-							vessel2.save();
 							vessel2.updateLocation(vessel2.getTeleportLocation(), sign);
 						}
 					}else{
@@ -450,6 +456,31 @@ public class BukkitListeners implements Listener {
 						}
 					}
 				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public static void inventoryClick(InventoryClickEvent event){
+		Inventory inv = event.getInventory();
+		for(ShipsGUICommand command : ShipsGUICommand.getInterfaces()){
+			String invName = inv.getName();
+			String commandName = command.getInventoryName();
+			System.out.println(invName + " | " + commandName);
+			if (inv.getName().equals(command.getInventoryName())){
+				System.out.println("Match");
+				command.onScreenClick(event.getWhoClicked(), event.getCurrentItem(), inv, event.getSlot(), event.getClick());
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	@EventHandler
+	public static void inventoryDrag(InventoryDragEvent event){
+		Inventory inv = event.getInventory();
+		for(ShipsGUICommand command : ShipsGUICommand.getInterfaces()){
+			if (inv.getName().equals(command.getInventoryName())){
+				event.setCancelled(true);
 			}
 		}
 	}

@@ -21,7 +21,6 @@ import org.bukkit.material.Door;
 
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
-@SuppressWarnings("deprecation")
 public class SpecialBlock {
 	
 	Block BLOCK;

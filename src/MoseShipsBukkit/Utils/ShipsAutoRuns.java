@@ -39,7 +39,7 @@ public class ShipsAutoRuns {
 			
 		}, 0, config.getInt("Structure.Signs.Cell.repeat"));
 	}
-	
+
 	public static void fallOutSky(){
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable(){
 
@@ -47,7 +47,7 @@ public class ShipsAutoRuns {
 			public void run() {
 				for(Vessel vessel : Vessel.getVessels()){
 					if (vessel.getVesselType().shouldFall(vessel)){
-						vessel.moveVessel(MovementMethod.MOVE_DOWN, 1, null);
+						vessel.syncMoveVessel(MovementMethod.MOVE_DOWN, 1, null);
 					}
 				}
 				
@@ -55,7 +55,7 @@ public class ShipsAutoRuns {
 			
 		}, 0, 130);
 	}
-	
+
 	public static void EOTMove(){
 		final YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable(){
@@ -64,13 +64,13 @@ public class ShipsAutoRuns {
 			public void run() {
 				for (Entry<Vessel, OfflinePlayer> vessel : EOTAUTORUN.entrySet()){
 					vessel.getKey().updateStructure();
-					vessel.getKey().moveVessel(MovementMethod.MOVE_FORWARD, 2, vessel.getValue());
+					vessel.getKey().syncMoveVessel(MovementMethod.MOVE_FORWARD, 2, vessel.getValue());
 				}
 			}
 			
 		}, 0, config.getLong("Structure.Signs.EOT.repeat"));
 	}
-	
+
 	public static void AutoMove(){
 		final YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable(){
@@ -86,18 +86,18 @@ public class ShipsAutoRuns {
 						if (loc.getY() >= config.getInt("Structure.Signs.AutoPilot.height")){
 							Location loc3 = new Location(data.getMovingTo().getWorld(), data.getMovingTo().getX(), loc.getY(), data.getMovingTo().getZ());
 							if ((loc3.getX() == loc.getX()) && (loc3.getZ() == loc.getZ())){
-								if (!vessel.safelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(), data.getPlayer())){
+								if (!vessel.syncSafelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(), data.getPlayer())){
 									vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
 									vessel.setAutoPilotTo(null);
 								}
 							}else{
-								if (!vessel.safelyMoveTowardsLocation(loc3, data.getSpeed(), data.getPlayer())){
+								if (!vessel.syncSafelyMoveTowardsLocation(loc3, data.getSpeed(), data.getPlayer())){
 									vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
 									vessel.setAutoPilotTo(null);
 								}
 							}
 						}else{
-							if (!vessel.safelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(), data.getPlayer())){
+							if (!vessel.syncSafelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(), data.getPlayer())){
 								vessel.getOwner().getPlayer().sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
 								vessel.setAutoPilotTo(null);	
 							}
