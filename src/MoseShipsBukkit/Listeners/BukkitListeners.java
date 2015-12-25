@@ -321,54 +321,77 @@ public class BukkitListeners implements Listener {
 		}
 	}
 	
+	final static int MoveSignID = 1;
+	final static int WheelSignID = 2;
+	final static int AltitudeSignID = 3;
+	final static int EOTSignID = 4;
+	final static int LicenseSignID = 4;
+	
+//	private static HashMap<String, Integer> signTypes = new HashMap<String,Integer>(); TODO
+	
+	private static int getSignType(String firstLine, String secondLine, String thirdLine, String fourthLine){
+		if(firstLine.equals(ChatColor.YELLOW + "[Move]")) return MoveSignID; //Check if is a movesign
+		if(firstLine.equals(ChatColor.YELLOW + "[Wheel]")) return WheelSignID;
+		if(firstLine.equals(ChatColor.YELLOW + "[Altitude]")) return AltitudeSignID;
+		if(firstLine.equals(ChatColor.YELLOW + "[E.O.T]")) return EOTSignID;
+		if(firstLine.equals(ChatColor.YELLOW + "[Ships]")) return LicenseSignID;
+		return -1;
+	}
+	
 	@EventHandler
 	public static void signClick(PlayerInteractEvent event){
+		
+		
+		
 		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
 			if (event.getClickedBlock().getState() instanceof Sign){
 				Sign sign = (Sign)event.getClickedBlock().getState();
 				//MOVE SIGN
-				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Move]")){
-					if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")){
-						sign.setLine(1, ChatColor.GREEN + "Engine");
-						sign.setLine(2, "{Boost}");
-						sign.update();
-					}else{
-						sign.setLine(1, "{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}");
-						sign.setLine(2, "Boost");
-						sign.update();
-					}
-				}
-				//WHEEL SIGN
-				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Wheel]")){
-					Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
-					if (vessel == null){
-						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
-					}else{
-						vessel.syncMoveVessel(MovementMethod.ROTATE_LEFT, 0, event.getPlayer());
-					}
-				}
-				//ALTITUDE SIGN
-				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Altitude]")){
-					Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
-					if (vessel == null){
-						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
-					}else{
-						vessel.syncMoveVessel(MovementMethod.MOVE_DOWN, 1, event.getPlayer());
-					}
-				}
-				//EOT SIGN
-				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[E.O.T]")){
-					if (sign.getLine(1).equals("-[" + ChatColor.GREEN + "AHEAD" + ChatColor.BLACK + "]-")){
-						sign.setLine(1, ChatColor.GREEN + "AHEAD");
-						sign.setLine(2, "-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-");
-						sign.update();
-						ShipsAutoRuns.EOTAUTORUN.remove(Vessel.getVessel(sign.getBlock(), true));
-					}else if(sign.getLine(1).equals(ChatColor.GREEN + "AHEAD")){
-						sign.setLine(1, "-[" + ChatColor.GREEN + "AHEAD" + ChatColor.BLACK + "]-");
-						sign.setLine(2, ChatColor.WHITE + "STOP");
-						sign.update();
-						ShipsAutoRuns.EOTAUTORUN.put(Vessel.getVessel(sign.getBlock(), true), event.getPlayer());
-					}
+				Vessel vessel = null;
+				switch(getSignType(sign.getLine(0), sign.getLine(1), sign.getLine(2), sign.getLine(3))){
+					case MoveSignID: //Move Sign
+						if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")){
+							sign.setLine(1, ChatColor.GREEN + "Engine");
+							sign.setLine(2, "{Boost}");
+							sign.update();
+						}else{
+							sign.setLine(1, "{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}");
+							sign.setLine(2, "Boost");
+							sign.update();
+						}
+					break;
+					
+					case WheelSignID: //Wheel Sign
+						vessel = Vessel.getVessel(sign.getBlock(), true);
+						if (vessel == null){
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
+						}else{
+							vessel.syncMoveVessel(MovementMethod.ROTATE_LEFT, 0, event.getPlayer());
+						}
+					break;
+					
+					case AltitudeSignID: //Altitude Sign
+						vessel = Vessel.getVessel(sign.getBlock(), true);
+						if (vessel == null){
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
+						}else{
+							vessel.syncMoveVessel(MovementMethod.MOVE_DOWN, 1, event.getPlayer());
+						}
+					break;
+					
+					case EOTSignID: //E.O.T Sign
+						if (sign.getLine(1).equals("-[" + ChatColor.GREEN + "AHEAD" + ChatColor.BLACK + "]-")){
+							sign.setLine(1, ChatColor.GREEN + "AHEAD");
+							sign.setLine(2, "-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-");
+							sign.update();
+							ShipsAutoRuns.EOTAUTORUN.remove(Vessel.getVessel(sign.getBlock(), true));
+						}else if(sign.getLine(1).equals(ChatColor.GREEN + "AHEAD")){
+							sign.setLine(1, "-[" + ChatColor.GREEN + "AHEAD" + ChatColor.BLACK + "]-");
+							sign.setLine(2, ChatColor.WHITE + "STOP");
+							sign.update();
+							ShipsAutoRuns.EOTAUTORUN.put(Vessel.getVessel(sign.getBlock(), true), event.getPlayer());
+						}
+					break;
 				}
 			}
 		}else if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
@@ -389,12 +412,14 @@ public class BukkitListeners implements Listener {
 			}
 			if (event.getClickedBlock().getState() instanceof Sign){
 				Sign sign = (Sign)event.getClickedBlock().getState();
-				//MOVE SIGN
-				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Move]")){
-					Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
-					if (vessel == null){
-						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
-					}else{
+				
+				Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
+				if(vessel == null){
+					event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
+				} else {
+					
+				switch(getSignType(sign.getLine(0), sign.getLine(1), sign.getLine(2), sign.getLine(3))){
+				case MoveSignID:
 						org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
 						BlockFace face;
 						if (sign2.isWallSign()){
@@ -410,34 +435,23 @@ public class BukkitListeners implements Listener {
 							}else{
 								vessel.syncMoveVessel(MovementMethod.getMovingDirection(vessel, face), vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
 							}
-						}
 					}
-				}
-				//WHEEL SIGN
-				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Wheel]")){
-					Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
-					if (vessel == null){
-						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
-					}else{
+					break;
+					
+				case WheelSignID:
 						vessel.syncMoveVessel(MovementMethod.ROTATE_RIGHT, 0, event.getPlayer());
-					}
-				}
-				//ALTITUDE SIGN
-				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Altitude]")){
-					Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
-					if (vessel == null){
-						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
-					}else{
+					break;
+				
+				case AltitudeSignID:
 						vessel.syncMoveVessel(MovementMethod.MOVE_UP, 1, event.getPlayer());
-					}
-				}
-				//EOT SIGN
-				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[E.O.T]")){
+					break;
+				
+				case EOTSignID:
 					event.getPlayer().sendMessage(Ships.runShipsMessage("Moves the vessel in the same direction until this E.O.T sign is changed.", false));
+					break;
 				}
-				//licence sign
-				else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
-					Vessel vessel = Vessel.getVessel(sign);
+			}
+				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")){
 					if (vessel == null){
 						//check for invalid ships
 						Vessel vessel2 = VesselLoader.loadUnloadedVessel(sign);

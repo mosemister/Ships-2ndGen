@@ -40,17 +40,23 @@ public class Developer extends CommandLauncher{
 		if (args.length == 1){
 			help(sender);
 		}else{
-			if (args[1].equalsIgnoreCase("loadedVessels")){
+			switch(args[1].toLowerCase()){
+			case "loadedVessels":
 				displayLoadedVessels(sender);
-			}else if (args[1].equalsIgnoreCase("Vesseltypes")){
+				break;
+			case "Vesseltypes":
 				displayVesselTypes(sender);
-			}else if (args[1].equalsIgnoreCase("CVesseltypes")){
+				break;
+			case "CVesseltypes":
 				displayCustomVesselTypes(sender);
-			}else if (args[1].equalsIgnoreCase("materialsList")){
+				break;
+			case "materialsList":
 				displayMaterialsList(sender);
-			}else if (args[1].equalsIgnoreCase("ramMaterials")){
+				break;
+			case "ramMaterials":
 				displayRAMMaterialsList(sender);
-			}else if (args[1].equalsIgnoreCase("all")){
+				break;
+			case "all":
 				sender.sendMessage("-----[LoadedVessels]-----");
 				displayLoadedVessels(sender);
 				sender.sendMessage("-----[Types]-----");
@@ -59,9 +65,10 @@ public class Developer extends CommandLauncher{
 				displayMaterialsList(sender);
 				sender.sendMessage("-----[RAM]-----");
 				displayRAMMaterialsList(sender);
-			}else if (args[1].equalsIgnoreCase("structure")){
+				break;
+			case "structure":
 				displayVessel(sender, args);
-			}else{
+				break;	
 			}
 		}
 	}
