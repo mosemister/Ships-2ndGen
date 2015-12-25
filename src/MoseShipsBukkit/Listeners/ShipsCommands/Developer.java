@@ -35,28 +35,30 @@ public class Developer extends CommandLauncher{
 		sender.sendMessage(ChatColor.GOLD + "/ships developer structure <vesselname>");
 	}
 	
+
+	
 	@Override
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
 		if (args.length == 1){
 			help(sender);
 		}else{
-			switch(args[1].toLowerCase()){
-			case "loadedVessels":
+			switch(DevCmdEnums.valueOf(args[1].toString())){
+			case LOADEDVESSELS:
 				displayLoadedVessels(sender);
 				break;
-			case "Vesseltypes":
+			case VESSELTYPES:
 				displayVesselTypes(sender);
 				break;
-			case "CVesseltypes":
+			case CVESSELTYPES:
 				displayCustomVesselTypes(sender);
 				break;
-			case "materialsList":
+			case MATERIALSLIST:
 				displayMaterialsList(sender);
 				break;
-			case "ramMaterials":
+			case RAMMATERIALS:
 				displayRAMMaterialsList(sender);
 				break;
-			case "all":
+			case ALL:
 				sender.sendMessage("-----[LoadedVessels]-----");
 				displayLoadedVessels(sender);
 				sender.sendMessage("-----[Types]-----");
@@ -66,7 +68,7 @@ public class Developer extends CommandLauncher{
 				sender.sendMessage("-----[RAM]-----");
 				displayRAMMaterialsList(sender);
 				break;
-			case "structure":
+			case STRUCTURE:
 				displayVessel(sender, args);
 				break;	
 			}
