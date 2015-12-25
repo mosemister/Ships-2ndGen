@@ -326,9 +326,7 @@ public class BukkitListeners implements Listener {
 	final static int AltitudeSignID = 3;
 	final static int EOTSignID = 4;
 	final static int LicenseSignID = 4;
-	
-//	private static HashMap<String, Integer> signTypes = new HashMap<String,Integer>(); TODO
-	
+
 	private static int getSignType(String firstLine, String secondLine, String thirdLine, String fourthLine){
 		if(firstLine.equals(ChatColor.YELLOW + "[Move]")) return MoveSignID; //Check if is a movesign
 		if(firstLine.equals(ChatColor.YELLOW + "[Wheel]")) return WheelSignID;
@@ -340,9 +338,6 @@ public class BukkitListeners implements Listener {
 	
 	@EventHandler
 	public static void signClick(PlayerInteractEvent event){
-		
-		
-		
 		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
 			if (event.getClickedBlock().getState() instanceof Sign){
 				Sign sign = (Sign)event.getClickedBlock().getState();
@@ -417,7 +412,6 @@ public class BukkitListeners implements Listener {
 				if(vessel == null){
 					event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 				} else {
-					
 				switch(getSignType(sign.getLine(0), sign.getLine(1), sign.getLine(2), sign.getLine(3))){
 				case MoveSignID:
 						org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign)sign.getData();
