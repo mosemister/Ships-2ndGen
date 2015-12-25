@@ -1,24 +1,20 @@
-package MoseShipsBukkit.Listeners;
+package MoseShipsBukkit.ShipsTypes;
 
 import org.bukkit.ChatColor;
 
 public enum ShipSignTypes {
-	MoveSign(ChatColor.YELLOW + "[Move]"), 
-	WheelSign(ChatColor.YELLOW + "[Wheel]"), 
-	AltitudeSign(ChatColor.YELLOW + "[Altitude]"), 
-	EOTSign(ChatColor.YELLOW + "[E.O.T]"), 
-	LicenseSign(ChatColor.YELLOW + "[Ships]");
+	MOVE_SIGN(ChatColor.YELLOW + "[Move]"), 
+	WHEEL_SIGN(ChatColor.YELLOW + "[Wheel]"), 
+	ALTITUDE_SIGN(ChatColor.YELLOW + "[Altitude]"), 
+	EOT_SIGN(ChatColor.YELLOW + "[E.O.T]"), 
+	LICENSE_SIGN(ChatColor.YELLOW + "[Ships]");
 
 	private String text;
 
-	ShipSignTypes(String text) {
+	private ShipSignTypes(String text) {
 		this.text = text;
 	}
-
-	public String getText() {
-		return text;
-	}
-
+	
 	public static ShipSignTypes fromString(String text) {
 		if (text != null) {
 			for (ShipSignTypes s : ShipSignTypes.values()) {

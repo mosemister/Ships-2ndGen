@@ -46,6 +46,7 @@ import MoseShipsBukkit.Events.ShipCreateEvent;
 import MoseShipsBukkit.Events.ShipsSignCreation;
 import MoseShipsBukkit.GUI.ShipsGUICommand;
 import MoseShipsBukkit.MovingShip.MovementMethod;
+import MoseShipsBukkit.ShipsTypes.ShipSignTypes;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.Vectors.BlockVector;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
@@ -309,7 +310,7 @@ public class BukkitListeners implements Listener {
 			return;
 		}
 	}
-
+	
 	@EventHandler
 	public static void signClick(PlayerInteractEvent event) {
 		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
@@ -318,7 +319,7 @@ public class BukkitListeners implements Listener {
 				// MOVE SIGN
 				Vessel vessel = null;
 				switch (ShipSignTypes.fromString(sign.getLine(0))) {
-				case MoveSign: // Move Sign
+				case MOVE_SIGN: // Move Sign
 					if (sign.getLine(1).equals("{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}")) {
 						sign.setLine(1, ChatColor.GREEN + "Engine");
 						sign.setLine(2, "{Boost}");
@@ -330,7 +331,7 @@ public class BukkitListeners implements Listener {
 					}
 					break;
 
-				case WheelSign: // Wheel Sign
+				case WHEEL_SIGN: // Wheel Sign
 					vessel = Vessel.getVessel(sign.getBlock(), true);
 					if (vessel == null)
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
@@ -338,7 +339,7 @@ public class BukkitListeners implements Listener {
 						vessel.syncMoveVessel(MovementMethod.ROTATE_LEFT, 0, event.getPlayer());
 					break;
 
-				case AltitudeSign: // Altitude Sign
+				case ALTITUDE_SIGN: // Altitude Sign
 					vessel = Vessel.getVessel(sign.getBlock(), true);
 					if (vessel == null)
 						event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
@@ -346,7 +347,7 @@ public class BukkitListeners implements Listener {
 						vessel.syncMoveVessel(MovementMethod.MOVE_DOWN, 1, event.getPlayer());
 					break;
 
-				case EOTSign: // E.O.T Sign
+				case EOT_SIGN: // E.O.T Sign
 					if (sign.getLine(1).equals("-[" + ChatColor.GREEN + "AHEAD" + ChatColor.BLACK + "]-")) {
 						sign.setLine(1, ChatColor.GREEN + "AHEAD");
 						sign.setLine(2, "-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-");
@@ -384,7 +385,7 @@ public class BukkitListeners implements Listener {
 					event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 				else
 					switch (ShipSignTypes.fromString(sign.getLine(0))) {
-					case MoveSign:
+					case MOVE_SIGN:
 						org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign) sign.getData();
 						BlockFace face;
 						if (sign2.isWallSign())
@@ -402,15 +403,15 @@ public class BukkitListeners implements Listener {
 									vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
 						break;
 
-					case WheelSign:
+					case WHEEL_SIGN:
 						vessel.syncMoveVessel(MovementMethod.ROTATE_RIGHT, 0, event.getPlayer());
 						break;
 
-					case AltitudeSign:
+					case ALTITUDE_SIGN:
 						vessel.syncMoveVessel(MovementMethod.MOVE_UP, 1, event.getPlayer());
 						break;
 
-					case EOTSign:
+					case EOT_SIGN:
 						event.getPlayer().sendMessage(Ships.runShipsMessage(
 								"Moves the vessel in the same direction until this E.O.T sign is changed.", false));
 						break;

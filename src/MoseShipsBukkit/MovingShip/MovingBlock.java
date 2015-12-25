@@ -27,8 +27,13 @@ public class MovingBlock {
 		MOVEMETHOD = move;
 		ID = block.getTypeId();
 		DATA = block.getData();
-		BlockFace facing = vessel.getFacingDirection();
 		
+		move(block, vessel, move);
+	}
+
+
+	private void move(Block block, BaseVessel vessel, MovementMethod move) {
+		BlockFace facing = vessel.getFacingDirection();
 		Block block2 = null;
 		switch(move){
 		case MOVE_FORWARD:
@@ -112,12 +117,12 @@ public class MovingBlock {
 
 	@SuppressWarnings("deprecation")
 	public MovingBlock(SpecialBlock sBlock, BaseVessel vessel, MovementMethod move){
-		this(sBlock.getBlock(),vessel,move);
 		Block block = sBlock.getBlock();
 		SPE_BLOCK = sBlock;
 		BLOCK = block;
 		ID = block.getTypeId();
 		DATA = block.getData();
+		move(block,vessel,move);
 	}
 	
 	public SpecialBlock getSpecialBlock(){

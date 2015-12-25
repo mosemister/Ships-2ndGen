@@ -35,6 +35,22 @@ public class Developer extends CommandLauncher{
 		sender.sendMessage(ChatColor.GOLD + "/ships developer structure <vesselname>");
 	}
 	
+	public enum DevCmdEnums{
+		LOADED_VESSELS(0),
+		VESSEL_TYPES(1),
+		CVESSEL_TYPES(2),
+		MATERIALS_LIST(3),
+		RAM_MATERIALS(4),
+		ALL(5),
+		STRUCTURE(6);
+
+		private byte id;
+		DevCmdEnums(int id){
+			this.id = (byte)id;
+		}
+		
+		public int getID(){return id;}
+	}
 
 	
 	@Override
@@ -43,19 +59,19 @@ public class Developer extends CommandLauncher{
 			help(sender);
 		}else{
 			switch(DevCmdEnums.valueOf(args[1].toString())){
-			case LOADEDVESSELS:
+			case LOADED_VESSELS:
 				displayLoadedVessels(sender);
 				break;
-			case VESSELTYPES:
+			case VESSEL_TYPES:
 				displayVesselTypes(sender);
 				break;
-			case CVESSELTYPES:
+			case CVESSEL_TYPES:
 				displayCustomVesselTypes(sender);
 				break;
-			case MATERIALSLIST:
+			case MATERIALS_LIST:
 				displayMaterialsList(sender);
 				break;
-			case RAMMATERIALS:
+			case RAM_MATERIALS:
 				displayRAMMaterialsList(sender);
 				break;
 			case ALL:
