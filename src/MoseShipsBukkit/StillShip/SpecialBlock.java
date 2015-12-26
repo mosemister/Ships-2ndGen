@@ -63,8 +63,8 @@ public class SpecialBlock {
 	
 	public SpecialBlock(Chest chest, boolean extraChest){
 		BLOCK = chest.getBlock();
-		for(int A = 0; A < chest.getInventory().getSize(); A++){
-			INVENTORY.put(A, chest.getInventory().getItem(A));
+		for(int A = 0; A < chest.getBlockInventory().getSize(); A++){
+			INVENTORY.put(A, chest.getBlockInventory().getItem(A));
 		}
 		if (extraChest){
 			BLOCKTYPE = "double chest";
@@ -185,18 +185,11 @@ public class SpecialBlock {
 		}
 		if (block.getState() instanceof Chest){
 			Chest chest = (Chest) block.getState();
-			Inventory inv = chest.getInventory();
+			Inventory inv = chest.getBlockInventory();
 			for(Entry<Integer, ItemStack> entry : getItems().entrySet()){
-				if (isRightChest()){
-					int A = entry.getKey();
-					if ((A > 26) && (A <= 64)){
-						inv.setItem(A - 27, entry.getValue());
-					}
-				}else{
-					int A = entry.getKey(); 
-					if (A <= 26){
-						inv.setItem(A, entry.getValue());
-					}
+				int A = entry.getKey(); 
+				if (A < inv.getSize()){
+					inv.setItem(A, entry.getValue());
 				}
 			}
 		}

@@ -265,18 +265,11 @@ public class MovableVessel extends ProtectedVessel{
 		}
 		if (nBlock.getState() instanceof Chest){
 			Chest chest = (Chest) nBlock.getState();
-			Inventory inv = chest.getInventory();
+			Inventory inv = chest.getBlockInventory();
 			for(Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet()){
-				if (sBlock.isRightChest()){
-					int A = entry.getKey();
-					if ((A > 26) && (A <= 64)){
-						inv.setItem(A - 27, entry.getValue());
-					}
-				}else{
-					int A = entry.getKey(); 
-					if (A <= 26){
-						inv.setItem(A, entry.getValue());
-					}
+				int A = entry.getKey(); 
+				if (A < inv.getSize()){
+					inv.setItem(A, entry.getValue());
 				}
 			}
 		}
@@ -376,12 +369,6 @@ public class MovableVessel extends ProtectedVessel{
 			}
 			if (block.getSpecialBlock() != null){
 				setInventory(block);
-			}
-			if(block.getMovingTo().getZ() == -91){
-				Bukkit.getConsoleSender().sendMessage("----------");
-				Bukkit.getConsoleSender().sendMessage("Original pos = " + block.getBlock().getLocation());
-				Bukkit.getConsoleSender().sendMessage("new Location = " + block.getMovingTo());
-				Bukkit.getConsoleSender().sendMessage("Is now = " + block.getId() + ":" + block.getData());
 			}
 		}
 		MovingBlock mBlock = new MovingBlock(getTeleportLocation().getBlock(), this, move);

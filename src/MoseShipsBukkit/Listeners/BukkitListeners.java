@@ -190,13 +190,18 @@ public class BukkitListeners implements Listener {
 			Sign sign = (Sign)event.getBlock().getState();
 			signBreakEvent(sign, event);
 		}
-		/*BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
+		BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
 		for(BlockFace face : faces){
 			Block block = event.getBlock().getRelative(face);
 			if (block.getState() instanceof Sign){
-				signBreakEvent((Sign)block.getState(), event);
+				org.bukkit.material.Sign sign = (org.bukkit.material.Sign)block.getState().getData();
+				if (sign.isWallSign()){
+					if(block.getRelative(sign.getAttachedFace()).equals(block)){
+						signBreakEvent((Sign)block.getState(), event);
+					}
+				}
 			}
-		}*/
+		}
 	}
 	
 	public static void signBreakEvent(Sign sign, BlockBreakEvent event){
@@ -464,11 +469,7 @@ public class BukkitListeners implements Listener {
 	public static void inventoryClick(InventoryClickEvent event){
 		Inventory inv = event.getInventory();
 		for(ShipsGUICommand command : ShipsGUICommand.getInterfaces()){
-			String invName = inv.getName();
-			String commandName = command.getInventoryName();
-			System.out.println(invName + " | " + commandName);
 			if (inv.getName().equals(command.getInventoryName())){
-				System.out.println("Match");
 				command.onScreenClick(event.getWhoClicked(), event.getCurrentItem(), inv, event.getSlot(), event.getClick());
 				event.setCancelled(true);
 			}
