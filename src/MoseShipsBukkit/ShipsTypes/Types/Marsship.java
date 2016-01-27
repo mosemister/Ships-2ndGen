@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipsTypes.VesselType;
@@ -25,11 +26,11 @@ import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Marsship extends VesselType implements RequiredMaterial, ClassicVessel{
+public class Marsship extends VesselType implements RequiredMaterial, ClassicVessel {
 
 	int PERCENT;
 	List<Material> REQUIREDBLOCKS = new ArrayList<Material>();
-	
+
 	public Marsship() {
 		super("Marsship", new ArrayList<Material>(Arrays.asList(Material.AIR)), 2, 3, true);
 	}
@@ -45,59 +46,63 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+			@Nullable Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		if (blocks.size() >= getMinBlocks()){
-			if (blocks.size() <= getMaxBlocks()){
-				if (util.isMovingInto(blocks, getMoveInMaterials())){
-					if (util.isPercentInMovingFrom(blocks, REQUIREDBLOCKS, PERCENT)){
-						if (move.equals(MovementMethod.MOVE_DOWN)){
+		if (blocks.size() >= getMinBlocks()) {
+			if (blocks.size() <= getMaxBlocks()) {
+				if (util.isMovingInto(blocks, getMoveInMaterials())) {
+					if (util.isPercentInMovingFrom(blocks, REQUIREDBLOCKS, PERCENT)) {
+						if (move.equals(MovementMethod.MOVE_DOWN)) {
 							return true;
-						}else{
+						} else {
 							long time = vessel.getTeleportLocation().getWorld().getTime();
-							if ((time >= 0) && (time <= 13000)){
+							if ((time >= 0) && (time <= 13000)) {
 								return true;
-							}else{
-								if (player != null){
-									if (Messages.isEnabled()){
+							} else {
+								if (player != null) {
+									if (Messages.isEnabled()) {
 										player.sendMessage(Ships.runShipsMessage(Messages.getNeeds("Light"), true));
 									}
 								}
 								return false;
 							}
 						}
-					}else{
+					} else {
 						List<String> materials = new ArrayList<String>();
-						for(Material material : REQUIREDBLOCKS){
+						for (Material material : REQUIREDBLOCKS) {
 							materials.add(material.name());
 						}
-						if (player != null){
-							if (Messages.isEnabled()){
-								player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(util.getOffBy(blocks,  REQUIREDBLOCKS, PERCENT), materials.toString()), true));
+						if (player != null) {
+							if (Messages.isEnabled()) {
+								player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(
+										util.getOffBy(blocks, REQUIREDBLOCKS, PERCENT), materials.toString()), true));
 							}
 						}
 						return false;
 					}
-				}else{
-					if (player != null){
-						if (Messages.isEnabled()){
+				} else {
+					if (player != null) {
+						if (Messages.isEnabled()) {
 							player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
 						}
 					}
 					return false;
 				}
-			}else{
-				if (player != null){
-					if (Messages.isEnabled()){
-						player.sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
+			} else {
+				if (player != null) {
+					if (Messages.isEnabled()) {
+						player.sendMessage(
+								Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
 					}
 				}
 				return false;
 			}
-		}else{
-			if (player != null){
-				if (Messages.isEnabled()){
-					player.sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
+		} else {
+			if (player != null) {
+				if (Messages.isEnabled()) {
+					player.sendMessage(
+							Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
 				}
 			}
 			return false;
@@ -117,7 +122,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 
 	@Override
 	public VesselType clone() {
-		Marsship mars =  new Marsship();
+		Marsship mars = new Marsship();
 		cloneVesselTypeData(mars);
 		mars.REQUIREDBLOCKS = REQUIREDBLOCKS;
 		mars.PERCENT = PERCENT;
@@ -128,21 +133,21 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Marsship){
-			Marsship mars = (Marsship)type;
+		if (type instanceof Marsship) {
+			Marsship mars = (Marsship) type;
 			int blockPercent = config.getInt("ShipsData.Config.Block.Percent");
 			mars.PERCENT = blockPercent;
 			vessel.setVesselType(mars);
 		}
-		
+
 	}
 
 	@Override
 	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Marsship){
-			Marsship mars = (Marsship)type;
+		if (type instanceof Marsship) {
+			Marsship mars = (Marsship) type;
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			mars.PERCENT = percent;
 			vessel.setVesselType(mars);
@@ -172,7 +177,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	@Override
 	public void loadDefault() {
 		File file = getTypeFile();
-		if (!file.exists()){
+		if (!file.exists()) {
 			createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -182,7 +187,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 		this.setMinBlocks(config.getInt("Blocks.Min"));
 		this.PERCENT = config.getInt("Blocks.requiredPercent");
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for(int id : config.getIntegerList("Blocks.requiredBlocks")){
+		for (int id : config.getIntegerList("Blocks.requiredBlocks")) {
 			@SuppressWarnings("deprecation")
 			Material material = Material.getMaterial(id);
 			requiredmaterials.add(material);
@@ -197,21 +202,25 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
-		config.set("ShipsData.Type", "Marsship");
-		config.set("ShipsData.Protected", vessel.isProtected());
-		config.set("ShipsData.Config.Block.Percent", PERCENT);
-		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
-		config.set("ShipsData.Config.Block.Min", getMinBlocks());
-		config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
-		Sign sign = vessel.getSign();
-		Location loc = vessel.getTeleportLocation();
-		config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
-		config.set("ShipsData.Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
-		try{
-			config.save(file);
-		}catch(IOException e){
-			e.printStackTrace();
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Marsship", PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed());
+		if (!event.isCancelled()) {
+			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
+			config.set("ShipsData.Type", "Marsship");
+			config.set("ShipsData.Config.Block.Percent", PERCENT);
+			config.set("ShipsData.Config.Block.Max", getMaxBlocks());
+			config.set("ShipsData.Config.Block.Min", getMinBlocks());
+			config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
+			Sign sign = vessel.getSign();
+			Location loc = vessel.getTeleportLocation();
+			config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
+					+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+			config.set("ShipsData.Location.Teleport",
+					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
+			try {
+				config.save(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

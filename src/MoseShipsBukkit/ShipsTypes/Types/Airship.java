@@ -16,6 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.MovingShip.MovingStructure;
@@ -29,7 +30,7 @@ import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Airship extends VesselType implements Fuel, RequiredMaterial, ClassicVessel{
+public class Airship extends VesselType implements Fuel, RequiredMaterial, ClassicVessel {
 
 	int PERCENT;
 	int TAKE;
@@ -40,12 +41,12 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		super("Airship", new ArrayList<Material>(Arrays.asList(Material.AIR)), 2, 3, true);
 		loadDefault();
 	}
-	
-	public int getPercent(){
+
+	public int getPercent() {
 		return PERCENT;
 	}
-	
-	public List<Material> getRequiredBlock(){
+
+	public List<Material> getRequiredBlock() {
 		return REQUIREDBLOCK;
 	}
 
@@ -62,56 +63,60 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		int ret = util.getTotalAmountOfFuel(FUEL, vessel);
 		return ret;
 	}
-	
+
 	@Override
 	public Map<Material, Byte> getFuel() {
 		return FUEL;
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		if (util.isMovingInto(blocks, getMoveInMaterials())){
-			if (util.isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())){
-				if (util.isMaterialInMovingFrom(blocks, Material.FIRE)){
-					if (move.equals(MovementMethod.MOVE_DOWN)){
+		if (util.isMovingInto(blocks, getMoveInMaterials())) {
+			if (util.isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())) {
+				if (util.isMaterialInMovingFrom(blocks, Material.FIRE)) {
+					if (move.equals(MovementMethod.MOVE_DOWN)) {
 						return true;
-					}else{
-						if (getTotalFuel(vessel) >= TAKE){
+					} else {
+						if (getTotalFuel(vessel) >= TAKE) {
 							removeFuel(vessel);
 							return true;
-						}else{
-							if (player != null){
-								if (Messages.isEnabled()){
+						} else {
+							if (player != null) {
+								if (Messages.isEnabled()) {
 									player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
 								}
 							}
 							return false;
 						}
 					}
-				}else{
-					if (player != null){
-						if (Messages.isEnabled()){
+				} else {
+					if (player != null) {
+						if (Messages.isEnabled()) {
 							player.sendMessage(Ships.runShipsMessage(Messages.getNeeds("Burner"), true));
 						}
 					}
 					return false;
 				}
-			}else{
+			} else {
 				List<String> materials = new ArrayList<String>();
-				for(Material material : getRequiredBlock()){
+				for (Material material : getRequiredBlock()) {
 					materials.add(material.name());
 				}
-				if (player != null){
-					if (Messages.isEnabled()){
-						player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(util.getOffBy(blocks,  getRequiredBlock(), getPercent()), "(of either) " + materials.toString()), true));
+				if (player != null) {
+					if (Messages.isEnabled()) {
+						player.sendMessage(Ships.runShipsMessage(
+								Messages.getOffBy(util.getOffBy(blocks, getRequiredBlock(), getPercent()),
+										"(of either) " + materials.toString()),
+								true));
 					}
 				}
 				return false;
 			}
-		}else{
-			if (player != null){
-				if (Messages.isEnabled()){
+		} else {
+			if (player != null) {
+				if (Messages.isEnabled()) {
 					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
 				}
 			}
@@ -121,8 +126,8 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 
 	@Override
 	public boolean shouldFall(ProtectedVessel vessel) {
-		MovingStructure stru = (MovingStructure)vessel.getStructure();
-		if (checkRequirements((MovableVessel)vessel, MovementMethod.MOVE_DOWN, stru.getAllMovingBlocks(), null)){
+		MovingStructure stru = (MovingStructure) vessel.getStructure();
+		if (checkRequirements((MovableVessel) vessel, MovementMethod.MOVE_DOWN, stru.getAllMovingBlocks(), null)) {
 			return true;
 		}
 		return false;
@@ -138,18 +143,18 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Airship){
-			Airship airship = (Airship)type;
+		if (type instanceof Airship) {
+			Airship airship = (Airship) type;
 			List<Integer> fuels = config.getIntegerList("ShipsData.Config.Fuel.Fuels");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			airship.PERCENT = percent;
 			airship.TAKE = consumption;
 			Map<Material, Byte> fuelsR = new HashMap<Material, Byte>();
-			for (int id : fuels){
+			for (int id : fuels) {
 				@SuppressWarnings("deprecation")
 				Material material = Material.getMaterial(id);
-				fuelsR.put(material, (byte)-1);
+				fuelsR.put(material, (byte) -1);
 			}
 			airship.FUEL = fuelsR;
 			vessel.setVesselType(airship);
@@ -161,8 +166,8 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Airship){
-			Airship air = (Airship)type;
+		if (type instanceof Airship) {
+			Airship air = (Airship) type;
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
@@ -170,9 +175,9 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 			air.setMinBlocks(config.getInt("ShipsData.Config.Block.Min"));
 			air.PERCENT = percent;
 			air.TAKE = consumption;
-			if (fuelsL.size() != 0){
+			if (fuelsL.size() != 0) {
 				Map<Material, Byte> fuels = new HashMap<Material, Byte>();
-				for (String fuelS : fuelsL){
+				for (String fuelS : fuelsL) {
 					String[] fuelM = fuelS.split(",");
 					fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
 				}
@@ -221,7 +226,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	@Override
 	public void loadDefault() {
 		File file = getTypeFile();
-		if (!file.exists()){
+		if (!file.exists()) {
 			createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -231,7 +236,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		this.setMaxBlocks(config.getInt("Blocks.Max"));
 		this.setMinBlocks(config.getInt("Blocks.Min"));
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for(int id : config.getIntegerList("Blocks.requiredBlocks")){
+		for (int id : config.getIntegerList("Blocks.requiredBlocks")) {
 			Material material = Material.getMaterial(id);
 			requiredmaterials.add(material);
 		}
@@ -247,7 +252,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
-		
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -255,27 +260,31 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
-		config.set("ShipsData.Type", "Airship");
-		config.set("ShipsData.Protected", vessel.isProtected());
-		config.set("ShipsData.Config.Block.Percent", getPercent());
-		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
-		config.set("ShipsData.Config.Block.Min", getMinBlocks());
 		List<String> fuels = new ArrayList<String>();
-		for (Entry<Material, Byte> fuels2 : this.FUEL.entrySet()){
+		for (Entry<Material, Byte> fuels2 : this.FUEL.entrySet()) {
 			fuels.add(fuels2.getKey().getId() + "," + fuels2.getValue());
 		}
-		config.set("ShipsData.Config.Fuel.Fuels", fuels);
-		config.set("ShipsData.Config.Fuel.Consumption", TAKE);
-		config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
-		Sign sign = vessel.getSign();
-		Location loc = vessel.getTeleportLocation();
-		config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
-		config.set("ShipsData.Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
-		try{
-			config.save(file);
-		}catch(IOException e){
-			e.printStackTrace();
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Airship", PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
+		if (!event.isCancelled()) {
+			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
+			config.set("ShipsData.Type", "Airship");
+			config.set("ShipsData.Config.Block.Percent", getPercent());
+			config.set("ShipsData.Config.Block.Max", getMaxBlocks());
+			config.set("ShipsData.Config.Block.Min", getMinBlocks());
+			config.set("ShipsData.Config.Fuel.Fuels", fuels);
+			config.set("ShipsData.Config.Fuel.Consumption", TAKE);
+			config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
+			Sign sign = vessel.getSign();
+			Location loc = vessel.getTeleportLocation();
+			config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
+					+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+			config.set("ShipsData.Location.Teleport",
+					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
+			try {
+				config.save(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

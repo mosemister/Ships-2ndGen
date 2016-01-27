@@ -17,6 +17,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipsTypes.VesselType;
@@ -27,11 +28,11 @@ import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Solarship extends VesselType implements Cell{
-	
+public class Solarship extends VesselType implements Cell {
+
 	int TAKE;
 	int MAX;
-	
+
 	public Solarship() {
 		super("Solarship", new ArrayList<Material>(Arrays.asList(Material.AIR)), 2, 3, true);
 	}
@@ -39,9 +40,9 @@ public class Solarship extends VesselType implements Cell{
 	@Override
 	public boolean removeCellPower(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		if (util.takeWholeNumberFromSign(ChatColor.YELLOW + "[Cell]", 2, vessel, TAKE)){
+		if (util.takeWholeNumberFromSign(ChatColor.YELLOW + "[Cell]", 2, vessel, TAKE)) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -61,32 +62,33 @@ public class Solarship extends VesselType implements Cell{
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, @Nullable Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+			@Nullable Player player) {
 		VesselTypeUtils utils = new VesselTypeUtils();
-		if (utils.isMovingInto(blocks, getMoveInMaterials())){
-			if (move.equals(MovementMethod.MOVE_DOWN)){
+		if (utils.isMovingInto(blocks, getMoveInMaterials())) {
+			if (move.equals(MovementMethod.MOVE_DOWN)) {
 				return true;
-			}else{
+			} else {
 				long time = vessel.getTeleportLocation().getWorld().getTime();
-				if (time > 13000){
-					if (getTotalCellPower(vessel) >= TAKE){
+				if (time > 13000) {
+					if (getTotalCellPower(vessel) >= TAKE) {
 						removeCellPower(vessel);
 						return true;
-					}else{
-						if (player != null){
-							if (Messages.isEnabled()){
+					} else {
+						if (player != null) {
+							if (Messages.isEnabled()) {
 								player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
 							}
 						}
 						return false;
 					}
-				}else{
+				} else {
 					return true;
 				}
 			}
-		}else{
-			if (player != null){
-				if (Messages.isEnabled()){
+		} else {
+			if (player != null) {
+				if (Messages.isEnabled()) {
 					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
 				}
 			}
@@ -96,7 +98,7 @@ public class Solarship extends VesselType implements Cell{
 
 	@Override
 	public boolean shouldFall(ProtectedVessel vessel) {
-		if (getTotalCellPower(vessel) == 0){
+		if (getTotalCellPower(vessel) == 0) {
 			return true;
 		}
 		return false;
@@ -121,8 +123,8 @@ public class Solarship extends VesselType implements Cell{
 	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
-		if (type instanceof Solarship){
-			Solarship solarship = (Solarship)type;
+		if (type instanceof Solarship) {
+			Solarship solarship = (Solarship) type;
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			int maxFuelCount = config.getInt("ShipsData.Config.Fuel.MaxLimitPerCell");
 			solarship.MAX = maxFuelCount;
@@ -151,7 +153,7 @@ public class Solarship extends VesselType implements Cell{
 	@Override
 	public void loadDefault() {
 		File file = getTypeFile();
-		if (!file.exists()){
+		if (!file.exists()) {
 			createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -167,22 +169,26 @@ public class Solarship extends VesselType implements Cell{
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
-		config.set("ShipsData.Type", "Solarship");
-		config.set("ShipsData.Protected", vessel.isProtected());
-		config.set("ShipsData.Config.Block.Max", getMaxBlocks());
-		config.set("ShipsData.Config.Block.Min", getMinBlocks());
-		config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
-		config.set("Fuel.Config.MaxLimitPerCell", MAX);
-		config.set("Fuel.Config.Consumption", TAKE);
-		Sign sign = vessel.getSign();
-		Location loc = vessel.getTeleportLocation();
-		config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
-		config.set("ShipsData.Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
-		try{
-			config.save(file);
-		}catch(IOException e){
-			e.printStackTrace();
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Solarship", getMaxBlocks(), getMinBlocks(), getDefaultSpeed());
+		if (!event.isCancelled()) {
+			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
+			config.set("ShipsData.Type", "Solarship");
+			config.set("ShipsData.Config.Block.Max", getMaxBlocks());
+			config.set("ShipsData.Config.Block.Min", getMinBlocks());
+			config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
+			config.set("Fuel.Config.MaxLimitPerCell", MAX);
+			config.set("Fuel.Config.Consumption", TAKE);
+			Sign sign = vessel.getSign();
+			Location loc = vessel.getTeleportLocation();
+			config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
+					+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+			config.set("ShipsData.Location.Teleport",
+					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
+			try {
+				config.save(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

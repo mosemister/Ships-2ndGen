@@ -425,28 +425,28 @@ public enum MaterialAndData {
 	COBBLESTONE_DOUBLE_SLAB(Material.DOUBLE_STEP, 3),
 	BRICK_DOUBLE_SLAB(Material.DOUBLE_STEP, 4),
 	STONE_DOUBLE_BRICK(Material.DOUBLE_STEP, 5);
-	
+
 	Material MATERIAL;
 	byte DATA;
-	
-	private MaterialAndData(Material material, int dataNumber){
+
+	private MaterialAndData(Material material, int dataNumber) {
 		MATERIAL = material;
-		DATA = (byte)dataNumber;
+		DATA = (byte) dataNumber;
 	}
-	
-	public Material getMaterial(){
+
+	public Material getMaterial() {
 		return MATERIAL;
 	}
-	
-	public byte getData(){
+
+	public byte getData() {
 		return DATA;
 	}
-	
-	public static List<MaterialAndData> getMaterial(Material material){
-		if (material.isBlock()){
+
+	public static List<MaterialAndData> getMaterial(Material material) {
+		if (material.isBlock()) {
 			List<MaterialAndData> datas = new ArrayList<MaterialAndData>();
-			for(MaterialAndData data : MaterialAndData.values()){
-				if (data.getMaterial().equals(material)){
+			for (MaterialAndData data : MaterialAndData.values()) {
+				if (data.getMaterial().equals(material)) {
 					datas.add(data);
 				}
 			}

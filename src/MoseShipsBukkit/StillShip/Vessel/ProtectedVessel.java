@@ -12,45 +12,45 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 
-public class ProtectedVessel extends BaseVessel{
+public class ProtectedVessel extends BaseVessel {
 
-	boolean PROTECTVESSEL;
 	List<UUID> SUBPILOTS = new ArrayList<UUID>();
 	boolean INVINCIBLE;
-	
-	ProtectedVessel(Sign sign, OfflinePlayer owner, Location teleport) throws InvalidSignException{
+
+	ProtectedVessel(Sign sign, OfflinePlayer owner, Location teleport) throws InvalidSignException {
 		super(sign, owner, teleport);
 	}
-	
-	ProtectedVessel(Sign sign, String name, VesselType type, Player player){
+
+	ProtectedVessel(Sign sign, String name, VesselType type, Player player) {
 		super(sign, name, type, player);
 	}
-	
+
 	ProtectedVessel(Sign sign, String name, VesselType type, OfflinePlayer player, Location loc) {
 		super(sign, name, type, player, loc);
 	}
-	
-	public List<UUID> getSubPilots(){
+
+	public List<UUID> getSubPilots() {
 		return SUBPILOTS;
 	}
-	
-	public boolean isProtected(){
-		return PROTECTVESSEL;
+
+	@Deprecated
+	public boolean isProtected() {
+		return true;
 	}
-	
-	public boolean isInvincible(){
+
+	public boolean isInvincible() {
 		return INVINCIBLE;
 	}
-	
-	public void setProtectVessel(boolean args){
-		PROTECTVESSEL = args;
+
+	@Deprecated
+	public void setProtectVessel(boolean args) {
 	}
-	
-	public void setInvincible(boolean args){
+
+	public void setInvincible(boolean args) {
 		INVINCIBLE = args;
 	}
-	
-	public void save(){
+
+	public void save() {
 		this.getVesselType().save(this);
 	}
 

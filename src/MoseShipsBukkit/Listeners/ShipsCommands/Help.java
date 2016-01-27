@@ -17,33 +17,35 @@ import org.bukkit.inventory.meta.ItemMeta;
 import MoseShipsBukkit.GUI.ShipsGUICommand;
 import MoseShipsBukkit.Listeners.CommandLauncher;
 
-public class Help extends CommandLauncher{
+public class Help extends CommandLauncher {
 
 	public Help() {
 		super("help", "<page>/GUI", "Displays all commands", null, true, true, HelpGUI.class);
 		new HelpGUI(this);
-		
+
 	}
 
 	@Override
 	public void playerCommand(Player player, String[] args) {
 		System.out.println("player command found");
-		if (args.length >= 2){
+		if (args.length >= 2) {
 			System.out.println("player command 2 args");
-			if (args[1].equalsIgnoreCase("GUI")){
+			if (args[1].equalsIgnoreCase("GUI")) {
 				System.out.println("player command arg2 = GUI");
 				runGUI(player);
 				return;
 			}
 		}
-		for(CommandLauncher command : CommandLauncher.getCommands()){
-			if (command.isPlayerCommand()){
-				if (command.getPermissions() != null){
-					if (player.hasPermission(command.getPermissions())){
-						player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs() + ChatColor.AQUA + ": " + command.getDescription());
+		for (CommandLauncher command : CommandLauncher.getCommands()) {
+			if (command.isPlayerCommand()) {
+				if (command.getPermissions() != null) {
+					if (player.hasPermission(command.getPermissions())) {
+						player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs()
+								+ ChatColor.AQUA + ": " + command.getDescription());
 					}
-				}else{
-					player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs() + ChatColor.AQUA + ": " + command.getDescription());
+				} else {
+					player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs()
+							+ ChatColor.AQUA + ": " + command.getDescription());
 				}
 			}
 		}
@@ -51,14 +53,15 @@ public class Help extends CommandLauncher{
 
 	@Override
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
-		for(CommandLauncher command : CommandLauncher.getCommands()){
-			if (command.isConsoleCommand()){
-				sender.sendMessage(ChatColor.GOLD + command.getCommand() + ChatColor.AQUA + ": " + command.getDescription());
+		for (CommandLauncher command : CommandLauncher.getCommands()) {
+			if (command.isConsoleCommand()) {
+				sender.sendMessage(
+						ChatColor.GOLD + command.getCommand() + ChatColor.AQUA + ": " + command.getDescription());
 			}
 		}
 	}
-	
-	public static class HelpGUI extends ShipsGUICommand{
+
+	public static class HelpGUI extends ShipsGUICommand {
 
 		public HelpGUI(CommandLauncher command) {
 			super(command);
@@ -66,32 +69,32 @@ public class Help extends CommandLauncher{
 
 		@Override
 		public void onScreenClick(HumanEntity player, ItemStack item, Inventory inv, int slot, ClickType type) {
-			if (item != null){
+			if (item != null) {
 				ItemMeta meta = item.getItemMeta();
-				if (meta != null){
+				if (meta != null) {
 					String name = meta.getDisplayName();
-					try{
+					try {
 						player.closeInventory();
 						CommandLauncher launcher = CommandLauncher.getCommand(name).get(0);
 						launcher.runGUI(player);
-					}catch(IndexOutOfBoundsException e){
-						if (item.equals(ShipsGUICommand.FORWARD_BUTTON)){
+					} catch (IndexOutOfBoundsException e) {
+						if (item.equals(ShipsGUICommand.FORWARD_BUTTON)) {
 							onInterfaceBoot(player, getPage(inv) + 1);
-						}else if (item.equals(ShipsGUICommand.BACK_BUTTON)){
+						} else if (item.equals(ShipsGUICommand.BACK_BUTTON)) {
 							onInterfaceBoot(player, getPage(inv) - 1);
 						}
 					}
 				}
 			}
-			
+
 		}
-		
-		public void onInterfaceBoot(HumanEntity player, int page){
+
+		public void onInterfaceBoot(HumanEntity player, int page) {
 			List<ItemStack> items = new ArrayList<ItemStack>();
-			for(CommandLauncher launcher : CommandLauncher.getCommands()){
-				if (launcher.isPlayerCommand()){
-					if ((launcher.getPermissions() == null) || (player.hasPermission(launcher.getPermissions()))){
-						if (launcher.hasGUI()){
+			for (CommandLauncher launcher : CommandLauncher.getCommands()) {
+				if (launcher.isPlayerCommand()) {
+					if ((launcher.getPermissions() == null) || (player.hasPermission(launcher.getPermissions()))) {
+						if (launcher.hasGUI()) {
 							ItemStack item = new ItemStack(Material.PAPER, 1);
 							ItemMeta data = item.getItemMeta();
 							data.setDisplayName(launcher.getCommand());
@@ -115,7 +118,7 @@ public class Help extends CommandLauncher{
 		public String getInventoryName() {
 			return "Help";
 		}
-		
+
 	}
 
 }
