@@ -32,8 +32,8 @@ public class Multitasking {
 		public ListToObject(List<A> object) {
 			OBJECT = object;
 		}
-		
-		public List<A> getList(){
+
+		public List<A> getList() {
 			return OBJECT;
 		}
 
