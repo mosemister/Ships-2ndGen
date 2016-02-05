@@ -9,28 +9,28 @@ import org.bukkit.event.HandlerList;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class ShipCreateEvent extends Event implements Cancellable {
-	
+
 	Player PLAYER;
 	Sign SIGN;
 	Vessel VESSEL;
 	boolean CANCELLED;
 	static final HandlerList HANDLERS = new HandlerList();
-	
-	public ShipCreateEvent(Player player, Sign sign, Vessel vessel){
+
+	public ShipCreateEvent(Player player, Sign sign, Vessel vessel) {
 		PLAYER = player;
 		SIGN = sign;
 		VESSEL = vessel;
 	}
-	
-	public Player getPlayer(){
+
+	public Player getPlayer() {
 		return PLAYER;
 	}
-	
-	public Sign getSign(){
+
+	public Sign getSign() {
 		return SIGN;
 	}
-	
-	public Vessel getVessel(){
+
+	public Vessel getVessel() {
 		return VESSEL;
 	}
 
@@ -48,8 +48,8 @@ public class ShipCreateEvent extends Event implements Cancellable {
 	public HandlerList getHandlers() {
 		return HANDLERS;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return HANDLERS;
 	}
 }

@@ -17,6 +17,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipsTypes.VesselType;
@@ -29,15 +30,17 @@ import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Submarine extends VesselType implements Fuel, RequiredMaterial, ClassicVessel{
+public class Submarine extends VesselType implements Fuel, RequiredMaterial, ClassicVessel {
 
 	int PERCENT;
 	int TAKE;
 	List<Material> REQUIREDBLOCK;
 	Map<Material, Byte> FUEL;
-	
+
 	public Submarine() {
-		super("Submarine", new ArrayList<Material>(Arrays.asList(Material.WATER, Material.AIR, Material.STATIONARY_WATER)), 2, 3, false);
+		super("Submarine",
+				new ArrayList<Material>(Arrays.asList(Material.WATER, Material.AIR, Material.STATIONARY_WATER)), 2, 3,
+				false);
 		loadDefault();
 	}
 
@@ -61,40 +64,44 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())){
-			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())){
-				if (move.equals(MovementMethod.MOVE_DOWN)){
+		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())) {
+			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())) {
+				if (move.equals(MovementMethod.MOVE_DOWN)) {
 					return true;
-				}else{
-					if (util.checkFuel(getFuel(), vessel, TAKE)){
+				} else {
+					if (util.checkFuel(getFuel(), vessel, TAKE)) {
 						util.takeFuel(getFuel(), vessel, TAKE);
 						return true;
-					}else{
-						if (player != null){
-							if (Messages.isEnabled()){
+					} else {
+						if (player != null) {
+							if (Messages.isEnabled()) {
 								player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
 							}
 						}
 						return false;
 					}
 				}
-			}else{
-				if (player != null){
+			} else {
+				if (player != null) {
 					List<String> materials = new ArrayList<String>();
-					for(Material material : getRequiredMaterial()){
+					for (Material material : getRequiredMaterial()) {
 						materials.add(material.name());
 					}
-					if (Messages.isEnabled()){
-					player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(util.getOffBy(blocks,  getRequiredMaterial(), getRequiredPercent()), "(of either) " + materials.toString()), true));
+					if (Messages.isEnabled()) {
+						player.sendMessage(Ships.runShipsMessage(
+								Messages.getOffBy(util.getOffBy(blocks, getRequiredMaterial(), getRequiredPercent()),
+										"(of either) " + materials.toString()),
+								true));
 					}
 				}
 				return false;
 			}
-		}else{
-			if (player != null){
-				if (Messages.isEnabled()){
+		} else {
+			if (player != null) {
+				if (Messages.isEnabled()) {
 					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Water"), true));
 				}
 			}
@@ -129,18 +136,18 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Submarine){
-			Submarine submarine = (Submarine)type;
+		if (type instanceof Submarine) {
+			Submarine submarine = (Submarine) type;
 			List<Integer> fuels = config.getIntegerList("ShipsData.Config.Fuel.Fuels");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			submarine.PERCENT = percent;
 			submarine.TAKE = consumption;
 			HashMap<Material, Byte> fuelsR = new HashMap<Material, Byte>();
-			for (int id : fuels){
+			for (int id : fuels) {
 				@SuppressWarnings("deprecation")
 				Material material = Material.getMaterial(id);
-				fuelsR.put(material, (byte)-1);
+				fuelsR.put(material, (byte) -1);
 			}
 			submarine.FUEL = fuelsR;
 			vessel.setVesselType(submarine);
@@ -152,16 +159,16 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Submarine){
-			Submarine sub = (Submarine)type;
+		if (type instanceof Submarine) {
+			Submarine sub = (Submarine) type;
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
 			sub.PERCENT = percent;
 			sub.TAKE = consumption;
-			if (fuelsL.size() != 0){
+			if (fuelsL.size() != 0) {
 				Map<Material, Byte> fuels = new HashMap<Material, Byte>();
-				for (String fuelS : fuelsL){
+				for (String fuelS : fuelsL) {
 					String[] fuelM = fuelS.split(",");
 					fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
 				}
@@ -199,7 +206,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	@Override
 	public void loadDefault() {
 		File file = getTypeFile();
-		if (!file.exists()){
+		if (!file.exists()) {
 			createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -209,7 +216,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		this.setMaxBlocks(config.getInt("Blocks.Max"));
 		this.setMinBlocks(config.getInt("Blocks.Min"));
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for(int id : config.getIntegerList("Blocks.requiredBlocks")){
+		for (int id : config.getIntegerList("Blocks.requiredBlocks")) {
 			Material material = Material.getMaterial(id);
 			requiredmaterials.add(material);
 		}
@@ -225,7 +232,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.WATER);
 		moveIn.add(Material.STATIONARY_WATER);
-		this.setMoveInMaterials(moveIn);		
+		this.setMoveInMaterials(moveIn);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -234,27 +241,31 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		ConfigurationSection config = configuration.createSection("ShipsData");
-		config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
-		config.set("Type", "Submarine");
-		config.set("Protected", vessel.isProtected());
-		config.set("Config.Block.Percent", PERCENT);
-		config.set("Config.Block.Max", getMaxBlocks());
-		config.set("Config.Block.Min", getMinBlocks());
 		List<String> fuels = new ArrayList<String>();
-		for (Entry<Material, Byte> fuels2 : this.getFuel().entrySet()){
+		for (Entry<Material, Byte> fuels2 : this.getFuel().entrySet()) {
 			fuels.add(fuels2.getKey().getId() + "," + fuels2.getValue());
 		}
-		config.set("Config.Fuel.Fuels", fuels);
-		config.set("Config.Fuel.Consumption", TAKE);
-		config.set("Config.Speed.Engine", getDefaultSpeed());
-		Sign sign = vessel.getSign();
-		Location loc = vessel.getTeleportLocation();
-		config.set("Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
-		config.set("Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
-		try{
-			configuration.save(file);
-		}catch(IOException e){
-			e.printStackTrace();
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Submarine", getRequiredPercent(), PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
+		if (!event.isCancelled()) {
+			config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
+			config.set("Type", "Submarine");
+			config.set("Config.Block.Percent", PERCENT);
+			config.set("Config.Block.Max", getMaxBlocks());
+			config.set("Config.Block.Min", getMinBlocks());
+			config.set("Config.Fuel.Fuels", fuels);
+			config.set("Config.Fuel.Consumption", TAKE);
+			config.set("Config.Speed.Engine", getDefaultSpeed());
+			Sign sign = vessel.getSign();
+			Location loc = vessel.getTeleportLocation();
+			config.set("Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
+					+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+			config.set("Location.Teleport",
+					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
+			try {
+				configuration.save(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

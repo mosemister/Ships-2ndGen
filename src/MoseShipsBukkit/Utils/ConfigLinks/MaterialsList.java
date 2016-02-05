@@ -21,13 +21,13 @@ public class MaterialsList {
 	List<MaterialItem> MATERIALIDLIST = new ArrayList<MaterialItem>();
 	List<MaterialItem> RAMIDLIST = new ArrayList<MaterialItem>();
 	static MaterialsList LIST;
-	
+
 	@SuppressWarnings("deprecation")
-	public MaterialsList(){
+	public MaterialsList() {
 		File file = new File("plugins/Ships/Configuration/Materials.yml");
-		if (!file.exists()){
-			//default
-			//TODO
+		if (!file.exists()) {
+			// default
+			// TODO
 			MATERIALIDLIST.add(new MaterialItem(5, -1));
 			MATERIALIDLIST.add(new MaterialItem(14, 0));
 			MATERIALIDLIST.add(new MaterialItem(15, (byte) 0));
@@ -152,7 +152,7 @@ public class MaterialsList {
 			MATERIALIDLIST.add(new MaterialItem(185, (byte) -1));
 			MATERIALIDLIST.add(new MaterialItem(186, (byte) -1));
 			MATERIALIDLIST.add(new MaterialItem(187, (byte) -1));
-			
+
 			RAMIDLIST.add(new MaterialItem(6, (byte) -1));
 			RAMIDLIST.add(new MaterialItem(18, (byte) -1));
 			RAMIDLIST.add(new MaterialItem(30, (byte) -1));
@@ -173,18 +173,18 @@ public class MaterialsList {
 			RAMIDLIST.add(new MaterialItem(142, (byte) -1));
 			RAMIDLIST.add(new MaterialItem(161, (byte) -1));
 			RAMIDLIST.add(new MaterialItem(175, (byte) -1));
-		
+
 			LIST = this;
-		}else{
+		} else {
 			YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-			for(Material material : Material.values()){
+			for (Material material : Material.values()) {
 				Map<Byte, Integer> values = getValues(config, material);
-				for(Entry<Byte, Integer> entry : values.entrySet()){
-					if (entry.getValue() == 1){
+				for (Entry<Byte, Integer> entry : values.entrySet()) {
+					if (entry.getValue() == 1) {
 						int id = material.getId();
 						byte data = entry.getKey();
 						MATERIALIDLIST.add(new MaterialItem(id, data));
-					}else if (entry.getValue() == 2){
+					} else if (entry.getValue() == 2) {
 						int id = material.getId();
 						byte data = entry.getKey();
 						RAMIDLIST.add(new MaterialItem(id, data));
@@ -194,43 +194,48 @@ public class MaterialsList {
 		}
 		LIST = this;
 	}
-	
-	Map<Byte, Integer> getValues(YamlConfiguration config, Material material){
+
+	Map<Byte, Integer> getValues(YamlConfiguration config, Material material) {
 		Map<Byte, Integer> dataValues = new HashMap<Byte, Integer>();
-		for(int A = -1; A < 100; A++){
+		for (int A = -1; A < 100; A++) {
 			int check = config.getInt("Materials." + material.name() + ".dataValue_" + A);
-			if (check != 0){
-				dataValues.put((byte)A, check);
+			if (check != 0) {
+				dataValues.put((byte) A, check);
 			}
 		}
 		return dataValues;
 	}
-	
-	public void save(){
+
+	public void save() {
 		File file = new File("plugins/Ships/Configuration/Materials.yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		List<Material> failedMaterials = new ArrayList<Material>();
-		for(Material material : Material.values()){
+		for (Material material : Material.values()) {
 			List<MaterialAndData> materials = MaterialAndData.getMaterial(material);
-			if (materials != null){
-				if (materials.size() == 0){
+			if (materials != null) {
+				if (materials.size() == 0) {
 					failedMaterials.add(material);
-				}else{
-					if (Config.getConfig().updateCheck()){
-						for(MaterialAndData data : materials){
-							if (contains(material, true)){
-								if (config.getInt("Materials." + material.name() + ".dataValue_" + data.getData()) == 0){
+				} else {
+					if (Config.getConfig().updateCheck()) {
+						for (MaterialAndData data : materials) {
+							if (contains(material, true)) {
+								if (config
+										.getInt("Materials." + material.name() + ".dataValue_" + data.getData()) == 0) {
 									config.set("Materials." + material.name() + ".dataValue_" + data.getData(), 1);
-									Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(material.name() + " has been updated in materials list", false));
+									Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
+											material.name() + " has been updated in materials list", false));
 								}
-							}else if (contains(material, false)){
-								if (config.getInt("Materials." + material.name() + ".dataValue_" + data.getData()) == 0){
+							} else if (contains(material, false)) {
+								if (config.getInt(
+										"Materials." + material.name() + ".dataValue_" + data.getData()) == 0) {
 									config.set("Materials." + material.name() + ".dataValue_" + data.getData(), 2);
-									Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(material.name() + " has been updated in materials list", false));
+									Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
+											material.name() + " has been updated in materials list", false));
 								}
-							}else{
+							} else {
 								config.set("Materials." + material.name() + ".dataValue_" + data.getData(), 0);
-								Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(material.name() + " has been updated in materials list", false));
+								Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
+										material.name() + " has been updated in materials list", false));
 							}
 						}
 					}
@@ -242,50 +247,55 @@ public class MaterialsList {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (failedMaterials.size() != 0){
-			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Ships currently does not support " + failedMaterials + "(found " + failedMaterials.size() + " blocks)", true));
-			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("check http://dev.bukkit.org/bukkit-plugins/ships to see if you are using the latest version. This version is " + Config.getConfig().getLatestVersionString(), false));
+		if (failedMaterials.size() != 0) {
+			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Ships currently does not support "
+					+ failedMaterials + "(found " + failedMaterials.size() + " blocks)", true));
+			Bukkit.getConsoleSender()
+					.sendMessage(Ships.runShipsMessage(
+							"check http://dev.bukkit.org/bukkit-plugins/ships to see if you are using the latest version. This version is "
+									+ Config.getConfig().getLatestVersionString(),
+							false));
 		}
 	}
-	
-	public boolean contains(Material material, boolean materials){
-		if (materials){
-			for (MaterialItem item : MATERIALIDLIST){
-				if (item.getMaterial().equals(material)){
+
+	public boolean contains(Material material, boolean materials) {
+		if (materials) {
+			for (MaterialItem item : MATERIALIDLIST) {
+				if (item.getMaterial().equals(material)) {
 					return true;
 				}
 			}
-		}else{
-			for (MaterialItem item : RAMIDLIST){
-				if (item.getMaterial().equals(material)){
+		} else {
+			for (MaterialItem item : RAMIDLIST) {
+				if (item.getMaterial().equals(material)) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-	
-	public boolean contains(Material material, byte data, boolean materials){
-		if (materials){
-			for (MaterialItem item : MATERIALIDLIST){
-				if (item.getMaterial().equals(material)){
-					if (item.getData() != -1){
-						if (item.getData() == data){
+
+	public boolean contains(Material material, byte data, boolean materials) {
+		if (materials) {
+			for (MaterialItem item : MATERIALIDLIST) {
+				if (item.getMaterial().equals(material)) {
+					if (item.getData() != -1) {
+						if (item.getData() == data) {
 							return true;
 						}
-					}else{
+					} else {
 						return true;
 					}
 				}
 			}
-		}else{
-			for (MaterialItem item : RAMIDLIST){
-				if (item.getMaterial().equals(material)){
-					if (item.getData() != -1){
-						if (item.getData() == data){
+		} else {
+			for (MaterialItem item : RAMIDLIST) {
+				if (item.getMaterial().equals(material)) {
+					if (item.getData() != -1) {
+						if (item.getData() == data) {
 							return true;
 						}
-					}else{
+					} else {
 						return true;
 					}
 				}
@@ -293,17 +303,17 @@ public class MaterialsList {
 		}
 		return false;
 	}
-	
-	public List<MaterialItem> getMaterials(){
+
+	public List<MaterialItem> getMaterials() {
 		return MATERIALIDLIST;
 	}
-	
-	public List<MaterialItem> getRamMaterials(){
+
+	public List<MaterialItem> getRamMaterials() {
 		return RAMIDLIST;
 	}
-	
-	public static MaterialsList getMaterialsList(){
+
+	public static MaterialsList getMaterialsList() {
 		return LIST;
 	}
-	
+
 }

@@ -75,17 +75,21 @@ public class MovableVessel extends ProtectedVessel {
 	}
 
 	private boolean isMoveInBlock(Location loc) {
-		for (Material material : getVesselType().getMoveInMaterials())
-			if (material.equals(loc.getBlock().getType()))
+		for (Material material : this.getVesselType().getMoveInMaterials()) {
+			if (material.equals(loc.getBlock().getType())) {
 				return true;
+			}
+		}
 		return false;
 	}
 
 	private boolean isPartOfVessel(Location loc) {
 		ShipsStructure str = STRUCTURE;
-		for (Block block : str.getAllBlocks())
-			if (block.getLocation().equals(loc))
+		for (Block block : str.getAllBlocks()) {
+			if (block.getLocation().equals(loc)) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -95,12 +99,14 @@ public class MovableVessel extends ProtectedVessel {
 		Block block2 = loc.getBlock();
 		if (!isPartOfVessel(loc)) {
 			MaterialsList matList = MaterialsList.getMaterialsList();
-			if (matList.contains(block2.getType(), block2.getData(), false))
+			if (matList.contains(block2.getType(), block2.getData(), false)) {
 				return false;
-			else if (isMoveInBlock(loc))
+			} else if (isMoveInBlock(loc)) {
 				return false;
-		} else
+			}
+		} else {
 			return false;
+		}
 		return true;
 	}
 
@@ -108,23 +114,27 @@ public class MovableVessel extends ProtectedVessel {
 		int maxValue = 0;
 		for (MovingBlock block : blocks) {
 			Block block2 = block.getMovingTo().getBlock();
-			if (block2.getType().equals(Material.STATIONARY_WATER) || block2.getType().equals(Material.WATER))
-				if (block2.getY() > maxValue)
+			if ((block2.getType().equals(Material.STATIONARY_WATER)) || (block2.getType().equals(Material.WATER))) {
+				if (block2.getY() > maxValue) {
 					maxValue = block2.getY();
+				}
+			}
 		}
 		return maxValue;
 	}
 
 	private boolean hasMovePermissions(@Nullable OfflinePlayer player) {
-		if (player == null)
+		if (player == null) {
 			return true;
-		else if (player.isOnline())
-			if (player.getPlayer().hasPermission("ships." + getName() + ".use"))
+		} else if (player.isOnline()) {
+			if (player.getPlayer().hasPermission("ships." + getName() + ".use")) {
 				return true;
-			else if (player.getPlayer().hasPermission("ships." + getVesselType().getName() + ".use"))
+			} else if (player.getPlayer().hasPermission("ships." + getVesselType().getName() + ".use")) {
 				return true;
-			else if (player.getPlayer().hasPermission("ships.*.use"))
+			} else if (player.getPlayer().hasPermission("ships.*.use")) {
 				return true;
+			}
+		}
 		return false;
 	}
 
@@ -133,50 +143,66 @@ public class MovableVessel extends ProtectedVessel {
 		for (Block block : STRUCTURE.getPriorityBlocks()) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
-				if (player != null)
-					if (Messages.isEnabled())
-						if (player.isOnline())
+				if (player != null) {
+					if (Messages.isEnabled()) {
+						if (player.isOnline()) {
 							player.getPlayer().sendMessage(Ships.runShipsMessage(
 									Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
+					}
+				}
 				return null;
-			} else
+			} else {
 				blocks.add(block2);
+			}
 		}
 		for (SpecialBlock block : STRUCTURE.getSpecialBlocks()) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
-				if (player != null)
-					if (Messages.isEnabled())
-						if (player.isOnline())
+				if (player != null) {
+					if (Messages.isEnabled()) {
+						if (player.isOnline()) {
 							player.getPlayer().sendMessage(Ships.runShipsMessage(
 									Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
+					}
+				}
 				return null;
-			} else
+			} else {
 				blocks.add(block2);
+			}
 		}
 		for (Block block : STRUCTURE.getStandardBlocks()) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
-				if (player != null)
-					if (Messages.isEnabled())
-						if (player.isOnline())
+				if (player != null) {
+					if (Messages.isEnabled()) {
+						if (player.isOnline()) {
 							player.getPlayer().sendMessage(Ships.runShipsMessage(
 									Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
+					}
+				}
 				return null;
-			} else
+			} else {
 				blocks.add(block2);
+			}
 		}
 		for (Block block : STRUCTURE.getAirBlocks()) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
-				if (player != null)
-					if (Messages.isEnabled())
-						if (player.isOnline())
+				if (player != null) {
+					if (Messages.isEnabled()) {
+						if (player.isOnline()) {
 							player.getPlayer().sendMessage(Ships.runShipsMessage(
 									Messages.getFoundInWay(block2.getMovingTo().getBlock().getType().name()), true));
+						}
+					}
+				}
 				return null;
-			} else
+			} else {
 				blocks.add(block2);
+			}
 		}
 		return blocks;
 	}
@@ -203,18 +229,21 @@ public class MovableVessel extends ProtectedVessel {
 			double Z = loc.getZ() - Math.floor(loc.getZ());
 			loc2.add(X, Y, Z);
 			loc2.setPitch(loc.getPitch());
-			if (move.equals(MovementMethod.ROTATE_LEFT))
+			if (move.equals(MovementMethod.ROTATE_LEFT)) {
 				loc2.setYaw(loc.getYaw() + 270);
-			else if (move.equals(MovementMethod.ROTATE_RIGHT))
+			} else if (move.equals(MovementMethod.ROTATE_RIGHT)) {
 				loc2.setYaw(loc.getYaw() + 90);
-			else
+			} else {
 				loc2.setYaw(loc.getYaw());
+			}
 			entity.teleport(loc2);
 			if (entity instanceof Player) {
 				Player player = (Player) entity;
-				if (config.getBoolean("Inventory.keepInventorysOpen"))
-					if (inv != null)
+				if (config.getBoolean("Inventory.keepInventorysOpen")) {
+					if (inv != null) {
 						player.openInventory(inv);
+					}
+				}
 			}
 		}
 	}
@@ -227,45 +256,47 @@ public class MovableVessel extends ProtectedVessel {
 			FurnaceInventory inv = furn.getInventory();
 			Map<Integer, ItemStack> stack = sBlock.getItems();
 			for (Entry<Integer, ItemStack> entry : stack.entrySet()) {
-				if (entry.getKey() == 1)
+				if (entry.getKey() == 1) {
 					inv.setFuel(entry.getValue());
-				if (entry.getKey() == 2)
+				}
+				if (entry.getKey() == 2) {
 					inv.setResult(entry.getValue());
-				if (entry.getKey() == 3)
+				}
+				if (entry.getKey() == 3) {
 					inv.setSmelting(entry.getValue());
+				}
 			}
 		}
 		if (nBlock.getState() instanceof Chest) {
 			Chest chest = (Chest) nBlock.getState();
-			Inventory inv = chest.getInventory();
-			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet())
-				if (sBlock.isRightChest()) {
-					int A = entry.getKey();
-					if (A > 26 && A <= 64)
-						inv.setItem(A - 27, entry.getValue());
-				} else {
-					int A = entry.getKey();
-					if (A <= 26)
-						inv.setItem(A, entry.getValue());
+			Inventory inv = chest.getBlockInventory();
+			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet()) {
+				int A = entry.getKey();
+				if (A < inv.getSize()) {
+					inv.setItem(A, entry.getValue());
 				}
+			}
 		}
 		if (nBlock.getState() instanceof Hopper) {
 			Hopper hop = (Hopper) nBlock.getState();
 			Inventory inv = hop.getInventory();
-			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet())
+			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet()) {
 				inv.setItem(entry.getKey(), entry.getValue());
+			}
 		}
 		if (nBlock.getState() instanceof Dropper) {
 			Dropper drop = (Dropper) nBlock.getState();
 			Inventory inv = drop.getInventory();
-			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet())
+			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet()) {
 				inv.setItem(entry.getKey(), entry.getValue());
+			}
 		}
 		if (nBlock.getState() instanceof Dispenser) {
 			Dispenser disp = (Dispenser) nBlock.getState();
 			Inventory inv = disp.getInventory();
-			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet())
+			for (Entry<Integer, ItemStack> entry : sBlock.getItems().entrySet()) {
 				inv.setItem(entry.getKey(), entry.getValue());
+			}
 		}
 		if (nBlock.getState() instanceof Sign) {
 			Sign sign = (Sign) nBlock.getState();
@@ -278,8 +309,9 @@ public class MovableVessel extends ProtectedVessel {
 				SIGN = sign;
 				updateLocation(getTeleportLocation(), sign);
 				YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-				if (config.getBoolean("Signs.ForceUsernameOnLicenceSign"))
-					sign.setLine(3, ChatColor.GREEN + getOwner().getName());
+				if (config.getBoolean("Signs.ForceUsernameOnLicenceSign")) {
+					sign.setLine(3, ChatColor.GREEN + this.getOwner().getName());
+				}
 			}
 		}
 	}
@@ -287,17 +319,17 @@ public class MovableVessel extends ProtectedVessel {
 	private void forceMove(final MovementMethod move, final List<MovingBlock> blocks, boolean multitasking) {
 		if (multitasking) {
 			final List<ListToObject<MovingBlock>> devide = Multitasking.spiltList(blocks, Multitasking.CORE_COUNT - 1);
-			for (int W = 0; W < Multitasking.CORE_COUNT - 1; W++) {
+			for (int W = 0; W < (Multitasking.CORE_COUNT - 1); W++) {
 				final int U = W;
 				new Runnable() {
-					@Override
 					public void run() {
 						forceMove(move, devide.get(U).getList());
 					}
 				}.run();
 			}
-		} else
+		} else {
 			forceMove(move, blocks);
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -306,38 +338,41 @@ public class MovableVessel extends ProtectedVessel {
 		for (int A = 0; A < blocks.size(); A++) {
 			MovingBlock block = blocks.get(A);
 			if (block.getBlock().getLocation().getY() > getWaterLevel(blocks)) {
-				if (block.getSpecialBlock() != null)
+				if (block.getSpecialBlock() != null) {
 					block.getSpecialBlock().removeBlock(false);
-				else
+				} else {
 					block.getBlock().setType(Material.AIR);
-			} else if (block.getSpecialBlock() != null)
-				block.getSpecialBlock().removeBlock(true);
-			else
-				block.getBlock().setType(Material.STATIONARY_WATER);
+				}
+			} else {
+				if (block.getSpecialBlock() != null) {
+					block.getSpecialBlock().removeBlock(true);
+				} else {
+					block.getBlock().setType(Material.STATIONARY_WATER);
+				}
+			}
 		}
 		// place all blocks (priority last)
 		for (int A = blocks.size() - 1; A >= 0; A--) {
 			MovingBlock block = blocks.get(A);
 			Block bBlock = block.getMovingTo().getBlock();
-			if (move.equals(MovementMethod.ROTATE_LEFT) || move.equals(MovementMethod.ROTATE_RIGHT)) {
+			if ((move.equals(MovementMethod.ROTATE_LEFT) || (move.equals(MovementMethod.ROTATE_RIGHT)))) {
 				byte data = BlockConverter.convertRotation(move, block, block.getData());
 				bBlock.setTypeIdAndData(block.getId(), data, false);
-				if (block.getSpecialBlock() != null)
-					if (block.getSpecialBlock().getType().equals("door"))
+				if (block.getSpecialBlock() != null) {
+					if (block.getSpecialBlock().getType().equals("door")) {
 						bBlock.getRelative(0, -1, 0).setTypeIdAndData(block.getId(), data, false);
+					}
+				}
 			} else {
 				bBlock.setTypeIdAndData(block.getId(), block.getData(), false);
-				if (block.getSpecialBlock() != null)
-					if (block.getSpecialBlock().getType().equals("door"))
+				if (block.getSpecialBlock() != null) {
+					if (block.getSpecialBlock().getType().equals("door")) {
 						bBlock.getRelative(0, -1, 0).setTypeIdAndData(block.getId(), block.getData(), false);
+					}
+				}
 			}
-			if (block.getSpecialBlock() != null)
+			if (block.getSpecialBlock() != null) {
 				setInventory(block);
-			if (block.getMovingTo().getZ() == -91) {
-				Bukkit.getConsoleSender().sendMessage("----------");
-				Bukkit.getConsoleSender().sendMessage("Original pos = " + block.getBlock().getLocation());
-				Bukkit.getConsoleSender().sendMessage("new Location = " + block.getMovingTo());
-				Bukkit.getConsoleSender().sendMessage("Is now = " + block.getId() + ":" + block.getData());
 			}
 		}
 		MovingBlock mBlock = new MovingBlock(getTeleportLocation().getBlock(), this, move);
@@ -351,17 +386,19 @@ public class MovableVessel extends ProtectedVessel {
 
 	private boolean safeMove(MovementMethod move, @Nullable OfflinePlayer player, boolean sendEvent) {
 		List<MovingBlock> blocks = sortMovingBlocks(move, player);
-		if (blocks == null)
+		if (blocks == null) {
 			return false;
+		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		if (getVesselType().attemptToMove(this, move, blocks, player)) {
+		if (this.getVesselType().attemptToMove(this, move, blocks, player)) {
 			MovingStructure structure = new MovingStructure(blocks);
-			setStructure(structure);
+			this.setStructure(structure);
 			if (sendEvent) {
 				ShipMovingEvent event = new ShipMovingEvent(player, this, move, structure);
 				Bukkit.getPluginManager().callEvent(event);
-				if (event.isCancelled())
+				if (event.isCancelled()) {
 					return false;
+				}
 				structure = event.getStructure();
 			}
 			forceMove(move, structure.getAllMovingBlocks(), config.getBoolean("Multitasking.enable"));
@@ -370,122 +407,157 @@ public class MovableVessel extends ProtectedVessel {
 		return false;
 	}
 
-	/*
-	 * @SuppressWarnings("deprecation") public void ASyncMoveVessel(final
-	 * MovementMethod move, final int speed, final OfflinePlayer player){
+	/* @SuppressWarnings("deprecation")
+	 * public void ASyncMoveVessel(final MovementMethod move, final int speed,
+	 * final OfflinePlayer player){
 	 * Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new
 	 * BukkitRunnable(){
 	 * 
-	 * @Override public void run() { syncMoveVessel(move, speed, player); }
+	 * @Override
+	 * public void run() {
+	 * syncMoveVessel(move, speed, player);
+	 * }
 	 * 
-	 * }, 0); }
-	 */
+	 * }, 0);
+	 * } */
 
 	public boolean syncMoveVessel(MovementMethod move, int speed, OfflinePlayer player) {
 		return syncMoveVessel(move, speed, player, true);
 	}
 
-	/*
-	 * @SuppressWarnings("deprecation") public void ASyncMoveVessel(final
-	 * MovementMethod move, final int speed, final OfflinePlayer player, final
-	 * boolean event){
+	/* @SuppressWarnings("deprecation")
+	 * public void ASyncMoveVessel(final MovementMethod move, final int speed,
+	 * final OfflinePlayer player, final boolean event){
 	 * Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new
 	 * BukkitRunnable(){
 	 * 
-	 * @Override public void run() { syncMoveVessel(move, speed, player, event);
+	 * @Override
+	 * public void run() {
+	 * syncMoveVessel(move, speed, player, event);
 	 * }
 	 * 
-	 * }, 0); }
-	 */
+	 * }, 0);
+	 * } */
 
 	public boolean syncMoveVessel(MovementMethod move, int speed, OfflinePlayer player, boolean event) {
 		if (hasMovePermissions(player)) {
 			if (move == null) {
-				if (player != null)
-					if (player.isOnline())
+				if (player != null) {
+					if (player.isOnline()) {
 						player.getPlayer()
 								.sendMessage(Ships.runShipsMessage("Can not translate block into move", true));
+					}
+				}
 				return false;
 			}
-			if (speed != 0)
+			if (speed != 0) {
 				move.setSpeed(speed);
+			}
 
 			if (event) {
 				ShipAboutToMoveEvent event2 = new ShipAboutToMoveEvent(move, speed, this, player);
 				Bukkit.getPluginManager().callEvent(event2);
-				if (event2.isCancelled())
+				if (event2.isCancelled()) {
 					return false;
-				else {
+				} else {
 					move = event2.getMethod();
 					speed = event2.getSpeed();
 					player = event2.getPlayer();
 				}
 			}
-			if (safeMove(move, player, event))
+			if (safeMove(move, player, event)) {
 				return true;
+			}
 		}
 		return false;
 	}
 
-	/*
-	 * @SuppressWarnings("deprecation") public void ASyncMoveVessel(final
-	 * Location move, final int speed, final OfflinePlayer player){
+	/* @SuppressWarnings("deprecation")
+	 * public void ASyncMoveVessel(final Location move, final int speed, final
+	 * OfflinePlayer player){
 	 * Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new
 	 * BukkitRunnable(){
 	 * 
-	 * @Override public void run() { syncSafelyMoveTowardsLocation(move, speed,
-	 * player); }
+	 * @Override
+	 * public void run() {
+	 * syncSafelyMoveTowardsLocation(move, speed, player);
+	 * }
 	 * 
-	 * }, 0); }
-	 */
+	 * }, 0);
+	 * } */
 
 	public boolean syncSafelyMoveTowardsLocation(Location moveTo, int speed, OfflinePlayer player) {
-		Location loc = getSign().getLocation();
-		BlockFace face = getFacingDirection();
+		Location loc = this.getSign().getLocation();
+		BlockFace face = this.getFacingDirection();
 		MovementMethod move = MovementMethod.getMovementDirection(face);
 		boolean value = false;
 		if (loc.getY() == moveTo.getY()) {
 			if (loc.getX() == moveTo.getX()) {
 				// try Z
-				if (loc.getZ() == moveTo.getZ())
+				if (loc.getZ() == moveTo.getZ()) {
 					return false;
+				}
 				if (loc.getZ() > moveTo.getZ()) {
-					if (loc.getZ() + speed > moveTo.getZ())
+					if ((loc.getZ() + speed) > moveTo.getZ()) {
 						value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_Z, 1, player);
-					else if (move.equals(MovementMethod.MOVE_NEGATIVE_Z))
-						value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_Z, speed, player);
-					else
-						value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
-				} else if (loc.getZ() - speed < moveTo.getZ())
-					value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_Z, 1, player);
-				else if (move.equals(MovementMethod.MOVE_POSITIVE_Z))
-					value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_Z, speed, player);
-				else
-					value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
-			} else // try X
-			if (loc.getX() > moveTo.getX()) {
-				if (loc.getX() + speed > moveTo.getX())
-					value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_X, 1, player);
-				else if (move.equals(MovementMethod.MOVE_NEGATIVE_X))
-					value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_X, speed, player);
-				else
-					value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
-			} else if (loc.getX() - speed < moveTo.getX())
-				value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_X, 1, player);
-			else if (move.equals(MovementMethod.MOVE_POSITIVE_X))
-				value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_X, speed, player);
-			else
-				value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
-		} else // try Y
-		if (loc.getY() < moveTo.getY()) {
-			if (loc.getY() + speed > moveTo.getY())
-				value = syncMoveVessel(MovementMethod.MOVE_UP, 1, player);
-			else
-				value = syncMoveVessel(MovementMethod.MOVE_UP, speed, player);
-		} else if (loc.getY() - speed > moveTo.getY())
-			value = syncMoveVessel(MovementMethod.MOVE_DOWN, 1, player);
-		else
-			value = syncMoveVessel(MovementMethod.MOVE_DOWN, speed, player);
+					} else {
+						if (move.equals(MovementMethod.MOVE_NEGATIVE_Z)) {
+							value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_Z, speed, player);
+						} else {
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				} else {
+					if ((loc.getZ() - speed) < moveTo.getZ()) {
+						value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_Z, 1, player);
+					} else {
+						if (move.equals(MovementMethod.MOVE_POSITIVE_Z)) {
+							value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_Z, speed, player);
+						} else {
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				}
+			} else {
+				// try X
+				if (loc.getX() > moveTo.getX()) {
+					if ((loc.getX() + speed) > moveTo.getX()) {
+						value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_X, 1, player);
+					} else {
+						if (move.equals(MovementMethod.MOVE_NEGATIVE_X)) {
+							value = syncMoveVessel(MovementMethod.MOVE_NEGATIVE_X, speed, player);
+						} else {
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				} else {
+					if ((loc.getX() - speed) < moveTo.getX()) {
+						value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_X, 1, player);
+					} else {
+						if (move.equals(MovementMethod.MOVE_POSITIVE_X)) {
+							value = syncMoveVessel(MovementMethod.MOVE_POSITIVE_X, speed, player);
+						} else {
+							value = syncMoveVessel(MovementMethod.ROTATE_RIGHT, 90, player);
+						}
+					}
+				}
+			}
+		} else {
+			// try Y
+			if (loc.getY() < moveTo.getY()) {
+				if ((loc.getY() + speed) > moveTo.getY()) {
+					value = syncMoveVessel(MovementMethod.MOVE_UP, 1, player);
+				} else {
+					value = syncMoveVessel(MovementMethod.MOVE_UP, speed, player);
+				}
+			} else {
+				if ((loc.getY() - speed) > moveTo.getY()) {
+					value = syncMoveVessel(MovementMethod.MOVE_DOWN, 1, player);
+				} else {
+					value = syncMoveVessel(MovementMethod.MOVE_DOWN, speed, player);
+				}
+			}
+		}
 		return value;
 	}
 
@@ -498,12 +570,14 @@ public class MovableVessel extends ProtectedVessel {
 			MovementMethod move = MovementMethod.TELEPORT;
 			ShipAboutToMoveEvent event2 = new ShipAboutToMoveEvent(move, 1, this, player);
 			Bukkit.getPluginManager().callEvent(event2);
-			if (event2.isCancelled())
+			if (event2.isCancelled()) {
 				return false;
-			else
+			} else {
 				player = event2.getPlayer();
-			if (safeMove(move, player, event))
+			}
+			if (safeMove(move, player, event)) {
 				return true;
+			}
 		}
 		return false;
 	}

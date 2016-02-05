@@ -25,30 +25,35 @@ public class AutoPilot extends CommandLauncher {
 			if (vessel == null) {
 				player.sendMessage(Ships.runShipsMessage("No ship found by that name", true));
 				return;
-			} else if (vessel.getVesselType().isAutoPilotAllowed()) {
-				World world = vessel.getTeleportLocation().getWorld();
-				if (player.equals(vessel.getOwner()) || vessel.getSubPilots().contains(player.getUniqueId()))
-					try {
-						int X = Integer.parseInt(args[2]);
-						int Y = Integer.parseInt(args[3]);
-						int Z = Integer.parseInt(args[4]);
-						Location loc = new Location(world, X, Y, Z);
-						AutoPilotData data = new AutoPilotData(vessel, loc, vessel.getVesselType().getDefaultSpeed(),
-								player);
-						vessel.setAutoPilotTo(data);
-						player.sendMessage(
-								Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName()
-										+ " " + loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));
-					} catch (NumberFormatException e) {
-						player.sendMessage(Ships.runShipsMessage("X Y Z need to be whole numbers", true));
+			} else {
+				if (vessel.getVesselType().isAutoPilotAllowed()) {
+					World world = vessel.getTeleportLocation().getWorld();
+					if ((player.equals(vessel.getOwner())) || (vessel.getSubPilots().contains(player.getUniqueId()))) {
+						try {
+							int X = Integer.parseInt(args[2]);
+							int Y = Integer.parseInt(args[3]);
+							int Z = Integer.parseInt(args[4]);
+							Location loc = new Location(world, X, Y, Z);
+							AutoPilotData data = new AutoPilotData(vessel, loc,
+									vessel.getVesselType().getDefaultSpeed(), player);
+							vessel.setAutoPilotTo(data);
+							player.sendMessage(
+									Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName()
+											+ " " + loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));
+						} catch (NumberFormatException e) {
+							player.sendMessage(Ships.runShipsMessage("X Y Z need to be whole numbers", true));
+						}
+					} else {
+						player.sendMessage(Ships.runShipsMessage("Not your vessel", true));
 					}
-				else
-					player.sendMessage(Ships.runShipsMessage("Not your vessel", true));
-			} else
-				player.sendMessage(Ships.runShipsMessage("Only Air based ships can use AutoPilot", true));
-		} else
-			player.sendMessage(ChatColor.GOLD + this.getCommand() + " " + getExtraArgs() + ChatColor.AQUA + ": "
-					+ getDescription());
+				} else {
+					player.sendMessage(Ships.runShipsMessage("Only Air based ships can use AutoPilot", true));
+				}
+			}
+		} else {
+			player.sendMessage(ChatColor.GOLD + this.getCommand() + " " + this.getExtraArgs() + ChatColor.AQUA + ": "
+					+ this.getDescription());
+		}
 	}
 
 	@Override
@@ -58,26 +63,31 @@ public class AutoPilot extends CommandLauncher {
 			if (vessel == null) {
 				sender.sendMessage(Ships.runShipsMessage("No ship found by that name", true));
 				return;
-			} else if (vessel.getVesselType().isAutoPilotAllowed()) {
-				World world = vessel.getTeleportLocation().getWorld();
-				try {
-					int X = Integer.parseInt(args[2]);
-					int Y = Integer.parseInt(args[3]);
-					int Z = Integer.parseInt(args[4]);
-					Location loc = new Location(world, X, Y, Z);
-					AutoPilotData data = new AutoPilotData(vessel, loc, vessel.getVesselType().getDefaultSpeed(), null);
-					vessel.setAutoPilotTo(data);
-					sender.sendMessage(
-							Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName() + " "
-									+ loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));
-				} catch (NumberFormatException e) {
-					sender.sendMessage(Ships.runShipsMessage("X Y Z need to be whole numbers", true));
+			} else {
+				if (vessel.getVesselType().isAutoPilotAllowed()) {
+					World world = vessel.getTeleportLocation().getWorld();
+					try {
+						int X = Integer.parseInt(args[2]);
+						int Y = Integer.parseInt(args[3]);
+						int Z = Integer.parseInt(args[4]);
+						Location loc = new Location(world, X, Y, Z);
+						AutoPilotData data = new AutoPilotData(vessel, loc, vessel.getVesselType().getDefaultSpeed(),
+								null);
+						vessel.setAutoPilotTo(data);
+						sender.sendMessage(
+								Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName()
+										+ " " + loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));
+					} catch (NumberFormatException e) {
+						sender.sendMessage(Ships.runShipsMessage("X Y Z need to be whole numbers", true));
+					}
+				} else {
+					sender.sendMessage(Ships.runShipsMessage("Only Air based ships can use AutoPilot", true));
 				}
-			} else
-				sender.sendMessage(Ships.runShipsMessage("Only Air based ships can use AutoPilot", true));
-		} else
-			sender.sendMessage(ChatColor.GOLD + this.getCommand() + " " + getExtraArgs() + ChatColor.AQUA + ": "
-					+ getDescription());
+			}
+		} else {
+			sender.sendMessage(ChatColor.GOLD + this.getCommand() + " " + this.getExtraArgs() + ChatColor.AQUA + ": "
+					+ this.getDescription());
+		}
 	}
 
 }

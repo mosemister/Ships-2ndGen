@@ -13,16 +13,16 @@ import MoseShipsBukkit.StillShip.SpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class MovingBlock {
-	
+
 	Block BLOCK;
 	SpecialBlock SPE_BLOCK;
 	int ID;
 	byte DATA;
 	Location MOVETO;
 	MovementMethod MOVEMETHOD;
-	
+
 	@SuppressWarnings("deprecation")
-	public MovingBlock(Block block, BaseVessel vessel, MovementMethod move){
+	public MovingBlock(Block block, BaseVessel vessel, MovementMethod move) {
 		BLOCK = block;
 		MOVEMETHOD = move;
 		ID = block.getTypeId();
@@ -109,49 +109,52 @@ public class MovingBlock {
 			break;
 		
 		default:
-			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Something went wrong, maybe a custom [API] MovementMethod. (" + move + ")", true));
+			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
+													"Something went wrong, maybe a custom [API] MovementMethod. ("
+														+ move + ")", true));
 			break;
 		}
 	}
-	
 
 	@SuppressWarnings("deprecation")
-	public MovingBlock(SpecialBlock sBlock, BaseVessel vessel, MovementMethod move){
+	public MovingBlock(SpecialBlock sBlock, BaseVessel vessel, MovementMethod move) {
 		Block block = sBlock.getBlock();
 		SPE_BLOCK = sBlock;
 		BLOCK = block;
 		ID = block.getTypeId();
 		DATA = block.getData();
 		move(block,vessel,move);
+
+
 	}
-	
-	public SpecialBlock getSpecialBlock(){
+
+	public SpecialBlock getSpecialBlock() {
 		return SPE_BLOCK;
 	}
-	
-	public int getId(){
+
+	public int getId() {
 		return ID;
 	}
-	
-	public byte getData(){
+
+	public byte getData() {
 		return DATA;
 	}
-	
-	public Location getMovingTo(){
+
+	public Location getMovingTo() {
 		return MOVETO;
 	}
-	
-	public Block getBlock(){
+
+	public Block getBlock() {
 		return BLOCK;
 	}
-	
-	public MovementMethod getMethod(){
+
+	public MovementMethod getMethod() {
 		return MOVEMETHOD;
 	}
-	
-	public static List<Block> convertToBlockArray(List<MovingBlock> blocks){
-		List<Block> blocks2 = new ArrayList<Block>(); 
-		for (MovingBlock block : blocks){
+
+	public static List<Block> convertToBlockArray(List<MovingBlock> blocks) {
+		List<Block> blocks2 = new ArrayList<Block>();
+		for (MovingBlock block : blocks) {
 			blocks2.add(block.getBlock());
 		}
 		return blocks2;

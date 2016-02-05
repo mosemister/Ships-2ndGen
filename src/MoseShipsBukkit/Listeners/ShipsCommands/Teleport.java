@@ -19,40 +19,43 @@ import MoseShipsBukkit.GUI.ShipsGUICommand;
 import MoseShipsBukkit.Listeners.CommandLauncher;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
-public class Teleport extends CommandLauncher{
+public class Teleport extends CommandLauncher {
 
 	public Teleport() {
-		super("teleport", "<vessel name>", "teleport to a vessel", "ships.command.teleport", true, false, TeleportGUI.class);
+		super("teleport", "<vessel name>", "teleport to a vessel", "ships.command.teleport", true, false,
+				TeleportGUI.class);
 	}
 
 	@Override
 	public void playerCommand(Player player, String[] args) {
-		if (args.length == 1){
-			if (player.hasPermission("ships.command.teleport.other")){
-				player.sendMessage(ChatColor.GOLD + "/ships teleport <vessel name>" + ChatColor.AQUA + "; teleport to any vessel");
-			}else{
-				player.sendMessage(ChatColor.GOLD + "/ships teleport <vessel name>" + ChatColor.AQUA + "; teleport to your vessel");
+		if (args.length == 1) {
+			if (player.hasPermission("ships.command.teleport.other")) {
+				player.sendMessage(
+						ChatColor.GOLD + "/ships teleport <vessel name>" + ChatColor.AQUA + "; teleport to any vessel");
+			} else {
+				player.sendMessage(ChatColor.GOLD + "/ships teleport <vessel name>" + ChatColor.AQUA
+						+ "; teleport to your vessel");
 			}
-		}else{
+		} else {
 			Vessel vessel = Vessel.getVessel(args[1]);
-			if (vessel == null){
+			if (vessel == null) {
 				player.sendMessage(Ships.runShipsMessage("Can not find vessel", true));
-			}else{
-				if ((vessel.getOwner().equals(player)) || (player.hasPermission("ships.command.teleport.other"))){
+			} else {
+				if ((vessel.getOwner().equals(player)) || (player.hasPermission("ships.command.teleport.other"))) {
 					player.teleport(vessel.getTeleportLocation());
 				}
 			}
 		}
-		
+
 	}
 
 	@Override
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
-		
+
 	}
 
-	public static class TeleportGUI extends ShipsGUICommand{
-		
+	public static class TeleportGUI extends ShipsGUICommand {
+
 		public TeleportGUI(CommandLauncher command) {
 			super(command);
 		}
@@ -60,13 +63,13 @@ public class Teleport extends CommandLauncher{
 		@Override
 		public void onScreenClick(HumanEntity players, ItemStack item, Inventory inv, int slot, ClickType type) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void onInterfaceBoot(HumanEntity player) {
 			List<ItemStack> stacks = new ArrayList<ItemStack>();
-			for(Vessel vessel : Vessel.getVessels((Player)player)){
+			for (Vessel vessel : Vessel.getVessels((Player) player)) {
 				ItemStack stack = new ItemStack(Material.ARROW, 1);
 				ItemMeta meta = stack.getItemMeta();
 				meta.setDisplayName(vessel.getName());
@@ -86,6 +89,6 @@ public class Teleport extends CommandLauncher{
 		public String getInventoryName() {
 			return "Choose Vessel";
 		}
-		
+
 	}
 }

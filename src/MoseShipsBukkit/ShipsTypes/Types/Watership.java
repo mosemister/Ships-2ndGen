@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships;
+import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipsTypes.VesselType;
@@ -24,36 +25,39 @@ import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Watership extends VesselType implements RequiredMaterial, ClassicVessel{
-	
+public class Watership extends VesselType implements RequiredMaterial, ClassicVessel {
+
 	int PERCENT;
 	List<Material> MATERIALS;
 
 	public Watership() {
-		super("Ship", new ArrayList<Material>(Arrays.asList(Material.WATER, Material.AIR, Material.STATIONARY_WATER)), 2, 3, false);
+		super("Ship", new ArrayList<Material>(Arrays.asList(Material.WATER, Material.AIR, Material.STATIONARY_WATER)),
+				2, 3, false);
 		loadDefault();
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks, Player player) {
-		if ((move.equals(MovementMethod.MOVE_DOWN) || (move.equals(MovementMethod.MOVE_UP)))){
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+			Player player) {
+		if ((move.equals(MovementMethod.MOVE_DOWN) || (move.equals(MovementMethod.MOVE_UP)))) {
 			return false;
 		}
 		VesselTypeUtils util = new VesselTypeUtils();
-		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())){
-			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())){
+		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())) {
+			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())) {
 				return true;
-			}else{
-				if (player != null){
-					if (Messages.isEnabled()){
-						player.sendMessage(Ships.runShipsMessage(Messages.getNeeds(getRequiredMaterial().get(0).name()), true));
+			} else {
+				if (player != null) {
+					if (Messages.isEnabled()) {
+						player.sendMessage(
+								Ships.runShipsMessage(Messages.getNeeds(getRequiredMaterial().get(0).name()), true));
 					}
 				}
 				return false;
 			}
-		}else{
-			if (player != null){
-				if (Messages.isEnabled()){
+		} else {
+			if (player != null) {
+				if (Messages.isEnabled()) {
 					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Water"), true));
 				}
 			}
@@ -75,7 +79,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	@Override
 	public VesselType clone() {
 		Watership ship = new Watership();
-		
+
 		return ship;
 	}
 
@@ -83,8 +87,8 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
-		if (type instanceof Watership){
-			Watership ship = (Watership)type;
+		if (type instanceof Watership) {
+			Watership ship = (Watership) type;
 			int percent = config.getInt("ShipsData.Block.Percent");
 			ship.PERCENT = percent;
 			vessel.setVesselType(ship);
@@ -95,8 +99,8 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
-		if (type instanceof Watership){
-			Watership ship = (Watership)type;
+		if (type instanceof Watership) {
+			Watership ship = (Watership) type;
 			int percent = config.getInt("ShipsData.Block.Percent");
 			ship.PERCENT = percent;
 			vessel.setVesselType(ship);
@@ -126,7 +130,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	@Override
 	public void loadDefault() {
 		File file = getTypeFile();
-		if (!file.exists()){
+		if (!file.exists()) {
 			createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -136,7 +140,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 		this.setMaxBlocks(config.getInt("Blocks.Max"));
 		this.setMinBlocks(config.getInt("Blocks.Min"));
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for(int id : config.getIntegerList("Blocks.requiredBlocks")){
+		for (int id : config.getIntegerList("Blocks.requiredBlocks")) {
 			Material material = Material.getMaterial(id);
 			requiredmaterials.add(material);
 		}
@@ -151,22 +155,26 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-		ConfigurationSection config = configuration.createSection("ShipsData");
-		config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
-		config.set("Type", "Ship");
-		config.set("Protected", vessel.isProtected());
-		config.set("Config.Block.Percent", getRequiredPercent());
-		config.set("Config.Block.Max", getMaxBlocks());
-		config.set("Config.Block.Min", getMinBlocks());
-		config.set("Config.Speed.Engine", getDefaultSpeed());
-		Sign sign = vessel.getSign();
-		Location loc = vessel.getTeleportLocation();
-		config.set("Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
-		config.set("Location.Teleport", loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
-		try{
-			configuration.save(file);
-		}catch(IOException e){
-			e.printStackTrace();
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Ship", PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed());
+		if (!event.isCancelled()) {
+			ConfigurationSection config = configuration.createSection("ShipsData");
+			config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
+			config.set("Type", "Ship");
+			config.set("Config.Block.Percent", getRequiredPercent());
+			config.set("Config.Block.Max", getMaxBlocks());
+			config.set("Config.Block.Min", getMinBlocks());
+			config.set("Config.Speed.Engine", getDefaultSpeed());
+			Sign sign = vessel.getSign();
+			Location loc = vessel.getTeleportLocation();
+			config.set("Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
+					+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+			config.set("Location.Teleport",
+					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
+			try {
+				configuration.save(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

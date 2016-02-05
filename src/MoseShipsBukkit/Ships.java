@@ -146,7 +146,17 @@ public class Ships extends JavaPlugin {
 		STACK = new BlockStack();
 		count = 0;
 		STACK.addBlock(block);
-		prototype2(block);
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+		int limit = config.getInt("Structure.StructureLimits.trackLimit");
+		BlockFace[] faces = {
+			BlockFace.DOWN,
+			BlockFace.EAST,
+			BlockFace.NORTH,
+			BlockFace.SOUTH,
+			BlockFace.UP,
+			BlockFace.WEST
+		};
+		prototype3(block, faces, limit);
 		if (STACK.isVaild()) {
 			List<Block> stack = STACK.getList();
 			return stack;
@@ -157,35 +167,32 @@ public class Ships extends JavaPlugin {
 	// This gets every block connected, It can be abnormal so the count attempts
 	// to control it. I called it Prototype for a good reason.
 	@SuppressWarnings("deprecation")
-	static void prototype2(Block block) {
+	static void prototype3(Block block, BlockFace[] faces, int limit) {
 		// this /attempts/ to cap the variable scan at 500, I have seen that it
 		// caps the block limit at 500 but the method is still ran afterwards
 		// for a good while. If you find another way to do this that is more
 		// efficient then this way, please contact me asap
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		int limit = config.getInt("Structure.StructureLimits.trackLimit");
 		if (count > limit) {
 			return;
 		}
 		count++;
-		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
-				BlockFace.WEST };
 		// List<String> material = new ArrayList<String>();
 		for (BlockFace face : faces) {
 			Block block2 = block.getRelative(face);
 			if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))) {
 				if (!STACK.contains(block2)) {
 					STACK.addBlock(block2);
-					prototype2(block2);
+					prototype3(block2, faces, limit);
 				}
-			} /*
-				 * else{ if (!material.contains(block2.getType().name())){
-				 * material.add(block2.getType().name()); } }
-				 */
+			} /* else{
+				 * if (!material.contains(block2.getType().name())){
+				 * material.add(block2.getType().name());
+				 * }
+				 * } */
 		}
-		/*
-		 * if (material.size() != 0){ System.out.println(material); }
-		 */
+		/* if (material.size() != 0){
+		 * System.out.println(material);
+		 * } */
 	}
 
 	// never know when it could be useful ;)
