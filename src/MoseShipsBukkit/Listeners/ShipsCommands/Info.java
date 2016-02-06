@@ -202,7 +202,6 @@ public class Info extends CommandLauncher {
 			return items;
 		}
 
-		@SuppressWarnings("deprecation")
 		public void onInterfaceBoot(HumanEntity player, int page) {
 			if (page == 1) {
 				Inventory inv = createPageGUI(getPage1Info(player), getInventoryName(), page, false);

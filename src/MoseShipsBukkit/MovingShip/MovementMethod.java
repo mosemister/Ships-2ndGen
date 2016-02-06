@@ -25,7 +25,7 @@ public enum MovementMethod {
 
 	int SPEED;
 	String DIRECTION;
-
+	
 	private MovementMethod(String direction) {
 		DIRECTION = direction;
 	}
@@ -51,43 +51,47 @@ public enum MovementMethod {
 		DIRECTION = direction;
 	}
 
-	public static MovementMethod getMovementDirection(BlockFace face) {
-		if (face.equals(BlockFace.NORTH)) {
+	public static MovementMethod getMovementDirection(BlockFace face){
+		switch(face){
+		case NORTH:
 			return MovementMethod.MOVE_NEGATIVE_Z;
-		} else if (face.equals(BlockFace.SOUTH)) {
+		case SOUTH:
 			return MovementMethod.MOVE_POSITIVE_Z;
-		} else if (face.equals(BlockFace.EAST)) {
+		case EAST:
 			return MovementMethod.MOVE_POSITIVE_X;
-		} else if (face.equals(BlockFace.SOUTH)) {
+		case WEST:
 			return MovementMethod.MOVE_NEGATIVE_X;
-		} else {
+		default:
 			new IOException("getMovementDirection does not support that BlockFace.");
-			return null;
+		return null;
 		}
 	}
 
-	public static MovementMethod getMovingDirection(Vessel vessel, BlockFace blockface) {
+	public static MovementMethod getMovingDirection(Vessel vessel, BlockFace blockface){
 		BlockFace vesselFace = vessel.getFacingDirection();
-		if (blockface.equals(BlockFace.EAST_NORTH_EAST)) {
+		
+		switch(blockface){
+		case EAST_NORTH_EAST:
+		case EAST_SOUTH_EAST:
 			blockface = BlockFace.EAST;
-		} else if (blockface.equals(BlockFace.EAST_SOUTH_EAST)) {
-			blockface = BlockFace.EAST;
-		} else if (blockface.equals(BlockFace.NORTH_EAST)) {
+			break;
+		
+		case NORTH_EAST: case NORTH_NORTH_EAST:
+		case NORTH_WEST: case NORTH_NORTH_WEST:
 			blockface = BlockFace.NORTH;
-		} else if (blockface.equals(BlockFace.NORTH_NORTH_EAST)) {
-			blockface = BlockFace.NORTH;
-		} else if (blockface.equals(BlockFace.NORTH_NORTH_WEST)) {
-			blockface = BlockFace.NORTH;
-		} else if (blockface.equals(BlockFace.SOUTH_EAST)) {
+			break;
+		
+		case SOUTH_SOUTH_EAST: case SOUTH_EAST: 
+		case SOUTH_SOUTH_WEST: case SOUTH_WEST:
 			blockface = BlockFace.SOUTH;
-		} else if (blockface.equals(BlockFace.SOUTH_SOUTH_EAST)) {
-			blockface = BlockFace.SOUTH;
-		} else if (blockface.equals(BlockFace.SOUTH_SOUTH_WEST)) {
-			blockface = BlockFace.SOUTH;
-		} else if (blockface.equals(BlockFace.WEST_NORTH_WEST)) {
+			break;
+		
+		case WEST_NORTH_WEST:
+		case WEST_SOUTH_WEST:
 			blockface = BlockFace.WEST;
-		} else if (blockface.equals(BlockFace.WEST_SOUTH_WEST)) {
-			blockface = BlockFace.WEST;
+		
+		default:
+			break;
 		}
 		if (vesselFace.equals(blockface)) {
 			return MovementMethod.MOVE_FORWARD;
@@ -102,5 +106,4 @@ public enum MovementMethod {
 			return null;
 		}
 	}
-
 }

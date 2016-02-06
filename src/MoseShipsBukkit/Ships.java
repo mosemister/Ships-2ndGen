@@ -15,7 +15,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -196,86 +195,56 @@ public class Ships extends JavaPlugin {
 		 * } */
 	}
 
-	@SuppressWarnings("deprecation")
-	static List<Block> prototype4(Block block, BlockFace[] faces, int limit) {
-		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-		console.sendMessage("------------[Started]--------------");
-		BlockStack stack = new BlockStack();
-		int count = 0;
-		Block previousBlock = block;
-		Block viewingBlock = block;
-		while (count <= limit) {
-			console.sendMessage("Repeating: " + count);
-			count++;
-			for (BlockFace face : faces) {
-				Block block2 = viewingBlock.getRelative(face);
-				console.sendMessage("facing: " + face.name() + " | type: " + block2.getType() + " | data: " + block2.getData());
-				if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))) {
-					console.sendMessage("materials accepted it");
-					if (!stack.contains(block2)) {
-						console.sendMessage("block not contained");
-						stack.addBlock(block2);
-						viewingBlock = block2;
-						previousBlock = block;
-					}
-				}
-			}
-			if (previousBlock.equals(viewingBlock)) {
-				break;
-			}
-		}
-		return stack.getList();
-	}
-
 	// never know when it could be useful ;)
 	public static BlockFace getPlayerFacingDirection(Player player) {
 		float yaw = player.getLocation().getYaw();
 		if ((yaw >= 45) && (yaw < 135)) {
 			return BlockFace.WEST;
+		} else if (((yaw >= 135) && (yaw <= 180)) || ((yaw >= -180) && (yaw < -135))) {
+			return BlockFace.NORTH;
+		} else if ((yaw >= -135) && (yaw < -45)) {
+			return BlockFace.EAST;
 		} else {
-			if (((yaw >= 135) && (yaw <= 180)) || ((yaw >= -180) && (yaw < -135))) {
-				return BlockFace.NORTH;
-			} else {
-				if ((yaw >= -135) && (yaw < -45)) {
-					return BlockFace.EAST;
-				} else {
-					return BlockFace.SOUTH;
-				}
-			}
+			return BlockFace.SOUTH;
 		}
 	}
 
 	// fixes a missing part of the bukkit API
 	public static BlockFace getSideFace(BlockFace face, boolean left) {
-		if (face.equals(BlockFace.NORTH)) {
+		BlockFace res = null;
+		switch (face) {
+		case NORTH:
 			if (left) {
-				return BlockFace.WEST;
+				res = BlockFace.WEST;
 			} else {
-				return BlockFace.EAST;
+				res = BlockFace.EAST;
 			}
-		}
-		if (face.equals(BlockFace.EAST)) {
+			break;
+		case SOUTH:
 			if (left) {
-				return BlockFace.SOUTH;
+				res =  BlockFace.EAST;
 			} else {
-				return BlockFace.NORTH;
+				res =  BlockFace.WEST;
 			}
-		}
-		if (face.equals(BlockFace.SOUTH)) {
+			break;
+		case EAST:
 			if (left) {
-				return BlockFace.EAST;
+				res =  BlockFace.SOUTH;
 			} else {
-				return BlockFace.WEST;
+				res =  BlockFace.NORTH;
 			}
-		}
-		if (face.equals(BlockFace.WEST)) {
+			break;
+		case WEST:
 			if (left) {
-				return BlockFace.NORTH;
+				res = BlockFace.NORTH;
 			} else {
-				return BlockFace.SOUTH;
+				res = BlockFace.SOUTH;
 			}
+			break;
+		default: new IOException("[SHIPS] Invalid direction: " + face.name());
+		break;
 		}
-		return face;
+		return res;
 	}
 
 	// This is used by the config files to copy internal files to outside, I put
