@@ -2,8 +2,10 @@ package MoseShipsBukkit.Utils.ConfigLinks;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import MoseShipsBukkit.Ships;
@@ -11,6 +13,7 @@ import MoseShipsBukkit.Ships;
 public class Config {
 
 	public static Config CONFIG = new Config();
+	public HashMap<String, Boolean> loadedWorlds;
 	boolean NEEDEDUPDATE;
 
 	public File createDefaultFile() throws IOException {
@@ -35,6 +38,30 @@ public class Config {
 		} else {
 			return null;
 		}
+	}
+	
+	public boolean isShipsEnabledInWorld(String worldName){
+		if(loadedWorlds == null){
+			loadedWorlds = new HashMap<String, Boolean>();
+
+			YamlConfiguration config = YamlConfiguration.loadConfiguration(getFile());
+			for(World world : Bukkit.getWorlds()){
+				if(config.isSet("EnabledWorlds." + world.getName())){
+					loadedWorlds.put(world.getName(), config.getBoolean("EnabledWorlds." + world.getName()));
+				} else {
+					config.set("EnabledWorlds." + world.getName(), true);
+					loadedWorlds.put(world.getName(), true);
+				}
+			}
+			try {
+				config.save(getFile());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(loadedWorlds.containsKey(worldName))return loadedWorlds.get(worldName);
+		return true;
 	}
 
 	public String getConfigVersionString() {

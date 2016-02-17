@@ -75,6 +75,8 @@ World:
       #enables the ability for vessels to fall out of the sky
       enabled: false
 
+EnabledWorlds: []
+    #Enable or disable ships in different worlds
 Multitasking:
   enable: false
 
