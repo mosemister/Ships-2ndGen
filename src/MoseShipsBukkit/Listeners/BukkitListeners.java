@@ -129,6 +129,8 @@ public class BukkitListeners implements Listener {
 
 	@EventHandler
 	public static void entityProtect(EntityExplodeEvent event) {
+		if(!Config.getConfig().isShipsEnabledInWorld(event.getEntity().getWorld().getName()))return;
+		
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		if (config.getBoolean("World.ProtectedVessels.ExplodeProtect.Creeper")) {
 			if (event.getEntity() instanceof Creeper) {
@@ -179,6 +181,8 @@ public class BukkitListeners implements Listener {
 
 	@EventHandler
 	public static void signBreak(BlockBreakEvent event) {
+		if(!Config.getConfig().isShipsEnabledInWorld(event.getPlayer().getWorld().getName()))return;
+		
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		Vessel vessel = Vessel.getVessel(event.getBlock(), true);
 		if (vessel != null) {
@@ -217,6 +221,8 @@ public class BukkitListeners implements Listener {
 	}
 
 	public static void signBreakEvent(Sign sign, BlockBreakEvent event) {
+		if(!Config.getConfig().isShipsEnabledInWorld(event.getPlayer().getWorld().getName()))return;
+		
 		if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
 			Vessel vessel = Vessel.getVessel(sign);
 			if (vessel == null) {
@@ -246,6 +252,7 @@ public class BukkitListeners implements Listener {
 
 	@EventHandler
 	public static void signCreation(SignChangeEvent event) {
+		if(!Config.getConfig().isShipsEnabledInWorld(event.getPlayer().getWorld().getName()))return;
 		// Ships sign
 		Sign sign = (Sign) event.getBlock().getState();
 		if (event.getLine(0).equalsIgnoreCase("[Ships]")) {
@@ -397,6 +404,8 @@ public class BukkitListeners implements Listener {
 
 	@EventHandler
 	public static void signClick(PlayerInteractEvent event) {
+		if(!Config.getConfig().isShipsEnabledInWorld(event.getPlayer().getWorld().getName()))return;
+		
 		if (!event.getPlayer().isSneaking()) {
 			if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 				if (event.getClickedBlock().getState() instanceof Sign) {
