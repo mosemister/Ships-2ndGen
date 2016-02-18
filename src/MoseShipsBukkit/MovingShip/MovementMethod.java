@@ -25,7 +25,7 @@ public enum MovementMethod {
 
 	int SPEED;
 	String DIRECTION;
-	
+
 	private MovementMethod(String direction) {
 		DIRECTION = direction;
 	}
@@ -51,47 +51,45 @@ public enum MovementMethod {
 		DIRECTION = direction;
 	}
 
-	public static MovementMethod getMovementDirection(BlockFace face){
-		switch(face){
-		case NORTH:
-			return MovementMethod.MOVE_NEGATIVE_Z;
-		case SOUTH:
-			return MovementMethod.MOVE_POSITIVE_Z;
-		case EAST:
-			return MovementMethod.MOVE_POSITIVE_X;
-		case WEST:
-			return MovementMethod.MOVE_NEGATIVE_X;
-		default:
-			new IOException("getMovementDirection does not support that BlockFace.");
-		return null;
+	public static MovementMethod getMovementDirection(BlockFace face) {
+		switch (face) {
+			case NORTH:
+				return MovementMethod.MOVE_NEGATIVE_Z;
+			case SOUTH:
+				return MovementMethod.MOVE_POSITIVE_Z;
+			case EAST:
+				return MovementMethod.MOVE_POSITIVE_X;
+			case WEST:
+				return MovementMethod.MOVE_NEGATIVE_Z;
+			default:
+				new IOException();
+				return null;
 		}
 	}
 
-	public static MovementMethod getMovingDirection(Vessel vessel, BlockFace blockface){
+	public static MovementMethod getMovingDirection(Vessel vessel, BlockFace blockface) {
 		BlockFace vesselFace = vessel.getFacingDirection();
-		
-		switch(blockface){
-		case EAST_NORTH_EAST:
-		case EAST_SOUTH_EAST:
-			blockface = BlockFace.EAST;
-			break;
-		
-		case NORTH_EAST: case NORTH_NORTH_EAST:
-		case NORTH_WEST: case NORTH_NORTH_WEST:
-			blockface = BlockFace.NORTH;
-			break;
-		
-		case SOUTH_SOUTH_EAST: case SOUTH_EAST: 
-		case SOUTH_SOUTH_WEST: case SOUTH_WEST:
-			blockface = BlockFace.SOUTH;
-			break;
-		
-		case WEST_NORTH_WEST:
-		case WEST_SOUTH_WEST:
-			blockface = BlockFace.WEST;
-		
-		default:
-			break;
+		switch (blockface) {
+			case EAST_NORTH_EAST:
+			case EAST_SOUTH_EAST:
+				blockface = BlockFace.EAST;
+				break;
+			case NORTH_EAST:
+			case NORTH_NORTH_EAST:
+			case NORTH_WEST:
+			case NORTH_NORTH_WEST:
+				blockface = BlockFace.NORTH;
+				break;
+			case SOUTH_SOUTH_EAST:
+			case SOUTH_EAST:
+			case SOUTH_SOUTH_WEST:
+			case SOUTH_WEST:
+				blockface = BlockFace.SOUTH;
+			case WEST_NORTH_WEST:
+			case WEST_SOUTH_WEST:
+				blockface = BlockFace.WEST;
+			default:
+				break;
 		}
 		if (vesselFace.equals(blockface)) {
 			return MovementMethod.MOVE_FORWARD;
@@ -106,4 +104,5 @@ public enum MovementMethod {
 			return null;
 		}
 	}
+
 }

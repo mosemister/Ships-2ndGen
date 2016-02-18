@@ -84,7 +84,7 @@ Messages:
   #change the Ship is too small message. 
   #%currentSize% displays the size of the vessel
   #%minForVessel% displays the min amount of blocks needed for the vessel
-  ShipTooSmall: 'The current size of your vessel is %currentSize%, Your vessel needs to be %minForVessel% or higher.'
+  ShipTooSmall: 'The current size of your vessel is %currentSize%, Your vessel needs to be %minForVessel% or lower.'
   #change the Ship is too large message. 
   #%currentSize% displays the size of the vessel
   #%minForVessel% displays the min amount of blocks needed for the vessel

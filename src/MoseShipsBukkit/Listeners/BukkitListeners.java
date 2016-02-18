@@ -180,7 +180,7 @@ public class BukkitListeners implements Listener {
 	@EventHandler
 	public static void signBreak(BlockBreakEvent event) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		Vessel vessel = Vessel.getVessel(event.getBlock(), true);
+		Vessel vessel = Vessel.getVessel(event.getBlock(), false);
 		if (vessel != null) {
 			if (((config.getBoolean("World.ProtectedVessels.BlockBreak")))) {
 				if (!event.getPlayer().equals(vessel.getOwner())) {
@@ -257,9 +257,9 @@ public class BukkitListeners implements Listener {
 						|| (event.getPlayer().hasPermission("ships.*"))) {
 					String[] signLines = {
 						ChatColor.YELLOW + "[Ships]",
-						ChatColor.BLUE + sign.getLine(1),
-						ChatColor.GREEN + sign.getLine(2),
-						ChatColor.GREEN + sign.getLine(3)
+						ChatColor.BLUE + event.getLine(1),
+						ChatColor.GREEN + event.getLine(2),
+						ChatColor.GREEN + event.getLine(3)
 					};
 					ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signLines,
 							sign, event.getPlayer(), event.getLines());

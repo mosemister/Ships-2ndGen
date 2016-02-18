@@ -118,7 +118,6 @@ public class Help extends CommandLauncher {
 		public String getInventoryName() {
 			return "Help";
 		}
-
 	}
 
 }
