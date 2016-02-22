@@ -75,7 +75,7 @@ public class Ships extends JavaPlugin {
 		if (config.getBoolean("Structure.Sign.Cell.enabled")) {
 			ShipsAutoRuns.SolorCell();
 		}
-		if (config.getBoolean("World.Physics.VesselFallOutSky")) {
+		if (config.getBoolean("World.ProtectedVessels.VesselFallOutSky")) {
 			ShipsAutoRuns.fallOutSky();
 		}
 		afterBoot();
@@ -282,6 +282,20 @@ public class Ships extends JavaPlugin {
 				break;
 		}
 		return ret;
+	}
+	
+	public static String getMinecraftVersion(){
+		String temp = getPlugin().getServer().getVersion();
+		//String version = tempVersion.split("'(MC: ', ')'")[1];
+		String[] part1 = temp.split(":");
+		String part2 = part1[1].replace(")", "");
+		String part3 = part2.replace(" ", "");
+		return part3;
+	}
+	
+	public static int getMinecraftVersionInt(){
+		int version = Integer.parseInt(getMinecraftVersion().replace(".", ""));
+		return version;
 	}
 
 	// This is used by the config files to copy internal files to outside, I put

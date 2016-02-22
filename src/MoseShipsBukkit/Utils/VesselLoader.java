@@ -24,6 +24,7 @@ import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.StillShip.Vectors.BlockVector;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 
 public class VesselLoader {
@@ -41,6 +42,11 @@ public class VesselLoader {
 						Bukkit.getPluginManager().callEvent(event);
 						if (!event.isCancelled()) {
 							success.add(file.getName().replace(".yml", ""));
+						}
+					}else{
+						YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+						if(config.getBoolean("VesselLoading.DeleteFailedLoads")){
+							file.deleteOnExit();
 						}
 					}
 				}

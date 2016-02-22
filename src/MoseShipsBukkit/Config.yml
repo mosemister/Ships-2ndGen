@@ -75,8 +75,11 @@ World:
       #enables the ability for vessels to fall out of the sky
       enabled: false
 
-Multitasking:
-  enable: false
+VesselLoading:
+  #this feature will remove vessel files that are not loading correctly. 
+  #This will save space, increase loading time, however there is no
+  #chance of recovering the file 
+  DeleteFailedLoads: false	
 
 Messages:
   #enable if messages appear for users
@@ -106,35 +109,5 @@ Messages:
   #%material% displays the material that is in way
   FoundInWay: 'Found %material% in way.'
 
-GriefPreventionPluginSupport:
-  enabled: false
-  OwnerBypass: false
-  FlyAreas: {}
-  
-FactionsSupport:
-  #If you have the factions plugin and you don't want Ships destroying 
-  #the faction land, enable this. Place below the areas you wish Ships
-  #to be able to fly in. 
-  enabled: false
-  FlyAreas:
-    - Wilderness
-
-WorldGuardSupport:
-  #If you have WorldGuard plugin and you don't want Ships destroying 
-  #the region, enable this. Custom region flags maybe supported in a
-  #later version.
-  enabled: false
-
-WorldBorderSupport:
-  #If you wish to keep your ships within the WorldBorder boundaries you 
-  #you have set with WorldBorder plugin, then enable this feature.
-  enabled: false
-  
-ChairsReloadedSupport:
-  #enabling this will keep players set in chairs when the vessel moves
-  enabled: false
-  
-VaultSupport:
-  #If you wish to attach a Eco plugin to Ships, enable this and add the
-  #plugin 'vault'
-  enabled: false
+MCVersion: 1.8.8
+MCVersion: 1.8.8

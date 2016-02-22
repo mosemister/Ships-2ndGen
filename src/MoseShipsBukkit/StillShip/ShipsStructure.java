@@ -77,7 +77,7 @@ public class ShipsStructure {
 		int gap = config.getInt("Structure.StructureLimits.airCheckGap");
 		for (int A = 1; A < gap; A++) {
 			Block block2 = block.getRelative(0, -A, 0);
-			if (getAllBlocks().contains(block2)) {
+			if (contains(getAllBlocks(), block2)) {
 				return blocks;
 			} else if (block2.getType().equals(Material.AIR)) {
 				blocks.add(block2);
@@ -95,5 +95,14 @@ public class ShipsStructure {
 		}
 		blocks.addAll(AIR_BLOCKS);
 		return blocks;
+	}
+	
+	private <T extends Object> boolean contains(List<T> list, T object){
+		for(Object obj : list){
+			if(obj.equals(object)){
+				return true;
+			}
+		}
+		return false;
 	}
 }

@@ -70,10 +70,7 @@ public class Config {
 
 	public boolean containsIgnoreList(int lastest) {
 		Integer[] list = {
-			5011,
-			5012,
-			5013,
-			5014
+			5015
 		};
 		for (int A : list) {
 			if (lastest == A) {
@@ -84,7 +81,6 @@ public class Config {
 	}
 
 	public boolean updateCheck() {
-		String latest = getLatestVersionString().replace(".", "");
 		String current = getConfigVersionString();
 		if (NEEDEDUPDATE) {
 			return true;
@@ -94,24 +90,25 @@ public class Config {
 			NEEDEDUPDATE = true;
 			return true;
 		}
-		current = current.replace(".", "");
-		int latestN = Integer.parseInt(latest);
-		int currentN = Integer.parseInt(current);
+		int latestN = getLatestVersionInt();
+		int currentN = getConfigVersionInt();
 		int result = latestN - currentN;
-		if ((result == 0) || (containsIgnoreList(latestN))) {
-			if (containsIgnoreList(latestN)) {
+		if(result == 0){
+			Bukkit.getConsoleSender().sendMessage("Ships config detected with no issues");
+			return false;
+		}else if (containsIgnoreList(currentN)) {
 				try {
+					Bukkit.getConsoleSender().sendMessage("New version of Ships detected. Config does not need a restart");
 					File file2 = getFile();
 					YamlConfiguration config2 = YamlConfiguration.loadConfiguration(file2);
 					config2.set("Version", getLatestVersionString());
 					config2.save(file2);
-
+					return false;
 				} catch (IOException e) {
 					e.printStackTrace();
+					return false;
 				}
-			}
-			return false;
-		} else {
+		}else{
 			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
 					"Your config maybe out of date. \n" + "Ships 5 found the current version of your config to be "
 							+ getConfigVersionString() + " and the latest to be " + getLatestVersionString() + ". \n"
@@ -128,9 +125,14 @@ public class Config {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (file.exists()) {
 			int curVersion = getConfigVersionInt();
-			if (curVersion > 5010) {
-				config.set("Structure.airCheckGap", 120);
-				config.set("Structure.trackLimit", 5000);
+			int latVersion = getLatestVersionInt();
+			if ((curVersion <= 5011) && (latVersion >= 5012)) {
+				config.set("Structure.StructureLimits.airCheckGap", 120);
+				config.set("Structure.StructureLimits.trackLimit", 5000);
+			}
+			if((curVersion <= 5014) && (latVersion >= 5015)){
+				config.set("VesselLoading.DeleteFailedLoads", false);
+				config.set("MCVersion", "1.8.8");
 			}
 			// compare version then update
 			config.set("Version", getLatestVersionString());
