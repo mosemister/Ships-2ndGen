@@ -294,7 +294,11 @@ public class Ships extends JavaPlugin {
 	}
 	
 	public static int getMinecraftVersionInt(){
-		int version = Integer.parseInt(getMinecraftVersion().replace(".", ""));
+		String mcVersion = getMinecraftVersion().replace(".", "");
+		if(mcVersion.length() == 2){
+			mcVersion = (mcVersion + "0");
+		}
+		int version = Integer.parseInt(mcVersion);
 		return version;
 	}
 

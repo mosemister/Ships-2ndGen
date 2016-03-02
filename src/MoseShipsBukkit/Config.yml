@@ -108,6 +108,3 @@ Messages:
   #change the found material in way. 
   #%material% displays the material that is in way
   FoundInWay: 'Found %material% in way.'
-
-MCVersion: 1.8.8
-MCVersion: 1.8.8

@@ -42,14 +42,6 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		loadDefault();
 	}
 
-	public int getPercent() {
-		return PERCENT;
-	}
-
-	public List<Material> getRequiredBlock() {
-		return REQUIREDBLOCK;
-	}
-
 	@Override
 	public boolean removeFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
@@ -74,7 +66,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMovingInto(blocks, getMoveInMaterials())) {
-			if (util.isPercentInMovingFrom(blocks, getRequiredBlock(), getPercent())) {
+			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())) {
 				if (util.isMaterialInMovingFrom(blocks, Material.FIRE)) {
 					if (move.equals(MovementMethod.MOVE_DOWN)) {
 						return true;
@@ -101,13 +93,13 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 				}
 			} else {
 				List<String> materials = new ArrayList<String>();
-				for (Material material : getRequiredBlock()) {
+				for (Material material : getRequiredMaterial()) {
 					materials.add(material.name());
 				}
 				if (player != null) {
 					if (Messages.isEnabled()) {
 						player.sendMessage(Ships.runShipsMessage(
-								Messages.getOffBy(util.getOffBy(blocks, getRequiredBlock(), getPercent()),
+								Messages.getOffBy(util.getOffBy(blocks, getRequiredMaterial(), getRequiredPercent()),
 										"(of either) " + materials.toString()),
 								true));
 					}
@@ -268,7 +260,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		if (!event.isCancelled()) {
 			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 			config.set("ShipsData.Type", "Airship");
-			config.set("ShipsData.Config.Block.Percent", getPercent());
+			config.set("ShipsData.Config.Block.Percent", getRequiredPercent());
 			config.set("ShipsData.Config.Block.Max", getMaxBlocks());
 			config.set("ShipsData.Config.Block.Min", getMinBlocks());
 			config.set("ShipsData.Config.Fuel.Fuels", fuels);

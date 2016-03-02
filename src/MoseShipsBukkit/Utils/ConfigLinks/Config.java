@@ -46,8 +46,6 @@ public class Config {
 
 	public int getConfigVersionInt() {
 		String versionString = getConfigVersionString().replace(".", "");
-
-		System.out.println(versionString);
 		int version = Integer.parseInt(versionString);
 		return version;
 	}
@@ -132,7 +130,7 @@ public class Config {
 			}
 			if((curVersion <= 5014) && (latVersion >= 5015)){
 				config.set("VesselLoading.DeleteFailedLoads", false);
-				config.set("MCVersion", "1.8.8");
+				config.set("MCVersion", "1.9.0");
 			}
 			// compare version then update
 			config.set("Version", getLatestVersionString());

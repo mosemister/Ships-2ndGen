@@ -68,7 +68,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())) {
-			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())) {
+			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), (getRequiredPercent()))) {
 				if (move.equals(MovementMethod.MOVE_DOWN)) {
 					return true;
 				} else {

@@ -267,7 +267,7 @@ public class MaterialsList {
 		if(check){
 			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("A new minecraft version found. \n Attempting to update the materials list with the new blocks", false));
 			YamlConfiguration config2 = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-			config2.set("MCVersion", Ships.getMinecraftVersion());
+			config2.set("MCVersion", Ships.getMinecraftVersionInt());
 			try {
 				config2.save(Config.getConfig().getFile());
 			} catch (IOException e) {
