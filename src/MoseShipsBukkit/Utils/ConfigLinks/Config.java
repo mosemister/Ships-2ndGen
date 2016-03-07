@@ -45,7 +45,11 @@ public class Config {
 	}
 
 	public int getConfigVersionInt() {
-		String versionString = getConfigVersionString().replace(".", "");
+		String versionString = getConfigVersionString();
+		if(versionString == null){
+			return 0;
+		}
+		versionString = versionString.replace(".", "");
 		int version = Integer.parseInt(versionString);
 		return version;
 	}
@@ -68,7 +72,7 @@ public class Config {
 
 	public boolean containsIgnoreList(int lastest) {
 		Integer[] list = {
-			5015
+			5017
 		};
 		for (int A : list) {
 			if (lastest == A) {
@@ -128,9 +132,9 @@ public class Config {
 				config.set("Structure.StructureLimits.airCheckGap", 120);
 				config.set("Structure.StructureLimits.trackLimit", 5000);
 			}
-			if((curVersion <= 5014) && (latVersion >= 5015)){
+			if((curVersion <= 5016) && (latVersion >= 5017)){
 				config.set("VesselLoading.DeleteFailedLoads", false);
-				config.set("MCVersion", "1.9.0");
+				config.set("MCVersion", "1.8.0");
 			}
 			// compare version then update
 			config.set("Version", getLatestVersionString());

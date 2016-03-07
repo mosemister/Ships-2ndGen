@@ -213,7 +213,11 @@ public class MaterialsList {
 			Config.getConfig().updateCheck();
 			return true;
 		}
-		int knownVersion = Integer.parseInt(mcVersion.replace(".", ""));
+		String mcVersionTrue = mcVersion.replace(".", "");
+		if(mcVersionTrue.length() == 2){
+			mcVersionTrue = (mcVersionTrue + "0");
+		}
+		int knownVersion = Integer.parseInt(mcVersionTrue);
 		int latest = Ships.getMinecraftVersionInt();
 		if(latest > knownVersion){
 			return true;
@@ -267,7 +271,7 @@ public class MaterialsList {
 		if(check){
 			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("A new minecraft version found. \n Attempting to update the materials list with the new blocks", false));
 			YamlConfiguration config2 = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-			config2.set("MCVersion", Ships.getMinecraftVersionInt());
+			config2.set("MCVersion", Ships.getMinecraftVersion());
 			try {
 				config2.save(Config.getConfig().getFile());
 			} catch (IOException e) {

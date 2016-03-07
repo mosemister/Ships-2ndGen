@@ -52,7 +52,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 		if (blocks.size() >= getMinBlocks()) {
 			if (blocks.size() <= getMaxBlocks()) {
 				if (util.isMovingInto(blocks, getMoveInMaterials())) {
-					if (util.isPercentInMovingFrom(blocks, REQUIREDBLOCKS, (PERCENT))) {
+					if (util.isPercentInMovingFrom(blocks, REQUIREDBLOCKS, PERCENT)) {
 						if (move.equals(MovementMethod.MOVE_DOWN)) {
 							return true;
 						} else {
