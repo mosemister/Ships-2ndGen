@@ -1,8 +1,0 @@
-name: Ships
-version: 5.0.1.7
-main: MoseShipsBukkit.Ships
-commands:
-  Ships:
-    usage: /ships
-    description: all ships commands
-
