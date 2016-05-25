@@ -79,3 +79,4 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		// TODO Auto-generated method stub
 		return false;
 	}
+}
