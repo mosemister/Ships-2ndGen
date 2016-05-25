@@ -18,8 +18,8 @@ public abstract class ShipType extends ShipsData{
 	public abstract Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, @Nullable User user);
 	public abstract boolean shouldFall(); 
 	
-	public ShipType(String NAME, User host, Location<World> sign, Location<World> teleport) {
-		super(NAME, host, sign, teleport);
+	public ShipType(String name, User host, Location<World> sign, Location<World> teleport) {
+		super(name, host, sign, teleport);
 	}
 
 }
