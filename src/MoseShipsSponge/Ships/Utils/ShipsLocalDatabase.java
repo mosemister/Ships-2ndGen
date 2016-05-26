@@ -1,4 +1,4 @@
-package MoseShipsSponge.Ships;
+package MoseShipsSponge.Ships.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.spongepowered.api.entity.living.player.User;
 
+import MoseShipsSponge.Ships.ShipsData;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;

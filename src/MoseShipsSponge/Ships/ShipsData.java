@@ -10,6 +10,8 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import MoseShipsSponge.Ships.Utils.ShipsLocalDatabase;
+
 public class ShipsData {
 	
 	public static final Object[] DATABASE_NAME = {"ShipsMeta", "Name"};

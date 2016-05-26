@@ -12,9 +12,9 @@ import org.spongepowered.api.world.World;
 import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Ships.Movement.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
-import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveFuel;
-import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveRequiredBlock;
-import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveRequiredPercent;
+import MoseShipsSponge.Ships.VesselTypes.DataTypes.Live.LiveFuel;
+import MoseShipsSponge.Ships.VesselTypes.DataTypes.Live.LiveRequiredBlock;
+import MoseShipsSponge.Ships.VesselTypes.DataTypes.Live.LiveRequiredPercent;
 
 public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, LiveRequiredBlock{
 
@@ -26,17 +26,6 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		super(name, host, sign, teleport);
 	}
 
-	@Override
-	public Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean shouldFall() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public String[] getRequiredBlocks() {
@@ -44,11 +33,13 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return null;
 	}
 
+
 	@Override
 	public int getRequiredPercent() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
 
 	@Override
 	public int getRequirement() {
@@ -56,11 +47,13 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return 0;
 	}
 
+
 	@Override
 	public String[] getPercentBlocks() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 	@Override
 	public int getFuel() {
@@ -68,15 +61,46 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return 0;
 	}
 
+
 	@Override
 	public String[] getFuelMaterials() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+
 	@Override
 	public boolean removeFuel(int Amount) {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+
+	@Override
+	public Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, User user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public boolean shouldFall() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getMaxBlocks() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public int getMinBlocks() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

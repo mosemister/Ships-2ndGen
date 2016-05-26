@@ -13,6 +13,8 @@ import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 
+import MoseShipsSponge.Ships.Movement.Movement.Rotate;
+
 public class MovingBlock {
 	
 	Location<World> ORIGIN;
@@ -39,6 +41,26 @@ public class MovingBlock {
 	
 	public Priority getPriority(){
 		return Priority.getType(STATE.getType());
+	}
+	
+	public Collision getCollision(){
+		//TODO - materials list needed
+		return Collision.NONE;
+	}
+	
+	public Collision getCollision(int radius){
+		//TODO = materials list needed
+		return Collision.NONE;
+	}
+	
+	public MovingBlock rotate(Rotate rotate, Location<World> centre){
+		switch(rotate){
+			case LEFT:
+				return rotateLeft(centre);
+			case RIGHT:
+				return rotateRight(centre);
+		}
+		return this;
 	}
 	
 	public MovingBlock rotateLeft(Location<World> centre){
@@ -106,6 +128,12 @@ public class MovingBlock {
 					return;
 			}
 		}
+	}
+	
+	public enum Collision{
+		NONE,
+		RAM,
+		COLLIDE;
 	}
 	
 	public enum Priority{
