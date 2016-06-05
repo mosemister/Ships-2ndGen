@@ -10,9 +10,10 @@ import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
+import MoseShips.CustomDataHolder.DataHolder;
 import MoseShipsSponge.Ships.Utils.ShipsLocalDatabase;
 
-public class ShipsData {
+public class ShipsData extends DataHolder{
 	
 	public static final Object[] DATABASE_NAME = {"ShipsMeta", "Name"};
 	public static final Object[] DATABASE_PILOT = {"ShipsMeta", "Pilot"};
@@ -21,18 +22,22 @@ public class ShipsData {
 	public static final Object[] DATABASE_BLOCK = {"ShipsMeta", "Location", "Block"};
 	public static final Object[] DATABASE_TELEPORT = {"ShipsMeta", "Location", "Teleport"};
 	
-	String NAME;
-	User USER;
-	List<User> SUB_PILOTS;
-	List<Location<World>> STRUCTURE;
-	Location<World> MAIN_BLOCK;
-	Location<World> TELEPORT;
+	protected String NAME;
+	protected User USER;
+	protected List<User> SUB_PILOTS;
+	protected List<Location<World>> STRUCTURE;
+	protected Location<World> MAIN_BLOCK;
+	protected Location<World> TELEPORT;
 	
 	public ShipsData(String name, User host, Location<World> sign, Location<World> teleport){
 		NAME = name;
 		USER = host;
 		MAIN_BLOCK = sign;
 		TELEPORT = teleport;
+	}
+	
+	public ShipsData(ShipsData data){
+		data.cloneOnto(this);
 	}
 	
 	public Optional<Sign> getLicence(){
@@ -84,6 +89,7 @@ public class ShipsData {
 		data.SUB_PILOTS = this.SUB_PILOTS;
 		data.TELEPORT = this.TELEPORT;
 		data.USER = this.USER;
+		data.DATA = this.DATA;
 		return data;
 	}
 	

@@ -1,11 +1,13 @@
 package MoseShipsSponge.Ships.VesselTypes.DefaultTypes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -26,13 +28,11 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		super(name, host, sign, teleport);
 	}
 
-
 	@Override
 	public String[] getRequiredBlocks() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	public int getRequiredPercent() {
@@ -40,13 +40,11 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return 0;
 	}
 
-
 	@Override
 	public int getRequirement() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 	@Override
 	public String[] getPercentBlocks() {
@@ -54,13 +52,11 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return null;
 	}
 
-
 	@Override
 	public int getFuel() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 	@Override
 	public String[] getFuelMaterials() {
@@ -68,13 +64,11 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return null;
 	}
 
-
 	@Override
 	public boolean removeFuel(int Amount) {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 
 	@Override
 	public Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, User user) {
@@ -82,13 +76,11 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return null;
 	}
 
-
 	@Override
 	public boolean shouldFall() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 
 	@Override
 	public int getMaxBlocks() {
@@ -96,11 +88,15 @@ public class Airship extends ShipType implements LiveFuel, LiveRequiredPercent, 
 		return 0;
 	}
 
-
 	@Override
 	public int getMinBlocks() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	@Override
+	public Map<Text, Object> getInfo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

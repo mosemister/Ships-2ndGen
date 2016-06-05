@@ -4,12 +4,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.entity.living.player.User;
 
+import MoseShips.CustomDataHolder.DataHolder;
+import MoseShipsSponge.SerializedData;
 import MoseShipsSponge.Ships.ShipsData;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -62,6 +66,13 @@ public class ShipsLocalDatabase {
 		set(ShipsData.DATABASE_WORLD, data.getTeleportToLocation().getExtent().getName());
 		set(ShipsData.DATABASE_BLOCK, block);
 		set(ShipsData.DATABASE_TELEPORT, teleport);
+		for(DataHolder data2 : data.getAllData()){
+			if(data2 instanceof SerializedData){
+				SerializedData serData = (SerializedData)data2;
+				Set<Entry<String[], Object>> entrySet = serData.getSerializedData().entrySet();
+				entrySet.forEach(e -> set(e.getKey(), e.getValue()));
+			}
+		}
 		return this;
 	}
 

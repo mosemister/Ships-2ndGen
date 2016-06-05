@@ -14,7 +14,7 @@ public interface StaticShipType {
 	public int getBoostSpeed();
 	public int getAltitudeSpeed();
 	public boolean autoPilot();
-	public Optional<? extends ShipsData> createVessel(String name, Location<World> world, Player owner);
+	public Optional<? extends ShipsData> createVessel(String name, Location<World> licence, Player owner);
 	public Optional<? extends ShipsData> loadVessel(ShipsData data);
 	
 
