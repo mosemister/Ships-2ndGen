@@ -5,12 +5,16 @@ import java.util.Optional;
 
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import com.flowpowered.math.vector.Vector3i;
 
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
@@ -44,9 +48,17 @@ public class ShipsListeners {
 										info.entrySet().forEach(e -> player.sendMessage(e.getKey()));
 										break;
 									case MOVE:
-										
+										Direction direction = sign.get(Keys.DIRECTION).get();
+										if(sign.lines().get(2).toPlain().equals("{Boost}")){
+											ship.move(direction, ship.getStatic().getBoostSpeed());
+										}else{
+											ship.move(direction, ship.getStatic().getDefaultSpeed());
+										}
 										break;
 									case WHEEL:
+										break;
+									case ALTITUDE:
+										ship.move(new Vector3i(0, -ship.getStatic().getAltitudeSpeed(), 0));
 										break;
 								}
 							}

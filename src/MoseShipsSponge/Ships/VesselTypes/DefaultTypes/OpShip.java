@@ -52,8 +52,15 @@ public class OpShip extends ShipType{
 		return new HashMap<Text, Object>();
 	}
 	
-	public class StaticOPShip implements StaticShipType{
+	@Override
+	public StaticShipType getStatic() {
+		return StaticOPShip.STATIC;
+	}
+	
+	public static class StaticOPShip implements StaticShipType{
 
+		public static final StaticOPShip STATIC = new StaticOPShip();
+		
 		@Override
 		public int getDefaultSpeed() {
 			return 2;
@@ -85,5 +92,4 @@ public class OpShip extends ShipType{
 		}
 		
 	}
-
 }

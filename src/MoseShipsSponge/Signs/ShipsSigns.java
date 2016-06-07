@@ -68,7 +68,8 @@ public class ShipsSigns {
 		LICENCE,
 		MOVE(Text.builder("[Move]").color(TextColors.YELLOW).build(), Text.builder("{Engine}").color(TextColors.GREEN).build(), Text.builder("Boost").build()),
 		WHEEL,
-		EOT;
+		EOT,
+		ALTITUDE;
 		
 		Text[] LINES;
 		

@@ -2,6 +2,7 @@ package MoseShipsSponge.Ships.Utils;
 
 import java.util.Optional;
 
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -12,13 +13,15 @@ public class StoredMovement {
 	int X, Y, Z;
 	Location<World> TELEPORT;
 	Rotate ROTATE;
+	Cause CAUSE;
 	
-	public StoredMovement(Location<World> teleport, Rotate rotate, int x, int y, int z){
+	public StoredMovement(Location<World> teleport, Rotate rotate, int x, int y, int z, Cause cause){
 		X = x;
 		Y = y;
 		Z = z;
 		TELEPORT = teleport;
 		ROTATE = rotate;
+		CAUSE = cause;
 	}
 	
 	public int getX(){
@@ -51,11 +54,16 @@ public class StoredMovement {
 		}
 	}
 	
+	public Cause getCause(){
+		return CAUSE;
+	}
+	
 	public static class Builder{
 		
 		int X, Y, Z;
 		Location<World> TELEPORT;
 		Rotate ROTATE;
+		Cause CAUSE;
 		
 		public Builder setX(int x){
 			X = x;
@@ -82,8 +90,17 @@ public class StoredMovement {
 			return this;
 		}
 		
+		public Cause getCause(){
+			return CAUSE;
+		}
+		
+		public Builder setCause(Cause cause){
+			CAUSE = cause;
+			return this;
+		}
+		
 		public StoredMovement build(){
-			return new StoredMovement(TELEPORT, ROTATE, X, Y, Z);
+			return new StoredMovement(TELEPORT, ROTATE, X, Y, Z, CAUSE);
 		}
 	}
 

@@ -63,12 +63,12 @@ public class AutoPilot {
 		if (MOVEMENTS.size() != 0) {
 			if (MOVEMENTS.size() < TARGET) {
 				StoredMovement movement = MOVEMENTS.get(TARGET);
-				Optional<FailedCause> opFail = Movement.move(SHIP, movement);
+				Optional<FailedCause> opFail = Movement.teleport(SHIP, movement);
 				TARGET++;
 				return opFail;
 			} else if (SHOULD_REPEATE) {
 				StoredMovement movement = MOVEMENTS.get(0);
-				Optional<FailedCause> opFail = Movement.move(SHIP, movement);
+				Optional<FailedCause> opFail = Movement.teleport(SHIP, movement);
 				TARGET++;
 				return opFail;
 			}
