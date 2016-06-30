@@ -19,12 +19,10 @@ public class MovingBlock {
 	int ID;
 	byte DATA;
 	Location MOVETO;
-	MovementMethod MOVEMETHOD;
 
 	@SuppressWarnings("deprecation")
 	public MovingBlock(Block block, BaseVessel vessel, MovementMethod move) {
 		BLOCK = block;
-		MOVEMETHOD = move;
 		ID = block.getTypeId();
 		DATA = block.getData();
 		move(block, vessel, move);
@@ -38,6 +36,23 @@ public class MovingBlock {
 		ID = block.getTypeId();
 		DATA = block.getData();
 		move(block, vessel, move);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public MovingBlock(Block block, Location moveTo){
+		BLOCK = block;
+		ID = block.getTypeId();
+		DATA = block.getData();
+		MOVETO = moveTo;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public MovingBlock(SpecialBlock sBlock, Location moveTo){
+		Block block = sBlock.getBlock();
+		BLOCK = block;
+		ID = block.getTypeId();
+		DATA = block.getData();
+		MOVETO = moveTo;
 	}
 
 	private void move(Block block, BaseVessel vessel, MovementMethod move) {
@@ -142,10 +157,6 @@ public class MovingBlock {
 
 	public Block getBlock() {
 		return BLOCK;
-	}
-
-	public MovementMethod getMethod() {
-		return MOVEMETHOD;
 	}
 
 	public static List<Block> convertToBlockArray(List<MovingBlock> blocks) {

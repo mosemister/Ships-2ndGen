@@ -9,6 +9,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
+import MoseShipsBukkit.Utils.MoseUtils.ExpandedList;
 
 public class ShipsStructure {
 
@@ -86,8 +87,8 @@ public class ShipsStructure {
 		return null;
 	}
 
-	public List<Block> getAllBlocks() {
-		List<Block> blocks = new ArrayList<Block>();
+	public ExpandedList<Block> getAllBlocks() {
+		ExpandedList<Block> blocks = new ExpandedList<Block>();
 		blocks.addAll(STA_BLOCKS);
 		blocks.addAll(PRI_BLOCKS);
 		for (SpecialBlock block : SPE_BLOCKS) {

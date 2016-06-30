@@ -36,7 +36,7 @@ public class BaseVessel extends CustomDataStore {
 	OfflinePlayer OWNER;
 	VesselType TYPE;
 	ShipsStructure STRUCTURE;
-	Sign SIGN;
+	Block SIGN;
 	Location TELEPORTLOCATION;
 	BlockFace DIRECTION;
 	AutoPilotData AUTOPILOTDATA;
@@ -45,7 +45,7 @@ public class BaseVessel extends CustomDataStore {
 	BaseVessel(Sign sign, OfflinePlayer owner, Location teleport) throws InvalidSignException {
 		OWNER = owner;
 		TELEPORTLOCATION = teleport;
-		SIGN = sign;
+		SIGN = sign.getBlock();
 		NAME = sign.getLine(2).replace(ChatColor.GREEN + "", "");
 		DIRECTION = ((org.bukkit.material.Sign) sign.getData()).getFacing();
 		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
@@ -58,7 +58,7 @@ public class BaseVessel extends CustomDataStore {
 	BaseVessel(Sign sign, String name, VesselType type, Player player) {
 		NAME = name;
 		TYPE = type;
-		SIGN = sign;
+		SIGN = sign.getBlock();
 		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
 		org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign) sign.getData();
 		DIRECTION = sign2.getFacing();
@@ -69,7 +69,7 @@ public class BaseVessel extends CustomDataStore {
 	BaseVessel(Sign sign, String name, VesselType type, OfflinePlayer player, Location loc) {
 		NAME = name;
 		TYPE = type;
-		SIGN = sign;
+		SIGN = sign.getBlock();
 		STRUCTURE = new ShipsStructure(Ships.getBaseStructure(sign.getBlock()));
 		org.bukkit.material.Sign sign2 = (org.bukkit.material.Sign) sign.getData();
 		DIRECTION = sign2.getFacing();
@@ -104,7 +104,7 @@ public class BaseVessel extends CustomDataStore {
 	}
 
 	public Sign getSign() {
-		return SIGN;
+		return (Sign)SIGN.getState();
 	}
 
 	public ShipsStructure getStructure() {
@@ -168,7 +168,7 @@ public class BaseVessel extends CustomDataStore {
 		ShipsWriteEvent event = new ShipsWriteEvent(file, signS, teleportS);
 		if (!event.isCancelled()) {
 			config.set("ShipsData.Location.Sign", signS);
-			this.SIGN = sign;
+			this.SIGN = sign.getBlock();
 			config.set("ShipsData.Location.Teleport", teleportS);
 			this.TELEPORTLOCATION = loc;
 			try {

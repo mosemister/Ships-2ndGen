@@ -158,6 +158,7 @@ public class Ships extends JavaPlugin {
 			BlockFace.WEST
 		};
 		prototype3(block, faces, limit);
+		System.out.println("stack: " + STACK.getList().size() + " | count " + count);
 		if (STACK.isVaild()) {
 			List<Block> stack = STACK.getList();
 			return stack;
@@ -178,10 +179,14 @@ public class Ships extends JavaPlugin {
 		}
 		count++;
 		// List<String> material = new ArrayList<String>();
+		System.out.println("New block");
 		for (BlockFace face : faces) {
+			System.out.println("\t searching in " + face.name());
 			Block block2 = block.getRelative(face);
 			if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))) {
+				System.out.println("\t in materials list");
 				if (!STACK.contains(block2)) {
+					System.out.println("\t is not in stack");
 					STACK.addBlock(block2);
 					prototype3(block2, faces, limit);
 				}
@@ -293,13 +298,14 @@ public class Ships extends JavaPlugin {
 		return part3;
 	}
 	
-	public static int getMinecraftVersionInt(){
-		String mcVersion = getMinecraftVersion().replace(".", "");
-		if(mcVersion.length() == 2){
+	public static int getVersion(String version){
+		String mcVersion = version.replace(".", "");
+		String[] splitMCVersion = version.split(".");
+		for(int A = splitMCVersion.length; A < 4; A++){
 			mcVersion = (mcVersion + "0");
 		}
-		int version = Integer.parseInt(mcVersion);
-		return version;
+		int version2 = Integer.parseInt(mcVersion);
+		return version2;
 	}
 
 	// This is used by the config files to copy internal files to outside, I put

@@ -25,6 +25,7 @@ public class MaterialsList {
 	@SuppressWarnings("deprecation")
 	public MaterialsList() {
 		File file = new File("plugins/Ships/Configuration/Materials.yml");
+		System.out.println("file exsists" + file.exists());
 		if (!file.exists()) {
 			// default
 			// TODO
@@ -179,6 +180,7 @@ public class MaterialsList {
 			YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 			for (Material material : Material.values()) {
 				Map<Byte, Integer> values = getValues(config, material);
+				System.out.println("found " + values.size() + " relating " + material.name());
 				for (Entry<Byte, Integer> entry : values.entrySet()) {
 					if (entry.getValue() == 1) {
 						int id = material.getId();
@@ -197,7 +199,8 @@ public class MaterialsList {
 
 	Map<Byte, Integer> getValues(YamlConfiguration config, Material material) {
 		Map<Byte, Integer> dataValues = new HashMap<Byte, Integer>();
-		for (int A = -1; A < 100; A++) {
+		for (int A = -1; A < 25; A++) {
+			System.out.println(config.getString("Materials." + material.name() + ".dataValue_" + A));
 			int check = config.getInt("Materials." + material.name() + ".dataValue_" + A);
 			if (check != 0) {
 				dataValues.put((byte) A, check);
@@ -213,12 +216,8 @@ public class MaterialsList {
 			Config.getConfig().updateCheck();
 			return true;
 		}
-		String mcVersionTrue = mcVersion.replace(".", "");
-		if(mcVersionTrue.length() == 2){
-			mcVersionTrue = (mcVersionTrue + "0");
-		}
-		int knownVersion = Integer.parseInt(mcVersionTrue);
-		int latest = Ships.getMinecraftVersionInt();
+		int knownVersion = Ships.getVersion(mcVersion);
+		int latest = Ships.getVersion(Ships.getMinecraftVersion());
 		if(latest > knownVersion){
 			return true;
 		}
@@ -227,6 +226,7 @@ public class MaterialsList {
 
 	public void save() {
 		File file = new File("plugins/Ships/Configuration/Materials.yml");
+		System.out.println("Materials List exsists on save " + file.exists());
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		List<Material> failedMaterials = new ArrayList<Material>();
 		boolean check = false;
@@ -237,7 +237,7 @@ public class MaterialsList {
 					failedMaterials.add(material);
 					if (needsUpdating()){
 						check = true;
-						config.set("Materials.", material.name() + ".dataValue_-1");
+						config.set("Materials." + material.name() + ".dataValue_-1", 0);
 						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
 								material.name() + " has been updated in materials list", false));
 					}
@@ -307,8 +307,11 @@ public class MaterialsList {
 	}
 
 	public boolean contains(Material material, byte data, boolean materials) {
+		System.out.println("contains running");
 		if (materials) {
+			System.out.println("materials list size: " + MATERIALIDLIST.size());
 			for (MaterialItem item : MATERIALIDLIST) {
+				System.out.println("materialItem of " + item.getMaterial().name() + " " + item.getData());
 				if (item.getMaterial().equals(material)) {
 					if (item.getData() != -1) {
 						if (item.getData() == data) {

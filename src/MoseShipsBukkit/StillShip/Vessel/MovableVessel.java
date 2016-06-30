@@ -58,20 +58,32 @@ public class MovableVessel extends ProtectedVessel {
 	MovableVessel(Sign sign, String name, VesselType type, OfflinePlayer player, Location loc) {
 		super(sign, name, type, player, loc);
 	}
-
-	private List<MovingBlock> getTeleportStructure(Location loc) {
+	
+	public boolean transform(Location loc, boolean force){
+		int x = SIGN.getX() - loc.getBlockX();
+		int y = SIGN.getY() - loc.getBlockY();
+		int z = SIGN.getZ() - loc.getBlockZ();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		List<Block> structure = getStructure().getAllBlocks();
-		Location loc2 = getLocation();
-		for (Block block : structure) {
-			int X = (int) (block.getX() - loc2.getX());
-			int Y = (int) (block.getY() - loc2.getY());
-			int Z = (int) (block.getZ() - loc2.getZ());
-			Block teleport = loc.getBlock().getRelative(X, Y, Z);
-			MovingBlock block2 = new MovingBlock(teleport, this, MovementMethod.TELEPORT);
-			blocks.add(block2);
+		for(Block block : getStructure().getAllBlocks()){
+			Location loc2 = block.getRelative(x, y, z).getLocation();
+			loc2.setWorld(loc.getWorld());
+			SpecialBlock sBlock = SpecialBlock.getSpecialBlock(block);
+			if(sBlock == null){
+				blocks.add(new MovingBlock(block, loc2));
+			}else{
+				blocks.add(new MovingBlock(sBlock, loc2));
+			}
 		}
-		return blocks;
+		
+		if(!force){
+			for(MovingBlock block : blocks){
+				if(isBlocked(block)){
+					return false;
+				}
+			}
+		}
+		forceMove(MovementMethod.TELEPORT, blocks);
+		return true;
 	}
 
 	private boolean isMoveInBlock(Location loc) {
@@ -306,7 +318,7 @@ public class MovableVessel extends ProtectedVessel {
 			sign.setLine(3, sBlock.getLine(4));
 			sign.update();
 			if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
-				SIGN = sign;
+				SIGN = nBlock;
 				updateLocation(getTeleportLocation(), sign);
 				YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 				if (config.getBoolean("Signs.ForceUsernameOnLicenceSign")) {
@@ -582,10 +594,8 @@ public class MovableVessel extends ProtectedVessel {
 		return false;
 	}
 
-	public void forceTeleport(Location loc) {
-		List<MovingBlock> blocks = getTeleportStructure(loc);
-		forceMove(MovementMethod.TELEPORT, blocks,
-				YamlConfiguration.loadConfiguration(Config.getConfig().getFile()).getBoolean("Multitasking.enable"));
+	public boolean forceTeleport(Location loc) {
+		return transform(loc, true);
 	}
 
 	public void forceMove(MovementMethod move, int speed, Player player) {
