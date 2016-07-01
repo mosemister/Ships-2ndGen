@@ -245,7 +245,8 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		for (Entry<Material, Byte> fuels2 : this.getFuel().entrySet()) {
 			fuels.add(fuels2.getKey().getId() + "," + fuels2.getValue());
 		}
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Submarine", getRequiredPercent(), PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Submarine", getRequiredPercent(), PERCENT, getMaxBlocks(),
+				getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
 		if (!event.isCancelled()) {
 			config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
 			config.set("Type", "Submarine");

@@ -95,13 +95,11 @@ public class Plane extends VesselType implements Fuel, RequiredMaterial, Classic
 								return false;
 							}
 						}
-						/* }else{
-						 * if (player != null){
+						/*
+						 * }else{ if (player != null){
 						 * player.sendMessage(Ships.runShipsMessage(
-						 * "Needs engine", true));
-						 * }
-						 * return false;
-						 * } */
+						 * "Needs engine", true)); } return false; }
+						 */
 					} else {
 						List<String> materials = new ArrayList<String>();
 						for (Material material : REQUIREDBLOCKS) {
@@ -280,7 +278,8 @@ public class Plane extends VesselType implements Fuel, RequiredMaterial, Classic
 		for (Entry<Material, Byte> fuels2 : this.getFuel().entrySet()) {
 			fuels.add(fuels2.getKey().getId() + "," + fuels2.getValue());
 		}
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Plane", getRequiredPercent(), PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Plane", getRequiredPercent(), PERCENT, getMaxBlocks(),
+				getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
 		if (!event.isCancelled()) {
 			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 			config.set("ShipsData.Type", "Plane");

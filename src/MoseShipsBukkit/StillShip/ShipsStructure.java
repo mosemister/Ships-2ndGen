@@ -26,10 +26,10 @@ public class ShipsStructure {
 			if (special != null) {
 				SPE_BLOCKS.add(special);
 			} else if ((id == 50) || (id == 55) || (id == 51) || (id == 64) || (id == 65) || (id == 68) || (id == 69)
-					|| (id == 70) || (id == 71) || (id == 72) || (id == 75) || (id == 76) || (id == 77)
-					|| (id == 93) || (id == 94) || (id == 96) || (id == 131) || (id == 132) || (id == 143)
-					|| (id == 147) || (id == 148) || (id == 149) || (id == 150) || (id == 167) || (id == 177)
-					|| (id == 193) || (id == 194) || (id == 195) || (id == 196) || (id == 197)) {
+					|| (id == 70) || (id == 71) || (id == 72) || (id == 75) || (id == 76) || (id == 77) || (id == 93)
+					|| (id == 94) || (id == 96) || (id == 131) || (id == 132) || (id == 143) || (id == 147)
+					|| (id == 148) || (id == 149) || (id == 150) || (id == 167) || (id == 177) || (id == 193)
+					|| (id == 194) || (id == 195) || (id == 196) || (id == 197)) {
 				if (block.getState() instanceof Sign) {
 					SpecialBlock block2 = new SpecialBlock((Sign) block.getState());
 					SPE_BLOCKS.add(block2);
@@ -97,10 +97,10 @@ public class ShipsStructure {
 		blocks.addAll(AIR_BLOCKS);
 		return blocks;
 	}
-	
-	private <T extends Object> boolean contains(List<T> list, T object){
-		for(Object obj : list){
-			if(obj.equals(object)){
+
+	private <T extends Object> boolean contains(List<T> list, T object) {
+		for (Object obj : list) {
+			if (obj.equals(object)) {
 				return true;
 			}
 		}

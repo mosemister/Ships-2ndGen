@@ -155,7 +155,8 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Ship", PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed());
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Ship", PERCENT, getMaxBlocks(), getMinBlocks(),
+				getDefaultSpeed());
 		if (!event.isCancelled()) {
 			ConfigurationSection config = configuration.createSection("ShipsData");
 			config.set("Player.Name", vessel.getOwner().getUniqueId().toString());

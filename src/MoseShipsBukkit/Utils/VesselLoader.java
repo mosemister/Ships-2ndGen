@@ -43,9 +43,9 @@ public class VesselLoader {
 						if (!event.isCancelled()) {
 							success.add(file.getName().replace(".yml", ""));
 						}
-					}else{
+					} else {
 						YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-						if(config.getBoolean("VesselLoading.DeleteFailedLoads")){
+						if (config.getBoolean("VesselLoading.DeleteFailedLoads")) {
 							file.deleteOnExit();
 						}
 					}

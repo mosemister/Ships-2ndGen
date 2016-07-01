@@ -12,9 +12,8 @@ public interface Fuel {
 	 * removes a set amount of fuel from a vessel.
 	 * 
 	 * <p>
-	 * if this returns 'false' then the move
-	 * event will be cancelled. If returns 'true'
-	 * then it will continue the move event
+	 * if this returns 'false' then the move event will be cancelled. If returns
+	 * 'true' then it will continue the move event
 	 * </p>
 	 */
 	public boolean removeFuel(BaseVessel vessel);

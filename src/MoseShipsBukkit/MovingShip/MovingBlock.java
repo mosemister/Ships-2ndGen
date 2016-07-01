@@ -37,17 +37,17 @@ public class MovingBlock {
 		DATA = block.getData();
 		move(block, vessel, move);
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public MovingBlock(Block block, Location moveTo){
+	public MovingBlock(Block block, Location moveTo) {
 		BLOCK = block;
 		ID = block.getTypeId();
 		DATA = block.getData();
 		MOVETO = moveTo;
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public MovingBlock(SpecialBlock sBlock, Location moveTo){
+	public MovingBlock(SpecialBlock sBlock, Location moveTo) {
 		Block block = sBlock.getBlock();
 		BLOCK = block;
 		ID = block.getTypeId();
@@ -59,83 +59,82 @@ public class MovingBlock {
 		BlockFace facing = vessel.getFacingDirection();
 		Block block2 = null;
 		switch (move) {
-			case MOVE_FORWARD:
-				block2 = block.getRelative(facing, move.getSpeed());
-				MOVETO = block2.getLocation();
-				break;
-			case MOVE_BACKWARD:
-				block2 = block.getRelative(facing.getOppositeFace(), move.getSpeed());
-				MOVETO = block2.getLocation();
-				break;
+		case MOVE_FORWARD:
+			block2 = block.getRelative(facing, move.getSpeed());
+			MOVETO = block2.getLocation();
+			break;
+		case MOVE_BACKWARD:
+			block2 = block.getRelative(facing.getOppositeFace(), move.getSpeed());
+			MOVETO = block2.getLocation();
+			break;
 
-			case MOVE_LEFT:
-				block2 = block.getRelative(Ships.getSideFace(facing, true), move.getSpeed());
-				MOVETO = block2.getLocation();
-				break;
-			case MOVE_RIGHT:
-				block2 = block.getRelative(Ships.getSideFace(facing, false), move.getSpeed());
-				MOVETO = block2.getLocation();
-				break;
+		case MOVE_LEFT:
+			block2 = block.getRelative(Ships.getSideFace(facing, true), move.getSpeed());
+			MOVETO = block2.getLocation();
+			break;
+		case MOVE_RIGHT:
+			block2 = block.getRelative(Ships.getSideFace(facing, false), move.getSpeed());
+			MOVETO = block2.getLocation();
+			break;
 
-			case MOVE_UP:
-				block2 = block.getRelative(0, move.getSpeed(), 0);
-				MOVETO = block2.getLocation();
-				break;
-			case MOVE_DOWN:
-				block2 = block.getRelative(0, -move.getSpeed(), 0);
-				MOVETO = block2.getLocation();
-				break;
+		case MOVE_UP:
+			block2 = block.getRelative(0, move.getSpeed(), 0);
+			MOVETO = block2.getLocation();
+			break;
+		case MOVE_DOWN:
+			block2 = block.getRelative(0, -move.getSpeed(), 0);
+			MOVETO = block2.getLocation();
+			break;
 
-			case ROTATE_RIGHT: {
-				block2 = vessel.getSign().getBlock();
-				int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
-				double symmetry = block2.getLocation().getBlockZ();
+		case ROTATE_RIGHT: {
+			block2 = vessel.getSign().getBlock();
+			int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
+			double symmetry = block2.getLocation().getBlockZ();
 
-				double X = block.getLocation().getX() - shift;
-				double Y = block.getLocation().getY();
-				double Z = block.getLocation().getZ() - (block.getLocation().getZ() - symmetry) * 2.0D + shift;
-				Location loc = new Location(block.getWorld(), Z, Y, X);
-				MOVETO = loc;
-				break;
-			}
-			case ROTATE_LEFT:
-				block2 = vessel.getSign().getBlock();
-				int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
-				double symmetry = block2.getLocation().getBlockX();
+			double X = block.getLocation().getX() - shift;
+			double Y = block.getLocation().getY();
+			double Z = block.getLocation().getZ() - (block.getLocation().getZ() - symmetry) * 2.0D + shift;
+			Location loc = new Location(block.getWorld(), Z, Y, X);
+			MOVETO = loc;
+			break;
+		}
+		case ROTATE_LEFT:
+			block2 = vessel.getSign().getBlock();
+			int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
+			double symmetry = block2.getLocation().getBlockX();
 
-				double X = block.getLocation().getX() - (block.getLocation().getX() - symmetry) * 2.0D - shift;
-				double Y = block.getLocation().getY();
-				double Z = block.getLocation().getZ() + shift;
-				Location loc = new Location(block.getWorld(), Z, Y, X);
-				MOVETO = loc;
-				break;
+			double X = block.getLocation().getX() - (block.getLocation().getX() - symmetry) * 2.0D - shift;
+			double Y = block.getLocation().getY();
+			double Z = block.getLocation().getZ() + shift;
+			Location loc = new Location(block.getWorld(), Z, Y, X);
+			MOVETO = loc;
+			break;
 
-			case MOVE_POSITIVE_X:
-				block2 = block.getRelative(move.getSpeed(), 0, 0);
-				MOVETO = block2.getLocation();
-				break;
-			case MOVE_NEGATIVE_X:
-				block2 = block.getRelative(-move.getSpeed(), 0, 0);
-				MOVETO = block2.getLocation();
-				break;
+		case MOVE_POSITIVE_X:
+			block2 = block.getRelative(move.getSpeed(), 0, 0);
+			MOVETO = block2.getLocation();
+			break;
+		case MOVE_NEGATIVE_X:
+			block2 = block.getRelative(-move.getSpeed(), 0, 0);
+			MOVETO = block2.getLocation();
+			break;
 
-			case MOVE_POSITIVE_Z:
-				block2 = block.getRelative(0, 0, move.getSpeed());
-				MOVETO = block2.getLocation();
-				break;
-			case MOVE_NEGATIVE_Z:
-				block2 = block.getRelative(0, 0, -move.getSpeed());
-				MOVETO = block2.getLocation();
-				break;
+		case MOVE_POSITIVE_Z:
+			block2 = block.getRelative(0, 0, move.getSpeed());
+			MOVETO = block2.getLocation();
+			break;
+		case MOVE_NEGATIVE_Z:
+			block2 = block.getRelative(0, 0, -move.getSpeed());
+			MOVETO = block2.getLocation();
+			break;
 
-			case TELEPORT:
-				break;
+		case TELEPORT:
+			break;
 
-			default:
-				Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
-						"Something went wrong, maybe a custom [API] MovementMethod. ("
-								+ move + ")", true));
-				break;
+		default:
+			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
+					"Something went wrong, maybe a custom [API] MovementMethod. (" + move + ")", true));
+			break;
 		}
 	}
 

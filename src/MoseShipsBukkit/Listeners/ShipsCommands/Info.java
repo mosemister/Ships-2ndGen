@@ -214,7 +214,6 @@ public class Info extends CommandLauncher {
 				try {
 					VesselType type = VesselType.values().get(page - 2);
 					List<ItemStack> items = getVesselTypeInfo(type);
-					System.out.println("page:" + items.size());
 					Inventory inv = createPageGUI(items, getInventoryName(), page, false);
 					player.openInventory(inv);
 					if (player instanceof Player) {

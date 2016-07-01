@@ -16,12 +16,7 @@ public class Direction {
 
 	public Direction(World world) {
 		Random random = new Random();
-		BlockFace[] faces = {
-			BlockFace.WEST,
-			BlockFace.EAST,
-			BlockFace.NORTH,
-			BlockFace.SOUTH
-		};
+		BlockFace[] faces = { BlockFace.WEST, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH };
 		int number = random.nextInt(faces.length);
 		BlockFace direction = faces[number];
 		WORLD = world;

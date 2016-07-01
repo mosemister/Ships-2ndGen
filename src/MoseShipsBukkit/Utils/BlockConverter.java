@@ -406,7 +406,6 @@ public class BlockConverter {
 	}
 
 	static byte button(MovementMethod move, byte data) {
-		System.out.println("Current Data = " + data);
 		if (MovementMethod.ROTATE_RIGHT.equals(move)) {
 			if (data == 3) {
 				return 2;

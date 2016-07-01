@@ -25,7 +25,6 @@ public class MaterialsList {
 	@SuppressWarnings("deprecation")
 	public MaterialsList() {
 		File file = new File("plugins/Ships/Configuration/Materials.yml");
-		System.out.println("file exsists" + file.exists());
 		if (!file.exists()) {
 			// default
 			// TODO
@@ -180,7 +179,6 @@ public class MaterialsList {
 			YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 			for (Material material : Material.values()) {
 				Map<Byte, Integer> values = getValues(config, material);
-				System.out.println("found " + values.size() + " relating " + material.name());
 				for (Entry<Byte, Integer> entry : values.entrySet()) {
 					if (entry.getValue() == 1) {
 						int id = material.getId();
@@ -200,7 +198,6 @@ public class MaterialsList {
 	Map<Byte, Integer> getValues(YamlConfiguration config, Material material) {
 		Map<Byte, Integer> dataValues = new HashMap<Byte, Integer>();
 		for (int A = -1; A < 25; A++) {
-			System.out.println(config.getString("Materials." + material.name() + ".dataValue_" + A));
 			int check = config.getInt("Materials." + material.name() + ".dataValue_" + A);
 			if (check != 0) {
 				dataValues.put((byte) A, check);
@@ -208,17 +205,17 @@ public class MaterialsList {
 		}
 		return dataValues;
 	}
-	
-	private boolean needsUpdating(){
+
+	private boolean needsUpdating() {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		String mcVersion = config.getString("MCVersion");
-		if(mcVersion == null){
+		if (mcVersion == null) {
 			Config.getConfig().updateCheck();
 			return true;
 		}
 		int knownVersion = Ships.getVersion(mcVersion);
 		int latest = Ships.getVersion(Ships.getMinecraftVersion());
-		if(latest > knownVersion){
+		if (latest > knownVersion) {
 			return true;
 		}
 		return false;
@@ -226,7 +223,6 @@ public class MaterialsList {
 
 	public void save() {
 		File file = new File("plugins/Ships/Configuration/Materials.yml");
-		System.out.println("Materials List exsists on save " + file.exists());
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		List<Material> failedMaterials = new ArrayList<Material>();
 		boolean check = false;
@@ -235,11 +231,11 @@ public class MaterialsList {
 			if (materials != null) {
 				if (materials.size() == 0) {
 					failedMaterials.add(material);
-					if (needsUpdating()){
+					if (needsUpdating()) {
 						check = true;
 						config.set("Materials." + material.name() + ".dataValue_-1", 0);
-						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
-								material.name() + " has been updated in materials list", false));
+						Bukkit.getConsoleSender().sendMessage(
+								Ships.runShipsMessage(material.name() + " has been updated in materials list", false));
 					}
 				} else {
 					if (needsUpdating()) {
@@ -251,8 +247,8 @@ public class MaterialsList {
 									config.set("Materials." + material.name() + ".dataValue_" + data.getData(), 1);
 								}
 							} else if (contains(material, false)) {
-								if (config.getInt(
-										"Materials." + material.name() + ".dataValue_" + data.getData()) == 0) {
+								if (config
+										.getInt("Materials." + material.name() + ".dataValue_" + data.getData()) == 0) {
 									config.set("Materials." + material.name() + ".dataValue_" + data.getData(), 2);
 								}
 							} else {
@@ -268,8 +264,11 @@ public class MaterialsList {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(check){
-			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("A new minecraft version found. \n Attempting to update the materials list with the new blocks", false));
+		if (check) {
+			Bukkit.getConsoleSender()
+					.sendMessage(Ships.runShipsMessage(
+							"A new minecraft version found. \n Attempting to update the materials list with the new blocks",
+							false));
 			YamlConfiguration config2 = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 			config2.set("MCVersion", Ships.getMinecraftVersion());
 			try {
@@ -279,8 +278,11 @@ public class MaterialsList {
 			}
 		}
 		if (failedMaterials.size() != 0) {
-			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Ships currently does not support "
-					+ failedMaterials + "(found " + failedMaterials.size() + " blocks). \n These blocks are in the materials list however they maynot work correctly", true));
+			Bukkit.getConsoleSender()
+					.sendMessage(Ships.runShipsMessage(
+							"Ships currently does not support " + failedMaterials + "(found " + failedMaterials.size()
+									+ " blocks). \n These blocks are in the materials list however they maynot work correctly",
+							true));
 			Bukkit.getConsoleSender()
 					.sendMessage(Ships.runShipsMessage(
 							"check http://dev.bukkit.org/bukkit-plugins/ships to see if you are using the latest version. This version is "
@@ -307,11 +309,8 @@ public class MaterialsList {
 	}
 
 	public boolean contains(Material material, byte data, boolean materials) {
-		System.out.println("contains running");
 		if (materials) {
-			System.out.println("materials list size: " + MATERIALIDLIST.size());
 			for (MaterialItem item : MATERIALIDLIST) {
-				System.out.println("materialItem of " + item.getMaterial().name() + " " + item.getData());
 				if (item.getMaterial().equals(material)) {
 					if (item.getData() != -1) {
 						if (item.getData() == data) {

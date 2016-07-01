@@ -104,8 +104,7 @@ public class BukkitListeners implements Listener {
 			if (block.getType().equals(Material.NETHERRACK)) {
 				Vessel vessel = Vessel.getVessel(block, false);
 				if (vessel != null) {
-					if ((config.getBoolean("World.ProtectedVessels.FireProtect2"))
-							|| (vessel.isInvincible())) {
+					if ((config.getBoolean("World.ProtectedVessels.FireProtect2")) || (vessel.isInvincible())) {
 						event.setCancelled(true);
 					}
 				}
@@ -119,8 +118,7 @@ public class BukkitListeners implements Listener {
 		if (event.getEntity() instanceof Enderman) {
 			Vessel vessel = Vessel.getVessel(event.getBlock(), false);
 			if (vessel != null) {
-				if ((config.getBoolean("World.ProtectedVessels.EntityProtect.EnderMan"))
-						|| (vessel.isInvincible())) {
+				if ((config.getBoolean("World.ProtectedVessels.EntityProtect.EnderMan")) || (vessel.isInvincible())) {
 					event.setCancelled(true);
 				}
 			}
@@ -146,8 +144,7 @@ public class BukkitListeners implements Listener {
 			for (Block block : event.blockList()) {
 				Vessel vessel = Vessel.getVessel(block, false);
 				if (vessel != null) {
-					if ((config.getBoolean("World.ProtectedVessels.ExplodeProtect.TNT"))
-							|| (vessel.isInvincible())) {
+					if ((config.getBoolean("World.ProtectedVessels.ExplodeProtect.TNT")) || (vessel.isInvincible())) {
 						event.blockList().remove(block);
 					}
 				}
@@ -195,14 +192,8 @@ public class BukkitListeners implements Listener {
 			Sign sign = (Sign) event.getBlock().getState();
 			signBreakEvent(sign, event);
 		}
-		BlockFace[] faces = {
-			BlockFace.DOWN,
-			BlockFace.EAST,
-			BlockFace.NORTH,
-			BlockFace.SOUTH,
-			BlockFace.UP,
-			BlockFace.WEST
-		};
+		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
+				BlockFace.WEST };
 		for (BlockFace face : faces) {
 			Block block = event.getBlock().getRelative(face);
 			if (block.getState() instanceof Sign) {
@@ -255,14 +246,10 @@ public class BukkitListeners implements Listener {
 				if ((event.getPlayer().hasPermission("ships." + type.getName() + ".make"))
 						|| (event.getPlayer().hasPermission("ships.*.make"))
 						|| (event.getPlayer().hasPermission("ships.*"))) {
-					String[] signLines = {
-						ChatColor.YELLOW + "[Ships]",
-						ChatColor.BLUE + event.getLine(1),
-						ChatColor.GREEN + event.getLine(2),
-						ChatColor.GREEN + event.getLine(3)
-					};
-					ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signLines,
-							sign, event.getPlayer(), event.getLines());
+					String[] signLines = { ChatColor.YELLOW + "[Ships]", ChatColor.BLUE + event.getLine(1),
+							ChatColor.GREEN + event.getLine(2), ChatColor.GREEN + event.getLine(3) };
+					ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signLines, sign,
+							event.getPlayer(), event.getLines());
 					Bukkit.getPluginManager().callEvent(creation);
 					if (!creation.isCancelled()) {
 						if (Vessel.getVessel(event.getLine(2)) == null) {
@@ -300,14 +287,10 @@ public class BukkitListeners implements Listener {
 		}
 		// Move sign
 		if ((event.getLine(0).equalsIgnoreCase("[Move]")) || (event.getLine(0).equalsIgnoreCase("[Engine]"))) {
-			String[] signText = {
-				ChatColor.YELLOW + "[Move]",
-				"{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}",
-				"Boost",
-				""
-			};
-			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText,
-					sign, event.getPlayer(), event.getLine(0));
+			String[] signText = { ChatColor.YELLOW + "[Move]", "{" + ChatColor.GREEN + "Engine" + ChatColor.BLACK + "}",
+					"Boost", "" };
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText, sign, event.getPlayer(),
+					event.getLine(0));
 			Bukkit.getPluginManager().callEvent(creation);
 			if (!creation.isCancelled()) {
 				event.setLine(0, creation.getReturnText()[0]);
@@ -319,14 +302,10 @@ public class BukkitListeners implements Listener {
 		}
 		// Wheel sign
 		if (event.getLine(0).equalsIgnoreCase("[Wheel]")) {
-			String[] signText = {
-				ChatColor.YELLOW + "[Wheel]",
-				ChatColor.RED + "\\\\ || //",
-				ChatColor.RED + "==    ==",
-				ChatColor.RED + "// || \\\\"
-			};
-			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText,
-					sign, event.getPlayer(), event.getLine(0));
+			String[] signText = { ChatColor.YELLOW + "[Wheel]", ChatColor.RED + "\\\\ || //",
+					ChatColor.RED + "==    ==", ChatColor.RED + "// || \\\\" };
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText, sign, event.getPlayer(),
+					event.getLine(0));
 			Bukkit.getPluginManager().callEvent(creation);
 			if (!creation.isCancelled()) {
 				event.setLine(0, creation.getReturnText()[0]);
@@ -338,14 +317,9 @@ public class BukkitListeners implements Listener {
 		}
 		// Altitude
 		if ((event.getLine(0).equalsIgnoreCase("[Burner]")) || (event.getLine(0).equalsIgnoreCase("[Altitude]"))) {
-			String[] signText = {
-				ChatColor.YELLOW + "[Altitude]",
-				"[right] up",
-				"[left] down",
-				""
-			};
-			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText,
-					sign, event.getPlayer(), event.getLine(0));
+			String[] signText = { ChatColor.YELLOW + "[Altitude]", "[right] up", "[left] down", "" };
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText, sign, event.getPlayer(),
+					event.getLine(0));
 			Bukkit.getPluginManager().callEvent(creation);
 			if (!creation.isCancelled()) {
 				event.setLine(0, creation.getReturnText()[0]);
@@ -357,14 +331,10 @@ public class BukkitListeners implements Listener {
 		}
 		// EOT
 		if (event.getLine(0).equalsIgnoreCase("[EOT]")) {
-			String[] signText = {
-				ChatColor.YELLOW + "[E.O.T]",
-				ChatColor.GREEN + "AHEAD",
-				"-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-",
-				""
-			};
-			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText,
-					sign, event.getPlayer(), event.getLine(0));
+			String[] signText = { ChatColor.YELLOW + "[E.O.T]", ChatColor.GREEN + "AHEAD",
+					"-[" + ChatColor.WHITE + "STOP" + ChatColor.BLACK + "]-", "" };
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText, sign, event.getPlayer(),
+					event.getLine(0));
 			Bukkit.getPluginManager().callEvent(creation);
 			if (!creation.isCancelled()) {
 				event.setLine(0, creation.getReturnText()[0]);
@@ -376,14 +346,9 @@ public class BukkitListeners implements Listener {
 		}
 		// CELL
 		if (event.getLine(0).equalsIgnoreCase("[Cell]")) {
-			String[] signText = {
-				ChatColor.YELLOW + "[Cell]",
-				"",
-				ChatColor.GREEN + "0",
-				""
-			};
-			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText,
-					sign, event.getPlayer(), event.getLine(0));
+			String[] signText = { ChatColor.YELLOW + "[Cell]", "", ChatColor.GREEN + "0", "" };
+			ShipsSignCreation creation = new ShipsSignCreation(Ships.getPlugin(), signText, sign, event.getPlayer(),
+					event.getLine(0));
 			Bukkit.getPluginManager().callEvent(creation);
 			if (!creation.isCancelled()) {
 				event.setLine(0, creation.getReturnText()[0]);
@@ -422,8 +387,7 @@ public class BukkitListeners implements Listener {
 					} else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Altitude]")) {
 						Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
 						if (vessel == null) {
-							event.getPlayer()
-									.sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 						} else {
 							vessel.syncMoveVessel(MovementMethod.MOVE_DOWN, 1, event.getPlayer());
 						}
@@ -491,44 +455,40 @@ public class BukkitListeners implements Listener {
 					} else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Wheel]")) {
 						Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
 						if (vessel == null) {
-							event.getPlayer()
-									.sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 						} else {
 							vessel.syncMoveVessel(MovementMethod.ROTATE_RIGHT, 0, event.getPlayer());
 						}
 					} else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Altitude]")) {
 						Vessel vessel = Vessel.getVessel(sign.getBlock(), true);
 						if (vessel == null) {
-							event.getPlayer()
-									.sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
+							event.getPlayer().sendMessage(Ships.runShipsMessage("Ships sign can not be found", true));
 						} else {
 							vessel.syncMoveVessel(MovementMethod.MOVE_UP, 1, event.getPlayer());
 						}
 					} else if (sign.getLine(0).equals(ChatColor.YELLOW + "[E.O.T]")) {
-						event.getPlayer()
-								.sendMessage(Ships.runShipsMessage(
-										"Moves the vessel in the same direction until this E.O.T sign is changed.",
-										false));
+						event.getPlayer().sendMessage(Ships.runShipsMessage(
+								"Moves the vessel in the same direction until this E.O.T sign is changed.", false));
 					} else if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
 						Vessel vessel = Vessel.getVessel(sign);
 						if (vessel == null) {
 							// check for invalid ships
 							Vessel vessel2 = VesselLoader.loadUnloadedVessel(sign);
 							if (vessel2 == null) {
-								event.getPlayer().sendMessage(Ships.runShipsMessage(
-										"A issue has occured. Sign is not licenced", false));
+								event.getPlayer().sendMessage(
+										Ships.runShipsMessage("A issue has occured. Sign is not licenced", false));
 								sign.getBlock().breakNaturally();
 							} else {
-								event.getPlayer().sendMessage(Ships.runShipsMessage(
-										"Recoved losted vessel, click again to get stats.", false));
+								event.getPlayer().sendMessage(Ships
+										.runShipsMessage("Recoved losted vessel, click again to get stats.", false));
 								vessel2.updateLocation(vessel2.getTeleportLocation(), sign);
 							}
 						} else {
 							if (vessel.getOwner().equals(event.getPlayer())) {
 								vessel.displayInfo(event.getPlayer());
 							} else {
-								event.getPlayer().sendMessage(Ships.runShipsMessage(
-										"Vessel is owned by " + vessel.getOwner().getName(), false));
+								event.getPlayer().sendMessage(Ships
+										.runShipsMessage("Vessel is owned by " + vessel.getOwner().getName(), false));
 							}
 						}
 					}

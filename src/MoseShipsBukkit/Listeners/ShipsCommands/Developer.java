@@ -40,31 +40,24 @@ public class Developer extends CommandLauncher {
 		if (args.length == 1) {
 			help(sender);
 		} else {
-			switch (DevCmdEnums.valueOf(args[1].toString())) {
-				case LOADED_VESSELES:
-					displayLoadedVessels(sender);
-					break;
-				case VESSEL_TYPES:
-					displayVesselTypes(sender);
-					break;
-				case CUSTOM_VESSEL_TYPES:
-					displayCustomVesselTypes(sender);
-					break;
-				case MATERIALS_LIST:
-					displayMaterialsList(sender);
-					break;
-				case RAM_MATERIALS:
-					displayRAMMaterialsList(sender);
-					break;
-				case STRUCTURE:
-					displayVessel(sender, args);
-					break;
-				case ALL:
-					sender.sendMessage("-----[LoadedVessels]-----");
-					displayLoadedVessels(sender);
-					sender.sendMessage("-----[Materials]-----");
-					displayMaterialsList(sender);
-					sender.sendMessage("-----[RAM]-----");
+			if (args[1].equalsIgnoreCase("loadedVessels")) {
+				displayLoadedVessels(sender);
+			} else if (args[1].equalsIgnoreCase("VesselTypes")) {
+				displayVesselTypes(sender);
+			} else if (args[1].equalsIgnoreCase("CustomVesselTypes")) {
+				displayCustomVesselTypes(sender);
+			} else if (args[1].equalsIgnoreCase("MaterialsList")) {
+				displayMaterialsList(sender);
+			} else if (args[1].equalsIgnoreCase("RamMaterials")) {
+				displayRAMMaterialsList(sender);
+			} else if (args[1].equalsIgnoreCase("Structure")) {
+				displayVessel(sender, args);
+			} else if (args[1].equalsIgnoreCase("All")) {
+				sender.sendMessage("-----[LoadedVessels]-----");
+				displayLoadedVessels(sender);
+				sender.sendMessage("-----[Materials]-----");
+				displayMaterialsList(sender);
+				sender.sendMessage("-----[RAM]-----");
 			}
 		}
 	}
@@ -137,26 +130,6 @@ public class Developer extends CommandLauncher {
 							+ block.getZ() + ", " + block.getWorld().getName());
 				}
 			}
-		}
-	}
-
-	public enum DevCmdEnums {
-		LOADED_VESSELES(0),
-		VESSEL_TYPES(1),
-		CUSTOM_VESSEL_TYPES(2),
-		MATERIALS_LIST(3),
-		RAM_MATERIALS(4),
-		STRUCTURE(5),
-		ALL(6);
-
-		int ID;
-
-		DevCmdEnums(int id) {
-			ID = id;
-		}
-
-		public int getID() {
-			return ID;
 		}
 	}
 }

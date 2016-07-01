@@ -58,26 +58,26 @@ public class MovableVessel extends ProtectedVessel {
 	MovableVessel(Sign sign, String name, VesselType type, OfflinePlayer player, Location loc) {
 		super(sign, name, type, player, loc);
 	}
-	
-	public boolean transform(Location loc, boolean force){
+
+	public boolean transform(Location loc, boolean force) {
 		int x = SIGN.getX() - loc.getBlockX();
 		int y = SIGN.getY() - loc.getBlockY();
 		int z = SIGN.getZ() - loc.getBlockZ();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		for(Block block : getStructure().getAllBlocks()){
+		for (Block block : getStructure().getAllBlocks()) {
 			Location loc2 = block.getRelative(x, y, z).getLocation();
 			loc2.setWorld(loc.getWorld());
 			SpecialBlock sBlock = SpecialBlock.getSpecialBlock(block);
-			if(sBlock == null){
+			if (sBlock == null) {
 				blocks.add(new MovingBlock(block, loc2));
-			}else{
+			} else {
 				blocks.add(new MovingBlock(sBlock, loc2));
 			}
 		}
-		
-		if(!force){
-			for(MovingBlock block : blocks){
-				if(isBlocked(block)){
+
+		if (!force) {
+			for (MovingBlock block : blocks) {
+				if (isBlocked(block)) {
 					return false;
 				}
 			}
@@ -419,37 +419,33 @@ public class MovableVessel extends ProtectedVessel {
 		return false;
 	}
 
-	/* @SuppressWarnings("deprecation")
-	 * public void ASyncMoveVessel(final MovementMethod move, final int speed,
-	 * final OfflinePlayer player){
+	/*
+	 * @SuppressWarnings("deprecation") public void ASyncMoveVessel(final
+	 * MovementMethod move, final int speed, final OfflinePlayer player){
 	 * Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new
 	 * BukkitRunnable(){
 	 * 
-	 * @Override
-	 * public void run() {
-	 * syncMoveVessel(move, speed, player);
-	 * }
+	 * @Override public void run() { syncMoveVessel(move, speed, player); }
 	 * 
-	 * }, 0);
-	 * } */
+	 * }, 0); }
+	 */
 
 	public boolean syncMoveVessel(MovementMethod move, int speed, OfflinePlayer player) {
 		return syncMoveVessel(move, speed, player, true);
 	}
 
-	/* @SuppressWarnings("deprecation")
-	 * public void ASyncMoveVessel(final MovementMethod move, final int speed,
-	 * final OfflinePlayer player, final boolean event){
+	/*
+	 * @SuppressWarnings("deprecation") public void ASyncMoveVessel(final
+	 * MovementMethod move, final int speed, final OfflinePlayer player, final
+	 * boolean event){
 	 * Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new
 	 * BukkitRunnable(){
 	 * 
-	 * @Override
-	 * public void run() {
-	 * syncMoveVessel(move, speed, player, event);
+	 * @Override public void run() { syncMoveVessel(move, speed, player, event);
 	 * }
 	 * 
-	 * }, 0);
-	 * } */
+	 * }, 0); }
+	 */
 
 	public boolean syncMoveVessel(MovementMethod move, int speed, OfflinePlayer player, boolean event) {
 		if (hasMovePermissions(player)) {
@@ -484,19 +480,17 @@ public class MovableVessel extends ProtectedVessel {
 		return false;
 	}
 
-	/* @SuppressWarnings("deprecation")
-	 * public void ASyncMoveVessel(final Location move, final int speed, final
-	 * OfflinePlayer player){
+	/*
+	 * @SuppressWarnings("deprecation") public void ASyncMoveVessel(final
+	 * Location move, final int speed, final OfflinePlayer player){
 	 * Bukkit.getScheduler().runTaskLaterAsynchronously(Ships.getPlugin(), new
 	 * BukkitRunnable(){
 	 * 
-	 * @Override
-	 * public void run() {
-	 * syncSafelyMoveTowardsLocation(move, speed, player);
-	 * }
+	 * @Override public void run() { syncSafelyMoveTowardsLocation(move, speed,
+	 * player); }
 	 * 
-	 * }, 0);
-	 * } */
+	 * }, 0); }
+	 */
 
 	public boolean syncSafelyMoveTowardsLocation(Location moveTo, int speed, OfflinePlayer player) {
 		Location loc = this.getSign().getLocation();

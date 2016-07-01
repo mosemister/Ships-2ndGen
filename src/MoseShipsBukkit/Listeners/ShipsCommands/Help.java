@@ -27,11 +27,8 @@ public class Help extends CommandLauncher {
 
 	@Override
 	public void playerCommand(Player player, String[] args) {
-		System.out.println("player command found");
 		if (args.length >= 2) {
-			System.out.println("player command 2 args");
 			if (args[1].equalsIgnoreCase("GUI")) {
-				System.out.println("player command arg2 = GUI");
 				runGUI(player);
 				return;
 			}

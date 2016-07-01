@@ -77,11 +77,8 @@ public abstract class CommandLauncher {
 	}
 
 	public void runGUI(HumanEntity player) {
-		System.out.println("finding GUI");
 		for (ShipsGUICommand command : ShipsGUICommand.getInterfaces()) {
-			System.out.println("found a GUI \n class: " + command.getClass() + " \n gui class" + GUI);
 			if (command.getClass().equals(GUI)) {
-				System.out.println("applying command");
 				command.onInterfaceBoot(player);
 				return;
 			}

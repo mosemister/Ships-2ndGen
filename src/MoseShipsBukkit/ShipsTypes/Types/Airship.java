@@ -264,7 +264,8 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		for (Entry<Material, Byte> fuels2 : this.FUEL.entrySet()) {
 			fuels.add(fuels2.getKey().getId() + "," + fuels2.getValue());
 		}
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Airship", PERCENT, getMaxBlocks(), getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Airship", PERCENT, getMaxBlocks(), getMinBlocks(),
+				getDefaultSpeed(), fuels, TAKE);
 		if (!event.isCancelled()) {
 			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 			config.set("ShipsData.Type", "Airship");

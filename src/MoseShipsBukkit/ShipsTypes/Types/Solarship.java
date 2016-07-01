@@ -169,7 +169,8 @@ public class Solarship extends VesselType implements Cell {
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Solarship", getMaxBlocks(), getMinBlocks(), getDefaultSpeed());
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Solarship", getMaxBlocks(), getMinBlocks(),
+				getDefaultSpeed());
 		if (!event.isCancelled()) {
 			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 			config.set("ShipsData.Type", "Solarship");

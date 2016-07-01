@@ -75,8 +75,9 @@ public class BaseVessel extends CustomDataStore {
 		DIRECTION = sign2.getFacing();
 		OWNER = player;
 		TELEPORTLOCATION = loc;
-		/* LOADEDVESSELS.add(this)
-		 * type.save(this) */
+		/*
+		 * LOADEDVESSELS.add(this) type.save(this)
+		 */
 	}
 
 	public BlockFace getFacingDirection() {
@@ -104,7 +105,7 @@ public class BaseVessel extends CustomDataStore {
 	}
 
 	public Sign getSign() {
-		return (Sign)SIGN.getState();
+		return (Sign) SIGN.getState();
 	}
 
 	public ShipsStructure getStructure() {
@@ -162,8 +163,8 @@ public class BaseVessel extends CustomDataStore {
 	public void updateLocation(Location loc, Sign sign) {
 		File file = getFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		String signS = sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
-				+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName();
+		String signS = sign.getLocation().getX() + "," + sign.getLocation().getY() + "," + sign.getLocation().getZ()
+				+ "," + sign.getLocation().getWorld().getName();
 		String teleportS = loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName();
 		ShipsWriteEvent event = new ShipsWriteEvent(file, signS, teleportS);
 		if (!event.isCancelled()) {

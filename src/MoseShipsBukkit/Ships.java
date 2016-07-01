@@ -149,16 +149,9 @@ public class Ships extends JavaPlugin {
 		STACK.addBlock(block);
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		int limit = config.getInt("Structure.StructureLimits.trackLimit");
-		BlockFace[] faces = {
-			BlockFace.DOWN,
-			BlockFace.EAST,
-			BlockFace.NORTH,
-			BlockFace.SOUTH,
-			BlockFace.UP,
-			BlockFace.WEST
-		};
+		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
+				BlockFace.WEST };
 		prototype3(block, faces, limit);
-		System.out.println("stack: " + STACK.getList().size() + " | count " + count);
 		if (STACK.isVaild()) {
 			List<Block> stack = STACK.getList();
 			return stack;
@@ -179,26 +172,21 @@ public class Ships extends JavaPlugin {
 		}
 		count++;
 		// List<String> material = new ArrayList<String>();
-		System.out.println("New block");
 		for (BlockFace face : faces) {
-			System.out.println("\t searching in " + face.name());
 			Block block2 = block.getRelative(face);
 			if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))) {
-				System.out.println("\t in materials list");
 				if (!STACK.contains(block2)) {
-					System.out.println("\t is not in stack");
 					STACK.addBlock(block2);
 					prototype3(block2, faces, limit);
 				}
-			} /* else{
-				 * if (!material.contains(block2.getType().name())){
-				 * material.add(block2.getType().name());
-				 * }
-				 * } */
+			} /*
+				 * else{ if (!material.contains(block2.getType().name())){
+				 * material.add(block2.getType().name()); } }
+				 */
 		}
-		/* if (material.size() != 0){
-		 * System.out.println(material);
-		 * } */
+		/*
+		 * if (material.size() != 0){ System.out.println(material); }
+		 */
 	}
 
 	@SuppressWarnings("deprecation")
@@ -214,7 +202,8 @@ public class Ships extends JavaPlugin {
 			count++;
 			for (BlockFace face : faces) {
 				Block block2 = viewingBlock.getRelative(face);
-				console.sendMessage("facing: " + face.name() + " | type: " + block2.getType() + " | data: " + block2.getData());
+				console.sendMessage(
+						"facing: " + face.name() + " | type: " + block2.getType() + " | data: " + block2.getData());
 				if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))) {
 					console.sendMessage("materials accepted it");
 					if (!stack.contains(block2)) {
@@ -254,54 +243,54 @@ public class Ships extends JavaPlugin {
 	public static BlockFace getSideFace(BlockFace face, boolean left) {
 		BlockFace ret = null;
 		switch (face) {
-			case NORTH:
-				if (left) {
-					ret = BlockFace.WEST;
-				} else {
-					ret = BlockFace.EAST;
-				}
-				break;
-			case SOUTH:
-				if (left) {
-					ret = BlockFace.EAST;
-				} else {
-					ret = BlockFace.WEST;
-				}
-				break;
-			case EAST:
-				if (left) {
-					ret = BlockFace.SOUTH;
-				} else {
-					ret = BlockFace.NORTH;
-				}
-				break;
-			case WEST:
-				if (left) {
-					ret = BlockFace.NORTH;
-				} else {
-					ret = BlockFace.SOUTH;
-				}
-				break;
-			default:
-				new IOException("[SHIPS] Invalid direction: " + face.name());
-				break;
+		case NORTH:
+			if (left) {
+				ret = BlockFace.WEST;
+			} else {
+				ret = BlockFace.EAST;
+			}
+			break;
+		case SOUTH:
+			if (left) {
+				ret = BlockFace.EAST;
+			} else {
+				ret = BlockFace.WEST;
+			}
+			break;
+		case EAST:
+			if (left) {
+				ret = BlockFace.SOUTH;
+			} else {
+				ret = BlockFace.NORTH;
+			}
+			break;
+		case WEST:
+			if (left) {
+				ret = BlockFace.NORTH;
+			} else {
+				ret = BlockFace.SOUTH;
+			}
+			break;
+		default:
+			new IOException("[SHIPS] Invalid direction: " + face.name());
+			break;
 		}
 		return ret;
 	}
-	
-	public static String getMinecraftVersion(){
+
+	public static String getMinecraftVersion() {
 		String temp = getPlugin().getServer().getVersion();
-		//String version = tempVersion.split("'(MC: ', ')'")[1];
+		// String version = tempVersion.split("'(MC: ', ')'")[1];
 		String[] part1 = temp.split(":");
 		String part2 = part1[1].replace(")", "");
 		String part3 = part2.replace(" ", "");
 		return part3;
 	}
-	
-	public static int getVersion(String version){
+
+	public static int getVersion(String version) {
 		String mcVersion = version.replace(".", "");
 		String[] splitMCVersion = version.split(".");
-		for(int A = splitMCVersion.length; A < 4; A++){
+		for (int A = splitMCVersion.length; A < 4; A++) {
 			mcVersion = (mcVersion + "0");
 		}
 		int version2 = Integer.parseInt(mcVersion);

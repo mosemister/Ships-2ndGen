@@ -13,8 +13,10 @@ import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 
 public class ShipAboutToMoveEvent extends Event implements Cancellable {
 
-	/* This event is called when a vessel is told to move. The
-	 * ForceMove/ForceTeleport will bypass this activation */
+	/*
+	 * This event is called when a vessel is told to move. The
+	 * ForceMove/ForceTeleport will bypass this activation
+	 */
 
 	MovementMethod METHOD;
 	int SPEED;

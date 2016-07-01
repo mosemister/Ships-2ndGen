@@ -82,7 +82,6 @@ public class Teleport extends CommandLauncher {
 			}
 			Inventory inv = createPageGUI(stacks, "Choose Vessel", 1, true);
 			player.openInventory(inv);
-			System.out.println("teleport inventory");
 		}
 
 		@Override

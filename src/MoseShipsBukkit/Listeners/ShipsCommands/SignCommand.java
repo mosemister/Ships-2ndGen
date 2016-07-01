@@ -73,26 +73,21 @@ public class SignCommand extends CommandLauncher {
 						} else if (args.length >= 3) {
 							try {
 								int A = Integer.parseInt(args[2]);
-								Bukkit.getScheduler().scheduleSyncDelayedTask(Ships.getPlugin(),
-										new Runnable() {
+								Bukkit.getScheduler().scheduleSyncDelayedTask(Ships.getPlugin(), new Runnable() {
 
-											@Override
-											public void run() {
-												for (Entry<MovingBlock, SpecialBlock> entry : backupBlocks
-														.entrySet()) {
-													entry.getKey().getBlock().setTypeIdAndData(
-															entry.getKey().getId(), entry.getKey().getData(),
-															false);
-													if (entry.getValue() != null) {
-														entry.getValue()
-																.setInventory(entry.getKey().getBlock());
-													}
-												}
+									@Override
+									public void run() {
+										for (Entry<MovingBlock, SpecialBlock> entry : backupBlocks.entrySet()) {
+											entry.getKey().getBlock().setTypeIdAndData(entry.getKey().getId(),
+													entry.getKey().getData(), false);
+											if (entry.getValue() != null) {
+												entry.getValue().setInventory(entry.getKey().getBlock());
 											}
-										}, (A * 20));
+										}
+									}
+								}, (A * 20));
 							} catch (NumberFormatException e) {
-								player.sendMessage(
-										Ships.runShipsMessage("[seconds] must be whole number", true));
+								player.sendMessage(Ships.runShipsMessage("[seconds] must be whole number", true));
 							}
 						}
 					} else {
@@ -108,8 +103,7 @@ public class SignCommand extends CommandLauncher {
 			if (args.length >= 3) {
 				if ((player.hasPermission("ships.command.sign.transfer")) || (player.hasPermission("ships.*"))
 						|| (player.hasPermission("ships.command.*"))) {
-					Block block = player.getTargetBlock(Sets.newConcurrentHashSet(Arrays.asList(Material.AIR)),
-							5);
+					Block block = player.getTargetBlock(Sets.newConcurrentHashSet(Arrays.asList(Material.AIR)), 5);
 					if (block.getState() instanceof Sign) {
 						Sign sign = (Sign) block.getState();
 						if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
@@ -118,14 +112,13 @@ public class SignCommand extends CommandLauncher {
 								OfflinePlayer user = Bukkit.getOfflinePlayer(args[2]);
 								vessel.setOwner(user);
 							} else {
-								player.sendMessage(Ships.runShipsMessage(
-										"error occured, no licenced vessel to that sign", true));
+								player.sendMessage(
+										Ships.runShipsMessage("error occured, no licenced vessel to that sign", true));
 								sign.getBlock().breakNaturally();
 							}
 						}
 					} else {
-						player.sendMessage(
-								Ships.runShipsMessage("must be looking at Ships licence sign", true));
+						player.sendMessage(Ships.runShipsMessage("must be looking at Ships licence sign", true));
 					}
 				} else {
 					player.sendMessage(Ships.runShipsMessage("lack required permissions", true));
