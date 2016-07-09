@@ -26,9 +26,9 @@ import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.Movement;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Ships.Movement.MovingBlock;
-import MoseShipsSponge.Ships.Utils.StoredMovement;
+import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
-import MoseShipsSponge.Signs.ShipsSigns.SignTypes;
+import MoseShipsSponge.Signs.ShipsSigns.SignType;
 
 public abstract class ShipType extends ShipsData {
 
@@ -46,8 +46,8 @@ public abstract class ShipType extends ShipsData {
 
 	static List<ShipType> SHIPS = new ArrayList<>();
 
-	public ShipType(String name, User host, Location<World> sign, Location<World> teleport) {
-		super(name, host, sign, teleport);
+	public ShipType(String name, Location<World> sign, Location<World> teleport) {
+		super(name, sign, teleport);
 	}
 	
 	public ShipType(ShipsData data){
@@ -106,6 +106,10 @@ public abstract class ShipType extends ShipsData {
 		}
 		return Movement.teleport(this, loc2, X, Y, Z, cause);
 	}
+	
+	public static void inject(ShipType type){
+		SHIPS.add(type);
+	}
 
 	public static Optional<ShipType> getShip(String name) {
 		return SHIPS.stream().filter(s -> s.getName().equals(name)).findFirst();
@@ -115,8 +119,8 @@ public abstract class ShipType extends ShipsData {
 		return getShip(text.toPlain());
 	}
 
-	public static Optional<ShipType> getShip(SignTypes type, Sign sign) {
-		if (type.equals(SignTypes.LICENCE)) {
+	public static Optional<ShipType> getShip(SignType type, Sign sign) {
+		if (type.equals(SignType.LICENCE)) {
 			Text text = sign.lines().get(2);
 			return getShip(text.toPlain());
 		}

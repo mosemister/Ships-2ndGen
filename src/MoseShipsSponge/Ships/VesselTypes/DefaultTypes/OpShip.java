@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
@@ -19,8 +18,8 @@ import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 
 public class OpShip extends ShipType{
 
-	public OpShip(User host, Location<World> sign, Location<World> teleport) {
-		super("OPShip", host, sign, teleport);
+	public OpShip(Location<World> sign, Location<World> teleport) {
+		super("OPShip", sign, teleport);
 	}
 	
 	public OpShip(ShipsData ship){
@@ -54,12 +53,19 @@ public class OpShip extends ShipType{
 	
 	@Override
 	public StaticShipType getStatic() {
-		return StaticOPShip.STATIC;
+		return StaticShipType.getType(StaticOPShip.class).get();
 	}
 	
 	public static class StaticOPShip implements StaticShipType{
 
-		public static final StaticOPShip STATIC = new StaticOPShip();
+		public StaticOPShip(){
+			StaticShipType.inject(this);
+		}
+		
+		@Override
+		public String getName(){
+			return "OPShip";
+		}
 		
 		@Override
 		public int getDefaultSpeed() {
@@ -82,12 +88,12 @@ public class OpShip extends ShipType{
 		}
 
 		@Override
-		public Optional<? extends ShipsData> createVessel(String name, Location<World> sign, Player owner) {
-			return Optional.of(new OpShip(owner, sign, owner.getLocation()));
+		public Optional<ShipType> createVessel(String name, Location<World> sign) {
+			return Optional.of(new OpShip(sign, sign));
 		}
 
 		@Override
-		public Optional<? extends ShipsData> loadVessel(ShipsData data) {
+		public Optional<ShipType> loadVessel(ShipsData data) {
 			return Optional.of(new OpShip(data));
 		}
 		

@@ -14,6 +14,7 @@ import MoseShips.Maps.OrderedMap;
 import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Causes.FailedCause.FailedKeys;
 import MoseShipsSponge.Ships.Movement.Movement;
+import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
 public class AutoPilot {

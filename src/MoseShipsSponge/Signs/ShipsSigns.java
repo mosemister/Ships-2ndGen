@@ -12,13 +12,15 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 public class ShipsSigns {
-	
+
 	/**
 	 * this colours the sign in the licence sign format
-	 * @param sign: the target sign
+	 * 
+	 * @param sign:
+	 *            the target sign
 	 * @return: the same sign
 	 */
-	public static Sign colourSign(Sign sign){
+	public static Sign colourSign(Sign sign) {
 		ListValue<Text> lines = sign.lines();
 		List<String> strings = new ArrayList<>();
 		lines.forEach(t -> strings.add(t.toPlain()));
@@ -26,62 +28,63 @@ public class ShipsSigns {
 		sign.offer(Keys.SIGN_LINES, linesTo);
 		return sign;
 	}
-	
-	public static Text[] colour(String... lines){
+
+	public static Text[] colour(String... lines) {
 		return colour(Arrays.asList(lines));
 	}
 	
-	public static Optional<SignTypes> getSignType(Sign sign){
+	public static Optional<SignType> getSignType(String line1){
+		return Arrays.asList(SignType.values()).stream().filter(s -> s.LINES[0].toPlain().equalsIgnoreCase(line1)).findAny();
+	}
+
+	public static Optional<SignType> getSignType(Sign sign) {
 		List<Text> lines = sign.get(Keys.SIGN_LINES).get();
-		if(lines.get(0).toPlain().equals("[Ships]")){
-			return Optional.of(SignTypes.LICENCE);
-		}else{
-			for(SignTypes type : SignTypes.values()){
-				if(type.LINES.length == lines.size()){
-				boolean check = true;
-				for(int A = 0; A < type.LINES.length; A++){
-					Text line = type.LINES[A];
-					if(!line.equals(lines.get(A))){
-						check = false;
+		if (lines.get(0).toPlain().equals("[Ships]")) {
+			return Optional.of(SignType.LICENCE);
+		} else {
+			for (SignType type : SignType.values()) {
+				if (type.LINES.length == lines.size()) {
+					boolean check = true;
+					for (int A = 0; A < type.LINES.length; A++) {
+						Text line = type.LINES[A];
+						if (!line.equals(lines.get(A))) {
+							check = false;
+						}
 					}
-				}
-				if(check){
-					return Optional.of(type);
-				}
+					if (check) {
+						return Optional.of(type);
+					}
 				}
 			}
 		}
 		return Optional.empty();
 	}
-	
-	public static Text[] colour(List<String> lines){
+
+	public static Text[] colour(List<String> lines) {
 		Text[] lines2 = new Text[lines.size()];
 		lines2[0] = Text.builder(lines.get(0)).color(TextColors.YELLOW).build();
 		lines2[1] = Text.builder(lines.get(1)).color(TextColors.BLUE).build();
-		for(int A = 2; A < lines.size(); A++){
+		for (int A = 2; A < lines.size(); A++) {
 			lines2[A] = Text.builder(lines.get(A)).color(TextColors.GREEN).build();
 		}
 		return lines2;
 	}
-	
-	public enum SignTypes{
-		LICENCE,
+
+	public enum SignType {
+		LICENCE(Text.builder("[Ships]").color(TextColors.YELLOW).build()),
 		MOVE(Text.builder("[Move]").color(TextColors.YELLOW).build(), Text.builder("{Engine}").color(TextColors.GREEN).build(), Text.builder("Boost").build()),
-		WHEEL,
-		EOT,
-		ALTITUDE;
-		
+		WHEEL(Text.builder("[wheel]").color(TextColors.YELLOW).build(), Text.builder("\\\\||//").color(TextColors.RED).build(), Text.builder("==||==").color(TextColors.RED).build(), Text.builder(
+				"//==\\\\").build()),
+		EOT(Text.builder("[EOT]").build()),
+		ALTITUDE(Text.builder("[Altitude]").build());
+
 		Text[] LINES;
-		
-		SignTypes(){
-			
-		}
-		
-		SignTypes(Text... text){
+
+		SignType(Text... text) {
 			LINES = text;
 		}
-		
-		public Optional<Text[]> getLines(){
+
+		public Optional<Text[]> getDefaultLines() {
 			return Optional.ofNullable(LINES);
 		}
 	}

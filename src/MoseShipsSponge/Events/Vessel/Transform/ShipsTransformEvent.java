@@ -8,7 +8,7 @@ import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Events.Vessel.ShipsEvent;
 import MoseShipsSponge.Ships.Movement.MovingBlock;
-import MoseShipsSponge.Ships.Utils.StoredMovement;
+import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
 public abstract class ShipsTransformEvent<S extends ShipType> extends ShipsEvent<S>{
@@ -34,19 +34,19 @@ public abstract class ShipsTransformEvent<S extends ShipType> extends ShipsEvent
 		}
 		
 		public Move(S ship, Location<World> loc, List<MovingBlock> structure, Cause cause){
-			super(ship, new StoredMovement(loc, null, 0, 0, 0), structure, cause);
+			super(ship, new StoredMovement(loc, null, 0, 0, 0, cause), structure, cause);
 		}
 		
 		public Move(S ship, Location<World> loc, MoseShipsSponge.Ships.Movement.Movement.Rotate rotate, List<MovingBlock> structure, Cause cause){
-			super(ship, new StoredMovement(loc, rotate, 0, 0, 0), structure, cause);
+			super(ship, new StoredMovement(loc, rotate, 0, 0, 0, cause), structure, cause);
 		}
 		
 		public Move(S ship, Location<World> loc, MoseShipsSponge.Ships.Movement.Movement.Rotate rotate, int X, int Y, int Z, List<MovingBlock> structure, Cause cause){
-			super(ship, new StoredMovement(loc, rotate, X, Y, Z), structure, cause);
+			super(ship, new StoredMovement(loc, rotate, X, Y, Z, cause), structure, cause);
 		}
 		
 		public Move(S ship, int X, int Y, int Z, List<MovingBlock> structure, Cause cause){
-			super(ship, new StoredMovement(null, null, X, Y, Z), structure, cause);
+			super(ship, new StoredMovement(null, null, X, Y, Z, cause), structure, cause);
 		}
 		
 	}

@@ -61,7 +61,9 @@ public class ShipsLocalDatabase {
 		String block = (data.getLocation().getBlockPosition().getX() + "," + data.getLocation().getBlockPosition().getY() + "," + data.getLocation().getBlockPosition().getZ());
 		String teleport = (data.getTeleportToLocation().getBlockPosition().getX() + "," + data.getTeleportToLocation().getBlockPosition().getY() + "," + data.getTeleportToLocation().getBlockPosition().getZ());
 		set(ShipsData.DATABASE_NAME, data.getName());
-		set(ShipsData.DATABASE_PILOT, data.getOwner().getUniqueId().toString());
+		if(data.getOwner().isPresent()){
+			set(ShipsData.DATABASE_PILOT, data.getOwner().get().getUniqueId().toString());
+		}
 		set(ShipsData.DATABASE_NAME, pilots);
 		set(ShipsData.DATABASE_WORLD, data.getTeleportToLocation().getExtent().getName());
 		set(ShipsData.DATABASE_BLOCK, block);

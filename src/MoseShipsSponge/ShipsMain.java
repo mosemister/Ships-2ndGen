@@ -1,5 +1,6 @@
 package MoseShipsSponge;
 
+import org.spongepowered.api.Game;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -9,6 +10,10 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 
 import com.flowpowered.math.vector.Vector3i;
+import com.google.inject.Inject;
+
+import MoseShipsSponge.Listeners.ShipsListeners;
+import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.OpShip;
 
 @Plugin(id=ShipsMain.ID, name=ShipsMain.NAME, version=ShipsMain.VERSION)
 public class ShipsMain {
@@ -17,14 +22,25 @@ public class ShipsMain {
 	public static final String NAME = "Ships";
 	public static final String VERSION = "6.0.0.0 | Developer version";
 	
+	static ShipsMain PLUGIN;
+	
+	@Inject
+	Game GAME;
+	
 	@Listener
 	public void onEnable(GameStartingServerEvent event){
-		
+		PLUGIN = this;
+		new OpShip.StaticOPShip();
+		GAME.getEventManager().registerListeners(this, new ShipsListeners());
 	}
 	
 	@Listener
 	public void onDisable(GameStoppingServerEvent event){
 		
+	}
+	
+	public Game getGame(){
+		return GAME;
 	}
 	
 	public static Vector3i convert(Direction direction, int speed){
@@ -89,6 +105,10 @@ public class ShipsMain {
 			Text ret = Text.builder("[Ships] ").color(TextColors.GOLD).append(Text.builder(text.toPlain()).color(TextColors.AQUA).build()).build();
 			return ret;
 		}
+	}
+	
+	public static ShipsMain getPlugin(){
+		return PLUGIN;
 	}
 	
 

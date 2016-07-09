@@ -14,7 +14,6 @@ import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Causes.FailedCause.CauseKeys;
 import MoseShipsSponge.Causes.FailedCause.FailedKeys;
 import MoseShipsSponge.Ships.Movement.MovingBlock.Collision;
-import MoseShipsSponge.Ships.Utils.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
 public class Movement {

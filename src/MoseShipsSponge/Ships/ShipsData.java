@@ -29,9 +29,8 @@ public class ShipsData extends DataHolder{
 	protected Location<World> MAIN_BLOCK;
 	protected Location<World> TELEPORT;
 	
-	public ShipsData(String name, User host, Location<World> sign, Location<World> teleport){
+	public ShipsData(String name, Location<World> sign, Location<World> teleport){
 		NAME = name;
-		USER = host;
 		MAIN_BLOCK = sign;
 		TELEPORT = teleport;
 	}
@@ -54,8 +53,13 @@ public class ShipsData extends DataHolder{
 		return NAME;
 	}
 	
-	public User getOwner(){
-		return USER;
+	public Optional<User> getOwner(){
+		return Optional.ofNullable(USER);
+	}
+	
+	public ShipsData setOwner(User user){
+		USER = user;
+		return this;
 	}
 	
 	public List<User> getSubPilots(){

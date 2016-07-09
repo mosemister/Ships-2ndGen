@@ -1,4 +1,4 @@
-package MoseShipsSponge.Ships.Utils;
+package MoseShipsSponge.Ships.Movement;
 
 import java.util.Optional;
 
