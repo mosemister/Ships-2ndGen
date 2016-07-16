@@ -39,25 +39,7 @@ public class ShipsSigns {
 
 	public static Optional<SignType> getSignType(Sign sign) {
 		List<Text> lines = sign.get(Keys.SIGN_LINES).get();
-		if (lines.get(0).toPlain().equals("[Ships]")) {
-			return Optional.of(SignType.LICENCE);
-		} else {
-			for (SignType type : SignType.values()) {
-				if (type.LINES.length == lines.size()) {
-					boolean check = true;
-					for (int A = 0; A < type.LINES.length; A++) {
-						Text line = type.LINES[A];
-						if (!line.equals(lines.get(A))) {
-							check = false;
-						}
-					}
-					if (check) {
-						return Optional.of(type);
-					}
-				}
-			}
-		}
-		return Optional.empty();
+			return getSignType(lines.get(0).toPlain());
 	}
 
 	public static Text[] colour(List<String> lines) {

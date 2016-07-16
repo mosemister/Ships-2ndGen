@@ -1,7 +1,9 @@
 package MoseShipsSponge.Listeners;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -15,6 +17,7 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -45,7 +48,6 @@ public class ShipsListeners {
 					Optional<StaticShipType> opShipType = StaticShipType.getType(data.get(1).get().toPlain());
 					if (opShipType.isPresent()) {
 						StaticShipType type = opShipType.get();
-						System.out.println("type equals " + type.getName());
 						
 						//PLAYER CAUSE
 						Optional<Player> opPlayer = event.getCause().first(Player.class);
@@ -58,7 +60,6 @@ public class ShipsListeners {
 							
 						}
 						
-						System.out.println("player done");
 						AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<>(type, event.getTargetTile().getLocation(), data, event.getOriginalText(), ShipsCause.SIGN_CREATE.buildCause(causes) );
 						if(!ATCSEvent.isCancelled()){
 							Optional<ShipType> opShip = type.createVessel(data.get(2).get().toPlain(), event.getTargetTile().getLocation());
@@ -73,7 +74,11 @@ public class ShipsListeners {
 									if (opPlayer.isPresent()) {
 										Player player = opPlayer.get();
 										player.sendMessage(ShipsMain.format("Ship created", false));
-										
+										List<Text> lines = new ArrayList<>();
+										lines.add(Text.builder("[Ships]").color(TextColors.YELLOW).build());
+										lines.add(Text.builder(ship.getStatic().getName()).color(TextColors.BLUE).build());
+										lines.add(Text.builder(ship.getName()).color(TextColors.GREEN).build());
+										data.set(Keys.SIGN_LINES, lines);
 									}
 								}
 							}
@@ -88,19 +93,26 @@ public class ShipsListeners {
 
 	@Listener
 	public void playerInteractEvent(InteractBlockEvent event, @Root Player player) {
+		System.out.println("Interact event");
 		Optional<Location<World>> opLoc = event.getTargetBlock().getLocation();
 		if (opLoc.isPresent()) {
+			System.out.println("block click");
 			Location<World> loc = opLoc.get();
 			Optional<TileEntity> opEntity = loc.getTileEntity();
 			if (opEntity.isPresent()) {
+				System.out.println("is tile entity");
 				TileEntity tile = opEntity.get();
 				if (tile instanceof Sign) {
+					System.out.println("tile entity is sign");
 					Sign sign = (Sign) tile;
 					Optional<SignType> opSignType = ShipsSigns.getSignType(sign);
 					if (opSignType.isPresent()) {
+						System.out.println("sign type found");
 						if (event instanceof InteractBlockEvent.Secondary) {
+							System.out.println("is right click");
 							Optional<ShipType> opShipType = ShipType.getShip(opSignType.get(), sign);
 							if (opShipType.isPresent()) {
+								System.out.println("gets the ship");
 								ShipType ship = opShipType.get();
 								switch (opSignType.get()) {
 									case EOT:
@@ -112,6 +124,7 @@ public class ShipsListeners {
 										info.entrySet().forEach(e -> player.sendMessage(e.getKey()));
 										break;
 									case MOVE:
+										System.out.println("is move sign");
 										Direction direction = sign.get(Keys.DIRECTION).get();
 										if (sign.lines().get(2).toPlain().equals("{Boost}")) {
 											ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());

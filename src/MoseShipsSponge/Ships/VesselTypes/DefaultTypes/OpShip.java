@@ -18,8 +18,8 @@ import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 
 public class OpShip extends ShipType{
 
-	public OpShip(Location<World> sign, Location<World> teleport) {
-		super("OPShip", sign, teleport);
+	public OpShip(String name, Location<World> sign, Location<World> teleport) {
+		super(name, sign, teleport);
 	}
 	
 	public OpShip(ShipsData ship){
@@ -89,7 +89,7 @@ public class OpShip extends ShipType{
 
 		@Override
 		public Optional<ShipType> createVessel(String name, Location<World> sign) {
-			return Optional.of(new OpShip(sign, sign));
+			return Optional.of(new OpShip(name, sign, sign));
 		}
 
 		@Override
