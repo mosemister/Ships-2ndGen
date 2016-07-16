@@ -12,6 +12,8 @@ import org.spongepowered.api.util.Direction;
 import com.flowpowered.math.vector.Vector3i;
 import com.google.inject.Inject;
 
+import MoseShipsSponge.Configs.Files.BlockList;
+import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Listeners.ShipsListeners;
 import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.OpShip;
 
@@ -21,6 +23,9 @@ public class ShipsMain {
 	public static final String ID = "ships";
 	public static final String NAME = "Ships";
 	public static final String VERSION = "6.0.0.0 | Developer version";
+	
+	private BlockList MATERIALS_LIST = new BlockList();
+	private ShipsConfig CONFIG = new ShipsConfig();
 	
 	static ShipsMain PLUGIN;
 	
@@ -41,6 +46,14 @@ public class ShipsMain {
 	
 	public Game getGame(){
 		return GAME;
+	}
+	
+	public BlockList getMaterialsList(){
+		return MATERIALS_LIST;
+	}
+	
+	public ShipsConfig getConfig(){
+		return CONFIG;
 	}
 	
 	public static Vector3i convert(Direction direction, int speed){

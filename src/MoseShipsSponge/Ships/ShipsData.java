@@ -1,6 +1,7 @@
 package MoseShipsSponge.Ships;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +25,8 @@ public class ShipsData extends DataHolder{
 	
 	protected String NAME;
 	protected User USER;
-	protected List<User> SUB_PILOTS;
-	protected List<Location<World>> STRUCTURE;
+	protected List<User> SUB_PILOTS = new ArrayList<>();
+	protected List<Location<World>> STRUCTURE = new ArrayList<>();
 	protected Location<World> MAIN_BLOCK;
 	protected Location<World> TELEPORT;
 	

@@ -68,18 +68,18 @@ public class ShipsListeners {
 								ShipsSigns.colourSign(event.getTargetTile());
 								ShipsCreateEvent<ShipType> SCEvent = new ShipsCreateEvent<>(ship, ShipsCause.SIGN_CREATE.buildCause(causes));
 								if(!SCEvent.isCancelled()){
-									ShipType.inject(ship);
 									
 									//PLAYER 
 									if (opPlayer.isPresent()) {
 										Player player = opPlayer.get();
 										player.sendMessage(ShipsMain.format("Ship created", false));
-										List<Text> lines = new ArrayList<>();
-										lines.add(Text.builder("[Ships]").color(TextColors.YELLOW).build());
-										lines.add(Text.builder(ship.getStatic().getName()).color(TextColors.BLUE).build());
-										lines.add(Text.builder(ship.getName()).color(TextColors.GREEN).build());
-										data.set(Keys.SIGN_LINES, lines);
 									}
+									ShipType.inject(ship);
+									List<Text> lines = new ArrayList<>();
+									lines.add(Text.builder("[Ships]").color(TextColors.YELLOW).build());
+									lines.add(Text.builder(ship.getStatic().getName()).color(TextColors.BLUE).build());
+									lines.add(Text.builder(ship.getName()).color(TextColors.GREEN).build());
+									data.set(Keys.SIGN_LINES, lines);
 								}
 							}
 						}
@@ -110,7 +110,7 @@ public class ShipsListeners {
 						System.out.println("sign type found");
 						if (event instanceof InteractBlockEvent.Secondary) {
 							System.out.println("is right click");
-							Optional<ShipType> opShipType = ShipType.getShip(opSignType.get(), sign);
+							Optional<ShipType> opShipType = ShipType.getShip(opSignType.get(), sign, true);
 							if (opShipType.isPresent()) {
 								System.out.println("gets the ship");
 								ShipType ship = opShipType.get();
@@ -125,7 +125,7 @@ public class ShipsListeners {
 										break;
 									case MOVE:
 										System.out.println("is move sign");
-										Direction direction = sign.get(Keys.DIRECTION).get();
+										Direction direction = loc.get(Keys.DIRECTION).get();
 										if (sign.lines().get(2).toPlain().equals("{Boost}")) {
 											ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
 										} else {

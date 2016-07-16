@@ -10,6 +10,7 @@ import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3i;
 
+import MoseShips.Bypasses.FinalBypass;
 import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Causes.FailedCause.CauseKeys;
 import MoseShipsSponge.Causes.FailedCause.FailedKeys;
@@ -117,13 +118,17 @@ public class Movement {
 	public static Optional<FailedCause> move(ShipType ship, Vector3i vector, Cause intCause){
 		FailedCause cause = new FailedCause();
 		List<MovingBlock> blocks = new ArrayList<>();
-		for(Location<World> loc : ship.getBasicStructure()){
+		FinalBypass<Boolean> check = new FinalBypass<>(false);
+		ship.getBasicStructure().stream().forEach(loc -> {
 			MovingBlock block = new MovingBlock(loc, vector);
 			if(block.getCollision().equals(Collision.COLLIDE)){
 				cause.getCauses().put(FailedKeys.COLLIDE, block);
-				return Optional.of(cause);
+				check.set(true);
 			}
 			blocks.add(block);
+		});
+		if(check.get()){
+			return Optional.of(cause);
 		}
 		cause.getCauses().put(CauseKeys.MOVING_BLOCKS, blocks);
 		return move(ship, blocks, intCause);

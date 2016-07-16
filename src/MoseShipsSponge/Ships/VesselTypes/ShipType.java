@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 
 import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
@@ -20,7 +21,9 @@ import org.spongepowered.api.world.extent.Extent;
 
 import com.flowpowered.math.vector.Vector3i;
 
+import MoseShips.Bypasses.FinalBypass;
 import MoseShipsSponge.ShipsMain;
+import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.Movement;
@@ -119,12 +122,41 @@ public abstract class ShipType extends ShipsData {
 		return getShip(text.toPlain());
 	}
 
-	public static Optional<ShipType> getShip(SignType type, Sign sign) {
+	public static Optional<ShipType> getShip(SignType type, Sign sign, boolean refresh) {
 		if (type.equals(SignType.LICENCE)) {
 			Text text = sign.lines().get(2);
 			return getShip(text.toPlain());
+		}else{
+			if(refresh){
+				//List<Location<World>> structure = BasicBlockFinder.SHIPS5.getConnectedBlocks(ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.STRUCTURE_STRUCTURELIMITS_TRACKLIMIT), sign.getLocation());
+				System.out.println("finding ship");
+				List<Location<World>> structure = BasicBlockFinder.SHIPS5.getConnectedBlocks(5000, sign.getLocation());
+				System.out.println("structure size: " + structure.size());
+				FinalBypass<Optional<ShipType>> shipType = new FinalBypass<>(null);
+				structure.stream().forEach(l -> {
+					Optional<TileEntity> opTE = l.getTileEntity();
+					if(opTE.isPresent()){
+						TileEntity TE = opTE.get();
+						if(TE instanceof Sign){
+							Sign sign2 = (Sign)TE;
+							Text text = sign2.lines().get(2);
+							shipType.set(getShip(text.toPlain()));
+						}
+					}
+				});
+				return shipType.get();
+			}else{
+				FinalBypass<ShipType> shipType = new FinalBypass<>(null);
+				SHIPS.stream().forEach(s -> {
+					s.getBasicStructure().stream().forEach(l -> {
+						if(l.equals(sign.getLocation())){
+							shipType.set(s);
+						}
+					});
+				});
+				return Optional.ofNullable(shipType.get());
+			}
 		}
-		return Optional.empty();
 	}
 
 	@SuppressWarnings("unchecked")
