@@ -1,11 +1,14 @@
-package MoseShipsSponge.Ships.Movement;
+package MoseShipsSponge.Ships.Movement.MovingBlock;
 
 import java.util.Optional;
 
-import org.spongepowered.api.block.BlockState;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.item.inventory.type.TileEntityInventory;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -13,44 +16,94 @@ import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 
+import MoseShipsSponge.Configs.BasicConfig;
+import MoseShipsSponge.Configs.Files.BlockList;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
+import MoseShipsSponge.Ships.Movement.MovementType;
+import MoseShipsSponge.Ships.Movement.Collide.CollideType;
 
 public class MovingBlock {
 	
 	Location<World> ORIGIN;
 	Location<World> MOVING_TO;
-	BlockState STATE;
+	BlockSnapshot STATE;
+	
+	TileEntityInventory<TileEntityCarrier> INVENTORY;
 	
 	public MovingBlock(Location<World> original, Location<World> moving){
 		ORIGIN = original;
 		MOVING_TO = moving;
-		STATE = original.getBlock();
+		STATE = original.createSnapshot();
 	}
 	
 	public MovingBlock(Location<World> original, int X, int Y, int Z){
 		ORIGIN = original;
 		MOVING_TO = original.add(X, Y, Z);
-		STATE = original.getBlock();
+		STATE = original.createSnapshot();
 	}
 	
 	public MovingBlock(Location<World> original, Vector3i vector){
 		ORIGIN = original;
 		MOVING_TO = original.add(vector.toDouble());
-		STATE = original.getBlock();
+		STATE = original.createSnapshot();
+	}
+	
+	public Location<World> getOrigin(){
+		return ORIGIN;
+	}
+	
+	public Location<World> getMovingTo(){
+		return MOVING_TO;
+	}
+	
+	public MovementType getMovementType(){
+		if((ORIGIN.getBlockX() == MOVING_TO.getBlockX()) && (ORIGIN.getBlockZ() == MOVING_TO.getBlockZ())){
+			return MovementType.FORWARDS;
+		}else if((ORIGIN.getBlockX() > MOVING_TO.getBlockX()) || (ORIGIN.getBlockZ() > MOVING_TO.getBlockZ())){
+			return MovementType.ROTATE_RIGHT;
+		}else{
+			return MovementType.ROTATE_LEFT;
+		}
+	}
+	
+	public MovingBlock clearOriginalBlock(){
+		clearBlock(ORIGIN, BlockTypes.AIR);
+		return this;
+	}
+	
+	public MovingBlock clearMovingToBlock(){
+		clearBlock(MOVING_TO, BlockTypes.AIR);
+		return this;
+	}
+	
+	public MovingBlock move(boolean notify){
+		STATE.withLocation(MOVING_TO);
+		STATE.restore(true, notify);
+		return this;
+	}
+	
+	public MovingBlock replaceOriginalBlock(BlockType type){
+		clearBlock(ORIGIN, type);
+		return this;
+	}
+	
+	public MovingBlock replaceMovingToBlock(BlockType type){
+		clearBlock(MOVING_TO, type);
+		return this;
 	}
 	
 	public Priority getPriority(){
-		return Priority.getType(STATE.getType());
+		return Priority.getType(STATE.getState().getType());
 	}
 	
-	public Collision getCollision(){
-		//TODO - materials list needed
-		return Collision.NONE;
-	}
-	
-	public Collision getCollision(int radius){
-		//TODO = materials list needed
-		return Collision.NONE;
+	public CollideType getCollision(){
+		if(BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)){
+			return CollideType.COLLIDE;
+		}else if(BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)){
+			return CollideType.RAM;
+		}else{
+			return CollideType.NONE;
+		}
 	}
 	
 	public MovingBlock rotate(Rotate rotate, Location<World> centre){
@@ -85,6 +138,19 @@ public class MovingBlock {
 		double Z = MOVING_TO.getZ() - (MOVING_TO.getZ() - symmetry) * 2.0 + shift;
 		MOVING_TO.setPosition(new Vector3d(X, Y, Z));
 		return this;
+	}
+	
+	private void clearBlock(Location<World> loc, BlockType type){
+		Optional<TileEntity> opTile = loc.getTileEntity();
+		if(opTile.isPresent()){
+			TileEntity entity = opTile.get();
+			if(entity instanceof TileEntityCarrier){
+				TileEntityCarrier tile = (TileEntityCarrier)entity;
+				TileEntityInventory<TileEntityCarrier> inv = tile.getInventory();
+				inv.clear();
+			}
+		}
+		loc.setBlockType(type);
 	}
 	
 	private void rotate(boolean left){
@@ -128,12 +194,6 @@ public class MovingBlock {
 					return;
 			}
 		}
-	}
-	
-	public enum Collision{
-		NONE,
-		RAM,
-		COLLIDE;
 	}
 	
 	public enum Priority{

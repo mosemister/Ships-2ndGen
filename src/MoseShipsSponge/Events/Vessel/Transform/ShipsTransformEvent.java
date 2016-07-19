@@ -7,8 +7,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Events.Vessel.ShipsEvent;
-import MoseShipsSponge.Ships.Movement.MovingBlock;
 import MoseShipsSponge.Ships.Movement.StoredMovement;
+import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
 public abstract class ShipsTransformEvent<S extends ShipType> extends ShipsEvent<S>{

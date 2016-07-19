@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import MoseShipsSponge.Configs.Files.BlockList;
+import MoseShipsSponge.Configs.Files.ShipsConfig;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
@@ -14,6 +16,9 @@ public class BasicConfig {
 	File FILE;
 	HoconConfigurationLoader LOADER;
 	ConfigurationNode ROOT;
+	
+	public static final BlockList BLOCK_LIST = new BlockList();
+	public static final ShipsConfig CONFIG = new ShipsConfig();
 	
 	public BasicConfig(String fileName){
 		FILE = new File("config/Ships/" + fileName + ".conf");

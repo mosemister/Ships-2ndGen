@@ -12,7 +12,7 @@ import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Ships.ShipsData;
-import MoseShipsSponge.Ships.Movement.MovingBlock;
+import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 

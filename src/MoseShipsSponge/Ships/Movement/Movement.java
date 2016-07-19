@@ -14,7 +14,8 @@ import MoseShips.Bypasses.FinalBypass;
 import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Causes.FailedCause.CauseKeys;
 import MoseShipsSponge.Causes.FailedCause.FailedKeys;
-import MoseShipsSponge.Ships.Movement.MovingBlock.Collision;
+import MoseShipsSponge.Ships.Movement.Collide.CollideType;
+import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
 public class Movement {
@@ -29,7 +30,7 @@ public class Movement {
 		Location<World> centre = ship.getLocation();
 		for(Location<World> loc : ship.getBasicStructure()){
 			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateRight(centre);
-			if(block.getCollision().equals(Collision.COLLIDE)){
+			if(block.getCollision().equals(CollideType.COLLIDE)){
 				cause.getCauses().put(FailedKeys.COLLIDE, block);
 				return Optional.of(cause);
 			}
@@ -45,7 +46,7 @@ public class Movement {
 		Location<World> centre = ship.getLocation();
 		for(Location<World> loc : ship.getBasicStructure()){
 			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateLeft(centre);
-			if(block.getCollision().equals(Collision.COLLIDE)){
+			if(block.getCollision().equals(CollideType.COLLIDE)){
 				cause.getCauses().put(FailedKeys.COLLIDE, block);
 				return Optional.of(cause);
 			}
@@ -70,7 +71,7 @@ public class Movement {
 		List<MovingBlock> blocks = new ArrayList<>();
 		for(Location<World> loc2 : ship.getBasicStructure()){
 			MovingBlock block = new MovingBlock(loc2, loc);
-			if(block.getCollision().equals(Collision.COLLIDE)){
+			if(block.getCollision().equals(CollideType.COLLIDE)){
 				cause.getCauses().put(FailedKeys.COLLIDE, block);
 				return Optional.of(cause);
 			}
@@ -86,7 +87,7 @@ public class Movement {
 		Location<World> loc2 = loc.add(X, Y, Z);
 		for(Location<World> loc3 : ship.getBasicStructure()){
 			MovingBlock block = new MovingBlock(loc3, loc2);
-			if(block.getCollision().equals(Collision.COLLIDE)){
+			if(block.getCollision().equals(CollideType.COLLIDE)){
 				cause.getCauses().put(FailedKeys.COLLIDE, block);
 				return Optional.of(cause);
 			}
@@ -105,7 +106,7 @@ public class Movement {
 			if(movement.getRotation().isPresent()){
 				block.rotate(movement.getRotation().get(), ship.getLocation());
 			}
-			if(block.getCollision().equals(Collision.COLLIDE)){
+			if(block.getCollision().equals(CollideType.COLLIDE)){
 				cause.getCauses().put(FailedKeys.COLLIDE, block);
 				return Optional.of(cause);
 			}
@@ -121,7 +122,7 @@ public class Movement {
 		FinalBypass<Boolean> check = new FinalBypass<>(false);
 		ship.getBasicStructure().stream().forEach(loc -> {
 			MovingBlock block = new MovingBlock(loc, vector);
-			if(block.getCollision().equals(Collision.COLLIDE)){
+			if(block.getCollision().equals(CollideType.COLLIDE)){
 				cause.getCauses().put(FailedKeys.COLLIDE, block);
 				check.set(true);
 			}

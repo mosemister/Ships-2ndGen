@@ -28,7 +28,7 @@ import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.Movement;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
-import MoseShipsSponge.Ships.Movement.MovingBlock;
+import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
