@@ -1,6 +1,9 @@
 package MoseShipsSponge.Ships.Movement.MovingBlock;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
@@ -194,6 +197,17 @@ public class MovingBlock {
 					return;
 			}
 		}
+	}
+	
+	public static List<MovingBlock> setPriorityOrder(List<MovingBlock> blocks){
+		List<MovingBlock> normalList = blocks.stream().filter(b -> b.getPriority().equals(Priority.NORMAL)).collect(Collectors.toList());
+		List<MovingBlock> airList = blocks.stream().filter(b -> b.getPriority().equals(Priority.AIR)).collect(Collectors.toList());
+		List<MovingBlock> priList = blocks.stream().filter(b -> b.getPriority().equals(Priority.PRIORITY)).collect(Collectors.toList());
+		List<MovingBlock> retList = new ArrayList<>();
+		retList.addAll(normalList);
+		retList.addAll(airList);
+		retList.addAll(priList);
+		return retList;
 	}
 	
 	public enum Priority{

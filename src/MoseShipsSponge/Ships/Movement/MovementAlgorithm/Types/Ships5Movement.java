@@ -1,12 +1,14 @@
 package MoseShipsSponge.Ships.Movement.MovementAlgorithm.Types;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3i;
 
@@ -21,6 +23,9 @@ public class Ships5Movement implements MovementAlgorithm{
 
 	@Override
 	public void move(ShipType type, List<MovingBlock> blocks) {
+		System.out.println("moving blocks size: " + blocks.size());
+		//List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
+		//hidden because of update nabor is off
 		int waterLevel = 0;
 		/*if(type instanceof WaterType){
 			WaterType type2 = (WaterType)type;
@@ -34,8 +39,10 @@ public class Ships5Movement implements MovementAlgorithm{
 				block.replaceOriginalBlock(BlockTypes.WATER);
 			}
 		});
-		// place all blocks (priority last)
+		List<Location<World>> newStructure = new ArrayList<>();
+		// place all blocks
 		blocks.stream().forEach(block -> {
+			newStructure.add(block.getMovingTo());
 			block.move(false);
 			MovementType mType = block.getMovementType();
 			Optional<Direction> opConnected = block.getMovingTo().get(Keys.DIRECTION);
@@ -56,16 +63,15 @@ public class Ships5Movement implements MovementAlgorithm{
 			}
 		});
 		Vector3i vec = blocks.get(0).getMovingTo().getBlockPosition().sub(blocks.get(0).getOrigin().getBlockPosition());
-		MovingBlock mBlock = new MovingBlock(type.getTeleportToLocation(), vec.getX(), vec.getY(), vec.getZ());
-		/*type.setTeleportToLocation(mBlock.getMovingTo());
-		updateLocation(mBlock.getMovingTo(), getSign());
-		moveEntitys(move);
-		updateStructure();*/
+		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation(), vec.getX(), vec.getY(), vec.getZ());
+		MovingBlock lBlock = new MovingBlock(type.getLocation(), vec.getX(), vec.getY(), vec.getZ());
+		type.setBasicStructure(newStructure, lBlock.getMovingTo(), tBlock.getMovingTo());
+		//moveEntitys(move);
 		
 	}
 
 	@Override
-	public String name() {
+	public String getName() {
 		return "Ships 5";
 	}
 

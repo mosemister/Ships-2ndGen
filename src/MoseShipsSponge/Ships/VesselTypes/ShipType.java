@@ -6,11 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nullable;
-
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
@@ -35,7 +32,7 @@ import MoseShipsSponge.Signs.ShipsSigns.SignType;
 
 public abstract class ShipType extends ShipsData {
 
-	public abstract Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, @Nullable User user);
+	public abstract Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, Cause cause);
 
 	public abstract boolean shouldFall();
 
@@ -140,7 +137,11 @@ public abstract class ShipType extends ShipsData {
 						if(TE instanceof Sign){
 							Sign sign2 = (Sign)TE;
 							Text text = sign2.lines().get(2);
-							shipType.set(getShip(text.toPlain()));
+							Optional<ShipType> type2 = getShip(text.toPlain());
+							if(type2.isPresent()){
+								type2.get().setBasicStructure(structure, l);
+							}
+							shipType.set(type2);
 						}
 					}
 				});

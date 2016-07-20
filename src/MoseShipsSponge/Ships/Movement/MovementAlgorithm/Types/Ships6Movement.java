@@ -15,9 +15,8 @@ public class Ships6Movement implements MovementAlgorithm{
 	}
 
 	@Override
-	public String name() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getName() {
+		return "Ships 6";
 	}
 
 }

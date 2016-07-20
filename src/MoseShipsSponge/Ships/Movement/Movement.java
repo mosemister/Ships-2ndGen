@@ -15,6 +15,7 @@ import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Causes.FailedCause.CauseKeys;
 import MoseShipsSponge.Causes.FailedCause.FailedKeys;
 import MoseShipsSponge.Ships.Movement.Collide.CollideType;
+import MoseShipsSponge.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
@@ -117,6 +118,7 @@ public class Movement {
 	}
 	
 	public static Optional<FailedCause> move(ShipType ship, Vector3i vector, Cause intCause){
+		System.out.println("move from Movement");
 		FailedCause cause = new FailedCause();
 		List<MovingBlock> blocks = new ArrayList<>();
 		FinalBypass<Boolean> check = new FinalBypass<>(false);
@@ -136,7 +138,11 @@ public class Movement {
 	}
 	
 	private static Optional<FailedCause> move(ShipType ship, List<MovingBlock> blocks, Cause intCase){
-		
+		Optional<FailedCause> opFail = ship.hasRequirements(blocks, intCase);
+		if(opFail.isPresent()){
+			return opFail;
+		}
+		MovementAlgorithm.getConfig().move(ship, blocks);
 		return Optional.empty();
 	}
 	

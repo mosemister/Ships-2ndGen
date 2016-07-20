@@ -8,11 +8,11 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
+import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Configs.Files.BlockList.ListType;
 
-public class Prototype3 extends BasicBlockFinder{
+public class Prototype3 implements BasicBlockFinder{
 
 	int COUNT;
 	List<Location<World>> BLOCKS;
@@ -31,13 +31,18 @@ public class Prototype3 extends BasicBlockFinder{
 		COUNT++;
 		direction.forEach(d ->{
 			Location<World> loc2 = loc.getRelative(d);
-			if(ShipsMain.getPlugin().getMaterialsList().contains(loc2.getBlock(), ListType.MATERIALS)){
+			if(BasicConfig.BLOCK_LIST.contains(loc2.getBlock(), ListType.MATERIALS)){
 				if (!BLOCKS.contains(loc2)){
 					BLOCKS.add(loc2);
 					getNextBlock(limit, direction, loc2);
 				}
 			}
 		});
+	}
+
+	@Override
+	public String getName() {
+		return "Ships 5";
 	}
 
 }

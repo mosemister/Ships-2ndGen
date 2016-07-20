@@ -25,6 +25,7 @@ import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3i;
 
 import MoseShipsSponge.ShipsMain;
+import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsSponge.Events.Vessel.Create.ShipsCreateEvent;
@@ -127,7 +128,11 @@ public class ShipsListeners {
 										System.out.println("is move sign");
 										Direction direction = loc.get(Keys.DIRECTION).get();
 										if (sign.lines().get(2).toPlain().equals("{Boost}")) {
-											ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+											Optional<FailedCause> cause = ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+											if(cause.isPresent()){
+												FailedCause failed = cause.get();
+												failed.getCauses().get(FailedCause.FailedKeys.COLLIDE);
+											}
 										} else {
 											ship.move(direction, ship.getStatic().getDefaultSpeed(), ShipsCause.SIGN_CLICK.buildCause());
 										}

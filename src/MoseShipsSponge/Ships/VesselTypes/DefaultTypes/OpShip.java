@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -27,7 +27,7 @@ public class OpShip extends ShipType{
 	}
 
 	@Override
-	public Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, User user) {
+	public Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, Cause cause) {
 		return Optional.empty();
 	}
 

@@ -12,6 +12,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShips.CustomDataHolder.DataHolder;
+import MoseShipsSponge.BlockFinder.BasicBlockFinder;
+import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Ships.Utils.ShipsLocalDatabase;
 
 public class ShipsData extends DataHolder{
@@ -72,7 +74,22 @@ public class ShipsData extends DataHolder{
 	}
 	
 	public List<Location<World>> updateBasicStructure(){
-		return null;
+		List<Location<World>> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT), MAIN_BLOCK);
+		STRUCTURE = list;
+		return list;
+	}
+	
+	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence){
+		STRUCTURE = locs;
+		MAIN_BLOCK = licence;
+		return locs;
+	}
+	
+	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence, Location<World> teleport){
+		STRUCTURE = locs;
+		MAIN_BLOCK = licence;
+		TELEPORT = teleport;
+		return locs;
 	}
 	
 	public Location<World> getLocation(){
@@ -81,6 +98,11 @@ public class ShipsData extends DataHolder{
 	
 	public Location<World> getTeleportToLocation(){
 		return TELEPORT;
+	}
+	
+	public ShipsData setTeleportToLocation(Location<World> loc){
+		TELEPORT = loc;
+		return this;
 	}
 	
 	public ShipsLocalDatabase getLocalDatabase() throws IOException{
