@@ -1,4 +1,4 @@
-package MoseShipsSponge.Ships.VesselTypes.DefaultTypes;
+package MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +10,14 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import MoseShipsSponge.Causes.FailedCause;
+import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirType;
 
-public class OpShip extends ShipType{
+public class OpShip extends AirType {
 
 	public OpShip(String name, Location<World> sign, Location<World> teleport) {
 		super(name, sign, teleport);
@@ -27,7 +28,7 @@ public class OpShip extends ShipType{
 	}
 
 	@Override
-	public Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, Cause cause) {
+	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks, Cause cause) {
 		return Optional.empty();
 	}
 

@@ -13,7 +13,7 @@ import com.flowpowered.math.vector.Vector3i;
 import com.google.inject.Inject;
 
 import MoseShipsSponge.Listeners.ShipsListeners;
-import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.OpShip;
+import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
 
 @Plugin(id=ShipsMain.ID, name=ShipsMain.NAME, version=ShipsMain.VERSION)
 public class ShipsMain {
@@ -48,41 +48,27 @@ public class ShipsMain {
 		case DOWN:
 			return new Vector3i(0, -speed, 0);
 		case EAST:
-			break;
-		case EAST_NORTHEAST:
-			break;
-		case EAST_SOUTHEAST:
-			break;
+			return new Vector3i(speed, 0, 0);
 		case NONE:
-			break;
+			return new Vector3i(0, 0, 0);
 		case NORTH:
-			break;
+			return new Vector3i(0, 0, -speed);
 		case NORTHEAST:
 			break;
 		case NORTHWEST:
 			break;
-		case NORTH_NORTHEAST:
-			break;
-		case NORTH_NORTHWEST:
-			break;
 		case SOUTH:
-			break;
+			return new Vector3i(0, 0, speed);
 		case SOUTHEAST:
 			break;
 		case SOUTHWEST:
 			break;
-		case SOUTH_SOUTHEAST:
-			break;
-		case SOUTH_SOUTHWEST:
-			break;
 		case UP:
 			return new Vector3i(0, speed, 0);
 		case WEST:
-			break;
-		case WEST_NORTHWEST:
-			break;
-		case WEST_SOUTHWEST:
-			break;
+			return new Vector3i(-speed, 0, 0);
+		default:
+			return new Vector3i(0, 0, 0);
 		}
 		return new Vector3i(0, 0, 0);
 	}

@@ -11,8 +11,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShips.Maps.OrderedMap;
-import MoseShipsSponge.Causes.FailedCause;
-import MoseShipsSponge.Causes.FailedCause.FailedKeys;
+import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.Movement.Movement;
 import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
@@ -60,22 +59,22 @@ public class AutoPilot {
 		return SHOULD_REPEATE;
 	}
 
-	public Optional<FailedCause> next() {
+	public Optional<MovementResult> next() {
 		if (MOVEMENTS.size() != 0) {
 			if (MOVEMENTS.size() < TARGET) {
 				StoredMovement movement = MOVEMENTS.get(TARGET);
-				Optional<FailedCause> opFail = Movement.teleport(SHIP, movement);
+				Optional<MovementResult> opFail = Movement.teleport(SHIP, movement);
 				TARGET++;
 				return opFail;
 			} else if (SHOULD_REPEATE) {
 				StoredMovement movement = MOVEMENTS.get(0);
-				Optional<FailedCause> opFail = Movement.teleport(SHIP, movement);
+				Optional<MovementResult> opFail = Movement.teleport(SHIP, movement);
 				TARGET++;
 				return opFail;
 			}
 		}
-		FailedCause fail = new FailedCause();
-		fail.getCauses().put(FailedKeys.AUTO_PILOT_OUT_OF_MOVES, this);
+		MovementResult fail = new MovementResult();
+		fail.put(MovementResult.CauseKeys.AUTO_PILOT_OUT_OF_MOVES, this);
 		return Optional.of(fail);
 	}
 

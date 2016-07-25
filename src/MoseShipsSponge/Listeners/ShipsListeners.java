@@ -24,9 +24,11 @@ import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3i;
 
+import MoseShips.Stores.TwoStore;
 import MoseShipsSponge.ShipsMain;
-import MoseShipsSponge.Causes.FailedCause;
 import MoseShipsSponge.Causes.ShipsCause;
+import MoseShipsSponge.Causes.MovementResult;
+import MoseShipsSponge.Causes.MovementResult.CauseKeys;
 import MoseShipsSponge.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsSponge.Events.Vessel.Create.ShipsCreateEvent;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
@@ -128,19 +130,39 @@ public class ShipsListeners {
 										System.out.println("is move sign");
 										Direction direction = loc.get(Keys.DIRECTION).get();
 										if (sign.lines().get(2).toPlain().equals("{Boost}")) {
-											Optional<FailedCause> cause = ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+											Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
 											if(cause.isPresent()){
-												FailedCause failed = cause.get();
-												failed.getCauses().get(FailedCause.FailedKeys.COLLIDE);
+												MovementResult result = cause.get();
+												Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+												if(failed.isPresent()){
+													TwoStore<CauseKeys<Object>, Object> store = failed.get();
+													store.getFirst().sendMessage(player, store.getSecond());
+												}
 											}
 										} else {
-											ship.move(direction, ship.getStatic().getDefaultSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+											Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getDefaultSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+											if(cause.isPresent()){
+												MovementResult result = cause.get();
+												Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+												if(failed.isPresent()){
+													TwoStore<CauseKeys<Object>, Object> store = failed.get();
+													store.getFirst().sendMessage(player, store.getSecond());
+												}
+											}
 										}
 										break;
 									case WHEEL:
 										break;
 									case ALTITUDE:
-										ship.move(new Vector3i(0, -ship.getStatic().getAltitudeSpeed(), 0), ShipsCause.SIGN_CLICK.buildCause());
+										Optional<MovementResult> cause = ship.move(new Vector3i(0, -ship.getStatic().getAltitudeSpeed(), 0), ShipsCause.SIGN_CLICK.buildCause());
+										if(cause.isPresent()){
+											MovementResult result = cause.get();
+											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+											if(failed.isPresent()){
+												TwoStore<CauseKeys<Object>, Object> store = failed.get();
+												store.getFirst().sendMessage(player, store.getSecond());
+											}
+										}
 										break;
 								}
 							}

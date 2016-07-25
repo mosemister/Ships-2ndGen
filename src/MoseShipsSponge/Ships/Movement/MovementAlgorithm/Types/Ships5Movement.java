@@ -25,7 +25,7 @@ public class Ships5Movement implements MovementAlgorithm{
 	public void move(ShipType type, List<MovingBlock> blocks) {
 		System.out.println("moving blocks size: " + blocks.size());
 		//List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
-		//hidden because of update nabor is off
+		//hidden because of update neighbour is off
 		int waterLevel = 0;
 		/*if(type instanceof WaterType){
 			WaterType type2 = (WaterType)type;

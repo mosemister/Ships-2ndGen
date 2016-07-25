@@ -9,7 +9,7 @@ public class TwoStore <A extends Object, B extends Object>{
 		ONE_STORE = one;
 		TWO_STORE = two;
 	}
-	
+
 	public A getFirst(){
 		return ONE_STORE;
 	}

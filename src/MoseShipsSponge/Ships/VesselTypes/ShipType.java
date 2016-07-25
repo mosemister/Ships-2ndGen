@@ -21,7 +21,7 @@ import com.flowpowered.math.vector.Vector3i;
 import MoseShips.Bypasses.FinalBypass;
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
-import MoseShipsSponge.Causes.FailedCause;
+import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.Movement;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
@@ -32,7 +32,7 @@ import MoseShipsSponge.Signs.ShipsSigns.SignType;
 
 public abstract class ShipType extends ShipsData {
 
-	public abstract Optional<FailedCause> hasRequirements(List<MovingBlock> blocks, Cause cause);
+	public abstract Optional<MovementResult> hasRequirements(List<MovingBlock> blocks, Cause cause);
 
 	public abstract boolean shouldFall();
 
@@ -54,37 +54,38 @@ public abstract class ShipType extends ShipsData {
 		super(data);
 	}
 	
-	public Optional<FailedCause> move(Vector3i moveBy, Cause cause){
+	public Optional<MovementResult> move(Vector3i moveBy, Cause cause){
 		return Movement.move(this, moveBy, cause);
 	}
 	
-	public Optional<FailedCause> move(Direction dir, int speed, Cause cause){
+	public Optional<MovementResult> move(Direction dir, int speed, Cause cause){
+		System.out.println("speed: " + speed);
 		Vector3i vector3i = ShipsMain.convert(dir, speed);
 		return move(vector3i, cause);
 	}
 	
-	public Optional<FailedCause> move(int X, int Y, int Z, Cause cause){
+	public Optional<MovementResult> move(int X, int Y, int Z, Cause cause){
 		return Movement.move(this, X, Y, Z, cause);
 	}
 	
-	public Optional<FailedCause> rotateLeft(Cause cause){
+	public Optional<MovementResult> rotateLeft(Cause cause){
 		return Movement.rotateLeft(this, cause);
 	}
 	
-	public Optional<FailedCause> rotateRight(Cause cause){
+	public Optional<MovementResult> rotateRight(Cause cause){
 		return Movement.rotateRight(this, cause);
 	}
 	
-	public Optional<FailedCause> rotate(Rotate type, Cause cause){
+	public Optional<MovementResult> rotate(Rotate type, Cause cause){
 		return Movement.rotate(this, cause, type);
 	}
 	
-	public Optional<FailedCause> teleport(StoredMovement move){
+	public Optional<MovementResult> teleport(StoredMovement move){
 		return Movement.teleport(this, move);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Optional<FailedCause> teleport(Location<? extends Extent> loc, Cause cause){
+	public Optional<MovementResult> teleport(Location<? extends Extent> loc, Cause cause){
 		Location<World> loc2 = null;
 		if(loc.getExtent() instanceof Chunk){
 			Chunk chunk = (Chunk)loc.getExtent();
@@ -96,7 +97,7 @@ public abstract class ShipType extends ShipsData {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Optional<FailedCause> teleport(Location<? extends Extent> loc, int X, int Y, int Z, Cause cause){
+	public Optional<MovementResult> teleport(Location<? extends Extent> loc, int X, int Y, int Z, Cause cause){
 		Location<World> loc2 = null;
 		if(loc.getExtent() instanceof Chunk){
 			Chunk chunk = (Chunk)loc.getExtent();

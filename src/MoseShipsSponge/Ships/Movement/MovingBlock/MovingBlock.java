@@ -24,6 +24,7 @@ import MoseShipsSponge.Configs.Files.BlockList;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Ships.Movement.MovementType;
 import MoseShipsSponge.Ships.Movement.Collide.CollideType;
+import MoseShipsSponge.Utils.LocationUtils;
 
 public class MovingBlock {
 	
@@ -47,6 +48,7 @@ public class MovingBlock {
 	
 	public MovingBlock(Location<World> original, Vector3i vector){
 		ORIGIN = original;
+		System.out.println("MovingBlock created: " + vector.getX() + " | " + vector.getY() + " | " + vector.getZ());
 		MOVING_TO = original.add(vector.toDouble());
 		STATE = original.createSnapshot();
 	}
@@ -80,6 +82,9 @@ public class MovingBlock {
 	}
 	
 	public MovingBlock move(boolean notify){
+		if(LocationUtils.blocksEqual(ORIGIN, MOVING_TO)){
+			System.out.println("found same location");
+		}
 		STATE.withLocation(MOVING_TO);
 		STATE.restore(true, notify);
 		return this;
@@ -99,8 +104,10 @@ public class MovingBlock {
 		return Priority.getType(STATE.getState().getType());
 	}
 	
-	public CollideType getCollision(){
-		if(BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)){
+	public CollideType getCollision(List<Location<World>> ignore){
+		if(LocationUtils.blockWorldContains(ignore, MOVING_TO)){
+			return CollideType.NONE;
+		}else if(BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)){
 			return CollideType.COLLIDE;
 		}else if(BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)){
 			return CollideType.RAM;
