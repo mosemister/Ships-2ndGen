@@ -126,7 +126,6 @@ public class Movement {
 			MovingBlock block = new MovingBlock(loc, vector);
 			if(block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)){
 				check.set(true);
-				Location<World> loc2 = block.getMovingTo();
 				collide.add(block);
 			}
 			blocks.add(block);

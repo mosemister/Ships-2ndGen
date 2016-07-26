@@ -82,11 +82,9 @@ public class MovingBlock {
 	}
 	
 	public MovingBlock move(boolean notify){
-		if(LocationUtils.blocksEqual(ORIGIN, MOVING_TO)){
-			System.out.println("found same location");
-		}
-		STATE.withLocation(MOVING_TO);
-		STATE.restore(true, notify);
+		MOVING_TO.restoreSnapshot(STATE, true, false);
+		//STATE.withLocation(MOVING_TO);
+		//STATE.restore(true, notify);
 		return this;
 	}
 	
