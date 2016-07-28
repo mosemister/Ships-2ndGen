@@ -7,11 +7,13 @@ import java.util.Optional;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3i;
 
+import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Ships.Movement.MovementType;
 import MoseShipsSponge.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
@@ -26,24 +28,23 @@ public class Ships5Movement implements MovementAlgorithm{
 		System.out.println("moving blocks size: " + blocks.size());
 		//List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		//hidden because of update neighbour is off
-		int waterLevel = 0;
+		int waterLevel = 63;
 		/*if(type instanceof WaterType){
 			WaterType type2 = (WaterType)type;
 			waterLevel = type2.getWaterLevel();
 		}*/
 		blocks.stream().forEach(block -> {
-			block.clearOriginalBlock();
 			if (block.getOrigin().getBlockY() > waterLevel) {
-				block.clearOriginalBlock();
+				block.clearOriginalBlock(BlockChangeFlag.NONE, ShipsCause.BLOCK_MOVING.buildCause());
 			} else {
-				block.replaceOriginalBlock(BlockTypes.WATER);
+				block.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlag.NONE, ShipsCause.BLOCK_MOVING.buildCause());
 			}
 		});
 		List<Location<World>> newStructure = new ArrayList<>();
 		// place all blocks
 		blocks.stream().forEach(block -> {
 			newStructure.add(block.getMovingTo());
-			block.move(false);
+			block.move(BlockChangeFlag.NONE);
 			MovementType mType = block.getMovementType();
 			Optional<Direction> opConnected = block.getMovingTo().get(Keys.DIRECTION);
 			switch(mType){

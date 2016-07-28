@@ -10,7 +10,8 @@ import org.spongepowered.api.event.cause.NamedCause;
 public enum ShipsCause {
 	
 	SIGN_CLICK,
-	SIGN_CREATE;
+	SIGN_CREATE,
+	BLOCK_MOVING;
 	
 	String NAME;
 	

@@ -11,14 +11,17 @@ import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.block.tileentity.carrier.TileEntityCarrier;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.type.TileEntityInventory;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 
+import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Configs.Files.BlockList;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
@@ -71,30 +74,33 @@ public class MovingBlock {
 		}
 	}
 	
-	public MovingBlock clearOriginalBlock(){
-		clearBlock(ORIGIN, BlockTypes.AIR);
+	public MovingBlock clearOriginalBlock(BlockChangeFlag flag, Cause cause){
+		clearBlock(ORIGIN, BlockTypes.AIR, flag, cause);
 		return this;
 	}
 	
-	public MovingBlock clearMovingToBlock(){
-		clearBlock(MOVING_TO, BlockTypes.AIR);
+	public MovingBlock clearMovingToBlock(BlockChangeFlag flag, Cause cause){
+		clearBlock(MOVING_TO, BlockTypes.AIR, flag, cause);
 		return this;
 	}
 	
-	public MovingBlock move(boolean notify){
-		MOVING_TO.restoreSnapshot(STATE, true, false);
-		//STATE.withLocation(MOVING_TO);
-		//STATE.restore(true, notify);
+	public MovingBlock move(BlockChangeFlag flag){
+		MOVING_TO.restoreSnapshot(STATE, true, flag, ShipsCause.BLOCK_MOVING.buildCause());
 		return this;
 	}
 	
-	public MovingBlock replaceOriginalBlock(BlockType type){
-		clearBlock(ORIGIN, type);
+	public MovingBlock move(BlockChangeFlag flag, Cause cause){
+		MOVING_TO.restoreSnapshot(STATE, true, flag, cause);
 		return this;
 	}
 	
-	public MovingBlock replaceMovingToBlock(BlockType type){
-		clearBlock(MOVING_TO, type);
+	public MovingBlock replaceOriginalBlock(BlockType type, BlockChangeFlag flag, Cause cause){
+		clearBlock(ORIGIN, type, flag, cause);
+		return this;
+	}
+	
+	public MovingBlock replaceMovingToBlock(BlockType type, BlockChangeFlag flag, Cause cause){
+		clearBlock(MOVING_TO, type, flag, cause);
 		return this;
 	}
 	
@@ -148,7 +154,7 @@ public class MovingBlock {
 		return this;
 	}
 	
-	private void clearBlock(Location<World> loc, BlockType type){
+	private void clearBlock(Location<World> loc, BlockType type, BlockChangeFlag flag, Cause cause){
 		Optional<TileEntity> opTile = loc.getTileEntity();
 		if(opTile.isPresent()){
 			TileEntity entity = opTile.get();
@@ -158,7 +164,7 @@ public class MovingBlock {
 				inv.clear();
 			}
 		}
-		loc.setBlockType(type);
+		loc.setBlockType(type, flag, cause);
 	}
 	
 	private void rotate(boolean left){
