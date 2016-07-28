@@ -14,31 +14,32 @@ import MoseShipsSponge.Signs.ShipsSigns;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
 
 public interface BasicBlockFinder {
-	
+
 	static final List<BasicBlockFinder> LIST = new ArrayList<>();
-	
+
 	public static final BasicBlockFinder SHIPS5 = new Prototype3();
-	
+
 	public List<Location<World>> getConnectedBlocks(int limit, Location<World> loc);
+
 	public String getName();
-	
-	public static BasicBlockFinder getConfigSelected(){
+
+	public static BasicBlockFinder getConfigSelected() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_BLOCKFINDER);
 		Optional<BasicBlockFinder> opBlock = getFinder(name);
-		if(opBlock.isPresent()){
+		if (opBlock.isPresent()) {
 			return opBlock.get();
 		}
 		return SHIPS5;
 	}
-	
-	public static boolean isValid(List<Location<World>> list){
-		return list.stream().anyMatch(l ->{
-			if(l.getTileEntity().isPresent()){
-				if(l.getTileEntity().get() instanceof Sign){
-					Sign sign = (Sign)l.getTileEntity().get();
+
+	public static boolean isValid(List<Location<World>> list) {
+		return list.stream().anyMatch(l -> {
+			if (l.getTileEntity().isPresent()) {
+				if (l.getTileEntity().get() instanceof Sign) {
+					Sign sign = (Sign) l.getTileEntity().get();
 					Optional<SignType> opType = ShipsSigns.getSignType(sign);
-					if(opType.isPresent()){
-						if(opType.get().equals(SignType.LICENCE)){
+					if (opType.isPresent()) {
+						if (opType.get().equals(SignType.LICENCE)) {
 							return true;
 						}
 					}
@@ -47,14 +48,14 @@ public interface BasicBlockFinder {
 			return false;
 		});
 	}
-	
-	public static List<BasicBlockFinder> getFinders(){
+
+	public static List<BasicBlockFinder> getFinders() {
 		List<BasicBlockFinder> finder = new ArrayList<>(LIST);
 		finder.add(SHIPS5);
 		return finder;
 	}
-	
-	public static Optional<BasicBlockFinder> getFinder(String name){
+
+	public static Optional<BasicBlockFinder> getFinder(String name) {
 		return getFinders().stream().filter(f -> f.getName().equalsIgnoreCase(name)).findFirst();
 	}
 

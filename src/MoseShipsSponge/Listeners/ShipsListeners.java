@@ -25,9 +25,10 @@ import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3i;
 
 import MoseShips.Stores.TwoStore;
+
 import MoseShipsSponge.ShipsMain;
-import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Causes.MovementResult;
+import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Causes.MovementResult.CauseKeys;
 import MoseShipsSponge.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsSponge.Events.Vessel.Create.ShipsCreateEvent;
@@ -51,8 +52,8 @@ public class ShipsListeners {
 					Optional<StaticShipType> opShipType = StaticShipType.getType(data.get(1).get().toPlain());
 					if (opShipType.isPresent()) {
 						StaticShipType type = opShipType.get();
-						
-						//PLAYER CAUSE
+
+						// PLAYER CAUSE
 						Optional<Player> opPlayer = event.getCause().first(Player.class);
 						if (opPlayer.isPresent()) {
 							Player player = opPlayer.get();
@@ -60,19 +61,20 @@ public class ShipsListeners {
 								return;
 							}
 							causes.put("Player", player);
-							
+
 						}
-						
-						AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<>(type, event.getTargetTile().getLocation(), data, event.getOriginalText(), ShipsCause.SIGN_CREATE.buildCause(causes) );
-						if(!ATCSEvent.isCancelled()){
+
+						AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<>(type, event.getTargetTile().getLocation(), data, event.getOriginalText(), ShipsCause.SIGN_CREATE
+								.buildCause(causes));
+						if (!ATCSEvent.isCancelled()) {
 							Optional<ShipType> opShip = type.createVessel(data.get(2).get().toPlain(), event.getTargetTile().getLocation());
-							if(opShip.isPresent()){
+							if (opShip.isPresent()) {
 								ShipType ship = opShip.get();
 								ShipsSigns.colourSign(event.getTargetTile());
 								ShipsCreateEvent<ShipType> SCEvent = new ShipsCreateEvent<>(ship, ShipsCause.SIGN_CREATE.buildCause(causes));
-								if(!SCEvent.isCancelled()){
-									
-									//PLAYER 
+								if (!SCEvent.isCancelled()) {
+
+									// PLAYER
 									if (opPlayer.isPresent()) {
 										Player player = opPlayer.get();
 										player.sendMessage(ShipsMain.format("Ship created", false));
@@ -131,20 +133,20 @@ public class ShipsListeners {
 										Direction direction = loc.get(Keys.DIRECTION).get();
 										if (sign.lines().get(2).toPlain().equals("{Boost}")) {
 											Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
-											if(cause.isPresent()){
+											if (cause.isPresent()) {
 												MovementResult result = cause.get();
 												Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-												if(failed.isPresent()){
+												if (failed.isPresent()) {
 													TwoStore<CauseKeys<Object>, Object> store = failed.get();
 													store.getFirst().sendMessage(player, store.getSecond());
 												}
 											}
 										} else {
 											Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getDefaultSpeed(), ShipsCause.SIGN_CLICK.buildCause());
-											if(cause.isPresent()){
+											if (cause.isPresent()) {
 												MovementResult result = cause.get();
 												Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-												if(failed.isPresent()){
+												if (failed.isPresent()) {
 													TwoStore<CauseKeys<Object>, Object> store = failed.get();
 													store.getFirst().sendMessage(player, store.getSecond());
 												}
@@ -155,10 +157,10 @@ public class ShipsListeners {
 										break;
 									case ALTITUDE:
 										Optional<MovementResult> cause = ship.move(new Vector3i(0, -ship.getStatic().getAltitudeSpeed(), 0), ShipsCause.SIGN_CLICK.buildCause());
-										if(cause.isPresent()){
+										if (cause.isPresent()) {
 											MovementResult result = cause.get();
 											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-											if(failed.isPresent()){
+											if (failed.isPresent()) {
 												TwoStore<CauseKeys<Object>, Object> store = failed.get();
 												store.getFirst().sendMessage(player, store.getSecond());
 											}

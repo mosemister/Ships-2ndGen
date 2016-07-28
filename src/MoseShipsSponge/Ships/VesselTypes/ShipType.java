@@ -24,9 +24,9 @@ import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.Movement;
+import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
 
@@ -41,7 +41,7 @@ public abstract class ShipType extends ShipsData {
 	public abstract int getMinBlocks();
 
 	public abstract Map<Text, Object> getInfo();
-	
+
 	public abstract StaticShipType getStatic();
 
 	static List<ShipType> SHIPS = new ArrayList<>();
@@ -49,66 +49,66 @@ public abstract class ShipType extends ShipsData {
 	public ShipType(String name, Location<World> sign, Location<World> teleport) {
 		super(name, sign, teleport);
 	}
-	
-	public ShipType(ShipsData data){
+
+	public ShipType(ShipsData data) {
 		super(data);
 	}
-	
-	public Optional<MovementResult> move(Vector3i moveBy, Cause cause){
+
+	public Optional<MovementResult> move(Vector3i moveBy, Cause cause) {
 		return Movement.move(this, moveBy, cause);
 	}
-	
-	public Optional<MovementResult> move(Direction dir, int speed, Cause cause){
+
+	public Optional<MovementResult> move(Direction dir, int speed, Cause cause) {
 		System.out.println("speed: " + speed);
 		Vector3i vector3i = ShipsMain.convert(dir, speed);
 		return move(vector3i, cause);
 	}
-	
-	public Optional<MovementResult> move(int X, int Y, int Z, Cause cause){
+
+	public Optional<MovementResult> move(int X, int Y, int Z, Cause cause) {
 		return Movement.move(this, X, Y, Z, cause);
 	}
-	
-	public Optional<MovementResult> rotateLeft(Cause cause){
+
+	public Optional<MovementResult> rotateLeft(Cause cause) {
 		return Movement.rotateLeft(this, cause);
 	}
-	
-	public Optional<MovementResult> rotateRight(Cause cause){
+
+	public Optional<MovementResult> rotateRight(Cause cause) {
 		return Movement.rotateRight(this, cause);
 	}
-	
-	public Optional<MovementResult> rotate(Rotate type, Cause cause){
+
+	public Optional<MovementResult> rotate(Rotate type, Cause cause) {
 		return Movement.rotate(this, cause, type);
 	}
-	
-	public Optional<MovementResult> teleport(StoredMovement move){
+
+	public Optional<MovementResult> teleport(StoredMovement move) {
 		return Movement.teleport(this, move);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Optional<MovementResult> teleport(Location<? extends Extent> loc, Cause cause){
+	public Optional<MovementResult> teleport(Location<? extends Extent> loc, Cause cause) {
 		Location<World> loc2 = null;
-		if(loc.getExtent() instanceof Chunk){
-			Chunk chunk = (Chunk)loc.getExtent();
+		if (loc.getExtent() instanceof Chunk) {
+			Chunk chunk = (Chunk) loc.getExtent();
 			loc2 = chunk.getWorld().getLocation(loc.getBlockPosition());
-		}else{
-			loc2 = (Location<World>)loc;
+		} else {
+			loc2 = (Location<World>) loc;
 		}
 		return Movement.teleport(this, loc2, cause);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public Optional<MovementResult> teleport(Location<? extends Extent> loc, int X, int Y, int Z, Cause cause){
+	public Optional<MovementResult> teleport(Location<? extends Extent> loc, int X, int Y, int Z, Cause cause) {
 		Location<World> loc2 = null;
-		if(loc.getExtent() instanceof Chunk){
-			Chunk chunk = (Chunk)loc.getExtent();
+		if (loc.getExtent() instanceof Chunk) {
+			Chunk chunk = (Chunk) loc.getExtent();
 			loc2 = chunk.getWorld().getLocation(loc.getBlockPosition());
-		}else{
-			loc2 = (Location<World>)loc;
+		} else {
+			loc2 = (Location<World>) loc;
 		}
 		return Movement.teleport(this, loc2, X, Y, Z, cause);
 	}
-	
-	public static void inject(ShipType type){
+
+	public static void inject(ShipType type) {
 		SHIPS.add(type);
 	}
 
@@ -124,22 +124,25 @@ public abstract class ShipType extends ShipsData {
 		if (type.equals(SignType.LICENCE)) {
 			Text text = sign.lines().get(2);
 			return getShip(text.toPlain());
-		}else{
-			if(refresh){
-				//List<Location<World>> structure = BasicBlockFinder.SHIPS5.getConnectedBlocks(ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.STRUCTURE_STRUCTURELIMITS_TRACKLIMIT), sign.getLocation());
+		} else {
+			if (refresh) {
+				// List<Location<World>> structure =
+				// BasicBlockFinder.SHIPS5.getConnectedBlocks(ShipsConfig.CONFIG.get(Integer.class,
+				// ShipsConfig.STRUCTURE_STRUCTURELIMITS_TRACKLIMIT),
+				// sign.getLocation());
 				System.out.println("finding ship");
 				List<Location<World>> structure = BasicBlockFinder.SHIPS5.getConnectedBlocks(5000, sign.getLocation());
 				System.out.println("structure size: " + structure.size());
 				FinalBypass<Optional<ShipType>> shipType = new FinalBypass<>(null);
 				structure.stream().forEach(l -> {
 					Optional<TileEntity> opTE = l.getTileEntity();
-					if(opTE.isPresent()){
+					if (opTE.isPresent()) {
 						TileEntity TE = opTE.get();
-						if(TE instanceof Sign){
-							Sign sign2 = (Sign)TE;
+						if (TE instanceof Sign) {
+							Sign sign2 = (Sign) TE;
 							Text text = sign2.lines().get(2);
 							Optional<ShipType> type2 = getShip(text.toPlain());
-							if(type2.isPresent()){
+							if (type2.isPresent()) {
 								type2.get().setBasicStructure(structure, l);
 							}
 							shipType.set(type2);
@@ -147,11 +150,11 @@ public abstract class ShipType extends ShipsData {
 					}
 				});
 				return shipType.get();
-			}else{
+			} else {
 				FinalBypass<ShipType> shipType = new FinalBypass<>(null);
 				SHIPS.stream().forEach(s -> {
 					s.getBasicStructure().stream().forEach(l -> {
-						if(l.equals(sign.getLocation())){
+						if (l.equals(sign.getLocation())) {
 							shipType.set(s);
 						}
 					});

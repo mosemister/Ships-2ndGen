@@ -8,26 +8,26 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 
 public enum ShipsCause {
-	
+
 	SIGN_CLICK,
 	SIGN_CREATE,
 	BLOCK_MOVING;
-	
+
 	String NAME;
-	
-	private ShipsCause(){
+
+	private ShipsCause() {
 		NAME = name();
 	}
-	
-	private ShipsCause(String name){
+
+	private ShipsCause(String name) {
 		NAME = name;
 	}
-	
-	public Cause buildCause(){
+
+	public Cause buildCause() {
 		return Cause.builder().named(NAME, this).build();
 	}
-	
-	public Cause buildCause(Map<String, Object> causes){
+
+	public Cause buildCause(Map<String, Object> causes) {
 		List<NamedCause> namedCauses = new ArrayList<>();
 		namedCauses.add(NamedCause.of(NAME, this));
 		causes.entrySet().forEach(e -> NamedCause.of(e.getKey(), e.getValue()));

@@ -22,106 +22,107 @@ import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 
 import MoseShipsSponge.Causes.ShipsCause;
+
 import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Configs.Files.BlockList;
-import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Ships.Movement.MovementType;
 import MoseShipsSponge.Ships.Movement.Collide.CollideType;
+import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Utils.LocationUtils;
 
 public class MovingBlock {
-	
+
 	Location<World> ORIGIN;
 	Location<World> MOVING_TO;
 	BlockSnapshot STATE;
-	
+
 	TileEntityInventory<TileEntityCarrier> INVENTORY;
-	
-	public MovingBlock(Location<World> original, Location<World> moving){
+
+	public MovingBlock(Location<World> original, Location<World> moving) {
 		ORIGIN = original;
 		MOVING_TO = moving;
 		STATE = original.createSnapshot();
 	}
-	
-	public MovingBlock(Location<World> original, int X, int Y, int Z){
+
+	public MovingBlock(Location<World> original, int X, int Y, int Z) {
 		ORIGIN = original;
 		MOVING_TO = original.add(X, Y, Z);
 		STATE = original.createSnapshot();
 	}
-	
-	public MovingBlock(Location<World> original, Vector3i vector){
+
+	public MovingBlock(Location<World> original, Vector3i vector) {
 		ORIGIN = original;
 		System.out.println("MovingBlock created: " + vector.getX() + " | " + vector.getY() + " | " + vector.getZ());
 		MOVING_TO = original.add(vector.toDouble());
 		STATE = original.createSnapshot();
 	}
-	
-	public Location<World> getOrigin(){
+
+	public Location<World> getOrigin() {
 		return ORIGIN;
 	}
-	
-	public Location<World> getMovingTo(){
+
+	public Location<World> getMovingTo() {
 		return MOVING_TO;
 	}
-	
-	public MovementType getMovementType(){
-		if((ORIGIN.getBlockX() == MOVING_TO.getBlockX()) && (ORIGIN.getBlockZ() == MOVING_TO.getBlockZ())){
+
+	public MovementType getMovementType() {
+		if ((ORIGIN.getBlockX() == MOVING_TO.getBlockX()) && (ORIGIN.getBlockZ() == MOVING_TO.getBlockZ())) {
 			return MovementType.FORWARDS;
-		}else if((ORIGIN.getBlockX() > MOVING_TO.getBlockX()) || (ORIGIN.getBlockZ() > MOVING_TO.getBlockZ())){
+		} else if ((ORIGIN.getBlockX() > MOVING_TO.getBlockX()) || (ORIGIN.getBlockZ() > MOVING_TO.getBlockZ())) {
 			return MovementType.ROTATE_RIGHT;
-		}else{
+		} else {
 			return MovementType.ROTATE_LEFT;
 		}
 	}
-	
-	public MovingBlock clearOriginalBlock(BlockChangeFlag flag, Cause cause){
+
+	public MovingBlock clearOriginalBlock(BlockChangeFlag flag, Cause cause) {
 		clearBlock(ORIGIN, BlockTypes.AIR, flag, cause);
 		return this;
 	}
-	
-	public MovingBlock clearMovingToBlock(BlockChangeFlag flag, Cause cause){
+
+	public MovingBlock clearMovingToBlock(BlockChangeFlag flag, Cause cause) {
 		clearBlock(MOVING_TO, BlockTypes.AIR, flag, cause);
 		return this;
 	}
-	
-	public MovingBlock move(BlockChangeFlag flag){
+
+	public MovingBlock move(BlockChangeFlag flag) {
 		MOVING_TO.restoreSnapshot(STATE, true, flag, ShipsCause.BLOCK_MOVING.buildCause());
 		return this;
 	}
-	
-	public MovingBlock move(BlockChangeFlag flag, Cause cause){
+
+	public MovingBlock move(BlockChangeFlag flag, Cause cause) {
 		MOVING_TO.restoreSnapshot(STATE, true, flag, cause);
 		return this;
 	}
-	
-	public MovingBlock replaceOriginalBlock(BlockType type, BlockChangeFlag flag, Cause cause){
+
+	public MovingBlock replaceOriginalBlock(BlockType type, BlockChangeFlag flag, Cause cause) {
 		clearBlock(ORIGIN, type, flag, cause);
 		return this;
 	}
-	
-	public MovingBlock replaceMovingToBlock(BlockType type, BlockChangeFlag flag, Cause cause){
+
+	public MovingBlock replaceMovingToBlock(BlockType type, BlockChangeFlag flag, Cause cause) {
 		clearBlock(MOVING_TO, type, flag, cause);
 		return this;
 	}
-	
-	public Priority getPriority(){
+
+	public Priority getPriority() {
 		return Priority.getType(STATE.getState().getType());
 	}
-	
-	public CollideType getCollision(List<Location<World>> ignore){
-		if(LocationUtils.blockWorldContains(ignore, MOVING_TO)){
+
+	public CollideType getCollision(List<Location<World>> ignore) {
+		if (LocationUtils.blockWorldContains(ignore, MOVING_TO)) {
 			return CollideType.NONE;
-		}else if(BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)){
+		} else if (BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)) {
 			return CollideType.COLLIDE;
-		}else if(BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)){
+		} else if (BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)) {
 			return CollideType.RAM;
-		}else{
+		} else {
 			return CollideType.NONE;
 		}
 	}
-	
-	public MovingBlock rotate(Rotate rotate, Location<World> centre){
-		switch(rotate){
+
+	public MovingBlock rotate(Rotate rotate, Location<World> centre) {
+		switch (rotate) {
 			case LEFT:
 				return rotateLeft(centre);
 			case RIGHT:
@@ -129,8 +130,8 @@ public class MovingBlock {
 		}
 		return this;
 	}
-	
-	public MovingBlock rotateLeft(Location<World> centre){
+
+	public MovingBlock rotateLeft(Location<World> centre) {
 		rotate(true);
 		int shift = centre.getBlockX() - centre.getBlockZ();
 		double symmetry = centre.getBlockX();
@@ -141,8 +142,8 @@ public class MovingBlock {
 		MOVING_TO.setPosition(new Vector3d(X, Y, Z));
 		return this;
 	}
-	
-	public MovingBlock rotateRight(Location<World> centre){
+
+	public MovingBlock rotateRight(Location<World> centre) {
 		rotate(false);
 		int shift = centre.getBlockX() - centre.getBlockZ();
 		double symmetry = centre.getBlockZ();
@@ -153,54 +154,54 @@ public class MovingBlock {
 		MOVING_TO.setPosition(new Vector3d(X, Y, Z));
 		return this;
 	}
-	
-	private void clearBlock(Location<World> loc, BlockType type, BlockChangeFlag flag, Cause cause){
+
+	private void clearBlock(Location<World> loc, BlockType type, BlockChangeFlag flag, Cause cause) {
 		Optional<TileEntity> opTile = loc.getTileEntity();
-		if(opTile.isPresent()){
+		if (opTile.isPresent()) {
 			TileEntity entity = opTile.get();
-			if(entity instanceof TileEntityCarrier){
-				TileEntityCarrier tile = (TileEntityCarrier)entity;
+			if (entity instanceof TileEntityCarrier) {
+				TileEntityCarrier tile = (TileEntityCarrier) entity;
 				TileEntityInventory<TileEntityCarrier> inv = tile.getInventory();
 				inv.clear();
 			}
 		}
 		loc.setBlockType(type, flag, cause);
 	}
-	
-	private void rotate(boolean left){
+
+	private void rotate(boolean left) {
 		Optional<Direction> opDir = STATE.get(Keys.DIRECTION);
-		if(opDir.isPresent()){
+		if (opDir.isPresent()) {
 			Direction dir = opDir.get();
-			switch(dir){
+			switch (dir) {
 				case EAST:
-					if(left){
+					if (left) {
 						STATE.with(Keys.DIRECTION, Direction.NORTH);
 						return;
-					}else{
+					} else {
 						STATE.with(Keys.DIRECTION, Direction.SOUTH);
 						return;
 					}
 				case NORTH:
-					if(left){
+					if (left) {
 						STATE.with(Keys.DIRECTION, Direction.WEST);
 						return;
-					}else{
+					} else {
 						STATE.with(Keys.DIRECTION, Direction.EAST);
 						return;
 					}
 				case SOUTH:
-					if(left){
+					if (left) {
 						STATE.with(Keys.DIRECTION, Direction.EAST);
 						return;
-					}else{
+					} else {
 						STATE.with(Keys.DIRECTION, Direction.WEST);
 						return;
 					}
 				case WEST:
-					if(left){
+					if (left) {
 						STATE.with(Keys.DIRECTION, Direction.SOUTH);
 						return;
-					}else{
+					} else {
 						STATE.with(Keys.DIRECTION, Direction.NORTH);
 						return;
 					}
@@ -209,8 +210,8 @@ public class MovingBlock {
 			}
 		}
 	}
-	
-	public static List<MovingBlock> setPriorityOrder(List<MovingBlock> blocks){
+
+	public static List<MovingBlock> setPriorityOrder(List<MovingBlock> blocks) {
 		List<MovingBlock> normalList = blocks.stream().filter(b -> b.getPriority().equals(Priority.NORMAL)).collect(Collectors.toList());
 		List<MovingBlock> airList = blocks.stream().filter(b -> b.getPriority().equals(Priority.AIR)).collect(Collectors.toList());
 		List<MovingBlock> priList = blocks.stream().filter(b -> b.getPriority().equals(Priority.PRIORITY)).collect(Collectors.toList());
@@ -220,14 +221,14 @@ public class MovingBlock {
 		retList.addAll(priList);
 		return retList;
 	}
-	
-	public enum Priority{
+
+	public enum Priority {
 		NORMAL,
 		PRIORITY,
 		AIR;
-		
-		public static Priority getType(BlockType type){
-			if((type.equals(BlockTypes.TORCH)) ||
+
+		public static Priority getType(BlockType type) {
+			if ((type.equals(BlockTypes.TORCH)) ||
 					(type.equals(BlockTypes.FIRE)) ||
 					(type.equals(BlockTypes.REDSTONE_WIRE)) ||
 					(type.equals(BlockTypes.ACACIA_DOOR)) ||
@@ -255,11 +256,11 @@ public class MovingBlock {
 					(type.equals(BlockTypes.TRIPWIRE_HOOK)) ||
 					(type.equals(BlockTypes.TRIPWIRE)) ||
 					(type.equals(BlockTypes.IRON_TRAPDOOR)) ||
-					(type.equals(BlockTypes.WALL_BANNER))){
+					(type.equals(BlockTypes.WALL_BANNER))) {
 				return PRIORITY;
-			}else if(type.equals(BlockTypes.AIR)){
+			} else if (type.equals(BlockTypes.AIR)) {
 				return AIR;
-			}else{
+			} else {
 				return NORMAL;
 			}
 		}

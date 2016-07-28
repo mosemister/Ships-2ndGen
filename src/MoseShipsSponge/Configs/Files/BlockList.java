@@ -15,19 +15,19 @@ import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.BasicConfig;
 
 public class BlockList extends BasicConfig {
-	
+
 	List<BlockState> MATERIALS = new ArrayList<>();
 	List<BlockState> RAM = new ArrayList<>();
 
 	public BlockList() {
 		super("/Configuration/MaterialsList");
-		
+
 		// code for testing purpose only
 		MATERIALS.addAll(getAllPossibleStates(BlockTypes.WALL_SIGN));
 		MATERIALS.addAll(getAllPossibleStates(BlockTypes.PLANKS));
 
 	}
-	
+
 	public List<BlockState> getMaterialsList() {
 		return MATERIALS;
 	}
@@ -42,7 +42,7 @@ public class BlockList extends BasicConfig {
 		states.removeAll(MATERIALS);
 		return states;
 	}
-	
+
 	public boolean contains(BlockState state, ListType type) {
 		switch (type) {
 			case MATERIALS:
@@ -66,19 +66,19 @@ public class BlockList extends BasicConfig {
 		}
 		return new ArrayList<>();
 	}
-	
+
 	public static List<BlockState> getAllPossibleStates(BlockType type) {
 		List<BlockState> states = new ArrayList<>();
-		/*type.getTraits().forEach(t -> {
-			t.getPossibleValues().forEach(v -> {
-				Optional<BlockState> state = type.getDefaultState().withTrait(t, v);
-				if (state.isPresent()) {
-					states.add(state.get());
-				}
-			});
-		});*/
-		for(BlockTrait<?> trait : type.getTraits()){
-			for(Object value : trait.getPossibleValues()){
+		/* type.getTraits().forEach(t -> {
+		 * t.getPossibleValues().forEach(v -> {
+		 * Optional<BlockState> state = type.getDefaultState().withTrait(t, v);
+		 * if (state.isPresent()) {
+		 * states.add(state.get());
+		 * }
+		 * });
+		 * }); */
+		for (BlockTrait<?> trait : type.getTraits()) {
+			for (Object value : trait.getPossibleValues()) {
 				Optional<BlockState> state = type.getDefaultState().withTrait(trait, value);
 				if (state.isPresent()) {
 					states.add(state.get());
@@ -87,7 +87,7 @@ public class BlockList extends BasicConfig {
 		}
 		return states;
 	}
-	
+
 	public static List<BlockState> getAllPossibleStates() {
 		List<BlockState> states = new ArrayList<>();
 		Collection<BlockType> types = ShipsMain.getPlugin().getGame().getRegistry().getAllOf(BlockType.class);
@@ -96,7 +96,7 @@ public class BlockList extends BasicConfig {
 		});
 		return states;
 	}
-	
+
 	public static enum ListType {
 		MATERIALS,
 		RAM,

@@ -8,22 +8,23 @@ import java.util.stream.Collectors;
 
 import MoseShipsSponge.Configs.Files.BlockList;
 import MoseShipsSponge.Configs.Files.ShipsConfig;
+
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public class BasicConfig {
-	
+
 	File FILE;
 	HoconConfigurationLoader LOADER;
 	ConfigurationNode ROOT;
-	
+
 	public static final BlockList BLOCK_LIST = new BlockList();
 	public static final ShipsConfig CONFIG = new ShipsConfig();
-	
-	public BasicConfig(String fileName){
+
+	public BasicConfig(String fileName) {
 		FILE = new File("config/Ships/" + fileName + ".conf");
 		System.out.println(FILE.getAbsolutePath());
-		if(!FILE.exists()){
+		if (!FILE.exists()) {
 			try {
 				FILE.getParentFile().mkdirs();
 				FILE.createNewFile();
@@ -34,45 +35,45 @@ public class BasicConfig {
 		LOADER = HoconConfigurationLoader.builder().setFile(FILE).build();
 		ROOT = LOADER.createEmptyNode();
 	}
-	
-	public BasicConfig(File file){
+
+	public BasicConfig(File file) {
 		FILE = new File("config/Ships/" + file.getPath() + ".conf");
 		LOADER = HoconConfigurationLoader.builder().setFile(FILE).build();
 		ROOT = LOADER.createEmptyNode();
 	}
-	
-	public File getFile(){
+
+	public File getFile() {
 		return FILE;
 	}
-	
-	public HoconConfigurationLoader getLoader(){
+
+	public HoconConfigurationLoader getLoader() {
 		return LOADER;
 	}
-	
-	public ConfigurationNode getRoot(){
+
+	public ConfigurationNode getRoot() {
 		return ROOT;
 	}
-	
-	public BasicConfig set(Object object, Object... path){
+
+	public BasicConfig set(Object object, Object... path) {
 		ROOT.getNode(path).setValue(object);
 		return this;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T extends Object> T get(Class<T> type, Object... path){
+	public <T extends Object> T get(Class<T> type, Object... path) {
 		Object object = ROOT.getNode(path).getValue();
-		if(type.isInstance(object)){
+		if (type.isInstance(object)) {
 			return (T) object;
-		}else{
+		} else {
 			return null;
 		}
 	}
-	
-	public <T extends Object> List<T> getList(Function<? super ConfigurationNode, T> type, Object... path){
-		return (List<T>)ROOT.getNode(path).getChildrenList().stream().map(type).collect(Collectors.toList());
+
+	public <T extends Object> List<T> getList(Function<? super ConfigurationNode, T> type, Object... path) {
+		return (List<T>) ROOT.getNode(path).getChildrenList().stream().map(type).collect(Collectors.toList());
 	}
-	
-	public BasicConfig save(){
+
+	public BasicConfig save() {
 		try {
 			LOADER.save(ROOT);
 		} catch (IOException e) {

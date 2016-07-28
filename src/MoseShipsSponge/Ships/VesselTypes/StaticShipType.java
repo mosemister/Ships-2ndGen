@@ -10,34 +10,39 @@ import org.spongepowered.api.world.World;
 import MoseShipsSponge.Ships.ShipsData;
 
 public interface StaticShipType {
-	
+
 	List<StaticShipType> TYPES = new ArrayList<>();
-	
+
 	public String getName();
+
 	public int getDefaultSpeed();
+
 	public int getBoostSpeed();
+
 	public int getAltitudeSpeed();
+
 	public boolean autoPilot();
+
 	public Optional<ShipType> createVessel(String name, Location<World> licence);
+
 	public Optional<ShipType> loadVessel(ShipsData data);
-	
-	public static void inject(StaticShipType type){
+
+	public static void inject(StaticShipType type) {
 		TYPES.add(type);
 	}
-	
-	public static List<StaticShipType> getTypes(){
+
+	public static List<StaticShipType> getTypes() {
 		return new ArrayList<>(TYPES);
 	}
-	
-	public static Optional<StaticShipType> getType(String name){
+
+	public static Optional<StaticShipType> getType(String name) {
 		System.out.println("Ships types" + TYPES.size());
 		return TYPES.stream().filter(t -> t.getName().equalsIgnoreCase(name)).findAny();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public static <T extends StaticShipType> Optional<T> getType(Class<T> type){
-		return (Optional<T>)TYPES.stream().filter(t -> type.isInstance(t)).findAny();
+	public static <T extends StaticShipType> Optional<T> getType(Class<T> type) {
+		return (Optional<T>) TYPES.stream().filter(t -> type.isInstance(t)).findAny();
 	}
-	
 
 }

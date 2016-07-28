@@ -13,40 +13,41 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scheduler.Task;
 
 import MoseShips.Stores.TwoStore;
+
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.Utils.AutoPilot;
 
 public class MovementResult {
-	
+
 	List<TwoStore<CauseKeys<Object>, Object>> CAUSES = new ArrayList<>();
-	
-	public Set<TwoStore<CauseKeys<Object>, Object>> entrySet(){
+
+	public Set<TwoStore<CauseKeys<Object>, Object>> entrySet() {
 		return new HashSet<>(CAUSES);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <E extends Object> void put(CauseKeys<E> key, E value){
+	public <E extends Object> void put(CauseKeys<E> key, E value) {
 		CAUSES.removeAll(CAUSES.stream().filter(e -> e.getFirst().equals(key)).collect(Collectors.toList()));
-		TwoStore<CauseKeys<Object>, Object> store = new TwoStore<CauseKeys<Object>, Object>((CauseKeys<Object>)key, value);
+		TwoStore<CauseKeys<Object>, Object> store = new TwoStore<CauseKeys<Object>, Object>((CauseKeys<Object>) key, value);
 		CAUSES.add(store);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <E> Optional<E> get(CauseKeys<E> key){
+	public <E> Optional<E> get(CauseKeys<E> key) {
 		Optional<TwoStore<CauseKeys<Object>, Object>> opStore = CAUSES.stream().filter(e -> e.getFirst().equals(key)).findAny();
-		if(opStore.isPresent()){
-			return Optional.of((E)opStore.get().getSecond());
+		if (opStore.isPresent()) {
+			return Optional.of((E) opStore.get().getSecond());
 		}
 		return Optional.empty();
 	}
-	
-	public <E> Optional<TwoStore<CauseKeys<Object>, Object>> getFailedCause(){
-		if(CAUSES.isEmpty()){
+
+	public <E> Optional<TwoStore<CauseKeys<Object>, Object>> getFailedCause() {
+		if (CAUSES.isEmpty()) {
 			return Optional.empty();
 		}
-		
-		TwoStore<CauseKeys<Object>, Object> store = CAUSES.get(CAUSES.size() -1);
+
+		TwoStore<CauseKeys<Object>, Object> store = CAUSES.get(CAUSES.size() - 1);
 		return Optional.ofNullable(store);
 	}
 

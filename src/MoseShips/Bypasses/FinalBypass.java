@@ -1,20 +1,20 @@
 package MoseShips.Bypasses;
 
-public class FinalBypass <T extends Object>{
+public class FinalBypass<T extends Object> {
 
 	T OBJECT;
-	
-	public FinalBypass(T object){
+
+	public FinalBypass(T object) {
 		OBJECT = object;
 	}
-	
-	public T get(){
+
+	public T get() {
 		return OBJECT;
 	}
-	
-	public FinalBypass<T> set(T object){
+
+	public FinalBypass<T> set(T object) {
 		OBJECT = object;
 		return this;
 	}
-	
+
 }

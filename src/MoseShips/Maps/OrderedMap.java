@@ -37,7 +37,7 @@ public class OrderedMap<A extends Object, B extends Object> extends HashMap<A, B
 		}
 		return -1;
 	}
-	
+
 	public static <Y extends Object, Z extends Object> OrderedMap<Y, Z> orderByKey(Map<Y, Z> map) {
 		OrderedMap<Y, Z> ret = new OrderedMap<>();
 		while (map.size() > 0) {

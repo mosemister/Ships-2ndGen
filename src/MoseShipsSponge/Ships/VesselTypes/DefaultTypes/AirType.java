@@ -7,12 +7,12 @@ import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
 public abstract class AirType extends ShipType {
-	
+
 	public AirType(String name, Location<World> sign, Location<World> teleport) {
 		super(name, sign, teleport);
 	}
-	
-	public AirType(ShipsData data){
+
+	public AirType(ShipsData data) {
 		super(data);
 	}
 

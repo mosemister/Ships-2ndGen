@@ -32,14 +32,14 @@ public class ShipsSigns {
 	public static Text[] colour(String... lines) {
 		return colour(Arrays.asList(lines));
 	}
-	
-	public static Optional<SignType> getSignType(String line1){
+
+	public static Optional<SignType> getSignType(String line1) {
 		return Arrays.asList(SignType.values()).stream().filter(s -> s.LINES[0].toPlain().equalsIgnoreCase(line1)).findAny();
 	}
 
 	public static Optional<SignType> getSignType(Sign sign) {
 		List<Text> lines = sign.get(Keys.SIGN_LINES).get();
-			return getSignType(lines.get(0).toPlain());
+		return getSignType(lines.get(0).toPlain());
 	}
 
 	public static Text[] colour(List<String> lines) {

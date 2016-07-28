@@ -3,11 +3,11 @@ package MoseShipsSponge.Ships.Movement.Rotate;
 import org.spongepowered.api.util.Direction;
 
 public class BlockRotate {
-	
-	public static Direction getRotation(Direction direction, RotateType type){
-		switch(type){
+
+	public static Direction getRotation(Direction direction, RotateType type) {
+		switch (type) {
 			case LEFT:
-				switch(direction){
+				switch (direction) {
 					case DOWN:
 						return direction;
 					case EAST:
@@ -22,10 +22,10 @@ public class BlockRotate {
 						return Direction.SOUTH;
 					default:
 						return direction;
-					
+
 				}
 			case RIGHT:
-				switch(direction){
+				switch (direction) {
 					case DOWN:
 						return direction;
 					case EAST:
@@ -41,7 +41,7 @@ public class BlockRotate {
 					default:
 						return direction;
 				}
-			
+
 		}
 		return null;
 	}

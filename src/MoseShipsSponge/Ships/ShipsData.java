@@ -12,104 +12,126 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShips.CustomDataHolder.DataHolder;
+
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Ships.Utils.ShipsLocalDatabase;
 
-public class ShipsData extends DataHolder{
-	
-	public static final Object[] DATABASE_NAME = {"ShipsMeta", "Name"};
-	public static final Object[] DATABASE_PILOT = {"ShipsMeta", "Pilot"};
-	public static final Object[] DATABASE_SUB_PILOTS = {"ShipsMeta", "Sub_Pilots"};
-	public static final Object[] DATABASE_WORLD = {"ShipsMeta", "Location", "World"};
-	public static final Object[] DATABASE_BLOCK = {"ShipsMeta", "Location", "Block"};
-	public static final Object[] DATABASE_TELEPORT = {"ShipsMeta", "Location", "Teleport"};
-	
+public class ShipsData extends DataHolder {
+
+	public static final Object[] DATABASE_NAME = {
+		"ShipsMeta",
+		"Name"
+	};
+	public static final Object[] DATABASE_PILOT = {
+		"ShipsMeta",
+		"Pilot"
+	};
+	public static final Object[] DATABASE_SUB_PILOTS = {
+		"ShipsMeta",
+		"Sub_Pilots"
+	};
+	public static final Object[] DATABASE_WORLD = {
+		"ShipsMeta",
+		"Location",
+		"World"
+	};
+	public static final Object[] DATABASE_BLOCK = {
+		"ShipsMeta",
+		"Location",
+		"Block"
+	};
+	public static final Object[] DATABASE_TELEPORT = {
+		"ShipsMeta",
+		"Location",
+		"Teleport"
+	};
+
 	protected String NAME;
 	protected User USER;
 	protected List<User> SUB_PILOTS = new ArrayList<>();
 	protected List<Location<World>> STRUCTURE = new ArrayList<>();
 	protected Location<World> MAIN_BLOCK;
 	protected Location<World> TELEPORT;
-	
-	public ShipsData(String name, Location<World> sign, Location<World> teleport){
+
+	public ShipsData(String name, Location<World> sign, Location<World> teleport) {
 		NAME = name;
 		MAIN_BLOCK = sign;
 		TELEPORT = teleport;
 	}
-	
-	public ShipsData(ShipsData data){
+
+	public ShipsData(ShipsData data) {
 		data.cloneOnto(this);
 	}
-	
-	public Optional<Sign> getLicence(){
+
+	public Optional<Sign> getLicence() {
 		Optional<TileEntity> entity = MAIN_BLOCK.getTileEntity();
-		if(entity.isPresent()){
-			if(entity.get() instanceof Sign){
-				return Optional.of((Sign)entity.get());
+		if (entity.isPresent()) {
+			if (entity.get() instanceof Sign) {
+				return Optional.of((Sign) entity.get());
 			}
 		}
 		return null;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return NAME;
 	}
-	
-	public Optional<User> getOwner(){
+
+	public Optional<User> getOwner() {
 		return Optional.ofNullable(USER);
 	}
-	
-	public ShipsData setOwner(User user){
+
+	public ShipsData setOwner(User user) {
 		USER = user;
 		return this;
 	}
-	
-	public List<User> getSubPilots(){
+
+	public List<User> getSubPilots() {
 		return SUB_PILOTS;
 	}
-	
-	public List<Location<World>> getBasicStructure(){
+
+	public List<Location<World>> getBasicStructure() {
 		return STRUCTURE;
 	}
-	
-	public List<Location<World>> updateBasicStructure(){
+
+	public List<Location<World>> updateBasicStructure() {
 		List<Location<World>> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT), MAIN_BLOCK);
 		STRUCTURE = list;
 		return list;
 	}
-	
-	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence){
+
+	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence) {
 		STRUCTURE = locs;
 		MAIN_BLOCK = licence;
 		return locs;
 	}
-	
-	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence, Location<World> teleport){
+
+	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence, Location<World> teleport) {
 		STRUCTURE = locs;
 		MAIN_BLOCK = licence;
 		TELEPORT = teleport;
 		return locs;
 	}
-	
-	public Location<World> getLocation(){
+
+	public Location<World> getLocation() {
 		return MAIN_BLOCK;
 	}
-	
-	public Location<World> getTeleportToLocation(){
+
+	public Location<World> getTeleportToLocation() {
 		return TELEPORT;
 	}
-	
-	public ShipsData setTeleportToLocation(Location<World> loc){
+
+	public ShipsData setTeleportToLocation(Location<World> loc) {
 		TELEPORT = loc;
 		return this;
 	}
-	
-	public ShipsLocalDatabase getLocalDatabase() throws IOException{
+
+	public ShipsLocalDatabase getLocalDatabase() throws IOException {
 		return new ShipsLocalDatabase(this);
 	}
-	
-	public ShipsData cloneOnto(ShipsData data){
+
+	public ShipsData cloneOnto(ShipsData data) {
 		data.MAIN_BLOCK = this.MAIN_BLOCK;
 		data.NAME = this.NAME;
 		data.STRUCTURE = this.STRUCTURE;
@@ -119,5 +141,5 @@ public class ShipsData extends DataHolder{
 		data.DATA = this.DATA;
 		return data;
 	}
-	
+
 }

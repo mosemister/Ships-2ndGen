@@ -7,31 +7,31 @@ import org.spongepowered.api.entity.living.player.Player;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 
 public enum Permissions {
-	
+
 	CREATE_VESSEL(true, "ships.*", "ships.*.make", "ships.%VesselType%.make");
-	
+
 	public static boolean USE_PERMISSIONS = false;
-	
+
 	String[] PERMISSIONS;
 	boolean NO_PERMISSION_VALUE;
-	
-	private Permissions(boolean noPerms, String... perms){
+
+	private Permissions(boolean noPerms, String... perms) {
 		PERMISSIONS = perms;
 		NO_PERMISSION_VALUE = noPerms;
 	}
-	
-	public boolean hasPermission(Player player){
+
+	public boolean hasPermission(Player player) {
 		return hasPermission(player, "", "");
 	}
-	
-	public boolean hasPermission(Player player, StaticShipType type){
+
+	public boolean hasPermission(Player player, StaticShipType type) {
 		return hasPermission(player, "%VesselType%", type.getName());
 	}
-	
-	private boolean hasPermission(Player player, String old, String replace){
-		if(USE_PERMISSIONS){
+
+	private boolean hasPermission(Player player, String old, String replace) {
+		if (USE_PERMISSIONS) {
 			return Arrays.asList(PERMISSIONS).stream().anyMatch(p -> player.hasPermission(p.replace(old, replace)));
-		}else{
+		} else {
 			return NO_PERMISSION_VALUE;
 		}
 	}

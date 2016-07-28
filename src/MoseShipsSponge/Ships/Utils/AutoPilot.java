@@ -11,6 +11,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShips.Maps.OrderedMap;
+
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.Movement.Movement;
 import MoseShipsSponge.Ships.Movement.StoredMovement;
@@ -20,7 +21,8 @@ public class AutoPilot {
 
 	List<StoredMovement> MOVEMENTS = new ArrayList<>();
 	ShipType SHIP;
-	@Nullable User USER;
+	@Nullable
+	User USER;
 	int TARGET;
 	boolean SHOULD_REPEATE;
 
@@ -42,20 +44,20 @@ public class AutoPilot {
 	public AutoPilot(ShipType type, Location<World> moveTo, int speed, @Nullable User user) {
 		// TODO create path from ship to location
 	}
-	
-	public List<StoredMovement> getMovements(){
+
+	public List<StoredMovement> getMovements() {
 		return MOVEMENTS;
 	}
-	
-	public ShipType getTargetShip(){
+
+	public ShipType getTargetShip() {
 		return SHIP;
 	}
-	
-	public Optional<User> getTargetPlayer(){
+
+	public Optional<User> getTargetPlayer() {
 		return Optional.ofNullable(USER);
 	}
-	
-	public boolean isRepeating(){
+
+	public boolean isRepeating() {
 		return SHOULD_REPEATE;
 	}
 

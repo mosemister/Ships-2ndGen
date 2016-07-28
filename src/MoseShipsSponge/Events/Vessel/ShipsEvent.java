@@ -5,21 +5,21 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 
 import MoseShipsSponge.Ships.ShipsData;
 
-public abstract class ShipsEvent<T extends ShipsData> extends AbstractEvent{
-	
+public abstract class ShipsEvent<T extends ShipsData> extends AbstractEvent {
+
 	T SHIP;
 	Cause CAUSE;
-	
-	public ShipsEvent(T ship, Cause cause){
+
+	public ShipsEvent(T ship, Cause cause) {
 		SHIP = ship;
 	}
-	
-	public T getShip(){
+
+	public T getShip() {
 		return SHIP;
 	}
-	
+
 	@Override
-	public Cause getCause(){
+	public Cause getCause() {
 		return CAUSE;
 	}
 

@@ -22,8 +22,8 @@ public class OpShip extends AirType {
 	public OpShip(String name, Location<World> sign, Location<World> teleport) {
 		super(name, sign, teleport);
 	}
-	
-	public OpShip(ShipsData ship){
+
+	public OpShip(ShipsData ship) {
 		super(ship);
 	}
 
@@ -51,23 +51,23 @@ public class OpShip extends AirType {
 	public Map<Text, Object> getInfo() {
 		return new HashMap<Text, Object>();
 	}
-	
+
 	@Override
 	public StaticShipType getStatic() {
 		return StaticShipType.getType(StaticOPShip.class).get();
 	}
-	
-	public static class StaticOPShip implements StaticShipType{
 
-		public StaticOPShip(){
+	public static class StaticOPShip implements StaticShipType {
+
+		public StaticOPShip() {
 			StaticShipType.inject(this);
 		}
-		
+
 		@Override
-		public String getName(){
+		public String getName() {
 			return "OPShip";
 		}
-		
+
 		@Override
 		public int getDefaultSpeed() {
 			return 2;
@@ -97,6 +97,6 @@ public class OpShip extends AirType {
 		public Optional<ShipType> loadVessel(ShipsData data) {
 			return Optional.of(new OpShip(data));
 		}
-		
+
 	}
 }

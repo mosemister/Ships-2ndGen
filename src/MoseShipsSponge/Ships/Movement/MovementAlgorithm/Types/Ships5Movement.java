@@ -21,18 +21,18 @@ import MoseShipsSponge.Ships.Movement.Rotate.BlockRotate;
 import MoseShipsSponge.Ships.Movement.Rotate.RotateType;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
 
-public class Ships5Movement implements MovementAlgorithm{
+public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
 	public void move(ShipType type, List<MovingBlock> blocks) {
 		System.out.println("moving blocks size: " + blocks.size());
-		//List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
-		//hidden because of update neighbour is off
+		// List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
+		// hidden because of update neighbour is off
 		int waterLevel = 63;
-		/*if(type instanceof WaterType){
-			WaterType type2 = (WaterType)type;
-			waterLevel = type2.getWaterLevel();
-		}*/
+		/* if(type instanceof WaterType){
+		 * WaterType type2 = (WaterType)type;
+		 * waterLevel = type2.getWaterLevel();
+		 * } */
 		blocks.stream().forEach(block -> {
 			if (block.getOrigin().getBlockY() > waterLevel) {
 				block.clearOriginalBlock(BlockChangeFlag.NONE, ShipsCause.BLOCK_MOVING.buildCause());
@@ -47,28 +47,28 @@ public class Ships5Movement implements MovementAlgorithm{
 			block.move(BlockChangeFlag.NONE);
 			MovementType mType = block.getMovementType();
 			Optional<Direction> opConnected = block.getMovingTo().get(Keys.DIRECTION);
-			switch(mType){
+			switch (mType) {
 				case ROTATE_LEFT:
-					if(opConnected.isPresent()){
+					if (opConnected.isPresent()) {
 						BlockRotate.getRotation(opConnected.get(), RotateType.LEFT);
 					}
 					break;
 				case ROTATE_RIGHT:
-					if(opConnected.isPresent()){
+					if (opConnected.isPresent()) {
 						BlockRotate.getRotation(opConnected.get(), RotateType.LEFT);
 					}
 					break;
 				default:
 					break;
-				
+
 			}
 		});
 		Vector3i vec = blocks.get(0).getMovingTo().getBlockPosition().sub(blocks.get(0).getOrigin().getBlockPosition());
 		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation(), vec.getX(), vec.getY(), vec.getZ());
 		MovingBlock lBlock = new MovingBlock(type.getLocation(), vec.getX(), vec.getY(), vec.getZ());
 		type.setBasicStructure(newStructure, lBlock.getMovingTo(), tBlock.getMovingTo());
-		//moveEntitys(move);
-		
+		// moveEntitys(move);
+
 	}
 
 	@Override
