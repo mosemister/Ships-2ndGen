@@ -7,6 +7,8 @@ import java.util.Map;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 
+import MoseShipsSponge.ShipsMain;
+
 public enum ShipsCause {
 
 	SIGN_CLICK,
@@ -24,14 +26,17 @@ public enum ShipsCause {
 	}
 
 	public Cause buildCause() {
-		return Cause.builder().named(NAME, this).build();
+		Cause.Builder builder = Cause.builder();
+		builder.owner(ShipsMain.getPlugin().getContainer());
+		builder.named(NAME, this);
+		return builder.build();
 	}
 
 	public Cause buildCause(Map<String, Object> causes) {
 		List<NamedCause> namedCauses = new ArrayList<>();
 		namedCauses.add(NamedCause.of(NAME, this));
-		causes.entrySet().forEach(e -> NamedCause.of(e.getKey(), e.getValue()));
-		return Cause.builder().addAll(namedCauses).owner(this).build();
+		causes.entrySet().stream().forEach(e -> namedCauses.add(NamedCause.of(e.getKey(), e.getValue())));
+		return Cause.builder().addAll(namedCauses).owner(ShipsMain.getPlugin().getContainer()).build();
 	}
 
 }

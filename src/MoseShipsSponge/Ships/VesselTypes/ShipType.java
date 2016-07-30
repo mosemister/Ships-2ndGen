@@ -1,5 +1,6 @@
 package MoseShipsSponge.Ships.VesselTypes;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.util.Direction;
@@ -19,7 +21,7 @@ import org.spongepowered.api.world.extent.Extent;
 import com.flowpowered.math.vector.Vector3i;
 
 import MoseShips.Bypasses.FinalBypass;
-import MoseShipsSponge.ShipsMain;
+
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.ShipsData;
@@ -29,6 +31,7 @@ import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
+import MoseShipsSponge.Utils.LocationUtils;
 
 public abstract class ShipType extends ShipsData {
 
@@ -60,7 +63,7 @@ public abstract class ShipType extends ShipsData {
 
 	public Optional<MovementResult> move(Direction dir, int speed, Cause cause) {
 		System.out.println("speed: " + speed);
-		Vector3i vector3i = ShipsMain.convert(dir, speed);
+		Vector3i vector3i = LocationUtils.getReletive(dir, speed);
 		return move(vector3i, cause);
 	}
 
@@ -106,6 +109,39 @@ public abstract class ShipType extends ShipsData {
 			loc2 = (Location<World>) loc;
 		}
 		return Movement.teleport(this, loc2, X, Y, Z, cause);
+	}
+	
+	@Override
+	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence) {
+		List<Location<World>> structure = super.setBasicStructure(locs, licence);
+		try {
+			getLocalDatabase().saveBasicShip(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return structure;
+	}
+	
+	@Override
+	public ShipType setTeleportToLocation(Location<World> loc) {
+		super.setTeleportToLocation(loc);
+		try {
+			getLocalDatabase().saveBasicShip(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return this;
+	}
+	
+	@Override
+	public ShipType setOwner(User user) {
+		super.setOwner(user);
+		try {
+			getLocalDatabase().saveBasicShip(this);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return this;
 	}
 
 	public static void inject(ShipType type) {
@@ -165,13 +201,20 @@ public abstract class ShipType extends ShipsData {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Optional<ShipType> getShip(Location<? extends Extent> loc) {
+	public static Optional<ShipType> getShip(Location<? extends Extent> loc, boolean updateStructure) {
 		if (loc.getExtent() instanceof Chunk) {
 			Chunk chunk = (Chunk) loc.getExtent();
 			loc = chunk.getWorld().getLocation(loc.getBlockPosition());
 		}
-		final Location<World> loc2 = (Location<World>) loc;
-		return SHIPS.stream().filter(s -> s.getBasicStructure().stream().anyMatch(b -> (b.getBlockPosition().equals(loc2.getBlockPosition())) && (b.getExtent().equals(loc2.getExtent())))).findAny();
+		final Location<World> loc2 = (Location<World>) loc;		
+		return SHIPS.stream().filter(s -> {
+			//CHECK THOUGH ALL SHIPS
+			if(updateStructure){
+				//UPDATE THE STRUCTURE IF SPECIFIED
+				s.updateBasicStructure();
+			}
+			return s.hasLocation(loc2);
+		}).findFirst();
 	}
 
 	public static List<ShipType> getShips() {

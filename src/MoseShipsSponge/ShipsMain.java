@@ -5,11 +5,10 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.Direction;
 
-import com.flowpowered.math.vector.Vector3i;
 import com.google.inject.Inject;
 
 import MoseShipsSponge.Listeners.ShipsListeners;
@@ -26,6 +25,9 @@ public class ShipsMain {
 
 	@Inject
 	Game GAME;
+	
+	@Inject
+	PluginContainer CONTAINER;
 
 	@Listener
 	public void onEnable(GameStartingServerEvent event) {
@@ -42,35 +44,9 @@ public class ShipsMain {
 	public Game getGame() {
 		return GAME;
 	}
-
-	public static Vector3i convert(Direction direction, int speed) {
-		switch (direction) {
-			case DOWN:
-				return new Vector3i(0, -speed, 0);
-			case EAST:
-				return new Vector3i(speed, 0, 0);
-			case NONE:
-				return new Vector3i(0, 0, 0);
-			case NORTH:
-				return new Vector3i(0, 0, -speed);
-			case NORTHEAST:
-				break;
-			case NORTHWEST:
-				break;
-			case SOUTH:
-				return new Vector3i(0, 0, speed);
-			case SOUTHEAST:
-				break;
-			case SOUTHWEST:
-				break;
-			case UP:
-				return new Vector3i(0, speed, 0);
-			case WEST:
-				return new Vector3i(-speed, 0, 0);
-			default:
-				return new Vector3i(0, 0, 0);
-		}
-		return new Vector3i(0, 0, 0);
+	
+	public PluginContainer getContainer(){
+		return CONTAINER;
 	}
 
 	public static Text format(String message, boolean error) {

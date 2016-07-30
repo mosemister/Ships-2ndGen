@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
@@ -97,82 +96,165 @@ public class ShipsListeners {
 	}
 
 	@Listener
-	public void playerInteractEvent(InteractBlockEvent event, @Root Player player) {
-		System.out.println("Interact event");
-		Optional<Location<World>> opLoc = event.getTargetBlock().getLocation();
-		if (opLoc.isPresent()) {
-			System.out.println("block click");
-			Location<World> loc = opLoc.get();
-			Optional<TileEntity> opEntity = loc.getTileEntity();
-			if (opEntity.isPresent()) {
-				System.out.println("is tile entity");
-				TileEntity tile = opEntity.get();
-				if (tile instanceof Sign) {
-					System.out.println("tile entity is sign");
-					Sign sign = (Sign) tile;
-					Optional<SignType> opSignType = ShipsSigns.getSignType(sign);
-					if (opSignType.isPresent()) {
-						System.out.println("sign type found");
-						if (event instanceof InteractBlockEvent.Secondary) {
-							System.out.println("is right click");
-							Optional<ShipType> opShipType = ShipType.getShip(opSignType.get(), sign, true);
-							if (opShipType.isPresent()) {
-								System.out.println("gets the ship");
-								ShipType ship = opShipType.get();
-								switch (opSignType.get()) {
-									case EOT:
+	public void playerInteractEvent2(InteractBlockEvent event, @Root Player player) {
+		System.out.println("Interact event 2");
+		BlockSnapshot shot = event.getTargetBlock();
+		Direction direction = event.getTargetSide();
+		Optional<List<Text>> opLines = shot.get(Keys.SIGN_LINES);
+		if (opLines.isPresent()) {
+			System.out.println("is sign");
+			List<Text> lines = opLines.get();
+			Optional<SignType> signType = ShipsSigns.getSignType(lines.get(0).toPlain());
+			if (signType.isPresent()) {
+				System.out.println("is a Ship sign");
+				Location<World> loc = player.getLocation().getRelative(Direction.DOWN);
+				System.out.println(loc.getBlockX() + " | " + loc.getBlockY() + " | " + loc.getBlockZ() + " | " + loc.getExtent().getName() + " | " + loc.getBlockType().getId());
+				Optional<ShipType> opType = ShipType.getShip(loc, true);
+				if (opType.isPresent()) {
+					System.out.println("has Ship");
+					ShipType ship = opType.get();
+					if (event instanceof InteractBlockEvent.Secondary) {
+						System.out.print("Is right click");
+						switch (signType.get()) {
+							case EOT:
 
-										break;
-									case LICENCE:
-										Map<Text, Object> info = ship.getInfo();
-										player.sendMessage(ShipsMain.format("Information about " + ship.getName(), false));
-										info.entrySet().forEach(e -> player.sendMessage(e.getKey()));
-										break;
-									case MOVE:
-										System.out.println("is move sign");
-										Direction direction = loc.get(Keys.DIRECTION).get();
-										if (sign.lines().get(2).toPlain().equals("{Boost}")) {
-											Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
-											if (cause.isPresent()) {
-												MovementResult result = cause.get();
-												Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-												if (failed.isPresent()) {
-													TwoStore<CauseKeys<Object>, Object> store = failed.get();
-													store.getFirst().sendMessage(player, store.getSecond());
-												}
-											}
-										} else {
-											Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getDefaultSpeed(), ShipsCause.SIGN_CLICK.buildCause());
-											if (cause.isPresent()) {
-												MovementResult result = cause.get();
-												Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-												if (failed.isPresent()) {
-													TwoStore<CauseKeys<Object>, Object> store = failed.get();
-													store.getFirst().sendMessage(player, store.getSecond());
-												}
-											}
+								break;
+							case LICENCE:
+								Map<Text, Object> info = ship.getInfo();
+								player.sendMessage(ShipsMain.format("Information about " + ship.getName(), false));
+								info.entrySet().forEach(e -> player.sendMessage(e.getKey()));
+								break;
+							case MOVE:
+								System.out.println("is move sign");
+								if (lines.get(2).toPlain().equals("{Boost}")) {
+									Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+									if (cause.isPresent()) {
+										MovementResult result = cause.get();
+										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+										if (failed.isPresent()) {
+											TwoStore<CauseKeys<Object>, Object> store = failed.get();
+											store.getFirst().sendMessage(player, store.getSecond());
 										}
-										break;
-									case WHEEL:
-										break;
-									case ALTITUDE:
-										Optional<MovementResult> cause = ship.move(new Vector3i(0, -ship.getStatic().getAltitudeSpeed(), 0), ShipsCause.SIGN_CLICK.buildCause());
-										if (cause.isPresent()) {
-											MovementResult result = cause.get();
-											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-											if (failed.isPresent()) {
-												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(player, store.getSecond());
-											}
+									}
+								} else {
+									Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getDefaultSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+									if (cause.isPresent()) {
+										MovementResult result = cause.get();
+										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+										if (failed.isPresent()) {
+											TwoStore<CauseKeys<Object>, Object> store = failed.get();
+											store.getFirst().sendMessage(player, store.getSecond());
 										}
-										break;
+									}
 								}
-							}
+								break;
+							case WHEEL:
+								break;
+							case ALTITUDE:
+								Optional<MovementResult> cause = ship.move(new Vector3i(0, -ship.getStatic().getAltitudeSpeed(), 0), ShipsCause.SIGN_CLICK.buildCause());
+								if (cause.isPresent()) {
+									MovementResult result = cause.get();
+									Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+									if (failed.isPresent()) {
+										TwoStore<CauseKeys<Object>, Object> store = failed.get();
+										store.getFirst().sendMessage(player, store.getSecond());
+									}
+								}
+								break;
 						}
 					}
 				}
 			}
 		}
 	}
+
+	/* @Listener
+	 * public void playerInteractEvent(InteractBlockEvent event, @Root Player
+	 * player) {
+	 * System.out.println("Interact event");
+	 * Optional<Location<World>> opLoc = event.getTargetBlock().getLocation();
+	 * if (opLoc.isPresent()) {
+	 * System.out.println("block click");
+	 * Location<World> loc = opLoc.get();
+	 * Optional<TileEntity> opEntity = loc.getTileEntity();
+	 * if (opEntity.isPresent()) {
+	 * System.out.println("is tile entity");
+	 * TileEntity tile = opEntity.get();
+	 * if (tile instanceof Sign) {
+	 * System.out.println("tile entity is sign");
+	 * Sign sign = (Sign) tile;
+	 * Optional<SignType> opSignType = ShipsSigns.getSignType(sign);
+	 * if (opSignType.isPresent()) {
+	 * System.out.println("sign type found");
+	 * if (event instanceof InteractBlockEvent.Secondary) {
+	 * System.out.println("is right click");
+	 * Optional<ShipType> opShipType = ShipType.getShip(opSignType.get(), sign,
+	 * true);
+	 * if (opShipType.isPresent()) {
+	 * System.out.println("gets the ship");
+	 * ShipType ship = opShipType.get();
+	 * switch (opSignType.get()) {
+	 * case EOT:
+	 * 
+	 * break;
+	 * case LICENCE:
+	 * Map<Text, Object> info = ship.getInfo();
+	 * player.sendMessage(ShipsMain.format("Information about " +
+	 * ship.getName(), false));
+	 * info.entrySet().forEach(e -> player.sendMessage(e.getKey()));
+	 * break;
+	 * case MOVE:
+	 * System.out.println("is move sign");
+	 * Direction direction = loc.get(Keys.DIRECTION).get();
+	 * if (sign.lines().get(2).toPlain().equals("{Boost}")) {
+	 * Optional<MovementResult> cause = ship.move(direction,
+	 * ship.getStatic().getBoostSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+	 * if (cause.isPresent()) {
+	 * MovementResult result = cause.get();
+	 * Optional<TwoStore<CauseKeys<Object>, Object>> failed =
+	 * result.getFailedCause();
+	 * if (failed.isPresent()) {
+	 * TwoStore<CauseKeys<Object>, Object> store = failed.get();
+	 * store.getFirst().sendMessage(player, store.getSecond());
+	 * }
+	 * }
+	 * } else {
+	 * Optional<MovementResult> cause = ship.move(direction,
+	 * ship.getStatic().getDefaultSpeed(), ShipsCause.SIGN_CLICK.buildCause());
+	 * if (cause.isPresent()) {
+	 * MovementResult result = cause.get();
+	 * Optional<TwoStore<CauseKeys<Object>, Object>> failed =
+	 * result.getFailedCause();
+	 * if (failed.isPresent()) {
+	 * TwoStore<CauseKeys<Object>, Object> store = failed.get();
+	 * store.getFirst().sendMessage(player, store.getSecond());
+	 * }
+	 * }
+	 * }
+	 * break;
+	 * case WHEEL:
+	 * break;
+	 * case ALTITUDE:
+	 * Optional<MovementResult> cause = ship.move(new Vector3i(0,
+	 * -ship.getStatic().getAltitudeSpeed(), 0),
+	 * ShipsCause.SIGN_CLICK.buildCause());
+	 * if (cause.isPresent()) {
+	 * MovementResult result = cause.get();
+	 * Optional<TwoStore<CauseKeys<Object>, Object>> failed =
+	 * result.getFailedCause();
+	 * if (failed.isPresent()) {
+	 * TwoStore<CauseKeys<Object>, Object> store = failed.get();
+	 * store.getFirst().sendMessage(player, store.getSecond());
+	 * }
+	 * }
+	 * break;
+	 * }
+	 * }
+	 * }
+	 * }
+	 * }
+	 * }
+	 * }
+	 * } */
 
 }

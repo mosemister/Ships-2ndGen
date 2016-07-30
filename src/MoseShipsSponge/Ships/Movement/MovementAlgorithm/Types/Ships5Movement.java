@@ -20,21 +20,22 @@ import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.Movement.Rotate.BlockRotate;
 import MoseShipsSponge.Ships.Movement.Rotate.RotateType;
 import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.WaterType;
 
 public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
-	public void move(ShipType type, List<MovingBlock> blocks) {
+	public void move(ShipType type, List<MovingBlock> blocksUn) {
+		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		System.out.println("moving blocks size: " + blocks.size());
-		// List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
-		// hidden because of update neighbour is off
 		int waterLevel = 63;
-		/* if(type instanceof WaterType){
-		 * WaterType type2 = (WaterType)type;
-		 * waterLevel = type2.getWaterLevel();
-		 * } */
+		if(type instanceof WaterType){
+			WaterType type2 = (WaterType)type;
+			waterLevel = type2.getWaterLevel();
+		}
+		final int waterLevelFinal = waterLevel;
 		blocks.stream().forEach(block -> {
-			if (block.getOrigin().getBlockY() > waterLevel) {
+			if (block.getOrigin().getBlockY() > waterLevelFinal) {
 				block.clearOriginalBlock(BlockChangeFlag.NONE, ShipsCause.BLOCK_MOVING.buildCause());
 			} else {
 				block.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlag.NONE, ShipsCause.BLOCK_MOVING.buildCause());

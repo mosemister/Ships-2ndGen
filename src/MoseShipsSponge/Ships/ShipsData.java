@@ -46,6 +46,10 @@ public class ShipsData extends DataHolder {
 		"Location",
 		"Teleport"
 	};
+	public static final Object[] DATABASE_STRUCTURE = {
+		"ShipsStructure",
+		"Basic"
+	};
 
 	protected String NAME;
 	protected User USER;
@@ -90,9 +94,23 @@ public class ShipsData extends DataHolder {
 	public List<User> getSubPilots() {
 		return SUB_PILOTS;
 	}
+	
+	public World getWorld(){
+		return MAIN_BLOCK.getExtent();
+	}
 
 	public List<Location<World>> getBasicStructure() {
 		return STRUCTURE;
+	}
+	
+	public boolean hasLocation(Location<World> loc){
+		if(!loc.getExtent().equals(getWorld())){
+			return false;
+		}
+		STRUCTURE.stream().anyMatch(b -> {
+			return b.getBlockPosition().equals(loc.getBlockPosition());
+		});
+		return false;
 	}
 
 	public List<Location<World>> updateBasicStructure() {

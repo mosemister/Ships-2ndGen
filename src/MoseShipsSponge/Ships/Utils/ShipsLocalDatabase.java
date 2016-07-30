@@ -10,9 +10,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.spongepowered.api.entity.living.player.User;
-
-import MoseShips.CustomDataHolder.DataHolder;
+import com.flowpowered.math.vector.Vector3i;
 
 import MoseShipsSponge.SerializedData;
 import MoseShipsSponge.Ships.ShipsData;
@@ -30,6 +28,8 @@ public class ShipsLocalDatabase {
 
 	public ShipsLocalDatabase(ShipsData data) throws IOException {
 		FILE = new File("config/Ships/ShipsData/" + data.getName() + ".conf");
+		FILE.getParentFile().mkdirs();
+		FILE.createNewFile();
 		LOADER = HoconConfigurationLoader.builder().setFile(FILE).build();
 		ROOT_NODE = LOADER.load();
 	}
@@ -51,33 +51,51 @@ public class ShipsLocalDatabase {
 
 	public ShipsLocalDatabase set(Object value, Object... path) {
 		ConfigurationNode node = ROOT_NODE.getNode(path);
-		node.setValue(path);
+		node.setValue(value);
 		return this;
+	}
+	
+	public boolean save(){
+		try {
+			LOADER.save(ROOT_NODE);
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public ShipsLocalDatabase saveBasicShip(ShipsData data) {
 		List<String> pilots = new ArrayList<>();
-		for (User user : data.getSubPilots()) {
-			pilots.add(user.getUniqueId().toString());
-		}
+		data.getSubPilots().stream().forEach(p -> pilots.add(p.getUniqueId().toString()));
+		List<String> structure = new ArrayList<>();
+		data.getBasicStructure().stream().forEach(l -> {
+			Vector3i loc = l.getBlockPosition();
+			int X = loc.getX();
+			int Y = loc.getY();
+			int Z = loc.getZ();
+			structure.add(X + "," + Y + "," + Z);
+		});
 		String block = (data.getLocation().getBlockPosition().getX() + "," + data.getLocation().getBlockPosition().getY() + "," + data.getLocation().getBlockPosition().getZ());
 		String teleport = (data.getTeleportToLocation().getBlockPosition().getX() + "," + data.getTeleportToLocation().getBlockPosition().getY() + "," + data.getTeleportToLocation().getBlockPosition()
 				.getZ());
-		set(ShipsData.DATABASE_NAME, data.getName());
+		set(structure, ShipsData.DATABASE_STRUCTURE);
+		set(data.getName(), ShipsData.DATABASE_NAME);
 		if (data.getOwner().isPresent()) {
-			set(ShipsData.DATABASE_PILOT, data.getOwner().get().getUniqueId().toString());
+			set(data.getOwner().get().getUniqueId().toString(), ShipsData.DATABASE_PILOT);
 		}
-		set(ShipsData.DATABASE_NAME, pilots);
-		set(ShipsData.DATABASE_WORLD, data.getTeleportToLocation().getExtent().getName());
-		set(ShipsData.DATABASE_BLOCK, block);
-		set(ShipsData.DATABASE_TELEPORT, teleport);
-		for (DataHolder data2 : data.getAllData()) {
-			if (data2 instanceof SerializedData) {
-				SerializedData serData = (SerializedData) data2;
+		set(pilots, ShipsData.DATABASE_SUB_PILOTS);
+		set(data.getTeleportToLocation().getExtent().getName(), ShipsData.DATABASE_WORLD);
+		set(block, ShipsData.DATABASE_BLOCK);
+		set(teleport, ShipsData.DATABASE_TELEPORT);
+		data.getAllData().stream().forEach(d -> {
+			if (d instanceof SerializedData) {
+				SerializedData serData = (SerializedData) d;
 				Set<Entry<String[], Object>> entrySet = serData.getSerializedData().entrySet();
 				entrySet.forEach(e -> set(e.getKey(), e.getValue()));
 			}
-		}
+		});
+		save();
 		return this;
 	}
 
