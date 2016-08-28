@@ -114,7 +114,8 @@ public class ShipsData extends DataHolder {
 	}
 
 	public List<Location<World>> updateBasicStructure() {
-		List<Location<World>> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT), MAIN_BLOCK);
+		int trackLimit = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		List<Location<World>> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
 		STRUCTURE = list;
 		return list;
 	}

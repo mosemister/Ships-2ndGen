@@ -21,7 +21,6 @@ public class AutoPilot {
 
 	List<StoredMovement> MOVEMENTS = new ArrayList<>();
 	ShipType SHIP;
-	@Nullable
 	User USER;
 	int TARGET;
 	boolean SHOULD_REPEATE;

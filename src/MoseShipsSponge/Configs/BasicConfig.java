@@ -14,20 +14,21 @@ import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 
 public class BasicConfig {
 
-	File FILE;
-	HoconConfigurationLoader LOADER;
-	ConfigurationNode ROOT;
-
+	protected File FILE;
+	protected HoconConfigurationLoader LOADER;
+	protected ConfigurationNode ROOT;
+	protected boolean WAS_CREATED;
+	
 	public static final BlockList BLOCK_LIST = new BlockList();
 	public static final ShipsConfig CONFIG = new ShipsConfig();
 
 	public BasicConfig(String fileName) {
 		FILE = new File("config/Ships/" + fileName + ".conf");
-		System.out.println(FILE.getAbsolutePath());
 		if (!FILE.exists()) {
 			try {
 				FILE.getParentFile().mkdirs();
 				FILE.createNewFile();
+				WAS_CREATED = true;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -54,7 +55,17 @@ public class BasicConfig {
 		return ROOT;
 	}
 
-	public BasicConfig set(Object object, Object... path) {
+	public boolean set(Object object, Object... path) {
+		Object object2 = ROOT.getNode(path).getValue();
+		System.out.println("config found \n " + object2);
+		if(object2 == null){
+			ROOT.getNode(path).setValue(object);
+			return true;
+		}
+		return false;
+	}
+	
+	public BasicConfig setOverride(Object object, Object... path){
 		ROOT.getNode(path).setValue(object);
 		return this;
 	}

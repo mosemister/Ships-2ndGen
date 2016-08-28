@@ -97,7 +97,6 @@ public class ShipsListeners {
 
 	@Listener
 	public void playerInteractEvent2(InteractBlockEvent event, @Root Player player) {
-		System.out.println("Interact event 2");
 		BlockSnapshot shot = event.getTargetBlock();
 		Direction direction = event.getTargetSide();
 		Optional<List<Text>> opLines = shot.get(Keys.SIGN_LINES);

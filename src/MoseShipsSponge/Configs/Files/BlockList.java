@@ -21,11 +21,19 @@ public class BlockList extends BasicConfig {
 
 	public BlockList() {
 		super("/Configuration/MaterialsList");
-
+		applyMissing();
 		// code for testing purpose only
 		MATERIALS.addAll(getAllPossibleStates(BlockTypes.WALL_SIGN));
 		MATERIALS.addAll(getAllPossibleStates(BlockTypes.PLANKS));
 
+	}
+	
+	public BlockList applyMissing(){
+		getAllPossibleStates().stream().forEach(b -> {
+			set(false, b.getId(), "enabled");
+		});
+		save();
+		return this;
 	}
 
 	public List<BlockState> getMaterialsList() {
