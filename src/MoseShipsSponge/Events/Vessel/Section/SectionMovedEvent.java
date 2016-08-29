@@ -7,7 +7,7 @@ import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Events.Vessel.ShipsEvent;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 /**
  * SectionMovedEvent is called when select part of a ship has fully moved from its original
@@ -16,13 +16,13 @@ import MoseShipsSponge.Ships.VesselTypes.ShipType;
  * The event may not fire depending on the Ships algorithm that is in place, both Ships 5 and
  * Ships 6 algorithms will fire the targeted SectionMoveEvent, however custom algorithms may not.
  */
-public abstract class SectionMovedEvent<S extends ShipType> extends ShipsEvent<S>{
+public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEvent<S>{
 	
 	public SectionMovedEvent(S ship, Cause cause) {
 		super(ship, cause);
 	}
 	
-	public static class BlockMovedEvent <S extends ShipType> extends SectionMovedEvent<S>{
+	public static class BlockMovedEvent <S extends LoadableShip> extends SectionMovedEvent<S>{
 
 		MovingBlock BLOCK;
 		
@@ -42,7 +42,7 @@ public abstract class SectionMovedEvent<S extends ShipType> extends ShipsEvent<S
 		}
 	}
 	
-	public static class EntityMovedEvent <S extends ShipType> extends SectionMovedEvent<S>{
+	public static class EntityMovedEvent <S extends LoadableShip> extends SectionMovedEvent<S>{
 
 		Location<World> LOCATION;
 		Entity ENTITY;

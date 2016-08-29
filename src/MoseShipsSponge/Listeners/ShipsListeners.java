@@ -31,7 +31,7 @@ import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Causes.MovementResult.CauseKeys;
 import MoseShipsSponge.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsSponge.Events.Vessel.Create.ShipsCreateEvent;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 import MoseShipsSponge.Signs.ShipsSigns;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
@@ -66,11 +66,11 @@ public class ShipsListeners {
 						AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<>(type, event.getTargetTile().getLocation(), data, event.getOriginalText(), ShipsCause.SIGN_CREATE
 								.buildCause(causes));
 						if (!ATCSEvent.isCancelled()) {
-							Optional<ShipType> opShip = type.createVessel(data.get(2).get().toPlain(), event.getTargetTile().getLocation());
+							Optional<LoadableShip> opShip = type.createVessel(data.get(2).get().toPlain(), event.getTargetTile().getLocation());
 							if (opShip.isPresent()) {
-								ShipType ship = opShip.get();
+								LoadableShip ship = opShip.get();
 								ShipsSigns.colourSign(event.getTargetTile());
-								ShipsCreateEvent<ShipType> SCEvent = new ShipsCreateEvent<>(ship, ShipsCause.SIGN_CREATE.buildCause(causes));
+								ShipsCreateEvent<LoadableShip> SCEvent = new ShipsCreateEvent<>(ship, ShipsCause.SIGN_CREATE.buildCause(causes));
 								if (!SCEvent.isCancelled()) {
 
 									// PLAYER
@@ -78,7 +78,7 @@ public class ShipsListeners {
 										Player player = opPlayer.get();
 										player.sendMessage(ShipsMain.format("Ship created", false));
 									}
-									ShipType.inject(ship);
+									LoadableShip.inject(ship);
 									List<Text> lines = new ArrayList<>();
 									lines.add(Text.builder("[Ships]").color(TextColors.YELLOW).build());
 									lines.add(Text.builder(ship.getStatic().getName()).color(TextColors.BLUE).build());
@@ -108,10 +108,10 @@ public class ShipsListeners {
 				System.out.println("is a Ship sign");
 				Location<World> loc = player.getLocation().getRelative(Direction.DOWN);
 				System.out.println(loc.getBlockX() + " | " + loc.getBlockY() + " | " + loc.getBlockZ() + " | " + loc.getExtent().getName() + " | " + loc.getBlockType().getId());
-				Optional<ShipType> opType = ShipType.getShip(loc, true);
+				Optional<LoadableShip> opType = LoadableShip.getShip(loc, true);
 				if (opType.isPresent()) {
 					System.out.println("has Ship");
-					ShipType ship = opType.get();
+					LoadableShip ship = opType.get();
 					if (event instanceof InteractBlockEvent.Secondary) {
 						System.out.print("Is right click");
 						switch (signType.get()) {

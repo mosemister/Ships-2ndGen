@@ -17,15 +17,15 @@ import MoseShipsSponge.Causes.MovementResult.CauseKeys;
 import MoseShipsSponge.Ships.Movement.Collide.CollideType;
 import MoseShipsSponge.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class Movement {
 
-	public static Optional<MovementResult> move(ShipType ship, int X, int Y, int Z, Cause intCause) {
+	public static Optional<MovementResult> move(LoadableShip ship, int X, int Y, int Z, Cause intCause) {
 		return move(ship, new Vector3i(X, Y, Z), intCause);
 	}
 
-	public static Optional<MovementResult> rotateRight(ShipType ship, Cause intCause) {
+	public static Optional<MovementResult> rotateRight(LoadableShip ship, Cause intCause) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<>();
 		List<MovingBlock> collide = new ArrayList<>();
@@ -41,7 +41,7 @@ public class Movement {
 		return move(ship, blocks, intCause);
 	}
 
-	public static Optional<MovementResult> rotateLeft(ShipType ship, Cause intCause) {
+	public static Optional<MovementResult> rotateLeft(LoadableShip ship, Cause intCause) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<>();
 		List<MovingBlock> collide = new ArrayList<>();
@@ -57,7 +57,7 @@ public class Movement {
 		return move(ship, blocks, intCause);
 	}
 
-	public static Optional<MovementResult> rotate(ShipType ship, Cause intCause, Rotate rotate) {
+	public static Optional<MovementResult> rotate(LoadableShip ship, Cause intCause, Rotate rotate) {
 		switch (rotate) {
 			case LEFT:
 				return rotateLeft(ship, intCause);
@@ -67,7 +67,7 @@ public class Movement {
 		return Optional.of(new MovementResult());
 	}
 
-	public static Optional<MovementResult> teleport(ShipType ship, Location<World> loc, Cause intCause) {
+	public static Optional<MovementResult> teleport(LoadableShip ship, Location<World> loc, Cause intCause) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<>();
 		List<MovingBlock> collide = new ArrayList<>();
@@ -82,7 +82,7 @@ public class Movement {
 		return move(ship, blocks, intCause);
 	}
 
-	public static Optional<MovementResult> teleport(ShipType ship, Location<World> loc, int X, int Y, int Z, Cause intCause) {
+	public static Optional<MovementResult> teleport(LoadableShip ship, Location<World> loc, int X, int Y, int Z, Cause intCause) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<>();
 		List<MovingBlock> collide = new ArrayList<>();
@@ -98,7 +98,7 @@ public class Movement {
 		return move(ship, blocks, intCause);
 	}
 
-	public static Optional<MovementResult> teleport(ShipType ship, StoredMovement movement) {
+	public static Optional<MovementResult> teleport(LoadableShip ship, StoredMovement movement) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<>();
 		List<MovingBlock> collide = new ArrayList<>();
@@ -117,7 +117,7 @@ public class Movement {
 		return move(ship, blocks, movement.getCause());
 	}
 
-	public static Optional<MovementResult> move(ShipType ship, Vector3i vector, Cause intCause) {
+	public static Optional<MovementResult> move(LoadableShip ship, Vector3i vector, Cause intCause) {
 		System.out.println("move from Movement");
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<>();
@@ -139,7 +139,7 @@ public class Movement {
 		return move(ship, blocks, intCause);
 	}
 
-	private static Optional<MovementResult> move(ShipType ship, List<MovingBlock> blocks, Cause intCase) {
+	private static Optional<MovementResult> move(LoadableShip ship, List<MovingBlock> blocks, Cause intCase) {
 		Optional<MovementResult> opFail = ship.hasRequirements(blocks, intCase);
 		if (opFail.isPresent()) {
 			return opFail;

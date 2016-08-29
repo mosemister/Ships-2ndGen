@@ -19,13 +19,13 @@ import MoseShipsSponge.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.Movement.Rotate.BlockRotate;
 import MoseShipsSponge.Ships.Movement.Rotate.RotateType;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.WaterType;
 
 public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
-	public void move(ShipType type, List<MovingBlock> blocksUn) {
+	public void move(LoadableShip type, List<MovingBlock> blocksUn) {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		System.out.println("moving blocks size: " + blocks.size());
 		int waterLevel = 63;

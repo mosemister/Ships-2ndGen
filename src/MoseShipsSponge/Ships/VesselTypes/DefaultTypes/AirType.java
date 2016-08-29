@@ -4,9 +4,9 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Ships.ShipsData;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
-public abstract class AirType extends ShipType {
+public abstract class AirType extends LoadableShip {
 
 	public AirType(String name, Location<World> sign, Location<World> teleport) {
 		super(name, sign, teleport);

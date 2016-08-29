@@ -15,17 +15,17 @@ import MoseShips.Maps.OrderedMap;
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.Movement.Movement;
 import MoseShipsSponge.Ships.Movement.StoredMovement;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class AutoPilot {
 
 	List<StoredMovement> MOVEMENTS = new ArrayList<>();
-	ShipType SHIP;
+	LoadableShip SHIP;
 	User USER;
 	int TARGET;
 	boolean SHOULD_REPEATE;
 
-	public AutoPilot(ShipType type, List<StoredMovement> movements, boolean repeate, int start, @Nullable User user) {
+	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, int start, @Nullable User user) {
 		MOVEMENTS = movements;
 		SHIP = type;
 		SHOULD_REPEATE = repeate;
@@ -33,14 +33,14 @@ public class AutoPilot {
 		USER = user;
 	}
 
-	public AutoPilot(ShipType type, List<StoredMovement> movements, boolean repeate, @Nullable User user) {
+	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, @Nullable User user) {
 		MOVEMENTS = movements;
 		SHIP = type;
 		SHOULD_REPEATE = repeate;
 		USER = user;
 	}
 
-	public AutoPilot(ShipType type, Location<World> moveTo, int speed, @Nullable User user) {
+	public AutoPilot(LoadableShip type, Location<World> moveTo, int speed, @Nullable User user) {
 		// TODO create path from ship to location
 	}
 
@@ -48,7 +48,7 @@ public class AutoPilot {
 		return MOVEMENTS;
 	}
 
-	public ShipType getTargetShip() {
+	public LoadableShip getTargetShip() {
 		return SHIP;
 	}
 

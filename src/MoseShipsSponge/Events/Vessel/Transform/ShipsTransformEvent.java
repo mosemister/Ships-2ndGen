@@ -9,9 +9,9 @@ import org.spongepowered.api.world.World;
 import MoseShipsSponge.Events.Vessel.ShipsEvent;
 import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
-public abstract class ShipsTransformEvent<S extends ShipType> extends ShipsEvent<S> {
+public abstract class ShipsTransformEvent<S extends LoadableShip> extends ShipsEvent<S> {
 
 	List<MovingBlock> BLOCKS;
 	StoredMovement MOVEMENT;
@@ -26,7 +26,7 @@ public abstract class ShipsTransformEvent<S extends ShipType> extends ShipsEvent
 		return BLOCKS;
 	}
 
-	public static class Move<S extends ShipType> extends ShipsTransformEvent<S> {
+	public static class Move<S extends LoadableShip> extends ShipsTransformEvent<S> {
 
 		public Move(S ship, StoredMovement movement, List<MovingBlock> structure, Cause cause) {
 			super(ship, movement, structure, cause);
@@ -51,7 +51,7 @@ public abstract class ShipsTransformEvent<S extends ShipType> extends ShipsEvent
 
 	}
 
-	public static class Teleport<S extends ShipType> extends ShipsTransformEvent<S> {
+	public static class Teleport<S extends LoadableShip> extends ShipsTransformEvent<S> {
 
 		public Teleport(S ship, StoredMovement movement, List<MovingBlock> structure, Cause cause) {
 			super(ship, movement, structure, cause);
@@ -59,7 +59,7 @@ public abstract class ShipsTransformEvent<S extends ShipType> extends ShipsEvent
 
 	}
 
-	public static class Rotate<S extends ShipType> extends ShipsTransformEvent<S> {
+	public static class Rotate<S extends LoadableShip> extends ShipsTransformEvent<S> {
 
 		public Rotate(S ship, StoredMovement movement, List<MovingBlock> structure, Cause cause) {
 			super(ship, movement, structure, cause);

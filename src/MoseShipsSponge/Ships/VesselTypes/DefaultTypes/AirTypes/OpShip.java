@@ -11,9 +11,10 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Causes.MovementResult;
+import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirType;
 
@@ -89,12 +90,12 @@ public class OpShip extends AirType {
 		}
 
 		@Override
-		public Optional<ShipType> createVessel(String name, Location<World> sign) {
+		public Optional<LoadableShip> createVessel(String name, Location<World> sign) {
 			return Optional.of(new OpShip(name, sign, sign));
 		}
 
 		@Override
-		public Optional<ShipType> loadVessel(ShipsData data) {
+		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
 			return Optional.of(new OpShip(data));
 		}
 

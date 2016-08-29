@@ -6,7 +6,7 @@ import org.spongepowered.api.event.impl.AbstractEvent;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 /**
  * The SectionDetectedEvent will fire when a part of a ship is detected,
@@ -54,14 +54,14 @@ public class SectionDetectedEvent extends AbstractEvent{
 		 * this is fired when a ShipType sign is found and read
 		 */
 		
-		ShipType TYPE;
+		LoadableShip TYPE;
 		
-		public VesselDetectedEvent(ShipType type, Cause cause) {
+		public VesselDetectedEvent(LoadableShip type, Cause cause) {
 			super(type.getLocation(), cause);
 			TYPE = type;
 		}
 		
-		public ShipType getVessel(){
+		public LoadableShip getVessel(){
 			return TYPE;
 		}
 		
@@ -74,16 +74,16 @@ public class SectionDetectedEvent extends AbstractEvent{
 		 * please note this is likely going to be removed
 		 */
 
-		ShipType TYPE;
+		LoadableShip TYPE;
 		Entity ENTITY;
 		
-		public EntityDetectedEvent(Entity entity, ShipType type, Cause cause) {
+		public EntityDetectedEvent(Entity entity, LoadableShip type, Cause cause) {
 			super(cause);
 			ENTITY = entity;
 			TYPE = type;
 		}
 		
-		public ShipType getVessel(){
+		public LoadableShip getVessel(){
 			return TYPE;
 		}
 		

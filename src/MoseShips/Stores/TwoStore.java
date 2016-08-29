@@ -1,22 +1,12 @@
 package MoseShips.Stores;
 
-public class TwoStore<A extends Object, B extends Object> {
+public class TwoStore<A extends Object, B extends Object> extends OneStore<A>{
 
-	A ONE_STORE;
 	B TWO_STORE;
 
 	public TwoStore(A one, B two) {
-		ONE_STORE = one;
+		super(one);
 		TWO_STORE = two;
-	}
-
-	public A getFirst() {
-		return ONE_STORE;
-	}
-
-	public TwoStore<A, B> setFirst(A first) {
-		ONE_STORE = first;
-		return this;
 	}
 
 	public B getSecond() {

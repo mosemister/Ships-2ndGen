@@ -8,7 +8,7 @@ import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Ships.Movement.MovementAlgorithm.Types.Ships5Movement;
 import MoseShipsSponge.Ships.Movement.MovementAlgorithm.Types.Ships6Movement;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.VesselTypes.ShipType;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public interface MovementAlgorithm {
 
@@ -17,7 +17,7 @@ public interface MovementAlgorithm {
 	public static Ships5Movement SHIPS5 = new Ships5Movement();
 	public static MovementAlgorithm SHIPS6 = new Ships6Movement();
 
-	public void move(ShipType vessel, List<MovingBlock> blocks);
+	public void move(LoadableShip vessel, List<MovingBlock> blocks);
 
 	public String getName();
 

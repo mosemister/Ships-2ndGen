@@ -1,6 +1,5 @@
 package MoseShipsSponge.Ships;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,13 +14,16 @@ import MoseShips.CustomDataHolder.DataHolder;
 
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Configs.Files.ShipsConfig;
-import MoseShipsSponge.Ships.Utils.ShipsLocalDatabase;
 
 public class ShipsData extends DataHolder {
 
 	public static final Object[] DATABASE_NAME = {
 		"ShipsMeta",
 		"Name"
+	};
+	public static final Object[] DATABASE_TYPE = {
+		"ShipsMeta",
+		"Type"
 	};
 	public static final Object[] DATABASE_PILOT = {
 		"ShipsMeta",
@@ -144,10 +146,6 @@ public class ShipsData extends DataHolder {
 	public ShipsData setTeleportToLocation(Location<World> loc) {
 		TELEPORT = loc;
 		return this;
-	}
-
-	public ShipsLocalDatabase getLocalDatabase() throws IOException {
-		return new ShipsLocalDatabase(this);
 	}
 
 	public ShipsData cloneOnto(ShipsData data) {
