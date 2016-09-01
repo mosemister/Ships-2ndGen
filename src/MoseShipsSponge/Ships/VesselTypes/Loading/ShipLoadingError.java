@@ -3,6 +3,7 @@ package MoseShipsSponge.Ships.VesselTypes.Loading;
 public enum ShipLoadingError {
 	
 	UNKNOWN,
+	MISSING_FILE,
 	NOT_CURRUPT,
 	
 	UNREADABLE_WORLD,

@@ -1,5 +1,6 @@
 package MoseShipsSponge.Ships.VesselTypes;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
 import MoseShipsSponge.Utils.LocationUtils;
@@ -56,7 +58,7 @@ public abstract class LoadableShip extends ShipsData {
 	public LoadableShip(ShipsData data) {
 		super(data);
 	}
-	
+
 	public ShipsLocalDatabase getLocalDatabase() {
 		return new ShipsLocalDatabase(this);
 	}
@@ -114,21 +116,21 @@ public abstract class LoadableShip extends ShipsData {
 		}
 		return Movement.teleport(this, loc2, X, Y, Z, cause);
 	}
-	
+
 	@Override
 	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence) {
 		List<Location<World>> structure = super.setBasicStructure(locs, licence);
 		getLocalDatabase().saveBasicShip(this);
 		return structure;
 	}
-	
+
 	@Override
 	public LoadableShip setTeleportToLocation(Location<World> loc) {
 		super.setTeleportToLocation(loc);
 		getLocalDatabase().saveBasicShip(this);
 		return this;
 	}
-	
+
 	@Override
 	public LoadableShip setOwner(User user) {
 		super.setOwner(user);
@@ -198,28 +200,65 @@ public abstract class LoadableShip extends ShipsData {
 			Chunk chunk = (Chunk) loc.getExtent();
 			loc = chunk.getWorld().getLocation(loc.getBlockPosition());
 		}
-		final Location<World> loc2 = (Location<World>) loc;		
+		final Location<World> loc2 = (Location<World>) loc;
 		return SHIPS.stream().filter(s -> {
-			//CHECK THOUGH ALL SHIPS
-			if(updateStructure){
-				//UPDATE THE STRUCTURE IF SPECIFIED
+			// CHECK THOUGH ALL SHIPS
+			if (updateStructure) {
+				// UPDATE THE STRUCTURE IF SPECIFIED
 				s.updateBasicStructure();
 			}
 			return s.hasLocation(loc2);
 		}).findFirst();
 	}
 
-	public static List<LoadableShip> getShips() {
+	public static List<LoadableShip> getReasentlyUsedShips() {
 		return SHIPS;
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T extends LoadableShip> List<T> getShips(Class<T> type) {
-		return (List<T>) SHIPS.stream().filter(s -> type.isInstance(s)).collect(Collectors.toList());
+	public static List<LoadableShip> getShips() {
+		List<LoadableShip> ships = new ArrayList<>();
+		ships.addAll(SHIPS);
+		StaticShipType.TYPES.stream().forEach(t -> {
+			File[] files = new File("config/Ships/VesselData/" + t.getName()).listFiles();
+			if (files != null) {
+				for (File file : files) {
+					String name = file.getName().replace(".conf", "");
+					if (!ships.stream().anyMatch(s -> s.getName().equals(name))) {
+						Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
+						if (opShip.isPresent()) {
+							ships.add(opShip.get());
+						}
+					}
+				}
+			}
+		});
+		return ships;
+	}
+
+	public static <T extends StaticShipType> List<LoadableShip> getShips(StaticShipType type) {
+		List<LoadableShip> ships = new ArrayList<>();
+		SHIPS.stream().forEach(s -> {
+			if (type.equals(s.getStatic())) {
+				ships.add(s);
+			}
+		});
+		File[] files = new File("config/Ships/VesselData/" + type.getName()).listFiles();
+		if (files != null) {
+			for (File file : files) {
+				String name = file.getName().replace(".conf", "");
+				if (!ships.stream().anyMatch(s -> s.getName().equals(name))) {
+					Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
+					if (opShip.isPresent()) {
+						ships.add(opShip.get());
+					}
+				}
+			}
+		}
+		return ships;
 	}
 
 	public static List<LoadableShip> getShipsByRequirements(Class<? extends LiveData> type) {
-		return SHIPS.stream().filter(s -> type.isInstance(s)).collect(Collectors.toList());
+		return getShips().stream().filter(s -> type.isInstance(s)).collect(Collectors.toList());
 	}
 
 }

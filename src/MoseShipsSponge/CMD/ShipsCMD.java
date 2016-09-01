@@ -69,38 +69,41 @@ public interface ShipsCMD {
 			ConsoleSource sender = ShipsMain.getPlugin().getGame().getServer().getConsole();
 			sender.sendMessage(Text.of("processing"));
 			String[] rArgs = args.split(" ");
+			sender.sendMessage(Text.of("Args before: " + rArgs.length));
 			if (source instanceof Player) {
 				Optional<ShipsCMD> opCMD = SHIPS_COMMANDS.stream().filter(cmd -> (cmd instanceof ShipsPlayerCMD))
 						.filter(cmd -> {
 							return Arrays.asList(cmd.getAliases()).stream().anyMatch(s -> s.equalsIgnoreCase(rArgs[0]));
 						}).findFirst();
-				if(opCMD.isPresent()){
-					Player player = (Player)source;
-					ShipsPlayerCMD cmd = (ShipsPlayerCMD)opCMD.get();
-					if(player.hasPermission(cmd.getPermission())){
-						return cmd.execute(player, args);
+				if (opCMD.isPresent()) {
+					Player player = (Player) source;
+					ShipsPlayerCMD cmd = (ShipsPlayerCMD) opCMD.get();
+					if (cmd.getPermission() != null) {
+						if (player.hasPermission(cmd.getPermission())) {
+							return cmd.execute(player, rArgs);
+						}
+					} else {
+						return cmd.execute(player, rArgs);
 					}
 				}
-			}else if(source instanceof ConsoleSource){
-				sender.sendMessage(Text.of("source is console"));
+			} else if (source instanceof ConsoleSource) {
 				Optional<ShipsCMD> opCMD = SHIPS_COMMANDS.stream().filter(cmd -> (cmd instanceof ShipsConsoleCMD))
 						.filter(cmd -> {
 							sender.sendMessage(Text.of("cmd: " + cmd.getAliases()[0]));
 							return Arrays.asList(cmd.getAliases()).stream().anyMatch(s -> s.equalsIgnoreCase(rArgs[0]));
 						}).findFirst();
-				if(opCMD.isPresent()){
-					sender.sendMessage(Text.of("cmd is present and executing"));
-					return ((ShipsConsoleCMD)opCMD.get()).execute((ConsoleSource)source, args);
+				if (opCMD.isPresent()) {
+					return ((ShipsConsoleCMD) opCMD.get()).execute((ConsoleSource) source, rArgs);
 				}
-			}else if (source instanceof CommandBlockSource){
+			} else if (source instanceof CommandBlockSource) {
 				Optional<ShipsCMD> opCMD = SHIPS_COMMANDS.stream().filter(cmd -> (cmd instanceof ShipsBlockCMD))
 						.filter(cmd -> {
 							return Arrays.asList(cmd.getAliases()).stream().anyMatch(s -> s.equalsIgnoreCase(rArgs[0]));
 						}).findFirst();
-				if(opCMD.isPresent()){
-					return ((ShipsBlockCMD)opCMD.get()).execute((CommandBlockSource)source, args);
+				if (opCMD.isPresent()) {
+					return ((ShipsBlockCMD) opCMD.get()).execute((CommandBlockSource) source, rArgs);
 				}
-			}else{
+			} else {
 				new IOException("The source " + source + " is not regonised.");
 			}
 			return CommandResult.empty();

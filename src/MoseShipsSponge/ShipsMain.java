@@ -18,6 +18,7 @@ import org.spongepowered.api.text.format.TextColors;
 import com.google.inject.Inject;
 
 import MoseShipsSponge.CMD.ShipsCMD;
+import MoseShipsSponge.CMD.Commands.DebugCMD;
 import MoseShipsSponge.CMD.Commands.InfoCMD;
 import MoseShipsSponge.Listeners.ShipsListeners;
 import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
@@ -41,6 +42,7 @@ public class ShipsMain {
 
 	private void registerCMDs(){
 		new InfoCMD();
+		new DebugCMD();
 	}
 	
 	@Listener

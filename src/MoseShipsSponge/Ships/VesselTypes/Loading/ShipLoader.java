@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -24,10 +25,10 @@ public class ShipLoader {
 		TwoStore<LoadableShip, ShipLoadingError> opShip = pLoadShip(file);
 		return Optional.ofNullable(opShip.getFirst());
 	}
-	
+
 	public static Optional<LoadableShip> loadShip(String name) {
 		Optional<File> opFile = getFile(name);
-		if(opFile.isPresent()){
+		if (opFile.isPresent()) {
 			return Optional.ofNullable(pLoadShip(opFile.get()).getFirst());
 		}
 		return Optional.empty();
@@ -36,25 +37,30 @@ public class ShipLoader {
 	public static ShipLoadingError getError(File file) {
 		return pLoadShip(file).getSecond();
 	}
-	
-	public static ShipLoadingError getError(String name){
+
+	public static ShipLoadingError getError(String name) {
 		Optional<File> opFile = getFile(name);
-		if(opFile.isPresent()){
+		if (opFile.isPresent()) {
 			return pLoadShip(opFile.get()).getSecond();
 		}
-		return ShipLoadingError.UNKNOWN_SHIP_NAME;
+		return ShipLoadingError.MISSING_FILE;
 	}
-	
-	private static Optional<File> getFile(String name){
+
+	private static Optional<File> getFile(String name) {
 		File root = new File("/config/Ships/VesselData");
 		OneStore<File> file = new OneStore<>(null);
 		StaticShipType.TYPES.stream().forEach(t -> {
 			File folder = new File(root, t.getName());
+			ShipsMain.getPlugin().getGame().getServer().getConsole().sendMessage(Text.of(folder));
 			File[] files = folder.listFiles();
-			for(File sFile : files){
-				if(sFile.getName().equals(name + ".conf")){
-					file.setFirst(sFile);
-					break;
+			if (files != null) {
+				ShipsMain.getPlugin().getGame().getServer().getConsole().sendMessage(Text.of("files dont equal null"));
+				for (File sFile : files) {
+					ShipsMain.getPlugin().getGame().getServer().getConsole().sendMessage(Text.of(sFile));
+					if (sFile.getName().equals(name + ".conf")) {
+						file.setFirst(sFile);
+						break;
+					}
 				}
 			}
 		});
@@ -97,52 +103,56 @@ public class ShipLoader {
 			} catch (NumberFormatException e) {
 				tel = lic;
 			}
-			Optional<StaticShipType> opType = StaticShipType.TYPES.stream().filter(t -> t.getName().equals(sType)).findFirst();
-			if(opType.isPresent()){
+			Optional<StaticShipType> opType = StaticShipType.TYPES.stream().filter(t -> t.getName().equals(sType))
+					.findFirst();
+			if (opType.isPresent()) {
 				StaticShipType type = opType.get();
 				ShipsData data = new ShipsData(name, lic, tel);
-				if(sPilot != null){
+				if (sPilot != null) {
 					Optional<User> opUser = ShipsMain.getUser(UUID.fromString(sPilot));
-					if(opUser.isPresent()){
+					if (opUser.isPresent()) {
 						data.setOwner(opUser.get());
-					}else{
+					} else {
 						return new TwoStore<>(null, ShipLoadingError.UNKNOWN_PLAYER);
 					}
 				}
-				
+
 				List<Location<World>> structure = new ArrayList<>();
 				int posX = 0;
 				int posY = 0;
 				int target = 0;
-				for(String value : sStructure){
-					try{
+				for (String value : sStructure) {
+					try {
 						int pos = Integer.parseInt(value);
-						switch(target){
-						case 0: posX = pos;
-						case 1: posY = pos;
-						case 2: structure.add(world.getLocation(posX, posY, pos));
+						switch (target) {
+						case 0:
+							posX = pos;
+						case 1:
+							posY = pos;
+						case 2:
+							structure.add(world.getLocation(posX, posY, pos));
 						}
-					}catch(NumberFormatException e){
+					} catch (NumberFormatException e) {
 						break;
 					}
 				}
 				data.setBasicStructure(structure, lic);
-				
-				if(sSubPilots != null){
+
+				if (sSubPilots != null) {
 					List<User> subPilots = new ArrayList<>();
-					for(String sUuid : sSubPilots.split(",")){
+					for (String sUuid : sSubPilots.split(",")) {
 						ShipsMain.getUser(UUID.fromString(sUuid));
 					}
 					data.getSubPilots().addAll(subPilots);
 				}
-				
+
 				Optional<LoadableShip> opShip = type.loadVessel(data, config);
-				if(opShip.isPresent()){
+				if (opShip.isPresent()) {
 					return new TwoStore<>(opShip.get(), ShipLoadingError.NOT_CURRUPT);
-				}else{
+				} else {
 					return new TwoStore<>(null, ShipLoadingError.LOADER_ISSUE);
 				}
-			}else{
+			} else {
 				return new TwoStore<>(null, ShipLoadingError.UNKNOWN_SHIP_TYPE);
 			}
 		} else {

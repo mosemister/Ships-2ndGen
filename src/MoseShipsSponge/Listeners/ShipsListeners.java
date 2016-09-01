@@ -84,6 +84,7 @@ public class ShipsListeners {
 									lines.add(Text.builder(ship.getStatic().getName()).color(TextColors.BLUE).build());
 									lines.add(Text.builder(ship.getName()).color(TextColors.GREEN).build());
 									data.set(Keys.SIGN_LINES, lines);
+									ship.getLocalDatabase().save();
 								}
 							}
 						}
@@ -101,7 +102,6 @@ public class ShipsListeners {
 		Direction direction = event.getTargetSide();
 		Optional<List<Text>> opLines = shot.get(Keys.SIGN_LINES);
 		if (opLines.isPresent()) {
-			System.out.println("is sign");
 			List<Text> lines = opLines.get();
 			Optional<SignType> signType = ShipsSigns.getSignType(lines.get(0).toPlain());
 			if (signType.isPresent()) {

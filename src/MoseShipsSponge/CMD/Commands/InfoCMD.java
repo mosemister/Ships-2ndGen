@@ -15,6 +15,7 @@ import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.CMD.ShipsCMD;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoader;
+import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoadingError;
 
 public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCMD{
 
@@ -50,7 +51,9 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 
 	@Override
 	public CommandResult execute(ConsoleSource console, String... args) throws CommandException {
+		System.out.println("Args size: " + args.length);
 		if(args.length > 1){
+			System.out.println("display info");
 			displayInfo(console, args[1]);
 		}else{
 			basicInfo(console);
@@ -63,6 +66,12 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 			basicInfo(source);
 		}else{
 			Optional<LoadableShip> opShip = ShipLoader.loadShip(type);
+			if(opShip.isPresent()){
+				shipInfo(source, opShip.get());
+			}else{
+				ShipLoadingError error = ShipLoader.getError(type);
+				source.sendMessage(ShipsMain.format("Ships failed to gain the information for that Ship. Error name of " + error.name(), true));
+			}
 		}
 	}
 	
