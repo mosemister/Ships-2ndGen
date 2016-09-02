@@ -17,8 +17,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import MoseShipsSponge.ShipsMain;
-
 public interface ShipsCMD {
 
 	public static final List<ShipsCMD> SHIPS_COMMANDS = new ArrayList<>();
@@ -66,10 +64,7 @@ public interface ShipsCMD {
 
 		@Override
 		public CommandResult process(CommandSource source, String args) throws CommandException {
-			ConsoleSource sender = ShipsMain.getPlugin().getGame().getServer().getConsole();
-			sender.sendMessage(Text.of("processing"));
 			String[] rArgs = args.split(" ");
-			sender.sendMessage(Text.of("Args before: " + rArgs.length));
 			if (source instanceof Player) {
 				Optional<ShipsCMD> opCMD = SHIPS_COMMANDS.stream().filter(cmd -> (cmd instanceof ShipsPlayerCMD))
 						.filter(cmd -> {
@@ -89,7 +84,6 @@ public interface ShipsCMD {
 			} else if (source instanceof ConsoleSource) {
 				Optional<ShipsCMD> opCMD = SHIPS_COMMANDS.stream().filter(cmd -> (cmd instanceof ShipsConsoleCMD))
 						.filter(cmd -> {
-							sender.sendMessage(Text.of("cmd: " + cmd.getAliases()[0]));
 							return Arrays.asList(cmd.getAliases()).stream().anyMatch(s -> s.equalsIgnoreCase(rArgs[0]));
 						}).findFirst();
 				if (opCMD.isPresent()) {

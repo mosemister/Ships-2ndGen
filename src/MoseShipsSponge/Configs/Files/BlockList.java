@@ -18,6 +18,8 @@ public class BlockList extends BasicConfig {
 
 	List<BlockState> MATERIALS = new ArrayList<>();
 	List<BlockState> RAM = new ArrayList<>();
+	
+	public static final BlockList BLOCK_LIST = new BlockList();
 
 	public BlockList() {
 		super("/Configuration/MaterialsList");

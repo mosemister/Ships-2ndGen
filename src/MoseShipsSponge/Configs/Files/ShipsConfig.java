@@ -25,6 +25,8 @@ public class ShipsConfig extends BasicConfig {
 		"Algorithms",
 		"Movement"
 	};
+	
+	public static final ShipsConfig CONFIG = new ShipsConfig();
 
 	public ShipsConfig() {
 		super("Configuration/Config");
@@ -35,7 +37,7 @@ public class ShipsConfig extends BasicConfig {
 		set(300, PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
 		set(2, PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE);
 		//this will be Ships6 when that algorithm is done
-		set("Ships5", PATH_ALGORITHMS_MOVEMENT);
+		set("Ships6", PATH_ALGORITHMS_MOVEMENT);
 		set("Ships5", PATH_ALGORITHMS_BLOCKFINDER);
 		save();
 		return this;

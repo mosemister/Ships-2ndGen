@@ -23,7 +23,6 @@ import com.flowpowered.math.vector.Vector3i;
 
 import MoseShipsSponge.Causes.ShipsCause;
 
-import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Configs.Files.BlockList;
 import MoseShipsSponge.Ships.Movement.MovementType;
 import MoseShipsSponge.Ships.Movement.Collide.CollideType;
@@ -112,9 +111,9 @@ public class MovingBlock {
 	public CollideType getCollision(List<Location<World>> ignore) {
 		if (LocationUtils.blockWorldContains(ignore, MOVING_TO)) {
 			return CollideType.NONE;
-		} else if (BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)) {
 			return CollideType.COLLIDE;
-		} else if (BasicConfig.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)) {
 			return CollideType.RAM;
 		} else {
 			return CollideType.NONE;

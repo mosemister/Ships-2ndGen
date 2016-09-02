@@ -9,7 +9,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
-import MoseShipsSponge.Configs.BasicConfig;
+import MoseShipsSponge.Configs.Files.BlockList;
 import MoseShipsSponge.Configs.Files.BlockList.ListType;
 
 public class Prototype3 implements BasicBlockFinder {
@@ -31,7 +31,7 @@ public class Prototype3 implements BasicBlockFinder {
 		COUNT++;
 		direction.forEach(d -> {
 			Location<World> loc2 = loc.getRelative(d);
-			if (BasicConfig.BLOCK_LIST.contains(loc2.getBlock(), ListType.MATERIALS)) {
+			if (BlockList.BLOCK_LIST.contains(loc2.getBlock(), ListType.MATERIALS)) {
 				if (!BLOCKS.contains(loc2)) {
 					BLOCKS.add(loc2);
 					getNextBlock(limit, direction, loc2);

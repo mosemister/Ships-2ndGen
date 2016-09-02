@@ -9,7 +9,8 @@ import org.spongepowered.api.text.Text;
 
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.CMD.ShipsCMD;
-import MoseShipsSponge.Configs.BasicConfig;
+import MoseShipsSponge.Configs.Files.BlockList;
+import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoadingError;
 
@@ -66,11 +67,12 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 		}else if(args[1].equalsIgnoreCase("reload")){
 			if(args.length > 2){
 				if(args[2].equalsIgnoreCase("config")){
-					BasicConfig.CONFIG.applyMissing();
-					source.sendMessage(ShipsMain.format("Configuration has been refreshed", true));
+					System.out.println("t");
+					ShipsConfig.CONFIG.applyMissing();
+					source.sendMessage(ShipsMain.format("Configuration has been refreshed", false));
 				}else if(args[2].equalsIgnoreCase("materials")){
-					BasicConfig.BLOCK_LIST.applyMissing();
-					source.sendMessage(ShipsMain.format("Block list has been refreshed", true));
+					BlockList.BLOCK_LIST.applyMissing();
+					source.sendMessage(ShipsMain.format("Block list has been refreshed", false));
 				}else{
 					source.sendMessage(ShipsMain.format("Can not find configuration file", true));
 				}
