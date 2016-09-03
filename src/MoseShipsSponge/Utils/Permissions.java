@@ -1,8 +1,6 @@
 package MoseShipsSponge.Utils;
 
-import java.util.Arrays;
-
-import org.spongepowered.api.entity.living.player.Player;
+import org.bukkit.entity.Player;
 
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 
@@ -30,7 +28,12 @@ public enum Permissions {
 
 	private boolean hasPermission(Player player, String old, String replace) {
 		if (USE_PERMISSIONS) {
-			return Arrays.asList(PERMISSIONS).stream().anyMatch(p -> player.hasPermission(p.replace(old, replace)));
+			for(String permission : PERMISSIONS){
+				if(player.hasPermission(permission.replace(old, replace))){
+					return true;
+				}
+			}
+			return false;
 		} else {
 			return NO_PERMISSION_VALUE;
 		}

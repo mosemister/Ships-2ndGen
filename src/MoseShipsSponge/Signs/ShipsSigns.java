@@ -1,15 +1,11 @@
 package MoseShipsSponge.Signs;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.value.mutable.ListValue;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.format.TextColors;
+import org.bukkit.ChatColor;
+import org.bukkit.block.Sign;
 
 public class ShipsSigns {
 
@@ -21,52 +17,55 @@ public class ShipsSigns {
 	 * @return: the same sign
 	 */
 	public static Sign colourSign(Sign sign) {
-		ListValue<Text> lines = sign.lines();
-		List<String> strings = new ArrayList<>();
-		lines.forEach(t -> strings.add(t.toPlain()));
-		List<Text> linesTo = Arrays.asList(colour(strings));
-		sign.offer(Keys.SIGN_LINES, linesTo);
+		String[] lines = sign.getLines();
+		for(int A = 0; A < lines.length; A++){
+			sign.setLine(A, lines[A]);
+		}
+		sign.update();
 		return sign;
 	}
 
-	public static Text[] colour(String... lines) {
+	public static String[] colour(String... lines) {
 		return colour(Arrays.asList(lines));
 	}
-
-	public static Optional<SignType> getSignType(String line1) {
-		return Arrays.asList(SignType.values()).stream().filter(s -> s.LINES[0].toPlain().equalsIgnoreCase(line1)).findAny();
-	}
-
-	public static Optional<SignType> getSignType(Sign sign) {
-		List<Text> lines = sign.get(Keys.SIGN_LINES).get();
-		return getSignType(lines.get(0).toPlain());
-	}
-
-	public static Text[] colour(List<String> lines) {
-		Text[] lines2 = new Text[lines.size()];
-		lines2[0] = Text.builder(lines.get(0)).color(TextColors.YELLOW).build();
-		lines2[1] = Text.builder(lines.get(1)).color(TextColors.BLUE).build();
+	
+	public static String[] colour(List<String> lines) {
+		String[] lines2 = new String[lines.size()];
+		lines2[0] = ChatColor.YELLOW + lines.get(0);
+		lines2[1] = ChatColor.BLUE + lines.get(1);
 		for (int A = 2; A < lines.size(); A++) {
-			lines2[A] = Text.builder(lines.get(A)).color(TextColors.GREEN).build();
+			lines2[A] = ChatColor.GREEN + lines.get(A);
 		}
 		return lines2;
 	}
 
+	public static Optional<SignType> getSignType(String line1) {
+		for(SignType type : SignType.values()){
+			if(ChatColor.stripColor(type.LINES[0]).equalsIgnoreCase(ChatColor.stripColor(line1))){
+				return Optional.of(type);
+			}
+		}
+		return Optional.empty();
+	}
+
+	public static Optional<SignType> getSignType(Sign sign) {
+		return getSignType(sign.getLine(0));
+	}
+
 	public enum SignType {
-		LICENCE(Text.builder("[Ships]").color(TextColors.YELLOW).build()),
-		MOVE(Text.builder("[Move]").color(TextColors.YELLOW).build(), Text.builder("{Engine}").color(TextColors.GREEN).build(), Text.builder("Boost").build()),
-		WHEEL(Text.builder("[wheel]").color(TextColors.YELLOW).build(), Text.builder("\\\\||//").color(TextColors.RED).build(), Text.builder("==||==").color(TextColors.RED).build(), Text.builder(
-				"//==\\\\").build()),
-		EOT(Text.builder("[EOT]").build()),
-		ALTITUDE(Text.builder("[Altitude]").build());
+		LICENCE(ChatColor.YELLOW + "[Ships]"),
+		MOVE(ChatColor.YELLOW + "[Move]", ChatColor.GREEN + "{Engine}", "Boost"),
+		WHEEL(ChatColor.YELLOW + "[Wheel]", ChatColor.RED + "\\\\||//", ChatColor.RED + "==||==", ChatColor.RED + "//==\\\\"),
+		EOT(ChatColor.YELLOW + "[EOT]"),
+		ALTITUDE(ChatColor.YELLOW + "[Altitude]");
 
-		Text[] LINES;
+		String[] LINES;
 
-		SignType(Text... text) {
+		SignType(String... text) {
 			LINES = text;
 		}
 
-		public Optional<Text[]> getDefaultLines() {
+		public Optional<String[]> getDefaultLines() {
 			return Optional.ofNullable(LINES);
 		}
 	}

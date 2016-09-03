@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.scheduler.Task;
+import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
 
@@ -20,24 +20,29 @@ import MoseShipsSponge.Ships.Utils.AutoPilot;
 
 public class MovementResult {
 
-	List<TwoStore<CauseKeys<Object>, Object>> CAUSES = new ArrayList<>();
+	List<TwoStore<CauseKeys<Object>, Object>> CAUSES = new ArrayList<TwoStore<CauseKeys<Object>, Object>>();
 
 	public Set<TwoStore<CauseKeys<Object>, Object>> entrySet() {
-		return new HashSet<>(CAUSES);
+		return new HashSet<TwoStore<CauseKeys<Object>, Object>>(CAUSES);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <E extends Object> void put(CauseKeys<E> key, E value) {
-		CAUSES.removeAll(CAUSES.stream().filter(e -> e.getFirst().equals(key)).collect(Collectors.toList()));
+		for(TwoStore<CauseKeys<Object>, Object> store : CAUSES){
+			if(store.getFirst().equals(key)){
+				CAUSES.remove(store);
+			}
+		}
 		TwoStore<CauseKeys<Object>, Object> store = new TwoStore<CauseKeys<Object>, Object>((CauseKeys<Object>) key, value);
 		CAUSES.add(store);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <E> Optional<E> get(CauseKeys<E> key) {
-		Optional<TwoStore<CauseKeys<Object>, Object>> opStore = CAUSES.stream().filter(e -> e.getFirst().equals(key)).findAny();
-		if (opStore.isPresent()) {
-			return Optional.of((E) opStore.get().getSecond());
+		for(TwoStore<CauseKeys<Object>, Object> store : CAUSES){
+			if(store.getFirst().equals(key)){
+				return Optional.of((E)store.getSecond());
+			}
 		}
 		return Optional.empty();
 	}
@@ -57,26 +62,25 @@ public class MovementResult {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(final Player player, Object value) {
 				if (value instanceof List) {
 					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 2 seconds", true));
-					List<MovingBlock> list = (List<MovingBlock>) value;
-					list.stream().forEach(b -> {
-						player.sendBlockChange(b.getMovingTo().getBlockPosition(), b.getMovingTo().getBlock());
-					});
-					Task.Builder builder = ShipsMain.getPlugin().getGame().getScheduler().createTaskBuilder();
-					builder.delay(2, TimeUnit.SECONDS);
-					builder.execute(new Runnable() {
+					final List<MovingBlock> list = (List<MovingBlock>) value;
+					for(MovingBlock block : list){
+						player.sendBlockChange(block.getMovingTo(), block.getMateral(), block.getDataValue());
+					}
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable(){
 
 						@Override
 						public void run() {
-							list.stream().forEach(b -> {
-								player.resetBlockChange(b.getMovingTo().getBlockPosition());
-							});
+							for(MovingBlock block : list){
+								Block block2 = block.getMovingTo().getBlock();
+								player.sendBlockChange(block.getMovementTo(), block2.getType(), block2.getData());
+							}
 
 						}
 
-					});
+					}, (3*20));
 				}
 
 			}

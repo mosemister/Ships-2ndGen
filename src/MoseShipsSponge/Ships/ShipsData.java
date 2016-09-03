@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.block.tileentity.TileEntity;
-import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 
 import MoseShips.CustomDataHolder.DataHolder;
 
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Configs.Files.ShipsConfig;
+import MoseShipsSponge.Utils.LocationUtils;
 
 public class ShipsData extends DataHolder {
 
@@ -54,13 +55,13 @@ public class ShipsData extends DataHolder {
 	};
 
 	protected String NAME;
-	protected User USER;
-	protected List<User> SUB_PILOTS = new ArrayList<>();
-	protected List<Location<World>> STRUCTURE = new ArrayList<>();
-	protected Location<World> MAIN_BLOCK;
-	protected Location<World> TELEPORT;
+	protected OfflinePlayer USER;
+	protected List<OfflinePlayer> SUB_PILOTS = new ArrayList<OfflinePlayer>();
+	protected List<Block> STRUCTURE = new ArrayList<Block>();
+	protected Block MAIN_BLOCK;
+	protected Location TELEPORT;
 
-	public ShipsData(String name, Location<World> sign, Location<World> teleport) {
+	public ShipsData(String name, Block sign, Location teleport) {
 		NAME = name;
 		MAIN_BLOCK = sign;
 		TELEPORT = teleport;
@@ -71,79 +72,78 @@ public class ShipsData extends DataHolder {
 	}
 
 	public Optional<Sign> getLicence() {
-		Optional<TileEntity> entity = MAIN_BLOCK.getTileEntity();
-		if (entity.isPresent()) {
-			if (entity.get() instanceof Sign) {
-				return Optional.of((Sign) entity.get());
-			}
+		if(MAIN_BLOCK.getState() instanceof Sign){
+			return Optional.of((Sign)MAIN_BLOCK.getState());
 		}
-		return null;
+		return Optional.empty();
 	}
 
 	public String getName() {
 		return NAME;
 	}
 
-	public Optional<User> getOwner() {
+	public Optional<OfflinePlayer> getOwner() {
 		return Optional.ofNullable(USER);
 	}
 
-	public ShipsData setOwner(User user) {
+	public ShipsData setOwner(OfflinePlayer user) {
 		USER = user;
 		return this;
 	}
 
-	public List<User> getSubPilots() {
+	public List<OfflinePlayer> getSubPilots() {
 		return SUB_PILOTS;
 	}
 	
 	public World getWorld(){
-		return MAIN_BLOCK.getExtent();
+		return MAIN_BLOCK.getWorld();
 	}
 
-	public List<Location<World>> getBasicStructure() {
+	public List<Block> getBasicStructure() {
 		return STRUCTURE;
 	}
 	
-	public boolean hasLocation(Location<World> loc){
-		if(!loc.getExtent().equals(getWorld())){
+	public boolean hasLocation(Location loc){
+		if(!loc.getWorld().equals(getWorld())){
 			return false;
 		}
-		STRUCTURE.stream().anyMatch(b -> {
-			return b.getBlockPosition().equals(loc.getBlockPosition());
-		});
+		for(Block block : STRUCTURE){
+			if(LocationUtils.blocksEqual(block.getLocation(), loc)){
+				return true;
+			}
+		}
 		return false;
 	}
 
-	public List<Location<World>> updateBasicStructure() {
+	public List<Block> updateBasicStructure() {
 		int trackLimit = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
-		List<Location<World>> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
+		List<Block> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
 		STRUCTURE = list;
 		return list;
 	}
 
-	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence) {
+	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
 		STRUCTURE = locs;
 		MAIN_BLOCK = licence;
 		return locs;
 	}
 
-	public List<Location<World>> setBasicStructure(List<Location<World>> locs, Location<World> licence, Location<World> teleport) {
+	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		STRUCTURE = locs;
 		MAIN_BLOCK = licence;
 		TELEPORT = teleport;
 		return locs;
 	}
 
-	public Location<World> getLocation() {
-		return MAIN_BLOCK;
+	public Location getLocation() {
+		return MAIN_BLOCK.getLocation();
 	}
 
-	public Location<World> getTeleportToLocation() {
+	public Location getTeleportToLocation() {
 		return TELEPORT;
 	}
 
-	public ShipsData setTeleportToLocation(Location<World> loc) {
+	public ShipsData setTeleportToLocation(Location loc) {
 		TELEPORT = loc;
 		return this;
 	}
