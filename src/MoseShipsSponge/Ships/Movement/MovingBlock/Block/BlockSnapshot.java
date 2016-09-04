@@ -11,54 +11,71 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.material.MaterialData;
 
-public class BlockSnapshot{
-	
-	Location loc;
-	Material material;
-	MaterialData data;
-	
+public class BlockSnapshot {
+
+	Location g_loc;
+	Material g_material;
+	MaterialData g_data;
+
 	public static final Map<Material, Class<? extends BlockSnapshot>> VALUE_TYPES = new HashMap<Material, Class<? extends BlockSnapshot>>();
-	
-	protected BlockSnapshot(BlockState state){
-		this.loc = state.getLocation();
-		this.material = state.getType();
-		this.data = state.getData();
+
+	protected BlockSnapshot(BlockState state) {
+		g_loc = state.getLocation();
+		g_material = state.getType();
+		g_data = state.getData();
 	}
-	
-	public Location getLocation(){
-		return loc;
+
+	public Location getLocation() {
+		return g_loc;
 	}
-	
-	public Material getMaterial(){
-		return material;
+
+	public Material getMaterial() {
+		return g_material;
 	}
-	
-	public MaterialData getData(){
-		return data;
+
+	public MaterialData getData() {
+		return g_data;
 	}
-	
-	public void placeBlock(){
-		placeBlock(loc.getBlock());
+
+	public void placeBlock() {
+		placeBlock(g_loc.getBlock());
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public void placeBlock(Block loc){
-		placeBlock(loc, data.getData());
+	public void placeBlock(Block loc) {
+		placeBlock(loc, g_data.getData());
 	}
-	
+
+	public void placeBlock(Block loc, byte data) {
+		placeBlock(loc, g_material, data);
+	}
+
 	@SuppressWarnings("deprecation")
-	public void placeBlock(Block loc, byte data){
+	public void placeBlock(Block loc, Material material, byte data) {
+		if (this instanceof SpecialSnapshot) {
+			SpecialSnapshot spec = (SpecialSnapshot) this;
+			spec.onRemove(loc);
+		}
 		loc.setType(material, false);
-		loc.setData(data, false);
+		if (material.equals(g_material)) {
+			g_data.setData(data);
+			loc.getState().setData(g_data);
+			if (this instanceof SpecialSnapshot) {
+				SpecialSnapshot spec = (SpecialSnapshot) this;
+				spec.onPlace(loc);
+			}
+		} else {
+			loc.setData(data, false);
+		}
 	}
-	
-	public static BlockSnapshot createSnapshot(Block block){
+
+	public static BlockSnapshot createSnapshot(Block block) {
 		return createSnapshot(block.getState());
 	}
-	
-	public static BlockSnapshot createSnapshot(BlockState state){
-		for(Entry<Material, Class<? extends BlockSnapshot>> entry : VALUE_TYPES.entrySet()){
-			if(entry.getKey().equals(state.getType())){
+
+	public static BlockSnapshot createSnapshot(BlockState state) {
+		for (Entry<Material, Class<? extends BlockSnapshot>> entry : VALUE_TYPES.entrySet()) {
+			if (entry.getKey().equals(state.getType())) {
 				try {
 					BlockSnapshot snapshot = entry.getValue().getConstructor(state.getClass()).newInstance(state);
 					return snapshot;

@@ -4,74 +4,80 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
-
-import com.flowpowered.math.vector.Vector3i;
-
-import MoseShips.Bypasses.FinalBypass;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Causes.MovementResult.CauseKeys;
 import MoseShipsSponge.Ships.Movement.Collide.CollideType;
-import MoseShipsSponge.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
+import MoseShipsSponge.Ships.Movement.MovementAlgorithm.MovementAlgorithmUtils;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class Movement {
 
-	public static Optional<MovementResult> move(LoadableShip ship, int X, int Y, int Z, Cause intCause) {
-		return move(ship, new Vector3i(X, Y, Z), intCause);
-	}
-
-	public static Optional<MovementResult> rotateRight(LoadableShip ship, Cause intCause) {
+	public static Optional<MovementResult> move(LoadableShip ship, int X, int Y, int Z) {
 		MovementResult cause = new MovementResult();
-		List<MovingBlock> blocks = new ArrayList<>();
-		List<MovingBlock> collide = new ArrayList<>();
-		Location<World> centre = ship.getLocation();
-		for (Location<World> loc : ship.getBasicStructure()) {
-			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateRight(centre);
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<MovingBlock> collide = new ArrayList<MovingBlock>();
+		for (Block loc : ship.getBasicStructure()) {
+			MovingBlock block = new MovingBlock(loc, X, Y, Z);
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
 			}
 			blocks.add(block);
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		return move(ship, blocks, intCause);
+		return move(ship, blocks);
 	}
 
-	public static Optional<MovementResult> rotateLeft(LoadableShip ship, Cause intCause) {
+	public static Optional<MovementResult> rotateRight(LoadableShip ship) {
 		MovementResult cause = new MovementResult();
-		List<MovingBlock> blocks = new ArrayList<>();
-		List<MovingBlock> collide = new ArrayList<>();
-		Location<World> centre = ship.getLocation();
-		for (Location<World> loc : ship.getBasicStructure()) {
-			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateLeft(centre);
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<MovingBlock> collide = new ArrayList<MovingBlock>();
+		Location centre = ship.getLocation();
+		for (Block loc : ship.getBasicStructure()) {
+			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateRight(centre.getBlock());
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
 			}
 			blocks.add(block);
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		return move(ship, blocks, intCause);
+		return move(ship, blocks);
 	}
 
-	public static Optional<MovementResult> rotate(LoadableShip ship, Cause intCause, Rotate rotate) {
+	public static Optional<MovementResult> rotateLeft(LoadableShip ship) {
+		MovementResult cause = new MovementResult();
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<MovingBlock> collide = new ArrayList<MovingBlock>();
+		Location centre = ship.getLocation();
+		for (Block loc : ship.getBasicStructure()) {
+			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateLeft(centre.getBlock());
+			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
+				return Optional.of(cause);
+			}
+			blocks.add(block);
+		}
+		cause.put(CauseKeys.MOVING_BLOCKS, collide);
+		return move(ship, blocks);
+	}
+
+	public static Optional<MovementResult> rotate(LoadableShip ship, Rotate rotate) {
 		switch (rotate) {
 			case LEFT:
-				return rotateLeft(ship, intCause);
+				return rotateLeft(ship);
 			case RIGHT:
-				return rotateRight(ship, intCause);
+				return rotateRight(ship);
 		}
 		return Optional.of(new MovementResult());
 	}
 
-	public static Optional<MovementResult> teleport(LoadableShip ship, Location<World> loc, Cause intCause) {
+	public static Optional<MovementResult> teleport(LoadableShip ship, Location loc) {
 		MovementResult cause = new MovementResult();
-		List<MovingBlock> blocks = new ArrayList<>();
-		List<MovingBlock> collide = new ArrayList<>();
-		for (Location<World> loc2 : ship.getBasicStructure()) {
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<MovingBlock> collide = new ArrayList<MovingBlock>();
+		for (Block loc2 : ship.getBasicStructure()) {
 			MovingBlock block = new MovingBlock(loc2, loc);
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
@@ -79,15 +85,15 @@ public class Movement {
 			blocks.add(block);
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		return move(ship, blocks, intCause);
+		return move(ship, blocks);
 	}
 
-	public static Optional<MovementResult> teleport(LoadableShip ship, Location<World> loc, int X, int Y, int Z, Cause intCause) {
+	public static Optional<MovementResult> teleport(LoadableShip ship, Location loc, int X, int Y, int Z) {
 		MovementResult cause = new MovementResult();
-		List<MovingBlock> blocks = new ArrayList<>();
-		List<MovingBlock> collide = new ArrayList<>();
-		Location<World> loc2 = loc.add(X, Y, Z);
-		for (Location<World> loc3 : ship.getBasicStructure()) {
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<MovingBlock> collide = new ArrayList<MovingBlock>();
+		Location loc2 = loc.add(X, Y, Z);
+		for (Block loc3 : ship.getBasicStructure()) {
 			MovingBlock block = new MovingBlock(loc3, loc2);
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
@@ -95,18 +101,18 @@ public class Movement {
 			blocks.add(block);
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		return move(ship, blocks, intCause);
+		return move(ship, blocks);
 	}
 
 	public static Optional<MovementResult> teleport(LoadableShip ship, StoredMovement movement) {
 		MovementResult cause = new MovementResult();
-		List<MovingBlock> blocks = new ArrayList<>();
-		List<MovingBlock> collide = new ArrayList<>();
-		Location<World> loc2 = movement.getEndResult(ship.getLocation());
-		for (Location<World> loc3 : ship.getBasicStructure()) {
-			MovingBlock block = new MovingBlock(loc3, loc2);
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<MovingBlock> collide = new ArrayList<MovingBlock>();
+		Block loc2 = movement.getEndResult(ship.getLocation().getBlock());
+		for (Block loc3 : ship.getBasicStructure()) {
+			MovingBlock block = new MovingBlock(loc3, loc2.getLocation());
 			if (movement.getRotation().isPresent()) {
-				block.rotate(movement.getRotation().get(), ship.getLocation());
+				block.rotate(movement.getRotation().get(), ship.getLocation().getBlock());
 			}
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
@@ -114,37 +120,15 @@ public class Movement {
 			blocks.add(block);
 		}
 		cause.put(MovementResult.CauseKeys.MOVING_BLOCKS, collide);
-		return move(ship, blocks, movement.getCause());
+		return move(ship, blocks);
 	}
 
-	public static Optional<MovementResult> move(LoadableShip ship, Vector3i vector, Cause intCause) {
-		System.out.println("move from Movement");
-		MovementResult cause = new MovementResult();
-		List<MovingBlock> blocks = new ArrayList<>();
-		List<MovingBlock> collide = new ArrayList<>();
-		FinalBypass<Boolean> check = new FinalBypass<>(false);
-		ship.getBasicStructure().stream().forEach(loc -> {
-			MovingBlock block = new MovingBlock(loc, vector);
-			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
-				check.set(true);
-				collide.add(block);
-			}
-			blocks.add(block);
-		});
-		cause.put(MovementResult.CauseKeys.MOVING_BLOCKS, collide);
-		if (check.get()) {
-			return Optional.of(cause);
-		}
-		System.out.println("moving method");
-		return move(ship, blocks, intCause);
-	}
-
-	private static Optional<MovementResult> move(LoadableShip ship, List<MovingBlock> blocks, Cause intCase) {
-		Optional<MovementResult> opFail = ship.hasRequirements(blocks, intCase);
+	private static Optional<MovementResult> move(LoadableShip ship, List<MovingBlock> blocks) {
+		Optional<MovementResult> opFail = ship.hasRequirements(blocks);
 		if (opFail.isPresent()) {
 			return opFail;
 		}
-		MovementAlgorithm.getConfig().move(ship, blocks);
+		MovementAlgorithmUtils.getConfig().move(ship, blocks);
 		return Optional.empty();
 	}
 

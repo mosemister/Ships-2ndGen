@@ -1,23 +1,22 @@
 package MoseShipsSponge.Configs.Files;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.trait.BlockTrait;
+import org.bukkit.Material;
 
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.BasicConfig;
+import MoseShipsSponge.Utils.State.BlockState;
 
 public class BlockList extends BasicConfig {
 
-	List<BlockState> MATERIALS = new ArrayList<>();
-	List<BlockState> RAM = new ArrayList<>();
+	List<BlockState> MATERIALS = new ArrayList<BlockState>();
+	List<BlockState> RAM = new ArrayList<BlockState>();
 	
 	public static final BlockList BLOCK_LIST = new BlockList();
 
@@ -25,17 +24,50 @@ public class BlockList extends BasicConfig {
 		super("/Configuration/MaterialsList");
 		applyMissing();
 		// code for testing purpose only
-		MATERIALS.addAll(getAllPossibleStates(BlockTypes.WALL_SIGN));
-		MATERIALS.addAll(getAllPossibleStates(BlockTypes.PLANKS));
+		MATERIALS.add(new BlockState(Material.WOOD));
+		MATERIALS.add(new BlockState(Material.WALL_SIGN));
 
 	}
 	
 	public BlockList applyMissing(){
-		getAllPossibleStates().stream().forEach(b -> {
-			set(false, b.getId(), "enabled");
-		});
+		for(Material material : Material.values()){
+			set(getDefaultValue(material).name(), material.name() + ".DataValue-1");
+		}
 		save();
 		return this;
+	}
+	
+	public List<BlockState> getDefaultMaterialsList(){
+		List<BlockState> list = new ArrayList<BlockState>();
+		list.add(new BlockState(Material.LOG));
+		list.add(new BlockState(Material.LOG_2));
+		list.add(new BlockState(Material.LEAVES));
+		list.add(new BlockState(Material.LEAVES_2));
+		list.add(new BlockState(Material.SPONGE));
+		list.add(new BlockState(Material.GLASS));
+		list.add(new BlockState(Material.LAPIS_BLOCK));
+		list.add(new BlockState(Material.DISPENSER));
+		list.add(new BlockState(Material.NOTE_BLOCK));
+		list.add(new BlockState(Material.PISTON_STICKY_BASE));
+		list.add(new BlockState(Material.PISTON_BASE));
+		list.add(new BlockState(Material.PISTON_EXTENSION));
+		list.add(new BlockState(Material.WOOL));
+		list.add(new BlockState(Material.GOLD_BLOCK));
+		list.add(new BlockState(Material.IRON_BLOCK));
+		list.add(new BlockState(Material.DOUBLE_STEP));
+		list.add(new BlockState(Material.STEP));
+		list.add(new BlockState(Material.BRICK));
+		list.add(new BlockState(Material.TNT));
+		list.add(new BlockState(Material.BOOKSHELF));
+		list.add(new BlockState(Material.MOSSY_COBBLESTONE));
+		list.add(new BlockState(Material.OBSIDIAN));
+		list.add(new BlockState(Material.TORCH));
+		list.add(new BlockState(Material.FIRE));
+		list.add(new BlockState(Material.MOB_SPAWNER));
+		list.add(new BlockState(Material.WOOD_STAIRS));
+		list.add(new BlockState(Material.CHEST));
+		list.add(new BlockState(Material.REDSTONE_WIRE));
+		list.add(new BlockState(Material.DIAMOND_BLOCK));
 	}
 
 	public List<BlockState> getMaterialsList() {
@@ -45,66 +77,64 @@ public class BlockList extends BasicConfig {
 	public List<BlockState> getRamMaterialsList() {
 		return RAM;
 	}
-
-	public List<BlockState> getUnusedMaterialsList() {
-		List<BlockState> states = getAllPossibleStates();
-		states.removeAll(RAM);
-		states.removeAll(MATERIALS);
-		return states;
+	
+	public List<Material> getUnusedMaterialsList(){
+		List<Material> materials = Arrays.asList(Material.values());
+		for(BlockState state : getMaterialsList()){
+			materials.remove(state.getMaterial());
+		}
+		for(BlockState state : getRamMaterialsList()){
+			materials.remove(state.getMaterial());
+		}
+		return materials;
 	}
 
-	public boolean contains(BlockState state, ListType type) {
+	public boolean contains(Material material, byte data, ListType type) {
 		switch (type) {
 			case MATERIALS:
-				return MATERIALS.stream().anyMatch(b -> b.equals(state));
+				for(BlockState state : MATERIALS){
+					if(state.getMaterial().equals(material) && (data == state.getData())){
+						return true;
+					}
+				}
+				return false;
 			case NONE:
-				return getUnusedMaterialsList().stream().anyMatch(s -> s.equals(state));
+				return getUnusedMaterialsList().contains(material);
 			case RAM:
-				return RAM.stream().anyMatch(b -> b.equals(state));
+				for(BlockState state : RAM){
+					if(state.getMaterial().equals(material) && (data == state.getData())){
+						return true;
+					}
+				}
+				return false;
 		}
 		return false;
 	}
 
-	public List<BlockState> getContains(BlockType block, ListType type) {
+	public List<BlockState> getContains(Material material, ListType type) {
+		List<BlockState> list = new ArrayList<BlockState>();
 		switch (type) {
 			case MATERIALS:
-				return MATERIALS.stream().filter(b -> b.getType().equals(block)).collect(Collectors.toList());
-			case NONE:
-				return getUnusedMaterialsList().stream().filter(b -> b.getType().equals(block)).collect(Collectors.toList());
-			case RAM:
-				return RAM.stream().filter(b -> b.getType().equals(block)).collect(Collectors.toList());
-		}
-		return new ArrayList<>();
-	}
-
-	public static List<BlockState> getAllPossibleStates(BlockType type) {
-		List<BlockState> states = new ArrayList<>();
-		/* type.getTraits().forEach(t -> {
-		 * t.getPossibleValues().forEach(v -> {
-		 * Optional<BlockState> state = type.getDefaultState().withTrait(t, v);
-		 * if (state.isPresent()) {
-		 * states.add(state.get());
-		 * }
-		 * });
-		 * }); */
-		for (BlockTrait<?> trait : type.getTraits()) {
-			for (Object value : trait.getPossibleValues()) {
-				Optional<BlockState> state = type.getDefaultState().withTrait(trait, value);
-				if (state.isPresent()) {
-					states.add(state.get());
+				for(BlockState state : MATERIALS){
+					if(state.getMaterial().equals(material)){
+						list.add(state);
+					}
 				}
-			}
+				return list;
+			case NONE:
+				if (getUnusedMaterialsList().contains(material)){
+					list.add(new BlockState(material));
+					return list;
+				}
+			case RAM:
+				for(BlockState state : RAM){
+					if(state.getMaterial().equals(material)){
+						list.add(state);
+					}
+				}
+				return list;
 		}
-		return states;
-	}
-
-	public static List<BlockState> getAllPossibleStates() {
-		List<BlockState> states = new ArrayList<>();
-		Collection<BlockType> types = ShipsMain.getPlugin().getGame().getRegistry().getAllOf(BlockType.class);
-		types.forEach(b -> {
-			states.addAll(getAllPossibleStates(b));
-		});
-		return states;
+		return list;
 	}
 
 	public static enum ListType {

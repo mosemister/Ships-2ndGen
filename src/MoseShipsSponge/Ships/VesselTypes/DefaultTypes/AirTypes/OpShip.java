@@ -15,8 +15,8 @@ import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
-import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
 
 public class OpShip extends AirType {
 

@@ -15,8 +15,8 @@ import org.bukkit.entity.Player;
 import MoseShips.Stores.TwoStore;
 
 import MoseShipsSponge.ShipsMain;
+import MoseShipsSponge.Ships.Movement.AutoPilot;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.Utils.AutoPilot;
 
 public class MovementResult {
 
@@ -67,15 +67,16 @@ public class MovementResult {
 					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 2 seconds", true));
 					final List<MovingBlock> list = (List<MovingBlock>) value;
 					for(MovingBlock block : list){
-						player.sendBlockChange(block.getMovingTo(), block.getMateral(), block.getDataValue());
+						player.sendBlockChange(block.getMovingTo(), block.getMaterial(), block.getDataValue());
 					}
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable(){
 
+						@SuppressWarnings("deprecation")
 						@Override
 						public void run() {
 							for(MovingBlock block : list){
 								Block block2 = block.getMovingTo().getBlock();
-								player.sendBlockChange(block.getMovementTo(), block2.getType(), block2.getData());
+								player.sendBlockChange(block.getMovingTo(), block2.getType(), block2.getData());
 							}
 
 						}

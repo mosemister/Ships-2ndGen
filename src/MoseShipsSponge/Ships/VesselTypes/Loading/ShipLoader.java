@@ -17,7 +17,7 @@ import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
-import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
 
 public class ShipLoader {
 

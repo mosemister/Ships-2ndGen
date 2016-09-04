@@ -3,21 +3,13 @@ package MoseShipsSponge.Configs;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import com.google.common.reflect.TypeToken;
-
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.ConfigurationOptions;
-import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class BasicConfig {
 
 	protected File file;
-	protected HoconConfigurationLoader loader;
-	protected ConfigurationNode root;
+	protected YamlConfiguration config;
 
 	public BasicConfig(String fileName) {
 		file = new File("config/Ships/" + fileName + ".conf");
@@ -29,8 +21,7 @@ public class BasicConfig {
 				e.printStackTrace();
 			}
 		}
-		loader = HoconConfigurationLoader.builder().setFile(file).build();
-		root = loader.createEmptyNode();
+		config = YamlConfiguration.loadConfiguration(file);
 	}
 
 	public BasicConfig(File file) {
@@ -43,74 +34,61 @@ public class BasicConfig {
 				e.printStackTrace();
 			}
 		}
-		loader = HoconConfigurationLoader.builder().setFile(file).build();
-		root = loader.createEmptyNode(ConfigurationOptions.defaults());
+		config = YamlConfiguration.loadConfiguration(file);
 	}
 
 	public File getFile() {
 		return file;
 	}
 
-	public HoconConfigurationLoader getLoader() {
-		return loader;
+	public YamlConfiguration getConfig() {
+		return config;
 	}
 
-	public ConfigurationNode getRoot() {
-		return root;
-	}
-
-	public boolean set(Object object, Object... path) {
+	public boolean set(Object object, String path) {
 		if (path != null) {
 			System.out.println("\n object: " + object);
 			if (has(path)) {
-				root.getNode(path).setValue(object);
+				config.set(path, object);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public BasicConfig setOverride(Object object, Object... path) {
+	public BasicConfig setOverride(Object object, String path) {
 		if (path != null) {
-			root.getNode(path).setValue(object);
+			config.set(path, object);
 		}
 		return this;
 	}
 
-	public <T extends Object> T get(Class<T> type, Object... path) {
+	@SuppressWarnings("unchecked")
+	public <T extends Object> T get(Class<T> type, String path) {
 		if (path != null) {
-			ConfigurationNode key = root.getNode(path);
-			try {
-				return key.getValue(TypeToken.of(type));
-			} catch (ObjectMappingException e) {
-				e.printStackTrace();
+			Object obj = config.get(path);
+			if(type.isInstance(obj)){
+				return (T)obj;
 			}
 		}
 		return null;
 	}
 
-	public boolean has(Object... path) {
+	public boolean has(String path) {
 		if (path != null) {
-			ConfigurationNode key = root.getNode(path);
-			try {
-				Object obj = key.getValue(TypeToken.of(Object.class));
-				if (obj != null) {
-					return true;
-				}
-			} catch (ObjectMappingException e) {
-				e.printStackTrace();
-			}
+			return (config.get(path) != null);
 		}
 		return false;
 	}
 
-	public <T extends Object> List<T> getList(Function<? super ConfigurationNode, T> type, Object... path) {
-		return (List<T>) root.getNode(path).getChildrenList().stream().map(type).collect(Collectors.toList());
+	@SuppressWarnings("unchecked")
+	public <T extends Object> List<T> getList(Class<T> type, String path) {
+		return (List<T>) config.getList(path);
 	}
 
 	public BasicConfig save() {
 		try {
-			loader.save(root);
+			config.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

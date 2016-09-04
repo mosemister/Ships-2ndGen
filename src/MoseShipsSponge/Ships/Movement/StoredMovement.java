@@ -2,26 +2,23 @@ package MoseShipsSponge.Ships.Movement;
 
 import java.util.Optional;
 
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 
 public class StoredMovement {
 
 	int X, Y, Z;
-	Location<World> TELEPORT;
+	Location TELEPORT;
 	Rotate ROTATE;
-	Cause CAUSE;
 
-	public StoredMovement(Location<World> teleport, Rotate rotate, int x, int y, int z, Cause cause) {
+	public StoredMovement(Location teleport, Rotate rotate, int x, int y, int z) {
 		X = x;
 		Y = y;
 		Z = z;
 		TELEPORT = teleport;
 		ROTATE = rotate;
-		CAUSE = cause;
 	}
 
 	public int getX() {
@@ -36,7 +33,7 @@ public class StoredMovement {
 		return Z;
 	}
 
-	public Optional<Location<World>> getTeleportTo() {
+	public Optional<Location> getTeleportTo() {
 		return Optional.ofNullable(TELEPORT);
 	}
 
@@ -44,26 +41,21 @@ public class StoredMovement {
 		return Optional.ofNullable(ROTATE);
 	}
 
-	public Location<World> getEndResult(Location<World> start) {
+	public Block getEndResult(Block start) {
 		if (TELEPORT != null) {
-			Location<World> ret = TELEPORT.add(X, Y, Z);
+			Block ret = TELEPORT.getBlock().getRelative(X, Y, Z);
 			return ret;
 		} else {
-			Location<World> ret = start.add(X, Y, Z);
+			Block ret = start.getRelative(X, Y, Z);
 			return ret;
 		}
-	}
-
-	public Cause getCause() {
-		return CAUSE;
 	}
 
 	public static class Builder {
 
 		int X, Y, Z;
-		Location<World> TELEPORT;
+		Location TELEPORT;
 		Rotate ROTATE;
-		Cause CAUSE;
 
 		public Builder setX(int x) {
 			X = x;
@@ -80,7 +72,7 @@ public class StoredMovement {
 			return this;
 		}
 
-		public Builder setTeleportTo(Location<World> loc) {
+		public Builder setTeleportTo(Location loc) {
 			TELEPORT = loc;
 			return this;
 		}
@@ -90,17 +82,8 @@ public class StoredMovement {
 			return this;
 		}
 
-		public Cause getCause() {
-			return CAUSE;
-		}
-
-		public Builder setCause(Cause cause) {
-			CAUSE = cause;
-			return this;
-		}
-
 		public StoredMovement build() {
-			return new StoredMovement(TELEPORT, ROTATE, X, Y, Z, CAUSE);
+			return new StoredMovement(TELEPORT, ROTATE, X, Y, Z);
 		}
 	}
 

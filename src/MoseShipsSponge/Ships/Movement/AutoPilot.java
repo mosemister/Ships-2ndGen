@@ -1,4 +1,4 @@
-package MoseShipsSponge.Ships.Utils;
+package MoseShipsSponge.Ships.Movement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,26 +6,23 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 
 import MoseShips.Maps.OrderedMap;
 
 import MoseShipsSponge.Causes.MovementResult;
-import MoseShipsSponge.Ships.Movement.Movement;
-import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class AutoPilot {
 
-	List<StoredMovement> MOVEMENTS = new ArrayList<>();
+	List<StoredMovement> MOVEMENTS = new ArrayList<StoredMovement>();
 	LoadableShip SHIP;
-	User USER;
+	OfflinePlayer USER;
 	int TARGET;
 	boolean SHOULD_REPEATE;
 
-	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, int start, @Nullable User user) {
+	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, int start, @Nullable OfflinePlayer user) {
 		MOVEMENTS = movements;
 		SHIP = type;
 		SHOULD_REPEATE = repeate;
@@ -33,14 +30,14 @@ public class AutoPilot {
 		USER = user;
 	}
 
-	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, @Nullable User user) {
+	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, @Nullable OfflinePlayer user) {
 		MOVEMENTS = movements;
 		SHIP = type;
 		SHOULD_REPEATE = repeate;
 		USER = user;
 	}
 
-	public AutoPilot(LoadableShip type, Location<World> moveTo, int speed, @Nullable User user) {
+	public AutoPilot(LoadableShip type, Block moveTo, int speed, @Nullable OfflinePlayer user) {
 		// TODO create path from ship to location
 	}
 
@@ -52,7 +49,7 @@ public class AutoPilot {
 		return SHIP;
 	}
 
-	public Optional<User> getTargetPlayer() {
+	public Optional<OfflinePlayer> getTargetPlayer() {
 		return Optional.ofNullable(USER);
 	}
 
@@ -79,13 +76,13 @@ public class AutoPilot {
 		return Optional.of(fail);
 	}
 
-	public OrderedMap<Integer, Location<World>> getPath() {
-		OrderedMap<Integer, Location<World>> map = new OrderedMap<>();
-		map.put(0, SHIP.getLocation());
-		Location<World> previousLoc = SHIP.getLocation();
+	public OrderedMap<Integer, Block> getPath() {
+		OrderedMap<Integer, Block> map = new OrderedMap<Integer, Block>();
+		map.put(0, SHIP.getLocation().getBlock());
+		Block previousLoc = SHIP.getLocation().getBlock();
 		for (int A = 1; A < MOVEMENTS.size(); A++) {
 			StoredMovement movement = MOVEMENTS.get(A - 1);
-			Location<World> ret = movement.getEndResult(previousLoc);
+			Block ret = movement.getEndResult(previousLoc);
 			map.put(A, ret);
 			previousLoc = ret;
 		}

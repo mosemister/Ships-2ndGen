@@ -2,7 +2,7 @@ package MoseShipsSponge.Utils;
 
 import org.bukkit.entity.Player;
 
-import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
 
 public enum Permissions {
 

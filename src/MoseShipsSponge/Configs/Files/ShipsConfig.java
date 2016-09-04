@@ -4,27 +4,10 @@ import MoseShipsSponge.Configs.BasicConfig;
 
 public class ShipsConfig extends BasicConfig {
 
-	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT = {
-		"Structure",
-		"StructureLimits",
-		"TrackLimits"
-	};
-	
-	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE = {
-		"Structure",
-		"StructureLimits",
-		"TrackRepeate"
-	};
-
-	public static final Object[] PATH_ALGORITHMS_BLOCKFINDER = {
-		"Algorithms",
-		"BlockFinder"
-	};
-	
-	public static final Object[] PATH_ALGORITHMS_MOVEMENT = {
-		"Algorithms",
-		"Movement"
-	};
+	public static final String PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT = "Structure.StructureLimits.TrackLimits";
+	public static final String PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE = "Structure.StructureLimits.TrackRepeate";
+	public static final String PATH_ALGORITHMS_BLOCKFINDER = "Algorithms.BlockFinder";
+	public static final String PATH_ALGORITHMS_MOVEMENT = "Algorithms.Movement";
 	
 	public static final ShipsConfig CONFIG = new ShipsConfig();
 

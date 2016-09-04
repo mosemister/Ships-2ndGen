@@ -6,9 +6,6 @@ import java.util.List;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Configs.Files.BlockList;

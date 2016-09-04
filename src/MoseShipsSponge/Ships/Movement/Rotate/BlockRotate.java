@@ -1,25 +1,25 @@
 package MoseShipsSponge.Ships.Movement.Rotate;
 
-import org.spongepowered.api.util.Direction;
+import org.bukkit.block.BlockFace;
 
 public class BlockRotate {
 
-	public static Direction getRotation(Direction direction, RotateType type) {
+	public static BlockFace getRotation(BlockFace direction, RotateType type) {
 		switch (type) {
 			case LEFT:
 				switch (direction) {
 					case DOWN:
 						return direction;
 					case EAST:
-						return Direction.NORTH;
+						return BlockFace.NORTH;
 					case NORTH:
-						return Direction.WEST;
+						return BlockFace.WEST;
 					case SOUTH:
-						return Direction.EAST;
+						return BlockFace.EAST;
 					case UP:
 						return direction;
 					case WEST:
-						return Direction.SOUTH;
+						return BlockFace.SOUTH;
 					default:
 						return direction;
 
@@ -29,15 +29,15 @@ public class BlockRotate {
 					case DOWN:
 						return direction;
 					case EAST:
-						return Direction.SOUTH;
+						return BlockFace.SOUTH;
 					case NORTH:
-						return Direction.EAST;
+						return BlockFace.EAST;
 					case SOUTH:
-						return Direction.WEST;
+						return BlockFace.WEST;
 					case UP:
 						return direction;
 					case WEST:
-						return Direction.NORTH;
+						return BlockFace.NORTH;
 					default:
 						return direction;
 				}

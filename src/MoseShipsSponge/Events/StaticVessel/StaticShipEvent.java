@@ -3,7 +3,7 @@ package MoseShipsSponge.Events.StaticVessel;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.impl.AbstractEvent;
 
-import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
 
 public class StaticShipEvent<S extends StaticShipType> extends AbstractEvent {
 

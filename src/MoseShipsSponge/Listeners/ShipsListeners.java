@@ -32,7 +32,7 @@ import MoseShipsSponge.Causes.MovementResult.CauseKeys;
 import MoseShipsSponge.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsSponge.Events.Vessel.Create.ShipsCreateEvent;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
-import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsSponge.Signs.ShipsSigns;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
 import MoseShipsSponge.Utils.Permissions;

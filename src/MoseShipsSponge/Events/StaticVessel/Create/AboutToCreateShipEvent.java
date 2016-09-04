@@ -10,7 +10,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Events.StaticVessel.StaticShipEvent;
-import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
 
 public class AboutToCreateShipEvent<S extends StaticShipType> extends StaticShipEvent<S> implements Cancellable {
 
