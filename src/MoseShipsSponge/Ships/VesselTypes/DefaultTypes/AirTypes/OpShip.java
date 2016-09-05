@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Configs.BasicConfig;
@@ -17,10 +15,11 @@ import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirType;
 import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 
 public class OpShip extends AirType {
 
-	public OpShip(String name, Location<World> sign, Location<World> teleport) {
+	public OpShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
 
@@ -29,7 +28,7 @@ public class OpShip extends AirType {
 	}
 
 	@Override
-	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks, Cause cause) {
+	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {
 		return Optional.empty();
 	}
 
@@ -49,19 +48,19 @@ public class OpShip extends AirType {
 	}
 
 	@Override
-	public Map<Text, Object> getInfo() {
-		return new HashMap<Text, Object>();
+	public Map<String, Object> getInfo() {
+		return new HashMap<String, Object>();
 	}
 
 	@Override
 	public StaticShipType getStatic() {
-		return StaticShipType.getType(StaticOPShip.class).get();
+		return StaticShipTypeUtil.getType(StaticOPShip.class).get();
 	}
 
 	public static class StaticOPShip implements StaticShipType {
 
 		public StaticOPShip() {
-			StaticShipType.inject(this);
+			StaticShipTypeUtil.inject(this);
 		}
 
 		@Override
@@ -90,13 +89,13 @@ public class OpShip extends AirType {
 		}
 
 		@Override
-		public Optional<LoadableShip> createVessel(String name, Location<World> sign) {
-			return Optional.of(new OpShip(name, sign, sign));
+		public Optional<LoadableShip> createVessel(String name, Block sign) {
+			return Optional.of((LoadableShip)new OpShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
 		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
-			return Optional.of(new OpShip(data));
+			return Optional.of((LoadableShip)new OpShip(data));
 		}
 
 	}

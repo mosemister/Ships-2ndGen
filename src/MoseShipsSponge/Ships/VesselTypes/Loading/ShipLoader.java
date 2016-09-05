@@ -6,18 +6,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 
 import MoseShips.Stores.OneStore;
 import MoseShips.Stores.TwoStore;
-import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
+import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 
 public class ShipLoader {
 
@@ -48,22 +49,22 @@ public class ShipLoader {
 
 	private static Optional<File> getFile(String name) {
 		File root = new File("/config/Ships/VesselData");
-		OneStore<File> file = new OneStore<>(null);
-		StaticShipType.TYPES.stream().forEach(t -> {
-			File folder = new File(root, t.getName());
-			ShipsMain.getPlugin().getGame().getServer().getConsole().sendMessage(Text.of(folder));
+		OneStore<File> file = new OneStore<File>(null);
+		for(StaticShipType type : StaticShipType.TYPES){
+			File folder = new File(root, type.getName());
+			Bukkit.getServer().getConsoleSender().sendMessage(folder.getAbsolutePath());
 			File[] files = folder.listFiles();
 			if (files != null) {
-				ShipsMain.getPlugin().getGame().getServer().getConsole().sendMessage(Text.of("files dont equal null"));
+				Bukkit.getServer().getConsoleSender().sendMessage("files dont equal null");
 				for (File sFile : files) {
-					ShipsMain.getPlugin().getGame().getServer().getConsole().sendMessage(Text.of(sFile));
+					Bukkit.getServer().getConsoleSender().sendMessage(sFile.getAbsolutePath());
 					if (sFile.getName().equals(name + ".conf")) {
 						file.setFirst(sFile);
 						break;
 					}
 				}
 			}
-		});
+		}
 		return Optional.ofNullable(file.getFirst());
 	}
 
@@ -80,44 +81,42 @@ public class ShipLoader {
 		String sWorld = config.get(String.class, ShipsData.DATABASE_WORLD);
 
 		if (sWorld == null) {
-			return new TwoStore<>(null, ShipLoadingError.UNREADABLE_WORLD);
+			return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.UNREADABLE_WORLD);
 		}
-		Optional<World> opWorld = ShipsMain.getPlugin().getGame().getServer().getWorld(sWorld);
-		if (opWorld.isPresent()) {
-			World world = opWorld.get();
-			Location<World> lic = null;
+		World world = Bukkit.getServer().getWorld(sWorld);
+		if (world != null) {
+			Location lic = null;
 			try {
 				int Xlic = Integer.parseInt(sLic[0]);
 				int Ylic = Integer.parseInt(sLic[1]);
 				int Zlic = Integer.parseInt(sLic[2]);
-				lic = world.getLocation(Xlic, Ylic, Zlic);
+				lic = new Location(world, Xlic, Ylic, Zlic);
 			} catch (NumberFormatException e) {
-				return new TwoStore<>(null, ShipLoadingError.UNREADABLE_LICENCE);
+				return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.UNREADABLE_LICENCE);
 			}
-			Location<World> tel = null;
+			Location tel = null;
 			try {
 				int Xtel = Integer.parseInt(sTel[0]);
 				int Ytel = Integer.parseInt(sTel[1]);
 				int Ztel = Integer.parseInt(sTel[2]);
-				lic = world.getLocation(Xtel, Ytel, Ztel);
+				lic = new Location(world, Xtel, Ytel, Ztel);
 			} catch (NumberFormatException e) {
 				tel = lic;
 			}
-			Optional<StaticShipType> opType = StaticShipType.TYPES.stream().filter(t -> t.getName().equals(sType))
-					.findFirst();
+			Optional<StaticShipType> opType = StaticShipTypeUtil.getType(sType);
 			if (opType.isPresent()) {
 				StaticShipType type = opType.get();
-				ShipsData data = new ShipsData(name, lic, tel);
+				ShipsData data = new ShipsData(name, lic.getBlock(), tel);
 				if (sPilot != null) {
-					Optional<User> opUser = ShipsMain.getUser(UUID.fromString(sPilot));
-					if (opUser.isPresent()) {
-						data.setOwner(opUser.get());
+					OfflinePlayer user = Bukkit.getOfflinePlayer(UUID.fromString(sPilot));
+					if (user != null) {
+						data.setOwner(user);
 					} else {
-						return new TwoStore<>(null, ShipLoadingError.UNKNOWN_PLAYER);
+						return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.UNKNOWN_PLAYER);
 					}
 				}
 
-				List<Location<World>> structure = new ArrayList<>();
+				List<Block> structure = new ArrayList<Block>();
 				int posX = 0;
 				int posY = 0;
 				int target = 0;
@@ -130,33 +129,33 @@ public class ShipLoader {
 						case 1:
 							posY = pos;
 						case 2:
-							structure.add(world.getLocation(posX, posY, pos));
+							structure.add(new Location(world, posX, posY, pos).getBlock());
 						}
 					} catch (NumberFormatException e) {
 						break;
 					}
 				}
-				data.setBasicStructure(structure, lic);
+				data.setBasicStructure(structure, lic.getBlock());
 
 				if (sSubPilots != null) {
-					List<User> subPilots = new ArrayList<>();
+					List<OfflinePlayer> subPilots = new ArrayList<OfflinePlayer>();
 					for (String sUuid : sSubPilots.split(",")) {
-						ShipsMain.getUser(UUID.fromString(sUuid));
+						subPilots.add(Bukkit.getOfflinePlayer(UUID.fromString(sUuid)));
 					}
 					data.getSubPilots().addAll(subPilots);
 				}
 
 				Optional<LoadableShip> opShip = type.loadVessel(data, config);
 				if (opShip.isPresent()) {
-					return new TwoStore<>(opShip.get(), ShipLoadingError.NOT_CURRUPT);
+					return new TwoStore<LoadableShip, ShipLoadingError>(opShip.get(), ShipLoadingError.NOT_CURRUPT);
 				} else {
-					return new TwoStore<>(null, ShipLoadingError.LOADER_ISSUE);
+					return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.LOADER_ISSUE);
 				}
 			} else {
-				return new TwoStore<>(null, ShipLoadingError.UNKNOWN_SHIP_TYPE);
+				return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.UNKNOWN_SHIP_TYPE);
 			}
 		} else {
-			return new TwoStore<>(null, ShipLoadingError.WORLD_MISSING);
+			return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.WORLD_MISSING);
 		}
 	}
 

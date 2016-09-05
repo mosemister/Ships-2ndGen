@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -17,6 +15,7 @@ import MoseShips.Stores.TwoStore;
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Ships.Movement.AutoPilot;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
+import MoseShipsSponge.Utils.State.BlockState;
 
 public class MovementResult {
 
@@ -60,7 +59,7 @@ public class MovementResult {
 
 		public static CauseKeys<List<MovingBlock>> MOVING_BLOCKS = new CauseKeys<List<MovingBlock>>() {
 
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "deprecation" })
 			@Override
 			public void sendMessage(final Player player, Object value) {
 				if (value instanceof List) {
@@ -71,7 +70,6 @@ public class MovementResult {
 					}
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable(){
 
-						@SuppressWarnings("deprecation")
 						@Override
 						public void run() {
 							for(MovingBlock block : list){
@@ -109,7 +107,7 @@ public class MovementResult {
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof BlockState) {
 					BlockState state = (BlockState) value;
-					player.sendMessage(ShipsMain.format("You are missing " + state.getName() + " from your ship", true));
+					player.sendMessage(ShipsMain.format("You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship", true));
 				}
 
 			}
@@ -120,7 +118,7 @@ public class MovementResult {
 			@Override
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof Integer) {
-					int blocks = (int) value;
+					int blocks = (Integer) value;
 					player.sendMessage(ShipsMain.format("You need " + blocks + " more blocks", true));
 				}
 
@@ -132,7 +130,7 @@ public class MovementResult {
 			@Override
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof Integer) {
-					int blocks = (int) value;
+					int blocks = (Integer) value;
 					player.sendMessage(ShipsMain.format("You need " + blocks + " less blocks", true));
 				}
 			}
@@ -145,7 +143,7 @@ public class MovementResult {
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof TwoStore) {
 					TwoStore<BlockState, Integer> value2 = (TwoStore<BlockState, Integer>) value;
-					player.sendMessage(ShipsMain.format("You need " + value2.getSecond() + " more blocks of " + value2.getFirst().getName(), true));
+					player.sendMessage(ShipsMain.format("You need " + value2.getSecond() + " more blocks of " + value2.getFirst().getMaterial() + ":" + value2.getFirst().getData(), true));
 				}
 			}
 

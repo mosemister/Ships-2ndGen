@@ -1,18 +1,17 @@
 package MoseShipsSponge.Events.StaticVessel;
 
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.impl.AbstractEvent;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 import MoseShipsSponge.Ships.VesselTypes.Satic.StaticShipType;
 
-public class StaticShipEvent<S extends StaticShipType> extends AbstractEvent {
+public class StaticShipEvent<S extends StaticShipType> extends Event {
 
 	protected S TYPE;
-	protected Cause CAUSE;
+	protected static HandlerList HANDLER = new HandlerList();
 
-	public StaticShipEvent(S type, Cause cause) {
+	public StaticShipEvent(S type) {
 		TYPE = type;
-		CAUSE = cause;
 	}
 
 	public S getType() {
@@ -20,8 +19,12 @@ public class StaticShipEvent<S extends StaticShipType> extends AbstractEvent {
 	}
 
 	@Override
-	public Cause getCause() {
-		return CAUSE;
+	public HandlerList getHandlers() {
+		return HANDLER;
+	}
+	
+	public static HandlerList getHandler(){
+		return HANDLER;
 	}
 
 }

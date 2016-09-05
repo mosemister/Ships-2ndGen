@@ -12,47 +12,20 @@ import org.bukkit.block.Sign;
 
 import MoseShips.CustomDataHolder.DataHolder;
 
-import MoseShipsSponge.BlockFinder.BasicBlockFinder;
+import MoseShipsSponge.BlockFinder.BlockFinderUtils;
 import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Utils.LocationUtils;
 
 public class ShipsData extends DataHolder {
 
-	public static final Object[] DATABASE_NAME = {
-		"ShipsMeta",
-		"Name"
-	};
-	public static final Object[] DATABASE_TYPE = {
-		"ShipsMeta",
-		"Type"
-	};
-	public static final Object[] DATABASE_PILOT = {
-		"ShipsMeta",
-		"Pilot"
-	};
-	public static final Object[] DATABASE_SUB_PILOTS = {
-		"ShipsMeta",
-		"Sub_Pilots"
-	};
-	public static final Object[] DATABASE_WORLD = {
-		"ShipsMeta",
-		"Location",
-		"World"
-	};
-	public static final Object[] DATABASE_BLOCK = {
-		"ShipsMeta",
-		"Location",
-		"Block"
-	};
-	public static final Object[] DATABASE_TELEPORT = {
-		"ShipsMeta",
-		"Location",
-		"Teleport"
-	};
-	public static final Object[] DATABASE_STRUCTURE = {
-		"ShipsStructure",
-		"Basic"
-	};
+	public static final String DATABASE_NAME = "ShipsMeta.Name";
+	public static final String DATABASE_TYPE = "ShipsMeta.Type";
+	public static final String DATABASE_PILOT = "ShipsMeta.Pilot";
+	public static final String DATABASE_SUB_PILOTS = "ShipsMeta.Sub_Pilots";
+	public static final String DATABASE_WORLD = "ShipsMeta.Location.World";
+	public static final String DATABASE_BLOCK = "ShipsMeta.Location.Block";
+	public static final String DATABASE_TELEPORT = "ShipsMeta.Location.Teleport";
+	public static final String DATABASE_STRUCTURE = "ShipsStructure.Basic";
 
 	protected String NAME;
 	protected OfflinePlayer USER;
@@ -117,7 +90,7 @@ public class ShipsData extends DataHolder {
 
 	public List<Block> updateBasicStructure() {
 		int trackLimit = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
-		List<Block> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
+		List<Block> list = BlockFinderUtils.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
 		STRUCTURE = list;
 		return list;
 	}

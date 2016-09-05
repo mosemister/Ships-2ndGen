@@ -1,7 +1,7 @@
 package MoseShipsSponge.Events.Vessel.Create;
 
-import org.spongepowered.api.event.Cancellable;
-import org.spongepowered.api.event.cause.Cause;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.HandlerList;
 
 import MoseShipsSponge.Events.Vessel.ShipsEvent;
 import MoseShipsSponge.Ships.ShipsData;
@@ -10,8 +10,8 @@ public class ShipsCreateEvent<S extends ShipsData> extends ShipsEvent<S> impleme
 
 	boolean CANCELLED;
 
-	public ShipsCreateEvent(S ship, Cause cause) {
-		super(ship, cause);
+	public ShipsCreateEvent(S ship) {
+		super(ship);
 	}
 
 	@Override
@@ -22,6 +22,10 @@ public class ShipsCreateEvent<S extends ShipsData> extends ShipsEvent<S> impleme
 	@Override
 	public void setCancelled(boolean arg0) {
 		CANCELLED = arg0;
+	}
+	
+	public static HandlerList getHandlerList(){
+		return HANDLER;
 	}
 
 }

@@ -2,14 +2,10 @@ package MoseShipsSponge.Configs.Files;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 
-import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Utils.State.BlockState;
 
@@ -37,12 +33,24 @@ public class BlockList extends BasicConfig {
 		return this;
 	}
 	
+	public ListType getDefaultValue(Material material){
+		for(BlockState material2 : getDefaultMaterialsList()){
+			if(material2.getMaterial().equals(material)){
+				return ListType.MATERIALS;
+			}
+		}
+		for(BlockState material2 : getDefaultRamList()){
+			if(material2.getMaterial().equals(material)){
+				return ListType.RAM;
+			}
+		}
+		return ListType.NONE;
+	}
+	
 	public List<BlockState> getDefaultMaterialsList(){
 		List<BlockState> list = new ArrayList<BlockState>();
 		list.add(new BlockState(Material.LOG));
 		list.add(new BlockState(Material.LOG_2));
-		list.add(new BlockState(Material.LEAVES));
-		list.add(new BlockState(Material.LEAVES_2));
 		list.add(new BlockState(Material.SPONGE));
 		list.add(new BlockState(Material.GLASS));
 		list.add(new BlockState(Material.LAPIS_BLOCK));
@@ -68,6 +76,119 @@ public class BlockList extends BasicConfig {
 		list.add(new BlockState(Material.CHEST));
 		list.add(new BlockState(Material.REDSTONE_WIRE));
 		list.add(new BlockState(Material.DIAMOND_BLOCK));
+		list.add(new BlockState(Material.WORKBENCH));
+		list.add(new BlockState(Material.FURNACE));
+		list.add(new BlockState(Material.BURNING_FURNACE));
+		list.add(new BlockState(Material.SIGN_POST));
+		list.add(new BlockState(Material.WOODEN_DOOR));
+		list.add(new BlockState(Material.LADDER));
+		list.add(new BlockState(Material.WALL_SIGN));
+		list.add(new BlockState(Material.LEVER));
+		list.add(new BlockState(Material.STONE_PLATE));
+		list.add(new BlockState(Material.IRON_DOOR_BLOCK));
+		list.add(new BlockState(Material.WOOD_PLATE));
+		list.add(new BlockState(Material.REDSTONE_TORCH_OFF));
+		list.add(new BlockState(Material.REDSTONE_TORCH_ON));
+		list.add(new BlockState(Material.STONE_BUTTON));
+		list.add(new BlockState(Material.JUKEBOX));
+		list.add(new BlockState(Material.FENCE));
+		list.add(new BlockState(Material.NETHERRACK));
+		list.add(new BlockState(Material.CAKE_BLOCK));
+		list.add(new BlockState(Material.DIODE_BLOCK_OFF));
+		list.add(new BlockState(Material.DIODE_BLOCK_ON));
+		list.add(new BlockState(Material.STAINED_GLASS));
+		list.add(new BlockState(Material.TRAP_DOOR));
+		list.add(new BlockState(Material.MONSTER_EGGS));
+		list.add(new BlockState(Material.SMOOTH_BRICK));
+		list.add(new BlockState(Material.IRON_FENCE));
+		list.add(new BlockState(Material.THIN_GLASS));
+		list.add(new BlockState(Material.VINE));
+		list.add(new BlockState(Material.FENCE_GATE));
+		list.add(new BlockState(Material.BRICK_STAIRS));
+		list.add(new BlockState(Material.SMOOTH_STAIRS));
+		list.add(new BlockState(Material.ENCHANTMENT_TABLE));
+		list.add(new BlockState(Material.BREWING_STAND));
+		list.add(new BlockState(Material.CAULDRON));
+		list.add(new BlockState(Material.REDSTONE_LAMP_OFF));
+		list.add(new BlockState(Material.REDSTONE_LAMP_ON));
+		list.add(new BlockState(Material.WOOD_DOUBLE_STEP));
+		list.add(new BlockState(Material.WOOD_STEP));
+		list.add(new BlockState(Material.SANDSTONE_STAIRS));
+		list.add(new BlockState(Material.ENDER_CHEST));
+		list.add(new BlockState(Material.TRIPWIRE_HOOK));
+		list.add(new BlockState(Material.TRIPWIRE));
+		list.add(new BlockState(Material.EMERALD_BLOCK));
+		list.add(new BlockState(Material.SPRUCE_WOOD_STAIRS));
+		list.add(new BlockState(Material.BIRCH_WOOD_STAIRS));
+		list.add(new BlockState(Material.JUNGLE_WOOD_STAIRS));
+		list.add(new BlockState(Material.BEACON));
+		list.add(new BlockState(Material.COBBLE_WALL));
+		list.add(new BlockState(Material.FLOWER_POT));
+		list.add(new BlockState(Material.WOOD_BUTTON));
+		list.add(new BlockState(Material.SKULL));
+		list.add(new BlockState(Material.ANVIL));
+		list.add(new BlockState(Material.TRAPPED_CHEST));
+		list.add(new BlockState(Material.GOLD_PLATE));
+		list.add(new BlockState(Material.IRON_PLATE));
+		list.add(new BlockState(Material.REDSTONE_COMPARATOR_OFF));
+		list.add(new BlockState(Material.REDSTONE_COMPARATOR_ON));
+		list.add(new BlockState(Material.DAYLIGHT_DETECTOR));
+		list.add(new BlockState(Material.REDSTONE_BLOCK));
+		list.add(new BlockState(Material.HOPPER));
+		list.add(new BlockState(Material.QUARTZ_BLOCK));
+		list.add(new BlockState(Material.QUARTZ_STAIRS));
+		list.add(new BlockState(Material.DROPPER));
+		list.add(new BlockState(Material.STAINED_CLAY));
+		list.add(new BlockState(Material.STAINED_GLASS_PANE));
+		list.add(new BlockState(Material.ACACIA_STAIRS));
+		list.add(new BlockState(Material.DARK_OAK_STAIRS));
+		list.add(new BlockState(Material.SLIME_BLOCK));
+		list.add(new BlockState(Material.BARRIER));
+		list.add(new BlockState(Material.IRON_TRAPDOOR));
+		list.add(new BlockState(Material.PRISMARINE));
+		list.add(new BlockState(Material.SEA_LANTERN));
+		list.add(new BlockState(Material.HAY_BLOCK));
+		list.add(new BlockState(Material.CARPET));
+		list.add(new BlockState(Material.HARD_CLAY));
+		list.add(new BlockState(Material.COAL_BLOCK));
+		list.add(new BlockState(Material.STANDING_BANNER));
+		list.add(new BlockState(Material.WALL_BANNER));
+		list.add(new BlockState(Material.DAYLIGHT_DETECTOR_INVERTED));
+		list.add(new BlockState(Material.SPRUCE_FENCE_GATE));
+		list.add(new BlockState(Material.BIRCH_FENCE_GATE));
+		list.add(new BlockState(Material.JUNGLE_FENCE_GATE));
+		list.add(new BlockState(Material.DARK_OAK_FENCE_GATE));
+		list.add(new BlockState(Material.ACACIA_FENCE_GATE));
+		list.add(new BlockState(Material.SPRUCE_FENCE));
+		list.add(new BlockState(Material.BIRCH_FENCE));
+		list.add(new BlockState(Material.JUNGLE_DOOR));
+		list.add(new BlockState(Material.DARK_OAK_FENCE));
+		list.add(new BlockState(Material.ACACIA_FENCE));
+		return list;
+	}
+	
+	public List<BlockState> getDefaultRamList(){
+		List<BlockState> list = new ArrayList<BlockState>();
+		list.add(new BlockState(Material.SAPLING));
+		list.add(new BlockState(Material.LEAVES));
+		list.add(new BlockState(Material.WEB));
+		list.add(new BlockState(Material.LONG_GRASS));
+		list.add(new BlockState(Material.DEAD_BUSH));
+		list.add(new BlockState(Material.YELLOW_FLOWER));
+		list.add(new BlockState(Material.RED_ROSE));
+		list.add(new BlockState(Material.BROWN_MUSHROOM));
+		list.add(new BlockState(Material.RED_MUSHROOM));
+		list.add(new BlockState(Material.CROPS));
+		list.add(new BlockState(Material.SUGAR_CANE_BLOCK));
+		list.add(new BlockState(Material.PUMPKIN_STEM));
+		list.add(new BlockState(Material.MELON_STEM));
+		list.add(new BlockState(Material.WATER_LILY));
+		list.add(new BlockState(Material.NETHER_WARTS));
+		list.add(new BlockState(Material.CARROT));
+		list.add(new BlockState(Material.POTATO));
+		list.add(new BlockState(Material.LEAVES_2));
+		list.add(new BlockState(Material.DOUBLE_PLANT));
+		return list;
 	}
 
 	public List<BlockState> getMaterialsList() {

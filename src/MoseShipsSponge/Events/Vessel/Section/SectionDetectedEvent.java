@@ -1,10 +1,9 @@
 package MoseShipsSponge.Events.Vessel.Section;
 
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.impl.AbstractEvent;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
@@ -13,17 +12,20 @@ import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
  * this could be a block, entity or even the whole vessel intself
  */
 
-public class SectionDetectedEvent extends AbstractEvent{
-
-	Cause CAUSE;
+public class SectionDetectedEvent extends Event{
 	
-	public SectionDetectedEvent(Cause cause){
-		CAUSE = cause;
+	protected static HandlerList HANDLER;
+	
+	public SectionDetectedEvent(){
 	}
 	
 	@Override
-	public Cause getCause() {
-		return CAUSE;
+	public HandlerList getHandlers() {
+		return HANDLER;
+	}
+	
+	public static HandlerList getHandlerList(){
+		return HANDLER;
 	}
 	
 	public static class BlockDetectedEvent extends SectionDetectedEvent{
@@ -35,15 +37,18 @@ public class SectionDetectedEvent extends AbstractEvent{
 		 *  please note that this will likely be removed
 		 */
 		
-		Location<World> BLOCK;
+		Block BLOCK;
 		
-		public BlockDetectedEvent(Location<World> loc, Cause cause){
-			super(cause);
+		public BlockDetectedEvent(Block loc){
 			BLOCK = loc;
 		}
 		
-		public Location<World> getBlock(){
+		public Block getBlock(){
 			return BLOCK;
+		}
+		
+		public static HandlerList getHandlerList(){
+			return HANDLER;
 		}
 		
 	}
@@ -56,13 +61,17 @@ public class SectionDetectedEvent extends AbstractEvent{
 		
 		LoadableShip TYPE;
 		
-		public VesselDetectedEvent(LoadableShip type, Cause cause) {
-			super(type.getLocation(), cause);
+		public VesselDetectedEvent(LoadableShip type) {
+			super(type.getLocation().getBlock());
 			TYPE = type;
 		}
 		
 		public LoadableShip getVessel(){
 			return TYPE;
+		}
+		
+		public static HandlerList getHandlerList(){
+			return HANDLER;
 		}
 		
 	}
@@ -77,8 +86,7 @@ public class SectionDetectedEvent extends AbstractEvent{
 		LoadableShip TYPE;
 		Entity ENTITY;
 		
-		public EntityDetectedEvent(Entity entity, LoadableShip type, Cause cause) {
-			super(cause);
+		public EntityDetectedEvent(Entity entity, LoadableShip type) {
 			ENTITY = entity;
 			TYPE = type;
 		}
@@ -89,6 +97,10 @@ public class SectionDetectedEvent extends AbstractEvent{
 		
 		public Entity getEntity(){
 			return ENTITY;
+		}
+		
+		public static HandlerList getHandlerList(){
+			return HANDLER;
 		}
 		
 	}

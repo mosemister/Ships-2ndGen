@@ -1,7 +1,6 @@
 package MoseShipsSponge.BlockFinder.Algorithms;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.block.Block;
@@ -24,6 +23,7 @@ public class Prototype3 implements BasicBlockFinder {
 		return BLOCKS;
 	}
 
+	@SuppressWarnings("deprecation")
 	void getNextBlock(int limit, Block loc, BlockFace... directions) {
 		if (COUNT > limit) {
 			return;
@@ -31,7 +31,7 @@ public class Prototype3 implements BasicBlockFinder {
 		COUNT++;
 		for(BlockFace face : directions){
 			Block block = loc.getRelative(face);
-			if(BlockList.BLOCK_LIST.contains(block, ListType.MATERIALS)){
+			if(BlockList.BLOCK_LIST.contains(block.getType(), block.getData(), ListType.MATERIALS)){
 				if(!BLOCKS.contains(block)){
 					BLOCKS.add(block);
 					getNextBlock(limit, block, directions);

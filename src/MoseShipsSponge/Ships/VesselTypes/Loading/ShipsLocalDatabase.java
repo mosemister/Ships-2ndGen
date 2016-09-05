@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.flowpowered.math.vector.Vector3i;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 
+import MoseShips.CustomDataHolder.DataHolder;
 import MoseShipsSponge.SerializedData;
 import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Ships.ShipsData;
@@ -20,19 +22,19 @@ public class ShipsLocalDatabase extends BasicConfig{
 	}
 
 	public ShipsLocalDatabase saveBasicShip(LoadableShip data) {
-		List<String> pilots = new ArrayList<>();
-		data.getSubPilots().stream().forEach(p -> pilots.add(p.getUniqueId().toString()));
-		List<String> structure = new ArrayList<>();
-		data.getBasicStructure().stream().forEach(l -> {
-			Vector3i loc = l.getBlockPosition();
-			int X = loc.getX();
-			int Y = loc.getY();
-			int Z = loc.getZ();
+		List<String> pilots = new ArrayList<String>();
+		for(OfflinePlayer player : data.getSubPilots()){
+			pilots.add(player.getUniqueId().toString());
+		}
+		List<String> structure = new ArrayList<String>();
+		for(Block block : data.getBasicStructure()){
+			int X = block.getX();
+			int Y = block.getY();
+			int Z = block.getZ();
 			structure.add(X + "," + Y + "," + Z);
-		});
-		String block = (data.getLocation().getBlockPosition().getX() + "," + data.getLocation().getBlockPosition().getY() + "," + data.getLocation().getBlockPosition().getZ());
-		String teleport = (data.getTeleportToLocation().getBlockPosition().getX() + "," + data.getTeleportToLocation().getBlockPosition().getY() + "," + data.getTeleportToLocation().getBlockPosition()
-				.getZ());
+		}
+		String block = (data.getLocation().getBlockX() + "," + data.getLocation().getBlockY() + "," + data.getLocation().getBlockZ());
+		String teleport = (data.getTeleportToLocation().getBlockX() + "," + data.getTeleportToLocation().getBlockY() + "," + data.getTeleportToLocation().getBlockZ());
 		set(structure, ShipsData.DATABASE_STRUCTURE);
 		set(data.getName(), ShipsData.DATABASE_NAME);
 		set(data.getStatic().getName(), ShipsData.DATABASE_TYPE);
@@ -40,16 +42,18 @@ public class ShipsLocalDatabase extends BasicConfig{
 			set(data.getOwner().get().getUniqueId().toString(), ShipsData.DATABASE_PILOT);
 		}
 		set(pilots, ShipsData.DATABASE_SUB_PILOTS);
-		set(data.getTeleportToLocation().getExtent().getName(), ShipsData.DATABASE_WORLD);
+		set(data.getTeleportToLocation().getWorld().getName(), ShipsData.DATABASE_WORLD);
 		set(block, ShipsData.DATABASE_BLOCK);
 		set(teleport, ShipsData.DATABASE_TELEPORT);
-		data.getAllData().stream().forEach(d -> {
+		for(DataHolder d : data.getAllData()){
 			if (d instanceof SerializedData) {
 				SerializedData serData = (SerializedData) d;
-				Set<Entry<String[], Object>> entrySet = serData.getSerializedData().entrySet();
-				entrySet.forEach(e -> set(e.getKey(), e.getValue()));
+				Set<Entry<String, Object>> entrySet = serData.getSerializedData().entrySet();
+				for(Entry<String, Object> entry : entrySet){
+					set(entry.getValue(), entry.getKey());
+				}
 			}
-		});
+		}
 		save();
 		return this;
 	}

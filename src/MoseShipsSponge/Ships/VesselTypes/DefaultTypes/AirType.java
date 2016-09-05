@@ -1,14 +1,14 @@
 package MoseShipsSponge.Ships.VesselTypes.DefaultTypes;
 
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public abstract class AirType extends LoadableShip {
 
-	public AirType(String name, Location<World> sign, Location<World> teleport) {
+	public AirType(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
 

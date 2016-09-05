@@ -1,26 +1,28 @@
 package MoseShipsSponge.Events.Vessel;
 
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.event.impl.AbstractEvent;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 import MoseShipsSponge.Ships.ShipsData;
 
-public abstract class ShipsEvent<T extends ShipsData> extends AbstractEvent {
+public abstract class ShipsEvent<T extends ShipsData> extends Event {
 
 	T SHIP;
-	Cause CAUSE;
+	protected static HandlerList HANDLER;
 
-	public ShipsEvent(T ship, Cause cause) {
+	public ShipsEvent(T ship) {
 		SHIP = ship;
 	}
 
 	public T getShip() {
 		return SHIP;
 	}
-
-	@Override
-	public Cause getCause() {
-		return CAUSE;
+	
+	public HandlerList getHandlers(){
+		return HANDLER;
 	}
-
+	
+	public static HandlerList getHandlerList(){
+		return HANDLER;
+	}
 }

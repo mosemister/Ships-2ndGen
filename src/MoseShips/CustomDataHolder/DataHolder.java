@@ -5,12 +5,16 @@ import java.util.List;
 
 public class DataHolder {
 
-	protected List<DataHolder> DATA = new ArrayList<>();
+	protected List<DataHolder> DATA = new ArrayList<DataHolder>();
 
 	@SuppressWarnings("unchecked")
 	public <T extends DataHandler> List<T> getData(Class<T> type) {
-		List<T> list = new ArrayList<>();
-		DATA.stream().filter(d -> type.isInstance(d)).forEach(d -> list.add((T) d));
+		List<T> list = new ArrayList<T>();
+		for(DataHolder data : DATA){
+			if(type.isInstance(data)){
+				list.add((T)data);
+			}
+		}
 		return list;
 	}
 
@@ -20,7 +24,11 @@ public class DataHolder {
 	}
 
 	public <T extends DataHandler> DataHolder removeAll(Class<T> type) {
-		DATA.stream().filter(d -> type.isInstance(d)).forEach(d -> DATA.remove(d));
+		for(DataHolder data : DATA){
+			if(type.isInstance(data)){
+				DATA.remove(data);
+			}
+		}
 		return this;
 	}
 

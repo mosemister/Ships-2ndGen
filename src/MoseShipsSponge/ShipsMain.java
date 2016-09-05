@@ -16,7 +16,7 @@ import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
 public class ShipsMain extends JavaPlugin{
 
 	public static final String NAME = getPlugin().getName();
-	public static final String VERSION = getPlugin().getVersion();
+	public static final String VERSION = getPlugin().getDescription().getVersion();
 	public static final String[] TESTED_MC = {"1.10.2"};
 
 	static ShipsMain PLUGIN;

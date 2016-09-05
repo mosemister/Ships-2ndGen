@@ -39,13 +39,13 @@ public class OrderedMap<A extends Object, B extends Object> extends HashMap<A, B
 	}
 
 	public static <Y extends Object, Z extends Object> OrderedMap<Y, Z> orderByKey(Map<Y, Z> map) {
-		OrderedMap<Y, Z> ret = new OrderedMap<>();
+		OrderedMap<Y, Z> ret = new OrderedMap<Y, Z>();
 		while (map.size() > 0) {
 			Entry<Y, Z> first = map.entrySet().iterator().next();
 			Z value = first.getValue();
 			Y key = first.getKey();
 			for (Entry<Y, Z> entry : map.entrySet()) {
-				if (((double) entry.getKey()) > ((double) key)) {
+				if (((Double) entry.getKey()) > ((Double) key)) {
 					value = entry.getValue();
 					key = entry.getKey();
 				}
@@ -57,13 +57,13 @@ public class OrderedMap<A extends Object, B extends Object> extends HashMap<A, B
 	}
 
 	public static <Y extends Object, Z extends Object> OrderedMap<Y, Z> orderByValue(Map<Y, Z> map) {
-		OrderedMap<Y, Z> ret = new OrderedMap<>();
+		OrderedMap<Y, Z> ret = new OrderedMap<Y, Z>();
 		while (map.size() > 0) {
 			Entry<Y, Z> first = map.entrySet().iterator().next();
 			Z value = first.getValue();
 			Y key = first.getKey();
 			for (Entry<Y, Z> entry : map.entrySet()) {
-				if (((double) entry.getValue()) > ((double) value)) {
+				if (((Double) entry.getValue()) > ((Double) value)) {
 					value = entry.getValue();
 					key = entry.getKey();
 				}

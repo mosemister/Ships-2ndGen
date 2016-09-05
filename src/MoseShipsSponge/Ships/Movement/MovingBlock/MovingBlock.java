@@ -2,8 +2,6 @@ package MoseShipsSponge.Ships.Movement.MovingBlock;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +16,6 @@ import MoseShipsSponge.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsSponge.Ships.Movement.MovingBlock.Block.RotatableSnapshot;
 import MoseShipsSponge.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
-import MoseShipsSponge.Utils.LocationUtils;
 
 public class MovingBlock {
 
@@ -103,12 +100,13 @@ public class MovingBlock {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	public CollideType getCollision(List<Block> ignore) {
 		if (ignore.contains(MOVING_TO.getBlock())) {
 			return CollideType.NONE;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(), BlockList.ListType.MATERIALS)) {
 			return CollideType.COLLIDE;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(), BlockList.ListType.RAM)) {
 			return CollideType.RAM;
 		} else {
 			return CollideType.NONE;

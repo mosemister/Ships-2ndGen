@@ -1,9 +1,8 @@
 package MoseShipsSponge.Events.Vessel.Section;
 
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.HandlerList;
 
 import MoseShipsSponge.Events.Vessel.ShipsEvent;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
@@ -18,8 +17,8 @@ import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
  */
 public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEvent<S>{
 	
-	public SectionMovedEvent(S ship, Cause cause) {
-		super(ship, cause);
+	public SectionMovedEvent(S ship) {
+		super(ship);
 	}
 	
 	public static class BlockMovedEvent <S extends LoadableShip> extends SectionMovedEvent<S>{
@@ -32,19 +31,23 @@ public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEve
 		 * of all the parts 
 		 */
 		
-		public BlockMovedEvent(S ship, MovingBlock block, Cause cause) {
-			super(ship, cause);
+		public BlockMovedEvent(S ship, MovingBlock block) {
+			super(ship);
 			BLOCK = block;
 		}
 		
 		public MovingBlock getBlock(){
 			return BLOCK;
 		}
+		
+		public static HandlerList getHandlerList(){
+			return HANDLER;
+		}
 	}
 	
 	public static class EntityMovedEvent <S extends LoadableShip> extends SectionMovedEvent<S>{
 
-		Location<World> LOCATION;
+		Location LOCATION;
 		Entity ENTITY;
 		
 		/**
@@ -53,8 +56,8 @@ public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEve
 		 * of all the parts 
 		 */
 		
-		public EntityMovedEvent(S ship, Entity entity, Location<World> movingTo, Cause cause) {
-			super(ship, cause);
+		public EntityMovedEvent(S ship, Entity entity, Location movingTo) {
+			super(ship);
 			LOCATION = movingTo;
 			ENTITY = entity;
 		}
@@ -63,8 +66,12 @@ public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEve
 			return ENTITY;
 		}
 		
-		public Location<World> getMovingTo(){
+		public Location getMovingTo(){
 			return LOCATION;
+		}
+		
+		public static HandlerList getHandlerList(){
+			return HANDLER;
 		}
 		
 	}
