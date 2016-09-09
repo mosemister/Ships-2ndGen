@@ -2,6 +2,7 @@ package MoseShipsBukkit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class VersionChecking {
 	
@@ -9,10 +10,11 @@ public class VersionChecking {
 	public static final int[] SHIPS_VERSION = convert(ShipsMain.VERSION);
 	
 	public static int[] convert(String version){
-		String[] args = version.split("\\.");
+		String[] args = version.split(Pattern.quote("."));
 		int[] version2 = new int[args.length];
 		for(int A = 0; A < args.length; A++){
-			version2[A] = Integer.parseInt(args[A]);
+			String part1 = args[A].split(Pattern.quote("|"))[0];
+			version2[A] = Integer.parseInt(part1);
 		}
 		return version2;
 	}
@@ -55,6 +57,7 @@ public class VersionChecking {
 		for(int A =0; A < origin2.size(); A++){
 			int oValue = origin2.get(A);
 			int cValue = compare2.get(A);
+			System.out.println("Comparing: " + oValue + " to " + cValue);
 			if(oValue > cValue){
 				return VersionOutcome.GREATER;
 			}else if (oValue < cValue){

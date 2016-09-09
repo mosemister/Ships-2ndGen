@@ -1,0 +1,25 @@
+name: Ships
+version: 6.0.0.0|Developer Version
+description: This plugin allows players to move structures easily within a single click
+author: mosemister
+website: http://dev.bukkit.org/bukkit-plugins/ships
+main: MoseShipsBukkit.ShipsMain
+commands:
+  ships:
+    description: All commands relating to the Ships plugin
+    aliases: vessels
+    usage: /ships help
+permissions:
+  ships.*:
+    description: Gives access to all ships features
+    default: false
+    children:
+      ships.*.make: true
+  ships.*.make:
+    description: gives access to the creation of all ships
+    default: false
+    children:
+      ships.airship.make: true
+  ships.airship.make:
+    description: gives access to the creation of the Airship
+    default: true
