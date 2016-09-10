@@ -10,9 +10,9 @@ public class DataHolder {
 	@SuppressWarnings("unchecked")
 	public <T extends DataHandler> List<T> getData(Class<T> type) {
 		List<T> list = new ArrayList<T>();
-		for(DataHolder data : DATA){
-			if(type.isInstance(data)){
-				list.add((T)data);
+		for (DataHolder data : DATA) {
+			if (type.isInstance(data)) {
+				list.add((T) data);
 			}
 		}
 		return list;
@@ -24,8 +24,8 @@ public class DataHolder {
 	}
 
 	public <T extends DataHandler> DataHolder removeAll(Class<T> type) {
-		for(DataHolder data : DATA){
-			if(type.isInstance(data)){
+		for (DataHolder data : DATA) {
+			if (type.isInstance(data)) {
 				DATA.remove(data);
 			}
 		}

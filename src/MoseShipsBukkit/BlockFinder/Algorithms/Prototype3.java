@@ -17,22 +17,30 @@ public class Prototype3 implements BasicBlockFinder {
 
 	@Override
 	public List<Block> getConnectedBlocks(int limit, Block loc) {
+		System.out.println("Prototype 3 running");
 		BLOCKS = new ArrayList<Block>();
-		BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
+		COUNT = 0;
+		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
+				BlockFace.WEST };
 		getNextBlock(limit, loc, faces);
 		return BLOCKS;
 	}
 
 	@SuppressWarnings("deprecation")
 	void getNextBlock(int limit, Block loc, BlockFace... directions) {
-		if (COUNT > limit) {
+		System.out.println("Count: " + COUNT + " | " + limit);
+		if (COUNT == limit) {
+			System.out.println("count return");
 			return;
 		}
 		COUNT++;
-		for(BlockFace face : directions){
+		for (BlockFace face : directions) {
 			Block block = loc.getRelative(face);
-			if(BlockList.BLOCK_LIST.contains(block.getType(), block.getData(), ListType.MATERIALS)){
-				if(!BLOCKS.contains(block)){
+			System.out.println("Prototype 3: " + face.name() + " | " + block.getType().name());
+			if (BlockList.BLOCK_LIST.contains(block.getType(), block.getData(), ListType.MATERIALS)) {
+				System.out.println("block is in materials block");
+				if (!BLOCKS.contains(block)) {
+					System.out.println("block now added");
 					BLOCKS.add(block);
 					getNextBlock(limit, block, directions);
 				}

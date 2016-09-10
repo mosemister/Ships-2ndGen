@@ -22,8 +22,8 @@ public class StaticShipEvent<S extends StaticShipType> extends Event {
 	public HandlerList getHandlers() {
 		return HANDLER;
 	}
-	
-	public static HandlerList getHandler(){
+
+	public static HandlerList getHandler() {
 		return HANDLER;
 	}
 

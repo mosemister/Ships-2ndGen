@@ -23,6 +23,7 @@ import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
 import MoseShipsBukkit.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Signs.ShipsSigns;
@@ -45,36 +46,41 @@ public class ShipsListeners implements Listener {
 
 						// PLAYER CAUSE
 						Player player = event.getPlayer();
-							if (!Permissions.CREATE_VESSEL.hasPermission(player, type)) {
-								return;
-							}
-							causes.put("Player", player);
+						if (!Permissions.CREATE_VESSEL.hasPermission(player, type)) {
+							return;
+						}
+						causes.put("Player", player);
 
-						AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<StaticShipType>(type, event.getBlock());
+						AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<StaticShipType>(
+								type, event.getBlock());
 						if (!ATCSEvent.isCancelled()) {
 							Optional<LoadableShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
 							if (opShip.isPresent()) {
-								LoadableShip ship = opShip.get();
-								ShipsSigns.colourSign((Sign)event.getBlock().getState());
+								final LoadableShip ship = opShip.get();
+								ship.setOwner(player);
 								ShipsCreateEvent<LoadableShip> SCEvent = new ShipsCreateEvent<LoadableShip>(ship);
+								// Bukkit.getPluginManager().callEvent(SCEvent);
 								if (!SCEvent.isCancelled()) {
 
 									// PLAYER
 									player.sendMessage(ShipsMain.format("Ship created", false));
 									LoadableShip.addToRam(ship);
+
 									event.setLine(0, ChatColor.YELLOW + "[Ships]");
 									event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
-									event.setLine(2, ChatColor.GREEN + event.getLine(2));
+									event.setLine(2, ChatColor.GREEN + ship.getName());
 									event.setLine(3, ChatColor.GREEN + event.getLine(3));
-									ship.getLocalDatabase().save();
+									ShipsLocalDatabase database = ship.getLocalDatabase();
+									database.saveBasicShip(ship);
 								}
 							}
 						}
 					}
 				}
+				return;
 			} else {
 				String[] lines = signType.getDefaultLines().get();
-				for(int A = 0; A < lines.length; A++){
+				for (int A = 0; A < lines.length; A++) {
 					event.setLine(A, lines[A]);
 				}
 			}
@@ -86,34 +92,67 @@ public class ShipsListeners implements Listener {
 		Block block = event.getClickedBlock();
 		BlockFace direction = event.getBlockFace();
 		Player player = event.getPlayer();
-		if (block.getState() instanceof Sign) {
-			Sign sign = (Sign)block.getState();
-			Optional<SignType> signType = ShipsSigns.getSignType(ChatColor.stripColor(sign.getLine(0)));
-			if (signType.isPresent()) {
-				System.out.println("is a Ship sign");
-				Block loc = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-				System.out.println(loc.getX() + " | " + loc.getY() + " | " + loc.getZ() + " | " + loc.getWorld().getName() + " | " + loc.getType().name());
-				Optional<LoadableShip> opType = LoadableShip.getShip(loc, true);
-				if (opType.isPresent()) {
-					System.out.println("has Ship");
-					LoadableShip ship = opType.get();
-					if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-						System.out.print("Is right click");
-						switch (signType.get()) {
-							case EOT:
+		if ((event.getAction().equals(Action.LEFT_CLICK_BLOCK))
+				|| (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+			if (block.getState() instanceof Sign) {
+				Sign sign = (Sign) block.getState();
+				Optional<SignType> signType = ShipsSigns.getSignType(ChatColor.stripColor(sign.getLine(0)));
+				if (signType.isPresent()) {
+					System.out.println("is a Ship sign");
+					Block loc = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
+					System.out.println(loc.getX() + " | " + loc.getY() + " | " + loc.getZ() + " | "
+							+ loc.getWorld().getName() + " | " + loc.getType().name());
+					Optional<LoadableShip> opType = LoadableShip.getShip(signType.get(), sign, true);
+					if (opType.isPresent()) {
+						System.out.println("has Ship");
+						LoadableShip ship = opType.get();
+						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+							System.out.print("Is right click");
+							switch (signType.get()) {
+								case EOT:
 
-								break;
-							case LICENCE:
-								Map<String, Object> info = ship.getInfo();
-								player.sendMessage(ShipsMain.format("Information about " + ship.getName(), false));
-								for(Entry<String, Object> data : info.entrySet()){
-									player.sendMessage(ShipsMain.formatCMDHelp(data.getKey() + ": " + data.getValue()));
-								}
-								break;
-							case MOVE:
-								System.out.println("is move sign");
-								if (sign.getLine(2).equals("{Boost}")) {
-									Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getBoostSpeed());
+									break;
+								case LICENCE:
+									Map<String, Object> info = ship.getInfo();
+									player.sendMessage(ShipsMain.format("Information about " + ship.getName(), false));
+									for (Entry<String, Object> data : info.entrySet()) {
+										player.sendMessage(
+												ShipsMain.formatCMDHelp(data.getKey() + ": " + data.getValue()));
+									}
+									break;
+								case MOVE:
+									System.out.println("is move sign");
+									if (sign.getLine(2).equals("{Boost}")) {
+										Optional<MovementResult> cause = ship.move(direction,
+												ship.getStatic().getBoostSpeed());
+										if (cause.isPresent()) {
+											MovementResult result = cause.get();
+											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
+													.getFailedCause();
+											if (failed.isPresent()) {
+												TwoStore<CauseKeys<Object>, Object> store = failed.get();
+												store.getFirst().sendMessage(player, store.getSecond());
+											}
+										}
+									} else {
+										Optional<MovementResult> cause = ship.move(direction,
+												ship.getStatic().getDefaultSpeed());
+										if (cause.isPresent()) {
+											MovementResult result = cause.get();
+											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
+													.getFailedCause();
+											if (failed.isPresent()) {
+												TwoStore<CauseKeys<Object>, Object> store = failed.get();
+												store.getFirst().sendMessage(player, store.getSecond());
+											}
+										}
+									}
+									break;
+								case WHEEL:
+									break;
+								case ALTITUDE:
+									Optional<MovementResult> cause = ship.move(0, -ship.getStatic().getAltitudeSpeed(),
+											0);
 									if (cause.isPresent()) {
 										MovementResult result = cause.get();
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
@@ -122,31 +161,8 @@ public class ShipsListeners implements Listener {
 											store.getFirst().sendMessage(player, store.getSecond());
 										}
 									}
-								} else {
-									Optional<MovementResult> cause = ship.move(direction, ship.getStatic().getDefaultSpeed());
-									if (cause.isPresent()) {
-										MovementResult result = cause.get();
-										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-										if (failed.isPresent()) {
-											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(player, store.getSecond());
-										}
-									}
-								}
-								break;
-							case WHEEL:
-								break;
-							case ALTITUDE:
-								Optional<MovementResult> cause = ship.move(0, -ship.getStatic().getAltitudeSpeed(), 0);
-								if (cause.isPresent()) {
-									MovementResult result = cause.get();
-									Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-									if (failed.isPresent()) {
-										TwoStore<CauseKeys<Object>, Object> store = failed.get();
-										store.getFirst().sendMessage(player, store.getSecond());
-									}
-								}
-								break;
+									break;
+							}
 						}
 					}
 				}

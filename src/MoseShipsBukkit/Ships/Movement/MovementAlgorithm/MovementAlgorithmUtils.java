@@ -7,7 +7,7 @@ import java.util.Optional;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
 
 public class MovementAlgorithmUtils {
-	
+
 	public static MovementAlgorithm getConfig() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_MOVEMENT);
 		Optional<MovementAlgorithm> opMove = get(name);
@@ -27,8 +27,8 @@ public class MovementAlgorithmUtils {
 	}
 
 	public static Optional<MovementAlgorithm> get(String name) {
-		for(MovementAlgorithm alg : get()){
-			if(alg.getName().equalsIgnoreCase(name)){
+		for (MovementAlgorithm alg : get()) {
+			if (alg.getName().equalsIgnoreCase(name)) {
 				return Optional.of(alg);
 			}
 		}

@@ -50,7 +50,7 @@ public class ShipLoader {
 	private static Optional<File> getFile(String name) {
 		File root = new File("/config/Ships/VesselData");
 		OneStore<File> file = new OneStore<File>(null);
-		for(StaticShipType type : StaticShipType.TYPES){
+		for (StaticShipType type : StaticShipType.TYPES) {
 			File folder = new File(root, type.getName());
 			Bukkit.getServer().getConsoleSender().sendMessage(folder.getAbsolutePath());
 			File[] files = folder.listFiles();
@@ -124,12 +124,12 @@ public class ShipLoader {
 					try {
 						int pos = Integer.parseInt(value);
 						switch (target) {
-						case 0:
-							posX = pos;
-						case 1:
-							posY = pos;
-						case 2:
-							structure.add(new Location(world, posX, posY, pos).getBlock());
+							case 0:
+								posX = pos;
+							case 1:
+								posY = pos;
+							case 2:
+								structure.add(new Location(world, posX, posY, pos).getBlock());
 						}
 					} catch (NumberFormatException e) {
 						break;

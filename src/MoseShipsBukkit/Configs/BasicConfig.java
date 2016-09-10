@@ -12,7 +12,7 @@ public class BasicConfig {
 	protected YamlConfiguration config;
 
 	public BasicConfig(String fileName) {
-		file = new File("config/Ships/" + fileName + ".conf");
+		file = new File("plugins/Ships/" + fileName + ".yml");
 		if (!file.exists()) {
 			try {
 				file.getParentFile().mkdirs();
@@ -47,7 +47,7 @@ public class BasicConfig {
 
 	public boolean set(Object object, String path) {
 		if (path != null) {
-			System.out.println("\n object: " + object);
+			// System.out.println("\n object: " + object);
 			if (has(path)) {
 				config.set(path, object);
 				return true;
@@ -67,8 +67,8 @@ public class BasicConfig {
 	public <T extends Object> T get(Class<T> type, String path) {
 		if (path != null) {
 			Object obj = config.get(path);
-			if(type.isInstance(obj)){
-				return (T)obj;
+			if (type.isInstance(obj)) {
+				return (T) obj;
 			}
 		}
 		return null;

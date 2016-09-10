@@ -13,7 +13,7 @@ public class BlockList extends BasicConfig {
 
 	List<BlockState> MATERIALS = new ArrayList<BlockState>();
 	List<BlockState> RAM = new ArrayList<BlockState>();
-	
+
 	public static final BlockList BLOCK_LIST = new BlockList();
 
 	public BlockList() {
@@ -24,30 +24,30 @@ public class BlockList extends BasicConfig {
 		MATERIALS.add(new BlockState(Material.WALL_SIGN));
 
 	}
-	
-	public BlockList applyMissing(){
-		for(Material material : Material.values()){
+
+	public BlockList applyMissing() {
+		for (Material material : Material.values()) {
 			set(getDefaultValue(material).name(), material.name() + ".DataValue-1");
 		}
 		save();
 		return this;
 	}
-	
-	public ListType getDefaultValue(Material material){
-		for(BlockState material2 : getDefaultMaterialsList()){
-			if(material2.getMaterial().equals(material)){
+
+	public ListType getDefaultValue(Material material) {
+		for (BlockState material2 : getDefaultMaterialsList()) {
+			if (material2.getMaterial().equals(material)) {
 				return ListType.MATERIALS;
 			}
 		}
-		for(BlockState material2 : getDefaultRamList()){
-			if(material2.getMaterial().equals(material)){
+		for (BlockState material2 : getDefaultRamList()) {
+			if (material2.getMaterial().equals(material)) {
 				return ListType.RAM;
 			}
 		}
 		return ListType.NONE;
 	}
-	
-	public List<BlockState> getDefaultMaterialsList(){
+
+	public List<BlockState> getDefaultMaterialsList() {
 		List<BlockState> list = new ArrayList<BlockState>();
 		list.add(new BlockState(Material.LOG));
 		list.add(new BlockState(Material.LOG_2));
@@ -166,8 +166,8 @@ public class BlockList extends BasicConfig {
 		list.add(new BlockState(Material.ACACIA_FENCE));
 		return list;
 	}
-	
-	public List<BlockState> getDefaultRamList(){
+
+	public List<BlockState> getDefaultRamList() {
 		List<BlockState> list = new ArrayList<BlockState>();
 		list.add(new BlockState(Material.SAPLING));
 		list.add(new BlockState(Material.LEAVES));
@@ -198,13 +198,13 @@ public class BlockList extends BasicConfig {
 	public List<BlockState> getRamMaterialsList() {
 		return RAM;
 	}
-	
-	public List<Material> getUnusedMaterialsList(){
+
+	public List<Material> getUnusedMaterialsList() {
 		List<Material> materials = Arrays.asList(Material.values());
-		for(BlockState state : getMaterialsList()){
+		for (BlockState state : getMaterialsList()) {
 			materials.remove(state.getMaterial());
 		}
-		for(BlockState state : getRamMaterialsList()){
+		for (BlockState state : getRamMaterialsList()) {
 			materials.remove(state.getMaterial());
 		}
 		return materials;
@@ -213,8 +213,12 @@ public class BlockList extends BasicConfig {
 	public boolean contains(Material material, byte data, ListType type) {
 		switch (type) {
 			case MATERIALS:
-				for(BlockState state : MATERIALS){
-					if(state.getMaterial().equals(material) && (data == state.getData())){
+				for (BlockState state : MATERIALS) {
+					System.out.println(state.getMaterial().name() + " | " + material.name());
+					if ((state.getMaterial().equals(material)) && (state.getData() == -1)) {
+						System.out.println("contains true");
+						return true;
+					} else if (state.getMaterial().equals(material) && (data == state.getData())) {
 						return true;
 					}
 				}
@@ -222,8 +226,8 @@ public class BlockList extends BasicConfig {
 			case NONE:
 				return getUnusedMaterialsList().contains(material);
 			case RAM:
-				for(BlockState state : RAM){
-					if(state.getMaterial().equals(material) && (data == state.getData())){
+				for (BlockState state : RAM) {
+					if (state.getMaterial().equals(material) && (data == state.getData())) {
 						return true;
 					}
 				}
@@ -236,20 +240,20 @@ public class BlockList extends BasicConfig {
 		List<BlockState> list = new ArrayList<BlockState>();
 		switch (type) {
 			case MATERIALS:
-				for(BlockState state : MATERIALS){
-					if(state.getMaterial().equals(material)){
+				for (BlockState state : MATERIALS) {
+					if (state.getMaterial().equals(material)) {
 						list.add(state);
 					}
 				}
 				return list;
 			case NONE:
-				if (getUnusedMaterialsList().contains(material)){
+				if (getUnusedMaterialsList().contains(material)) {
 					list.add(new BlockState(material));
 					return list;
 				}
 			case RAM:
-				for(BlockState state : RAM){
-					if(state.getMaterial().equals(material)){
+				for (BlockState state : RAM) {
+					if (state.getMaterial().equals(material)) {
 						list.add(state);
 					}
 				}
@@ -259,9 +263,7 @@ public class BlockList extends BasicConfig {
 	}
 
 	public static enum ListType {
-		MATERIALS,
-		RAM,
-		NONE;
+		MATERIALS, RAM, NONE;
 	}
 
 }

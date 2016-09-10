@@ -133,8 +133,7 @@ public class Movement {
 	}
 
 	public static enum Rotate {
-		LEFT,
-		RIGHT;
+		LEFT, RIGHT;
 	}
 
 }

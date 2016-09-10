@@ -90,12 +90,12 @@ public class OpShip extends AirType {
 
 		@Override
 		public Optional<LoadableShip> createVessel(String name, Block sign) {
-			return Optional.of((LoadableShip)new OpShip(name, sign, sign.getLocation()));
+			return Optional.of((LoadableShip) new OpShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
 		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
-			return Optional.of((LoadableShip)new OpShip(data));
+			return Optional.of((LoadableShip) new OpShip(data));
 		}
 
 	}

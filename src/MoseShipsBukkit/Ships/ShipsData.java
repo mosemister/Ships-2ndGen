@@ -45,8 +45,8 @@ public class ShipsData extends DataHolder {
 	}
 
 	public Optional<Sign> getLicence() {
-		if(MAIN_BLOCK.getState() instanceof Sign){
-			return Optional.of((Sign)MAIN_BLOCK.getState());
+		if (MAIN_BLOCK.getState() instanceof Sign) {
+			return Optional.of((Sign) MAIN_BLOCK.getState());
 		}
 		return Optional.empty();
 	}
@@ -67,21 +67,21 @@ public class ShipsData extends DataHolder {
 	public List<OfflinePlayer> getSubPilots() {
 		return SUB_PILOTS;
 	}
-	
-	public World getWorld(){
+
+	public World getWorld() {
 		return MAIN_BLOCK.getWorld();
 	}
 
 	public List<Block> getBasicStructure() {
 		return STRUCTURE;
 	}
-	
-	public boolean hasLocation(Location loc){
-		if(!loc.getWorld().equals(getWorld())){
+
+	public boolean hasLocation(Location loc) {
+		if (!loc.getWorld().equals(getWorld())) {
 			return false;
 		}
-		for(Block block : STRUCTURE){
-			if(LocationUtils.blocksEqual(block.getLocation(), loc)){
+		for (Block block : STRUCTURE) {
+			if (LocationUtils.blocksEqual(block.getLocation(), loc)) {
 				return true;
 			}
 		}
@@ -89,7 +89,11 @@ public class ShipsData extends DataHolder {
 	}
 
 	public List<Block> updateBasicStructure() {
-		int trackLimit = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		Integer trackLimit = ShipsConfig.CONFIG.get(Integer.class,
+				ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		if (trackLimit == null) {
+			trackLimit = 5000;
+		}
 		List<Block> list = BlockFinderUtils.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
 		STRUCTURE = list;
 		return list;

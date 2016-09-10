@@ -23,8 +23,8 @@ public class ShipsCreateEvent<S extends ShipsData> extends ShipsEvent<S> impleme
 	public void setCancelled(boolean arg0) {
 		CANCELLED = arg0;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return HANDLER;
 	}
 

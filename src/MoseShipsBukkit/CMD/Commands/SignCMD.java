@@ -15,15 +15,15 @@ import MoseShipsBukkit.CMD.ShipsCMD;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Signs.ShipsSigns;
 
-public class SignCMD implements ShipsCMD.ShipsPlayerCMD{
+public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 
-	public SignCMD(){
+	public SignCMD() {
 		ShipsCMD.SHIPS_COMMANDS.add(this);
 	}
-	
+
 	@Override
 	public String[] getAliases() {
-		String[] args = {"sign"};
+		String[] args = { "sign" };
 		return args;
 	}
 
@@ -39,46 +39,46 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD{
 
 	@Override
 	public boolean execute(Player player, String... args) {
-		if(args.length == 1){
+		if (args.length == 1) {
 			player.sendMessage(ShipsMain.formatCMDHelp("/ships sign track [time]"));
 			return true;
-		}else if (args[1].equalsIgnoreCase("track")){
-			if(args.length == 2){
+		} else if (args[1].equalsIgnoreCase("track")) {
+			if (args.length == 2) {
 				track(player, 3);
-			}else{
-				try{
+			} else {
+				try {
 					track(player, Integer.parseInt(args[2]));
-				}catch(NumberFormatException e){
+				} catch (NumberFormatException e) {
 					player.sendMessage(ShipsMain.format(args[2] + " is not a whole number", true));
 				}
 			}
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public void track(final Player player, int sec){
-		Block loc = player.getTargetBlock(((HashSet<Byte>)null), 5);
-		if(loc.getState() instanceof Sign){
-			Sign sign = (Sign)loc.getState();
+	public void track(final Player player, int sec) {
+		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
+		if (loc.getState() instanceof Sign) {
+			Sign sign = (Sign) loc.getState();
 			Optional<ShipsSigns.SignType> sSign = ShipsSigns.getSignType(sign);
-			if(sSign.isPresent()){
+			if (sSign.isPresent()) {
 				Optional<LoadableShip> opShip = LoadableShip.getShip(loc, true);
-				if(opShip.isPresent()){
+				if (opShip.isPresent()) {
 					LoadableShip ship = opShip.get();
 					final List<Block> structure = ship.getBasicStructure();
-					for(Block block : structure){
-						player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte)0);
+					for (Block block : structure) {
+						player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
 					}
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable(){
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 
 						@Override
 						public void run() {
-							for(Block block : structure){
+							for (Block block : structure) {
 								player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
 							}
 						}
-						
+
 					});
 				}
 			}

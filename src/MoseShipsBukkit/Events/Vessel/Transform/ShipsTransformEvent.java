@@ -25,8 +25,8 @@ public abstract class ShipsTransformEvent<S extends LoadableShip> extends ShipsE
 	public List<MovingBlock> getStructure() {
 		return BLOCKS;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return HANDLER;
 	}
 
@@ -52,8 +52,8 @@ public abstract class ShipsTransformEvent<S extends LoadableShip> extends ShipsE
 		public Move(S ship, int X, int Y, int Z, List<MovingBlock> structure) {
 			super(ship, new StoredMovement(null, null, X, Y, Z), structure);
 		}
-		
-		public static HandlerList getHandlerList(){
+
+		public static HandlerList getHandlerList() {
 			return HANDLER;
 		}
 
@@ -72,8 +72,8 @@ public abstract class ShipsTransformEvent<S extends LoadableShip> extends ShipsE
 		public Rotate(S ship, StoredMovement movement, List<MovingBlock> structure) {
 			super(ship, movement, structure);
 		}
-		
-		public static HandlerList getHandlerList(){
+
+		public static HandlerList getHandlerList() {
 			return HANDLER;
 		}
 

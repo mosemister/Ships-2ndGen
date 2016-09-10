@@ -22,7 +22,8 @@ public class AutoPilot {
 	int TARGET;
 	boolean SHOULD_REPEATE;
 
-	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, int start, @Nullable OfflinePlayer user) {
+	public AutoPilot(LoadableShip type, List<StoredMovement> movements, boolean repeate, int start,
+			@Nullable OfflinePlayer user) {
 		MOVEMENTS = movements;
 		SHIP = type;
 		SHOULD_REPEATE = repeate;

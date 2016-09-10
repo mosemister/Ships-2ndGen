@@ -13,9 +13,9 @@ import MoseShipsBukkit.Signs.ShipsSigns;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
 
 public class BlockFinderUtils {
-	
+
 	public static final BasicBlockFinder SHIPS5 = new Prototype3();
-	
+
 	public static BasicBlockFinder getConfigSelected() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_BLOCKFINDER);
 		Optional<BasicBlockFinder> opBlock = getFinder(name);
@@ -26,12 +26,12 @@ public class BlockFinderUtils {
 	}
 
 	public static boolean isValid(List<Block> list) {
-		for(Block block : list){
-			if(block.getState() instanceof Sign){
-				Sign sign = (Sign)block.getState();
+		for (Block block : list) {
+			if (block.getState() instanceof Sign) {
+				Sign sign = (Sign) block.getState();
 				Optional<SignType> opType = ShipsSigns.getSignType(sign);
-				if(opType.isPresent()){
-					if(opType.get().equals(SignType.LICENCE)){
+				if (opType.isPresent()) {
+					if (opType.get().equals(SignType.LICENCE)) {
 						return true;
 					}
 				}
@@ -47,8 +47,8 @@ public class BlockFinderUtils {
 	}
 
 	public static Optional<BasicBlockFinder> getFinder(String name) {
-		for(BasicBlockFinder finder : BasicBlockFinder.LIST){
-			if(finder.getName().equalsIgnoreCase(name)){
+		for (BasicBlockFinder finder : BasicBlockFinder.LIST) {
+			if (finder.getName().equalsIgnoreCase(name)) {
 				return Optional.of(finder);
 			}
 		}

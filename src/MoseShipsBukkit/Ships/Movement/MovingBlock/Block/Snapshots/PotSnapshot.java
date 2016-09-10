@@ -9,26 +9,26 @@ import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.AttachableSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 
-public class PotSnapshot extends BlockSnapshot implements SpecialSnapshot, AttachableSnapshot{
+public class PotSnapshot extends BlockSnapshot implements SpecialSnapshot, AttachableSnapshot {
 
 	MaterialData g_data;
-	
+
 	protected PotSnapshot(BlockState state) {
 		super(state);
 	}
 
 	@Override
 	public void onRemove(Block block) {
-		if(block.getState() instanceof FlowerPot){
-			FlowerPot pot = (FlowerPot)block.getState();
+		if (block.getState() instanceof FlowerPot) {
+			FlowerPot pot = (FlowerPot) block.getState();
 			g_data = pot.getContents();
 		}
 	}
 
 	@Override
 	public void onPlace(Block block) {
-		if(block.getState() instanceof FlowerPot){
-			FlowerPot pot = (FlowerPot)block.getState();
+		if (block.getState() instanceof FlowerPot) {
+			FlowerPot pot = (FlowerPot) block.getState();
 			pot.setContents(g_data);
 		}
 	}

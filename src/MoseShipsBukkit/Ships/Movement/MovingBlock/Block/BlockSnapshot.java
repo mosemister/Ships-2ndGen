@@ -1,5 +1,6 @@
 package MoseShipsBukkit.Ships.Movement.MovingBlock.Block;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +78,8 @@ public class BlockSnapshot {
 		for (Entry<Material, Class<? extends BlockSnapshot>> entry : VALUE_TYPES.entrySet()) {
 			if (entry.getKey().equals(state.getType())) {
 				try {
-					BlockSnapshot snapshot = entry.getValue().getConstructor(state.getClass()).newInstance(state);
+					Constructor<? extends BlockSnapshot> constr = entry.getValue().getConstructor(BlockState.class);
+					BlockSnapshot snapshot = constr.newInstance(state);
 					return snapshot;
 				} catch (InstantiationException e) {
 					e.printStackTrace();
@@ -96,5 +98,4 @@ public class BlockSnapshot {
 		}
 		return new BlockSnapshot(state);
 	}
-
 }

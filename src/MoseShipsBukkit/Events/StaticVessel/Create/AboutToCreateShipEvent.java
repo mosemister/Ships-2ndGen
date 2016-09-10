@@ -30,8 +30,8 @@ public class AboutToCreateShipEvent<S extends StaticShipType> extends StaticShip
 	public void setCancelled(boolean check) {
 		CANCELLED = check;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return HANDLER;
 	}
 

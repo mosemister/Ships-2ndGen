@@ -18,7 +18,7 @@ public class ShipsSigns {
 	 */
 	public static Sign colourSign(Sign sign) {
 		String[] lines = sign.getLines();
-		for(int A = 0; A < lines.length; A++){
+		for (int A = 0; A < lines.length; A++) {
 			sign.setLine(A, lines[A]);
 		}
 		sign.update();
@@ -28,7 +28,7 @@ public class ShipsSigns {
 	public static String[] colour(String... lines) {
 		return colour(Arrays.asList(lines));
 	}
-	
+
 	public static String[] colour(List<String> lines) {
 		String[] lines2 = new String[lines.size()];
 		lines2[0] = ChatColor.YELLOW + lines.get(0);
@@ -40,8 +40,8 @@ public class ShipsSigns {
 	}
 
 	public static Optional<SignType> getSignType(String line1) {
-		for(SignType type : SignType.values()){
-			if(ChatColor.stripColor(type.LINES[0]).equalsIgnoreCase(ChatColor.stripColor(line1))){
+		for (SignType type : SignType.values()) {
+			if (ChatColor.stripColor(type.LINES[0]).equalsIgnoreCase(ChatColor.stripColor(line1))) {
 				return Optional.of(type);
 			}
 		}
@@ -55,7 +55,11 @@ public class ShipsSigns {
 	public enum SignType {
 		LICENCE(ChatColor.YELLOW + "[Ships]"),
 		MOVE(ChatColor.YELLOW + "[Move]", ChatColor.GREEN + "{Engine}", "Boost"),
-		WHEEL(ChatColor.YELLOW + "[Wheel]", ChatColor.RED + "\\\\||//", ChatColor.RED + "==||==", ChatColor.RED + "//==\\\\"),
+		WHEEL(
+				ChatColor.YELLOW + "[Wheel]",
+				ChatColor.RED + "\\\\||//",
+				ChatColor.RED + "==||==",
+				ChatColor.RED + "//==\\\\"),
 		EOT(ChatColor.YELLOW + "[EOT]"),
 		ALTITUDE(ChatColor.YELLOW + "[Altitude]");
 

@@ -26,20 +26,21 @@ public class MovementResult {
 
 	@SuppressWarnings("unchecked")
 	public <E extends Object> void put(CauseKeys<E> key, E value) {
-		for(TwoStore<CauseKeys<Object>, Object> store : CAUSES){
-			if(store.getFirst().equals(key)){
+		for (TwoStore<CauseKeys<Object>, Object> store : CAUSES) {
+			if (store.getFirst().equals(key)) {
 				CAUSES.remove(store);
 			}
 		}
-		TwoStore<CauseKeys<Object>, Object> store = new TwoStore<CauseKeys<Object>, Object>((CauseKeys<Object>) key, value);
+		TwoStore<CauseKeys<Object>, Object> store = new TwoStore<CauseKeys<Object>, Object>((CauseKeys<Object>) key,
+				value);
 		CAUSES.add(store);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <E> Optional<E> get(CauseKeys<E> key) {
-		for(TwoStore<CauseKeys<Object>, Object> store : CAUSES){
-			if(store.getFirst().equals(key)){
-				return Optional.of((E)store.getSecond());
+		for (TwoStore<CauseKeys<Object>, Object> store : CAUSES) {
+			if (store.getFirst().equals(key)) {
+				return Optional.of((E) store.getSecond());
 			}
 		}
 		return Optional.empty();
@@ -64,21 +65,21 @@ public class MovementResult {
 				if (value instanceof List) {
 					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 2 seconds", true));
 					final List<MovingBlock> list = (List<MovingBlock>) value;
-					for(MovingBlock block : list){
+					for (MovingBlock block : list) {
 						player.sendBlockChange(block.getMovingTo(), block.getMaterial(), block.getDataValue());
 					}
-					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable(){
+					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 
 						@Override
 						public void run() {
-							for(MovingBlock block : list){
+							for (MovingBlock block : list) {
 								Block block2 = block.getMovingTo().getBlock();
 								player.sendBlockChange(block.getMovingTo(), block2.getType(), block2.getData());
 							}
 
 						}
 
-					}, (3*20));
+					}, (3 * 20));
 				}
 
 			}
@@ -106,7 +107,9 @@ public class MovementResult {
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof BlockState) {
 					BlockState state = (BlockState) value;
-					player.sendMessage(ShipsMain.format("You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship", true));
+					player.sendMessage(ShipsMain.format(
+							"You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship",
+							true));
 				}
 
 			}
@@ -142,7 +145,8 @@ public class MovementResult {
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof TwoStore) {
 					TwoStore<BlockState, Integer> value2 = (TwoStore<BlockState, Integer>) value;
-					player.sendMessage(ShipsMain.format("You need " + value2.getSecond() + " more blocks of " + value2.getFirst().getMaterial() + ":" + value2.getFirst().getData(), true));
+					player.sendMessage(ShipsMain.format("You need " + value2.getSecond() + " more blocks of "
+							+ value2.getFirst().getMaterial() + ":" + value2.getFirst().getData(), true));
 				}
 			}
 

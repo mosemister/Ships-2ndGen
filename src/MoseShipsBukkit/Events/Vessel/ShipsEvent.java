@@ -17,12 +17,12 @@ public abstract class ShipsEvent<T extends ShipsData> extends Event {
 	public T getShip() {
 		return SHIP;
 	}
-	
-	public HandlerList getHandlers(){
+
+	public HandlerList getHandlers() {
 		return HANDLER;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return HANDLER;
 	}
 }

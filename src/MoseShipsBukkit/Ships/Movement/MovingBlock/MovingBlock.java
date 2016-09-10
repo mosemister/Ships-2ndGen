@@ -39,24 +39,25 @@ public class MovingBlock {
 	public Location getMovingTo() {
 		return MOVING_TO;
 	}
-	
-	public Material getMaterial(){
+
+	public Material getMaterial() {
 		return STATE.getMaterial();
 	}
-	
-	public MaterialData getData(){
+
+	public MaterialData getData() {
 		return STATE.getData();
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public byte getDataValue(){
+	public byte getDataValue() {
 		return STATE.getData().getData();
 	}
 
 	public MovementType getMovementType() {
 		if ((getOrigin().getBlockX() == MOVING_TO.getBlockX()) && (getOrigin().getBlockZ() == MOVING_TO.getBlockZ())) {
 			return MovementType.FORWARDS;
-		} else if ((getOrigin().getBlockX() > MOVING_TO.getBlockX()) || (getOrigin().getBlockZ() > MOVING_TO.getBlockZ())) {
+		} else if ((getOrigin().getBlockX() > MOVING_TO.getBlockX())
+				|| (getOrigin().getBlockZ() > MOVING_TO.getBlockZ())) {
 			return MovementType.ROTATE_RIGHT;
 		} else {
 			return MovementType.ROTATE_LEFT;
@@ -64,12 +65,12 @@ public class MovingBlock {
 	}
 
 	public MovingBlock clearOriginalBlock() {
-		STATE.placeBlock(STATE.getLocation().getBlock(), Material.AIR, (byte)0);
+		STATE.placeBlock(STATE.getLocation().getBlock(), Material.AIR, (byte) 0);
 		return this;
 	}
 
 	public MovingBlock clearMovingToBlock() {
-		STATE.placeBlock(MOVING_TO.getBlock(), Material.AIR, (byte)0);
+		STATE.placeBlock(MOVING_TO.getBlock(), Material.AIR, (byte) 0);
 		return this;
 	}
 
@@ -89,13 +90,13 @@ public class MovingBlock {
 	}
 
 	public Priority getPriority() {
-		if(STATE instanceof AttachableSnapshot){
+		if (STATE instanceof AttachableSnapshot) {
 			return Priority.PRIORITY;
-		}else if(STATE instanceof SpecialSnapshot){
+		} else if (STATE instanceof SpecialSnapshot) {
 			return Priority.SPECIAL;
-		}else if(STATE.getMaterial().equals(Material.AIR)){
+		} else if (STATE.getMaterial().equals(Material.AIR)) {
 			return Priority.AIR;
-		}else{
+		} else {
 			return Priority.NORMAL;
 		}
 	}
@@ -104,9 +105,11 @@ public class MovingBlock {
 	public CollideType getCollision(List<Block> ignore) {
 		if (ignore.contains(MOVING_TO.getBlock())) {
 			return CollideType.NONE;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(), BlockList.ListType.MATERIALS)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(),
+				BlockList.ListType.MATERIALS)) {
 			return CollideType.COLLIDE;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(), BlockList.ListType.RAM)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(),
+				BlockList.ListType.RAM)) {
 			return CollideType.RAM;
 		} else {
 			return CollideType.NONE;
@@ -149,11 +152,11 @@ public class MovingBlock {
 
 	@SuppressWarnings("deprecation")
 	private void rotate(boolean left) {
-		if(STATE instanceof RotatableSnapshot){
-			RotatableSnapshot shot = (RotatableSnapshot)STATE;
-			if(left){
+		if (STATE instanceof RotatableSnapshot) {
+			RotatableSnapshot shot = (RotatableSnapshot) STATE;
+			if (left) {
 				STATE.getData().setData(shot.getRotateLeft());
-			}else{
+			} else {
 				STATE.getData().setData(shot.getRotateRight());
 			}
 		}
@@ -164,12 +167,16 @@ public class MovingBlock {
 		List<MovingBlock> airList = new ArrayList<MovingBlock>();
 		List<MovingBlock> specList = new ArrayList<MovingBlock>();
 		List<MovingBlock> priList = new ArrayList<MovingBlock>();
-		for(MovingBlock block : blocks){
-			switch(block.getPriority()){
-			case NORMAL: normalList.add(block);
-			case PRIORITY: priList.add(block);
-			case AIR: airList.add(block);
-			case SPECIAL: specList.add(block);
+		for (MovingBlock block : blocks) {
+			switch (block.getPriority()) {
+				case NORMAL:
+					normalList.add(block);
+				case PRIORITY:
+					priList.add(block);
+				case AIR:
+					airList.add(block);
+				case SPECIAL:
+					specList.add(block);
 			}
 		}
 		List<MovingBlock> retList = new ArrayList<MovingBlock>();
@@ -181,10 +188,7 @@ public class MovingBlock {
 	}
 
 	public enum Priority {
-		NORMAL,
-		PRIORITY,
-		SPECIAL,
-		AIR;
+		NORMAL, PRIORITY, SPECIAL, AIR;
 	}
 
 }

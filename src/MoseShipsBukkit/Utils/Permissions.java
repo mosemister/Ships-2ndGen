@@ -28,8 +28,8 @@ public enum Permissions {
 
 	private boolean hasPermission(Player player, String old, String replace) {
 		if (USE_PERMISSIONS) {
-			for(String permission : PERMISSIONS){
-				if(player.hasPermission(permission.replace(old, replace))){
+			for (String permission : PERMISSIONS) {
+				if (player.hasPermission(permission.replace(old, replace))) {
 					return true;
 				}
 			}

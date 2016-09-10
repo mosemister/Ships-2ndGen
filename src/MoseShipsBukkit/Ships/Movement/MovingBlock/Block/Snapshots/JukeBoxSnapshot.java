@@ -8,26 +8,26 @@ import org.bukkit.block.Jukebox;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 
-public class JukeBoxSnapshot extends BlockSnapshot implements SpecialSnapshot{
+public class JukeBoxSnapshot extends BlockSnapshot implements SpecialSnapshot {
 
 	Material g_material;
-	
+
 	protected JukeBoxSnapshot(BlockState state) {
 		super(state);
 	}
 
 	@Override
 	public void onRemove(Block block) {
-		if(block.getState() instanceof Jukebox){
-			Jukebox box = (Jukebox)block.getState();
+		if (block.getState() instanceof Jukebox) {
+			Jukebox box = (Jukebox) block.getState();
 			g_material = box.getPlaying();
 		}
 	}
 
 	@Override
 	public void onPlace(Block block) {
-		if(block.getState() instanceof Jukebox){
-			Jukebox box = (Jukebox)block.getState();
+		if (block.getState() instanceof Jukebox) {
+			Jukebox box = (Jukebox) block.getState();
 			box.setPlaying(g_material);
 		}
 	}
