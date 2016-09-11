@@ -46,7 +46,7 @@ public class ShipsListeners implements Listener {
 
 						// PLAYER CAUSE
 						Player player = event.getPlayer();
-						if (!Permissions.CREATE_VESSEL.hasPermission(player, type)) {
+						if (!Permissions.hasPermissionToMake(player, type)) {
 							return;
 						}
 						causes.put("Player", player);
@@ -90,7 +90,7 @@ public class ShipsListeners implements Listener {
 	@EventHandler
 	public void playerInteractEvent2(PlayerInteractEvent event) {
 		Block block = event.getClickedBlock();
-		BlockFace direction = event.getBlockFace();
+		BlockFace direction = event.getBlockFace().getOppositeFace();
 		Player player = event.getPlayer();
 		if ((event.getAction().equals(Action.LEFT_CLICK_BLOCK))
 				|| (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {

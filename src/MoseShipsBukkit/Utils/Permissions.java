@@ -4,39 +4,14 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 
-public enum Permissions {
+public class Permissions {
 
-	CREATE_VESSEL(true, "ships.*", "ships.*.make", "ships.%VesselType%.make");
-
-	public static boolean USE_PERMISSIONS = false;
-
-	String[] PERMISSIONS;
-	boolean NO_PERMISSION_VALUE;
-
-	private Permissions(boolean noPerms, String... perms) {
-		PERMISSIONS = perms;
-		NO_PERMISSION_VALUE = noPerms;
+	public static final String CREATE_AIRSHIP = "ships.airship.make";
+	
+	public static final String BLOCK_LIST_CMD = "ships.cmd.blocklist";
+	
+	public static boolean hasPermissionToMake(Player player, StaticShipType type){
+		return player.hasPermission("ships." + type.getName() + ".make");
 	}
-
-	public boolean hasPermission(Player player) {
-		return hasPermission(player, "", "");
-	}
-
-	public boolean hasPermission(Player player, StaticShipType type) {
-		return hasPermission(player, "%VesselType%", type.getName());
-	}
-
-	private boolean hasPermission(Player player, String old, String replace) {
-		if (USE_PERMISSIONS) {
-			for (String permission : PERMISSIONS) {
-				if (player.hasPermission(permission.replace(old, replace))) {
-					return true;
-				}
-			}
-			return false;
-		} else {
-			return NO_PERMISSION_VALUE;
-		}
-	}
-
+	
 }

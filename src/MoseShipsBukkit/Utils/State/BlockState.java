@@ -24,5 +24,16 @@ public class BlockState {
 	public byte getData() {
 		return DATA;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof BlockState){
+			BlockState state = (BlockState)obj;
+			if((state.getMaterial().equals(getMaterial())) && (state.getData() == getData())){
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

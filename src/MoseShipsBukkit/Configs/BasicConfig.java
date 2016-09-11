@@ -48,7 +48,7 @@ public class BasicConfig {
 	public boolean set(Object object, String path) {
 		if (path != null) {
 			// System.out.println("\n object: " + object);
-			if (has(path)) {
+			if (!has(path)) {
 				config.set(path, object);
 				return true;
 			}
