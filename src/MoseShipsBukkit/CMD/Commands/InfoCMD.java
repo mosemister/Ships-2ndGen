@@ -51,9 +51,7 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 
 	@Override
 	public boolean execute(ConsoleCommandSender console, String... args) {
-		System.out.println("Args size: " + args.length);
 		if (args.length > 1) {
-			System.out.println("display info");
 			displayInfo(console, args[1]);
 		} else {
 			basicInfo(console);

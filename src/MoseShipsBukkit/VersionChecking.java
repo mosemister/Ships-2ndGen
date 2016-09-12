@@ -31,7 +31,7 @@ public class VersionChecking {
 		return ret;
 	}
 
-	public static VersionOutcome isGreater(int[] origin, int[] compare) {
+	public static VersionOutcome isGreater(int[] origin, int... compare) {
 		List<Integer> origin2 = new ArrayList<Integer>();
 		for (int A : origin) {
 			origin2.add(A);

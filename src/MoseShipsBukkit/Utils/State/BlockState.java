@@ -35,5 +35,10 @@ public class BlockState {
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString() {
+		return MATERIAL.name() + ":" + DATA;
+	}
 
 }

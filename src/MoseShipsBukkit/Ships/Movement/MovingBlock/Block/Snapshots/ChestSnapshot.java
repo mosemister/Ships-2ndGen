@@ -18,7 +18,7 @@ public class ChestSnapshot extends BlockSnapshot implements SpecialSnapshot, Rot
 
 	Map<Integer, ItemStack> g_inv = new HashMap<Integer, ItemStack>();
 
-	protected ChestSnapshot(BlockState state) {
+	public ChestSnapshot(BlockState state) {
 		super(state);
 	}
 
@@ -30,9 +30,10 @@ public class ChestSnapshot extends BlockSnapshot implements SpecialSnapshot, Rot
 			for (int A = 0; A < inv.getSize(); A++) {
 				ItemStack item = inv.getItem(A);
 				if (item != null) {
-					g_inv.put(A, item);
+					g_inv.put(A, item.clone());
 				}
 			}
+			inv.clear();
 		}
 
 	}

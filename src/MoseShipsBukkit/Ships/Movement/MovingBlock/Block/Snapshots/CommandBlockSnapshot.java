@@ -11,7 +11,7 @@ public class CommandBlockSnapshot extends BlockSnapshot implements SpecialSnapsh
 
 	String g_command;
 
-	protected CommandBlockSnapshot(BlockState state) {
+	public CommandBlockSnapshot(BlockState state) {
 		super(state);
 	}
 
@@ -28,6 +28,7 @@ public class CommandBlockSnapshot extends BlockSnapshot implements SpecialSnapsh
 		if (block.getState() instanceof CommandBlock) {
 			CommandBlock cmdBlock = (CommandBlock) block.getState();
 			cmdBlock.setCommand(g_command);
+			cmdBlock.update();
 		}
 	}
 

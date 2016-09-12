@@ -12,9 +12,9 @@ import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 
 public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot, SpecialSnapshot {
 
-	ItemStack fuel, burn, result;
+	ItemStack g_fuel, g_burn, g_result;
 
-	protected FurnaceSnapshot(BlockState state) {
+	public FurnaceSnapshot(BlockState state) {
 		super(state);
 	}
 
@@ -23,9 +23,19 @@ public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot,
 		if (block.getState() instanceof Furnace) {
 			Furnace furnace = (Furnace) block.getState();
 			FurnaceInventory inv = furnace.getInventory();
-			fuel = inv.getFuel();
-			burn = inv.getSmelting();
-			result = inv.getResult();
+			ItemStack fuel = inv.getFuel();
+			if(fuel != null){
+				g_fuel = fuel.clone();
+			}
+			ItemStack burn = inv.getSmelting();
+			if(burn != null){
+				g_burn = burn.clone();
+			}
+			ItemStack result = inv.getResult();
+			if(result != null){
+				g_result = result.clone();
+			}
+			inv.clear();
 		}
 	}
 
@@ -34,9 +44,9 @@ public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot,
 		if (block.getState() instanceof Furnace) {
 			Furnace furnace = (Furnace) block.getState();
 			FurnaceInventory inv = furnace.getInventory();
-			inv.setFuel(fuel);
-			inv.setResult(result);
-			inv.setSmelting(burn);
+			inv.setFuel(g_fuel);
+			inv.setResult(g_result);
+			inv.setSmelting(g_burn);
 		}
 
 	}

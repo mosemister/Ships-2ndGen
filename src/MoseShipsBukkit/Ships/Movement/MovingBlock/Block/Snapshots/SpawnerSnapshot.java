@@ -13,7 +13,7 @@ public class SpawnerSnapshot extends BlockSnapshot implements SpecialSnapshot {
 	EntityType g_type;
 	int g_delay;
 
-	protected SpawnerSnapshot(BlockState state) {
+	public SpawnerSnapshot(BlockState state) {
 		super(state);
 	}
 
@@ -32,6 +32,7 @@ public class SpawnerSnapshot extends BlockSnapshot implements SpecialSnapshot {
 			CreatureSpawner spawner = (CreatureSpawner) block.getState();
 			spawner.setSpawnedType(g_type);
 			spawner.setDelay(g_delay);
+			spawner.update();
 		}
 	}
 

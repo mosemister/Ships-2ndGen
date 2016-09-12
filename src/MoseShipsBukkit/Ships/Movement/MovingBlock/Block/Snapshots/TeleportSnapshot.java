@@ -5,16 +5,17 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.EndGateway;
 
+import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.AttachableSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.RotatableSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 
-public class TeleportSnapshot extends BlockSnapshot implements SpecialSnapshot, RotatableSnapshot {
+public class TeleportSnapshot extends BlockSnapshot implements SpecialSnapshot, RotatableSnapshot, AttachableSnapshot {
 
 	boolean g_exact;
 	Location g_exit;
 
-	protected TeleportSnapshot(BlockState state) {
+	public TeleportSnapshot(BlockState state) {
 		super(state);
 	}
 
@@ -33,6 +34,7 @@ public class TeleportSnapshot extends BlockSnapshot implements SpecialSnapshot, 
 			EndGateway gateway = (EndGateway) block.getState();
 			gateway.setExactTeleport(g_exact);
 			gateway.setExitLocation(g_exit);
+			gateway.update();
 		}
 	}
 

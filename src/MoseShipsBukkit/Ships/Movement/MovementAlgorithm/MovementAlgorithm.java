@@ -13,7 +13,7 @@ public interface MovementAlgorithm {
 	static List<MovementAlgorithm> MOVEMENT_ALGORITHMS = new ArrayList<MovementAlgorithm>();
 
 	public static Ships5Movement SHIPS5 = new Ships5Movement();
-	public static MovementAlgorithm SHIPS6 = new Ships6Movement();
+	public static Ships6Movement SHIPS6 = new Ships6Movement();
 
 	public void move(LoadableShip vessel, List<MovingBlock> blocks);
 

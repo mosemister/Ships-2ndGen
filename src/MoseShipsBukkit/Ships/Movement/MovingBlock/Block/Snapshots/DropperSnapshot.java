@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
+import org.bukkit.block.Dropper;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,29 +18,30 @@ public class DropperSnapshot extends BlockSnapshot implements SpecialSnapshot, R
 
 	Map<Integer, ItemStack> g_inv = new HashMap<Integer, ItemStack>();
 
-	protected DropperSnapshot(BlockState state) {
+	public DropperSnapshot(BlockState state) {
 		super(state);
 	}
 
 	@Override
 	public void onRemove(Block block) {
-		if (block.getState() instanceof Chest) {
-			Chest chest = (Chest) block.getState();
-			Inventory inv = chest.getBlockInventory();
+		if (block.getState() instanceof Dropper) {
+			Dropper dropper = (Dropper) block.getState();
+			Inventory inv = dropper.getInventory();
 			for (int A = 0; A < inv.getSize(); A++) {
 				ItemStack item = inv.getItem(A);
 				if (item != null) {
-					g_inv.put(A, item);
+					g_inv.put(A, item.clone());
 				}
 			}
+			inv.clear();
 		}
 	}
 
 	@Override
 	public void onPlace(Block block) {
-		if (block.getState() instanceof Chest) {
-			Chest chest = (Chest) block.getState();
-			Inventory inv = chest.getBlockInventory();
+		if (block.getState() instanceof Dropper) {
+			Dropper drop = (Dropper) block.getState();
+			Inventory inv = drop.getInventory();
 			for (Entry<Integer, ItemStack> entry : g_inv.entrySet()) {
 				inv.setItem(entry.getKey(), entry.getValue());
 			}

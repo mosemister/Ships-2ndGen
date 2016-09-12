@@ -15,7 +15,6 @@ public class StaticShipTypeUtil {
 	}
 
 	public static Optional<StaticShipType> getType(String name) {
-		System.out.println("Ships types" + StaticShipType.TYPES.size());
 		for (StaticShipType type : StaticShipType.TYPES) {
 			if (type.getName().equalsIgnoreCase(name)) {
 				return Optional.of(type);

@@ -57,7 +57,7 @@ public interface ShipsCMD {
 				if (cmd2 != null) {
 					Player player = (Player) sender;
 					if (cmd2.getPermission() != null) {
-						if (player.hasPermission(cmd.getPermission())) {
+						if (player.hasPermission(cmd2.getPermission())) {
 							return cmd2.execute(player, args);
 						}
 					} else {

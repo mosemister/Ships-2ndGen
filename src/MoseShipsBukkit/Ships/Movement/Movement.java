@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
@@ -128,7 +129,24 @@ public class Movement {
 		if (opFail.isPresent()) {
 			return opFail;
 		}
+		final List<Entity> entities = ship.getEntities();
 		MovementAlgorithmUtils.getConfig().move(ship, blocks);
+		Location origin = blocks.get(0).getOrigin();
+		Location to = blocks.get(0).getMovingTo();
+		double X = to.getX() - origin.getX();
+		double Y = to.getY() - origin.getY();
+		double Z = to.getZ() - origin.getZ();
+		for(Entity entity : entities){
+			Location eLoc = entity.getLocation();
+			double tX = eLoc.getX() + X;
+			double tY = eLoc.getY() + Y;
+			double tZ = eLoc.getZ() + Z;
+			Location eTo = new Location(eLoc.getWorld(), tX, tY, tZ);
+			eTo.setDirection(eLoc.getDirection());
+			eTo.setPitch(eLoc.getPitch());
+			eTo.setYaw(eLoc.getYaw());
+			entity.teleport(eTo);
+		}
 		return Optional.empty();
 	}
 

@@ -12,7 +12,7 @@ public class JukeBoxSnapshot extends BlockSnapshot implements SpecialSnapshot {
 
 	Material g_material;
 
-	protected JukeBoxSnapshot(BlockState state) {
+	public JukeBoxSnapshot(BlockState state) {
 		super(state);
 	}
 
@@ -21,6 +21,8 @@ public class JukeBoxSnapshot extends BlockSnapshot implements SpecialSnapshot {
 		if (block.getState() instanceof Jukebox) {
 			Jukebox box = (Jukebox) block.getState();
 			g_material = box.getPlaying();
+			box.setPlaying(null);
+			box.update();
 		}
 	}
 
@@ -29,6 +31,7 @@ public class JukeBoxSnapshot extends BlockSnapshot implements SpecialSnapshot {
 		if (block.getState() instanceof Jukebox) {
 			Jukebox box = (Jukebox) block.getState();
 			box.setPlaying(g_material);
+			box.update();
 		}
 	}
 

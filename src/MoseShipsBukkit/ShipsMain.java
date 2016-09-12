@@ -6,10 +6,12 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import MoseShipsBukkit.CMD.ShipsCMD;
+import MoseShipsBukkit.CMD.Commands.BlockListCMD;
 import MoseShipsBukkit.CMD.Commands.DebugCMD;
 import MoseShipsBukkit.CMD.Commands.HelpCMD;
 import MoseShipsBukkit.CMD.Commands.InfoCMD;
 import MoseShipsBukkit.CMD.Commands.SignCMD;
+import MoseShipsBukkit.Configs.Files.BlockList;
 import MoseShipsBukkit.Listeners.ShipsListeners;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.BannerSnapshot;
@@ -33,7 +35,7 @@ public class ShipsMain extends JavaPlugin {
 
 	public static String NAME;
 	public static String VERSION;
-	public static final String[] TESTED_MC = { "1.10.2" };
+	public static final String[] TESTED_MC = { "1.9.4" };
 
 	static ShipsMain PLUGIN;
 
@@ -42,6 +44,7 @@ public class ShipsMain extends JavaPlugin {
 		new DebugCMD();
 		new SignCMD();
 		new HelpCMD();
+		new BlockListCMD();
 	}
 
 	private void registerSnapshotTypes() {
@@ -114,6 +117,7 @@ public class ShipsMain extends JavaPlugin {
 		VERSION = getDescription().getVersion();
 		getServer().getPluginManager().registerEvents(new ShipsListeners(), this);
 		getCommand("Ships").setExecutor(new ShipsCMD.Executer());
+		BlockList.BLOCK_LIST.reload();
 		registerSnapshotTypes();
 		registerCMDs();
 		registerShipTypes();

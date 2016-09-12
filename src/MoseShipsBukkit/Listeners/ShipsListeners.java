@@ -98,16 +98,10 @@ public class ShipsListeners implements Listener {
 				Sign sign = (Sign) block.getState();
 				Optional<SignType> signType = ShipsSigns.getSignType(ChatColor.stripColor(sign.getLine(0)));
 				if (signType.isPresent()) {
-					System.out.println("is a Ship sign");
-					Block loc = player.getLocation().getBlock().getRelative(BlockFace.DOWN);
-					System.out.println(loc.getX() + " | " + loc.getY() + " | " + loc.getZ() + " | "
-							+ loc.getWorld().getName() + " | " + loc.getType().name());
 					Optional<LoadableShip> opType = LoadableShip.getShip(signType.get(), sign, true);
 					if (opType.isPresent()) {
-						System.out.println("has Ship");
 						LoadableShip ship = opType.get();
 						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-							System.out.print("Is right click");
 							switch (signType.get()) {
 								case EOT:
 
@@ -121,7 +115,6 @@ public class ShipsListeners implements Listener {
 									}
 									break;
 								case MOVE:
-									System.out.println("is move sign");
 									if (sign.getLine(2).equals("{Boost}")) {
 										Optional<MovementResult> cause = ship.move(direction,
 												ship.getStatic().getBoostSpeed());

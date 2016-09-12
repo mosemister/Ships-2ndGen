@@ -64,11 +64,11 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 		} else if (args[1].equalsIgnoreCase("reload")) {
 			if (args.length > 2) {
 				if (args[2].equalsIgnoreCase("config")) {
-					System.out.println("t");
 					ShipsConfig.CONFIG.applyMissing();
 					source.sendMessage(ShipsMain.format("Configuration has been refreshed", false));
 				} else if (args[2].equalsIgnoreCase("materials")) {
 					BlockList.BLOCK_LIST.applyMissing();
+					BlockList.BLOCK_LIST.reload();
 					source.sendMessage(ShipsMain.format("Block list has been refreshed", false));
 				} else {
 					source.sendMessage(ShipsMain.format("Can not find configuration file", true));

@@ -8,7 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Entity;
 
 import MoseShips.CustomDataHolder.DataHolder;
 
@@ -75,6 +77,17 @@ public class ShipsData extends DataHolder {
 	public List<Block> getBasicStructure() {
 		return STRUCTURE;
 	}
+	
+	public List<Entity> getEntities(){
+		List<Entity> entities = new ArrayList<Entity>();
+		for (Entity entity : MAIN_BLOCK.getWorld().getEntities()){
+			Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
+			if(STRUCTURE.contains(block)){
+				entities.add(entity);
+			}
+		}
+		return entities;
+	}
 
 	public boolean hasLocation(Location loc) {
 		if (!loc.getWorld().equals(getWorld())) {
@@ -94,8 +107,10 @@ public class ShipsData extends DataHolder {
 		if (trackLimit == null) {
 			trackLimit = 5000;
 		}
+		final int size = STRUCTURE.size();
 		List<Block> list = BlockFinderUtils.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
 		STRUCTURE = list;
+		System.out.println("Updated structure from " + size + " to " + STRUCTURE.size());
 		return list;
 	}
 

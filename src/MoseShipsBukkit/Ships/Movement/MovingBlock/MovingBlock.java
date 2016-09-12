@@ -171,12 +171,16 @@ public class MovingBlock {
 			switch (block.getPriority()) {
 				case NORMAL:
 					normalList.add(block);
+					break;
 				case PRIORITY:
 					priList.add(block);
+					break;
 				case AIR:
 					airList.add(block);
+					break;
 				case SPECIAL:
 					specList.add(block);
+					break;
 			}
 		}
 		List<MovingBlock> retList = new ArrayList<MovingBlock>();

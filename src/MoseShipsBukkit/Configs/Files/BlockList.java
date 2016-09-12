@@ -21,14 +21,13 @@ public class BlockList extends BasicConfig {
 	public BlockList() {
 		super("/Configuration/BlockList");
 		applyMissing();
-		// code for testing purpose only
 	}
 	
 	public void reload(){
 		BLOCKS = new HashMap<BlockState, ListType>();
 		List<BlockState> list = new ArrayList<BlockState>();
 		for(Material material : Material.values()){
-			for(byte A = 0; A < 25; A++){
+			for(byte A = -1; A < 25; A++){
 				String value = get(String.class, material.name() + ".DataValue" + A);
 				if(value != null){
 					ListType type = ListType.valueFrom(value);
@@ -56,6 +55,16 @@ public class BlockList extends BasicConfig {
 	public ListType resetMaterial(Material material, byte data, ListType type){
 		return BLOCKS.replace(new BlockState(material, data), type);
 	}
+	
+	public List<BlockState> getBlocks(ListType type){
+		List<BlockState> states = new ArrayList<BlockState>();
+		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
+			if(entry.getValue().equals(type)){
+				states.add(entry.getKey());
+			}
+		}
+		return states;
+	}
 
 	public ListType getDefaultValue(Material material) {
 		for (BlockState material2 : getDefaultMaterialsList()) {
@@ -75,6 +84,7 @@ public class BlockList extends BasicConfig {
 		List<BlockState> list = new ArrayList<BlockState>();
 		list.add(new BlockState(Material.LOG));
 		list.add(new BlockState(Material.LOG_2));
+		list.add(new BlockState(Material.WOOD));
 		list.add(new BlockState(Material.SPONGE));
 		list.add(new BlockState(Material.GLASS));
 		list.add(new BlockState(Material.LAPIS_BLOCK));

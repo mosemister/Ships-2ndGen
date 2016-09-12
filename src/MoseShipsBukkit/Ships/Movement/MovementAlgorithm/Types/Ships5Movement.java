@@ -31,10 +31,15 @@ public class Ships5Movement implements MovementAlgorithm {
 			}
 		}
 		List<Block> newStructure = new ArrayList<Block>();
+		Block lic = null;
 		// place all blocks
-		for (MovingBlock block : blocks) {
+		for (int A = (blocks.size() - 1); A >= 0; A--) {
+			MovingBlock block = blocks.get(A);
 			newStructure.add(block.getMovingTo().getBlock());
 			block.move();
+			if (type.getLocation().getBlock().equals(block.getOrigin().getBlock())){
+				lic = block.getMovingTo().getBlock();
+			}
 		}
 		/*
 		 * blocks.stream().forEach(block -> {
@@ -53,11 +58,7 @@ public class Ships5Movement implements MovementAlgorithm {
 		Location loc = blocks.get(0).getMovingTo().clone().subtract(blocks.get(0).getOrigin());
 		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
 				loc.getBlockZ());
-		MovingBlock lBlock = new MovingBlock(type.getLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
-				loc.getBlockZ());
-		type.setBasicStructure(newStructure, lBlock.getMovingTo().getBlock(), tBlock.getMovingTo());
-		// moveEntitys(move);
-
+		type.setBasicStructure(newStructure, lic, tBlock.getMovingTo());
 	}
 
 	@Override

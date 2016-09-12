@@ -48,8 +48,10 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 			} else {
 				try {
 					track(player, Integer.parseInt(args[2]));
+					return true;
 				} catch (NumberFormatException e) {
 					player.sendMessage(ShipsMain.format(args[2] + " is not a whole number", true));
+					return true;
 				}
 			}
 		}
@@ -59,14 +61,19 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 	@SuppressWarnings("deprecation")
 	public void track(final Player player, int sec) {
 		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
+		System.out.println("targeted block found");
 		if (loc.getState() instanceof Sign) {
+			System.out.println("targeted block is Sign");
 			Sign sign = (Sign) loc.getState();
 			Optional<ShipsSigns.SignType> sSign = ShipsSigns.getSignType(sign);
 			if (sSign.isPresent()) {
-				Optional<LoadableShip> opShip = LoadableShip.getShip(loc, true);
+				System.out.println("is a ship sign");
+				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {
+					System.out.println("Ship found");
 					LoadableShip ship = opShip.get();
-					final List<Block> structure = ship.getBasicStructure();
+					final List<Block> structure = ship.updateBasicStructure();
+					player.sendMessage("Now showing the structure of "+ ship.getName() + " (size of " + structure.size() + ") for " + sec + " seconds");
 					for (Block block : structure) {
 						player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
 					}
@@ -76,10 +83,14 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 						public void run() {
 							for (Block block : structure) {
 								player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
+								if(block.getState() instanceof Sign){
+									Sign sign = (Sign)block.getState();
+									player.sendSignChange(block.getLocation(), sign.getLines());
+								}
 							}
 						}
 
-					});
+					}, (sec*20));
 				}
 			}
 		}

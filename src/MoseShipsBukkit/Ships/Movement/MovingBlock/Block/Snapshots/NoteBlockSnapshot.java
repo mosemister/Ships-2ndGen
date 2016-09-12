@@ -12,14 +12,14 @@ public class NoteBlockSnapshot extends BlockSnapshot implements SpecialSnapshot 
 
 	Note g_note;
 
-	protected NoteBlockSnapshot(BlockState state) {
+	public NoteBlockSnapshot(BlockState state) {
 		super(state);
 	}
 
 	@Override
 	public void onRemove(Block block) {
 		if (block.getState() instanceof NoteBlock) {
-			NoteBlock note = (NoteBlock) g_note;
+			NoteBlock note = (NoteBlock) block.getState();
 			g_note = note.getNote();
 		}
 	}
@@ -27,8 +27,9 @@ public class NoteBlockSnapshot extends BlockSnapshot implements SpecialSnapshot 
 	@Override
 	public void onPlace(Block block) {
 		if (block.getState() instanceof NoteBlock) {
-			NoteBlock note = (NoteBlock) g_note;
+			NoteBlock note = (NoteBlock) block.getState();
 			note.setNote(g_note);
+			note.update();
 		}
 	}
 

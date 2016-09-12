@@ -58,15 +58,10 @@ public class BlockSnapshot {
 			spec.onRemove(loc);
 		}
 		loc.setType(material, false);
-		if (material.equals(g_material)) {
-			g_data.setData(data);
-			loc.getState().setData(g_data);
-			if (this instanceof SpecialSnapshot) {
-				SpecialSnapshot spec = (SpecialSnapshot) this;
-				spec.onPlace(loc);
-			}
-		} else {
-			loc.setData(data, false);
+		loc.setData(data, false);
+		if (this instanceof SpecialSnapshot) {
+			SpecialSnapshot spec = (SpecialSnapshot) this;
+			spec.onPlace(loc);
 		}
 	}
 

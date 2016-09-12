@@ -1,5 +1,7 @@
 package MoseShipsBukkit.CMD.Commands;
 
+import java.util.List;
+
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -10,9 +12,14 @@ import MoseShipsBukkit.CMD.ShipsCMD;
 import MoseShipsBukkit.Configs.Files.BlockList;
 import MoseShipsBukkit.Configs.Files.BlockList.ListType;
 import MoseShipsBukkit.Utils.Permissions;
+import MoseShipsBukkit.Utils.State.BlockState;
 
 public class BlockListCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCMD {
 
+	public BlockListCMD(){
+		ShipsCMD.SHIPS_COMMANDS.add(this);
+	}
+	
 	@Override
 	public String[] getAliases() {
 		String[] args = {"blockList", "Materials"};
@@ -78,6 +85,15 @@ public class BlockListCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPla
 					return true;
 				}
 			}
+		}else if(args[1].equalsIgnoreCase("list")){
+			ListType type = BlockList.ListType.valueFrom(args[2]);
+			if(type == null){
+				sender.sendMessage(args[2] + " is not a valid list type");
+				return true;
+			}
+			List<BlockState> states = BlockList.BLOCK_LIST.getBlocks(type);
+			sender.sendMessage(states.toString());
+			return true;
 		}
 		return false;
 	}

@@ -1,5 +1,9 @@
 package MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
@@ -11,9 +15,10 @@ import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 
 public class BrewingStandSnapshot extends BlockSnapshot implements SpecialSnapshot {
 
-	ItemStack fuel, ingredient;
+	Map<Integer, ItemStack> g_inv = new HashMap<Integer, ItemStack>();
+	int g_brew_time, g_fuel_level;
 
-	protected BrewingStandSnapshot(BlockState state) {
+	public BrewingStandSnapshot(BlockState state) {
 		super(state);
 	}
 
@@ -22,8 +27,15 @@ public class BrewingStandSnapshot extends BlockSnapshot implements SpecialSnapsh
 		if (block.getState() instanceof BrewingStand) {
 			BrewingStand stand = (BrewingStand) block.getState();
 			BrewerInventory inv = stand.getInventory();
-			fuel = inv.getFuel();
-			ingredient = inv.getIngredient();
+			g_brew_time = stand.getBrewingTime();
+			g_fuel_level = stand.getFuelLevel();
+			for (int A = 0; A < inv.getSize(); A++) {
+				ItemStack item = inv.getItem(A);
+				if (item != null) {
+					g_inv.put(A, item.clone());
+				}
+			}
+			inv.clear();
 		}
 
 	}
@@ -33,8 +45,12 @@ public class BrewingStandSnapshot extends BlockSnapshot implements SpecialSnapsh
 		if (block.getState() instanceof BrewingStand) {
 			BrewingStand stand = (BrewingStand) block.getState();
 			BrewerInventory inv = stand.getInventory();
-			inv.setFuel(fuel);
-			inv.setIngredient(ingredient);
+			for (Entry<Integer, ItemStack> entry : g_inv.entrySet()) {
+				inv.setItem(entry.getKey(), entry.getValue());
+			}
+			stand.setBrewingTime(g_brew_time);
+			stand.setFuelLevel(g_fuel_level);
+			stand.update();
 		}
 	}
 
