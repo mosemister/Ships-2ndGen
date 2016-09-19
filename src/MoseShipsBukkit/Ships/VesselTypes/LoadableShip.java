@@ -31,15 +31,13 @@ public abstract class LoadableShip extends ShipsData {
 
 	public abstract boolean shouldFall();
 
-	public abstract int getMaxBlocks();
-
-	public abstract int getMinBlocks();
-
 	public abstract Map<String, Object> getInfo();
 
 	public abstract StaticShipType getStatic();
 	
-	protected boolean IS_MOVING = false;
+	protected boolean g_moving = false;
+	protected int g_max_blocks = 4000;
+	protected int g_min_blocks = 200;
 
 	static List<LoadableShip> SHIPS = new ArrayList<LoadableShip>();
 
@@ -51,12 +49,30 @@ public abstract class LoadableShip extends ShipsData {
 		super(data);
 	}
 	
+	public int getMaxBlocks(){
+		return g_max_blocks;
+	}
+	
+	public LoadableShip setMaxBlocks(int A){
+		g_max_blocks = A;
+		return this;
+	}
+
+	public int getMinBlocks(){
+		return g_min_blocks;
+	}
+	
+	public LoadableShip setMinBlocks(int A){
+		g_min_blocks = A;
+		return this;
+	}
+	
 	public boolean isMoving(){
-		return IS_MOVING;
+		return g_moving;
 	}
 	
 	public void setMoving(boolean check){
-		IS_MOVING = check;
+		g_moving = check;
 	}
 
 	public ShipsLocalDatabase getLocalDatabase() {

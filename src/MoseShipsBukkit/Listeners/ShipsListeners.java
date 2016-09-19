@@ -22,6 +22,7 @@ import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
 import MoseShipsBukkit.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
+import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
@@ -148,12 +149,21 @@ public class ShipsListeners implements Listener {
 									}
 									break;
 								case WHEEL:
+									Optional<MovementResult> causeRotate = ship.rotate(Rotate.RIGHT);
+									if(causeRotate.isPresent()){
+										MovementResult result = causeRotate.get();
+										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+										if(failed.isPresent()){
+											TwoStore<CauseKeys<Object>, Object> store = failed.get();
+											store.getFirst().sendMessage(player, store.getSecond());
+										}
+									}
 									break;
 								case ALTITUDE:
-									Optional<MovementResult> cause = ship.move(0, -ship.getStatic().getAltitudeSpeed(),
+									Optional<MovementResult> causeMove = ship.move(0, -ship.getStatic().getAltitudeSpeed(),
 											0);
-									if (cause.isPresent()) {
-										MovementResult result = cause.get();
+									if (causeMove.isPresent()) {
+										MovementResult result = causeMove.get();
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
@@ -161,6 +171,63 @@ public class ShipsListeners implements Listener {
 										}
 									}
 									break;
+							}
+						}else{
+							switch(signType.get()){
+								case ALTITUDE:
+									Optional<MovementResult> causeMove = ship.move(0, -ship.getStatic().getAltitudeSpeed(),
+											0);
+									if (causeMove.isPresent()) {
+										MovementResult result = causeMove.get();
+										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+										if (failed.isPresent()) {
+											TwoStore<CauseKeys<Object>, Object> store = failed.get();
+											store.getFirst().sendMessage(player, store.getSecond());
+										}
+									}
+									break;
+								case EOT:
+									break;
+								case LICENCE:
+									break;
+								case MOVE:
+									if (sign.getLine(2).equals("{Boost}")) {
+										Optional<MovementResult> cause = ship.move(direction,
+												ship.getStatic().getBoostSpeed());
+										if (cause.isPresent()) {
+											MovementResult result = cause.get();
+											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
+													.getFailedCause();
+											if (failed.isPresent()) {
+												TwoStore<CauseKeys<Object>, Object> store = failed.get();
+												store.getFirst().sendMessage(player, store.getSecond());
+											}
+										}
+									} else {
+										Optional<MovementResult> cause = ship.move(direction,
+												ship.getStatic().getDefaultSpeed());
+										if (cause.isPresent()) {
+											MovementResult result = cause.get();
+											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
+													.getFailedCause();
+											if (failed.isPresent()) {
+												TwoStore<CauseKeys<Object>, Object> store = failed.get();
+												store.getFirst().sendMessage(player, store.getSecond());
+											}
+										}
+									}
+									break;
+								case WHEEL:
+									Optional<MovementResult> causeRotate = ship.rotate(Rotate.LEFT);
+									if(causeRotate.isPresent()){
+										MovementResult result = causeRotate.get();
+										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
+										if(failed.isPresent()){
+											TwoStore<CauseKeys<Object>, Object> store = failed.get();
+											store.getFirst().sendMessage(player, store.getSecond());
+										}
+									}
+									break;								
 							}
 						}
 					}

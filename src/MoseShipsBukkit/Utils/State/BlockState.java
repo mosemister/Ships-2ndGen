@@ -1,6 +1,9 @@
 package MoseShipsBukkit.Utils.State;
 
+import java.util.List;
+
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 
 public class BlockState {
 
@@ -39,6 +42,34 @@ public class BlockState {
 	@Override
 	public String toString() {
 		return MATERIAL.name() + ":" + DATA;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static boolean contains(Block block, BlockState... list){
+		for(BlockState state : list){
+			if(state.getMaterial().equals(block.getType())){
+			if(state.getData() == -1){
+				return true;
+			}else if (state.getData() == block.getData()){
+				return true;
+			}
+			}
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static BlockState[] getStates(List<String> states){
+		BlockState[] states2 = new BlockState[states.size()];
+		for(int A = 0; A < states.size(); A++){
+			String value = states.get(A);
+			String[] args = value.split(",");
+			byte data = Byte.parseByte(args[1]);
+			Material material = Material.getMaterial(Integer.parseInt(args[0]));
+			
+			states2[A] = new BlockState(material, data);
+		}
+		return states2;
 	}
 
 }

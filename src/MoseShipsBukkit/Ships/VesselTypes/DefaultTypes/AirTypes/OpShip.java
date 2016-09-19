@@ -95,7 +95,7 @@ public class OpShip extends AirType {
 
 		@Override
 		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
-			return Optional.of((LoadableShip) new OpShip(data));
+			return Optional.of((LoadableShip) new OpShip(data));		
 		}
 
 	}
