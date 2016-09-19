@@ -17,6 +17,9 @@ public class Prototype3 implements BasicBlockFinder {
 
 	@Override
 	public List<Block> getConnectedBlocks(int limit, Block loc) {
+		if(loc == null){
+			throw new NullPointerException();
+		}
 		BLOCKS = new ArrayList<Block>();
 		COUNT = 0;
 		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
@@ -35,6 +38,7 @@ public class Prototype3 implements BasicBlockFinder {
 			Block block = loc.getRelative(face);
 			if (BlockList.BLOCK_LIST.contains(block.getType(), block.getData(), ListType.MATERIALS)) {
 				if (!BLOCKS.contains(block)) {
+					System.out.println("prototype 3: " + block);
 					BLOCKS.add(block);
 					getNextBlock(limit, block, directions);
 				}

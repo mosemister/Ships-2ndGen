@@ -48,7 +48,7 @@ public class ShipLoader {
 	}
 
 	private static Optional<File> getFile(String name) {
-		File root = new File("/config/Ships/VesselData");
+		File root = new File("plugins/Ships/VesselData");
 		OneStore<File> file = new OneStore<File>(null);
 		for (StaticShipType type : StaticShipType.TYPES) {
 			File folder = new File(root, type.getName());
@@ -58,7 +58,7 @@ public class ShipLoader {
 				Bukkit.getServer().getConsoleSender().sendMessage("files dont equal null");
 				for (File sFile : files) {
 					Bukkit.getServer().getConsoleSender().sendMessage(sFile.getAbsolutePath());
-					if (sFile.getName().equals(name + ".conf")) {
+					if (sFile.getName().equals(name + ".yml")) {
 						file.setFirst(sFile);
 						break;
 					}
@@ -70,16 +70,15 @@ public class ShipLoader {
 
 	private static TwoStore<LoadableShip, ShipLoadingError> pLoadShip(File file) {
 		BasicConfig config = new BasicConfig(file);
-
 		String[] sLic = config.get(String.class, ShipsData.DATABASE_BLOCK).split(",");
 		String name = config.get(String.class, ShipsData.DATABASE_NAME);
 		String sType = config.get(String.class, ShipsData.DATABASE_TYPE);
 		String sPilot = config.get(String.class, ShipsData.DATABASE_PILOT);
-		String[] sStructure = config.get(String.class, ShipsData.DATABASE_STRUCTURE).split(",");
+		List<String> lStructure = config.getList(String.class, ShipsData.DATABASE_STRUCTURE);
 		String sSubPilots = config.get(String.class, ShipsData.DATABASE_SUB_PILOTS);
 		String[] sTel = config.get(String.class, ShipsData.DATABASE_TELEPORT).split(",");
 		String sWorld = config.get(String.class, ShipsData.DATABASE_WORLD);
-
+		
 		if (sWorld == null) {
 			return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.UNREADABLE_WORLD);
 		}
@@ -120,19 +119,25 @@ public class ShipLoader {
 				int posX = 0;
 				int posY = 0;
 				int target = 0;
-				for (String value : sStructure) {
-					try {
-						int pos = Integer.parseInt(value);
-						switch (target) {
-							case 0:
-								posX = pos;
-							case 1:
-								posY = pos;
-							case 2:
-								structure.add(new Location(world, posX, posY, pos).getBlock());
+				for (String values : lStructure) {
+					String[] valuesArgs = values.split(",");
+					for (String value : valuesArgs) {
+						try {
+							int pos = Integer.parseInt(value);
+							switch (target) {
+								case 0:
+									posX = pos;
+									break;
+								case 1:
+									posY = pos;
+									break;
+								case 2:
+									structure.add(new Location(world, posX, posY, pos).getBlock());
+									break;
+							}
+						} catch (NumberFormatException e) {
+							break;
 						}
-					} catch (NumberFormatException e) {
-						break;
 					}
 				}
 				data.setBasicStructure(structure, lic.getBlock());
@@ -147,6 +152,8 @@ public class ShipLoader {
 
 				Optional<LoadableShip> opShip = type.loadVessel(data, config);
 				if (opShip.isPresent()) {
+					LoadableShip ship = opShip.get();
+					System.out.println("Ship loaded: \n Max Blocks: " + ship.getMaxBlocks() + " \n Min Blocks:" + ship.getMinBlocks() + " \n Name: " + ship.getName() + " \n Structure: " + ship.getBasicStructure() + " \n Licence: " + ship.getLocation() + " \n Owner: " + ship.getOwner().get() + "\n Teleport: " + ship.getTeleportToLocation());
 					return new TwoStore<LoadableShip, ShipLoadingError>(opShip.get(), ShipLoadingError.NOT_CURRUPT);
 				} else {
 					return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.LOADER_ISSUE);

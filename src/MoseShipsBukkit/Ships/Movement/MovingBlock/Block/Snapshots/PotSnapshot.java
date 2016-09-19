@@ -20,22 +20,26 @@ public class PotSnapshot extends BlockSnapshot implements SpecialSnapshot, Attac
 
 	@Override
 	public void onRemove(Block block) {
-		if(!VersionChecking.isGreater(VersionChecking.MINECRAFT_VERSION, 1, 10, 0).equals(VersionChecking.VersionOutcome.LOWER)){
-		if (block.getState() instanceof FlowerPot) {
-			FlowerPot pot = (FlowerPot) block.getState();
-			g_data = pot.getContents();
-			pot.update();
-		}
+		VersionChecking.VersionOutcome outcome = VersionChecking.isGreater(VersionChecking.MINECRAFT_VERSION, 1, 10, 0);
+		if (outcome != VersionChecking.VersionOutcome.LOWER) {
+			if (block.getState() instanceof FlowerPot) {
+				FlowerPot pot = (FlowerPot) block.getState();
+				g_data = pot.getContents();
+				pot.setContents(null);
+				pot.update();
+			}
 		}
 	}
 
 	@Override
 	public void onPlace(Block block) {
-		if(!VersionChecking.isGreater(VersionChecking.MINECRAFT_VERSION, 1, 10, 0).equals(VersionChecking.VersionOutcome.LOWER)){
-		if (block.getState() instanceof FlowerPot) {
-			FlowerPot pot = (FlowerPot) block.getState();
-			pot.setContents(g_data);
-		}
+		if (!VersionChecking.isGreater(VersionChecking.MINECRAFT_VERSION, 1, 10, 0)
+				.equals(VersionChecking.VersionOutcome.LOWER)) {
+			if (block.getState() instanceof FlowerPot) {
+				FlowerPot pot = (FlowerPot) block.getState();
+				pot.setContents(g_data);
+				pot.update();
+			}
 		}
 	}
 

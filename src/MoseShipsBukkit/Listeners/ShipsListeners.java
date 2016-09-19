@@ -88,19 +88,25 @@ public class ShipsListeners implements Listener {
 	}
 
 	@EventHandler
-	public void playerInteractEvent2(PlayerInteractEvent event) {
+	public void playerInteractEvent(PlayerInteractEvent event) {
 		Block block = event.getClickedBlock();
 		BlockFace direction = event.getBlockFace().getOppositeFace();
 		Player player = event.getPlayer();
+		System.out.println("interact");
 		if ((event.getAction().equals(Action.LEFT_CLICK_BLOCK))
 				|| (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
+			System.out.println("is Block");
 			if (block.getState() instanceof Sign) {
+				System.out.println("is Sign");
 				Sign sign = (Sign) block.getState();
 				Optional<SignType> signType = ShipsSigns.getSignType(ChatColor.stripColor(sign.getLine(0)));
 				if (signType.isPresent()) {
+					System.out.println("is ships sign");
 					Optional<LoadableShip> opType = LoadableShip.getShip(signType.get(), sign, true);
 					if (opType.isPresent()) {
 						LoadableShip ship = opType.get();
+						System.out.println("Ship found " + ship.getName());
+						LoadableShip.addToRam(ship);
 						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 							switch (signType.get()) {
 								case EOT:

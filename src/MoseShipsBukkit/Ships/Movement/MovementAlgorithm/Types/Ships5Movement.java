@@ -39,6 +39,7 @@ public class Ships5Movement implements MovementAlgorithm {
 			block.move();
 			if (type.getLocation().getBlock().equals(block.getOrigin().getBlock())){
 				lic = block.getMovingTo().getBlock();
+				System.out.println("Licence block updated: " + lic);
 			}
 		}
 		/*

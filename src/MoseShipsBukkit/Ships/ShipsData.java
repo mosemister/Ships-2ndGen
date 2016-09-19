@@ -1,7 +1,9 @@
 package MoseShipsBukkit.Ships;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Location;
@@ -27,7 +29,7 @@ public class ShipsData extends DataHolder {
 	public static final String DATABASE_WORLD = "ShipsMeta.Location.World";
 	public static final String DATABASE_BLOCK = "ShipsMeta.Location.Block";
 	public static final String DATABASE_TELEPORT = "ShipsMeta.Location.Teleport";
-	public static final String DATABASE_STRUCTURE = "ShipsStructure.Basic";
+	public static final String DATABASE_STRUCTURE = "ShipsStructure.BasicStructure";
 
 	protected String NAME;
 	protected OfflinePlayer USER;
@@ -39,7 +41,11 @@ public class ShipsData extends DataHolder {
 	public ShipsData(String name, Block sign, Location teleport) {
 		NAME = name;
 		MAIN_BLOCK = sign;
-		TELEPORT = teleport;
+		if(teleport == null){
+			TELEPORT = sign.getLocation();
+		}else{
+			TELEPORT = teleport;
+		}
 	}
 
 	public ShipsData(ShipsData data) {
@@ -72,6 +78,15 @@ public class ShipsData extends DataHolder {
 
 	public World getWorld() {
 		return MAIN_BLOCK.getWorld();
+	}
+	
+	public Map<String, String> getBasicData(){
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("Name: ", NAME);
+		map.put("Licence: ", MAIN_BLOCK.getX() + ", " + MAIN_BLOCK.getY() + ", " + MAIN_BLOCK.getZ() + ", " + MAIN_BLOCK.getWorld().getName());
+		map.put("Teleport: ", TELEPORT.getX() + ", " + TELEPORT.getY() + ", " + TELEPORT.getZ() + ", " + TELEPORT.getWorld().getName());
+		map.put("Structure size:", STRUCTURE.size() + "");
+		return map;
 	}
 
 	public List<Block> getBasicStructure() {

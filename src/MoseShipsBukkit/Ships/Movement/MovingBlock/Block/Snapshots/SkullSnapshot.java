@@ -20,6 +20,7 @@ public class SkullSnapshot extends BlockSnapshot implements SpecialSnapshot, Att
 		super(state);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onRemove(Block block) {
 		if (block.getState() instanceof Skull) {
@@ -31,6 +32,7 @@ public class SkullSnapshot extends BlockSnapshot implements SpecialSnapshot, Att
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onPlace(Block block) {
 		if (block.getState() instanceof Skull) {

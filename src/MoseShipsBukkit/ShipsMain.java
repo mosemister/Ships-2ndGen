@@ -1,41 +1,30 @@
 package MoseShipsBukkit;
 
+import java.io.File;
+import java.util.Optional;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import MoseShipsBukkit.CMD.ShipsCMD;
-import MoseShipsBukkit.CMD.Commands.BlockListCMD;
-import MoseShipsBukkit.CMD.Commands.DebugCMD;
-import MoseShipsBukkit.CMD.Commands.HelpCMD;
-import MoseShipsBukkit.CMD.Commands.InfoCMD;
-import MoseShipsBukkit.CMD.Commands.SignCMD;
+import MoseShipsBukkit.CMD.Commands.*;
 import MoseShipsBukkit.Configs.Files.BlockList;
 import MoseShipsBukkit.Listeners.ShipsListeners;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.BannerSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.BrewingStandSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.ChestSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.CommandBlockSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.DispenserSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.DropperSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.FurnaceSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.HopperSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.JukeBoxSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.NoteBlockSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.PotSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.SignSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.SkullSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.SpawnerSnapshot;
-import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.TeleportSnapshot;
+import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.*;
+import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
+import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
+import MoseShipsBukkit.Ships.VesselTypes.Satic.*;
 
 public class ShipsMain extends JavaPlugin {
 
 	public static String NAME;
 	public static String VERSION;
-	public static final String[] TESTED_MC = { "1.9.4" };
+	public static final String[] TESTED_MC = { "1.10.0", "1.9.4" };
 
 	static ShipsMain PLUGIN;
 
@@ -72,6 +61,46 @@ public class ShipsMain extends JavaPlugin {
 
 	private void registerShipTypes() {
 		new OpShip.StaticOPShip();
+	}
+	
+	private void loadShips(){
+		Bukkit.getScheduler().scheduleSyncDelayedTask(this, new Runnable(){
+
+			@Override
+			public void run() {
+				String goodFiles = null;
+				for(StaticShipType type : StaticShipTypeUtil.getTypes()){
+					String badFiles = null;
+					File folder = new File("plugins/Ships/VesselData/" + type.getName());
+					File[] files = folder.listFiles();
+					if(files != null){
+					for(File file : files){
+						Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
+						if(!opShip.isPresent()){
+							if(badFiles == null){
+								badFiles = file.getName().replace(".yml", "");
+							}else{
+								badFiles = badFiles + ", " + file.getName().replace(".yml", "");
+							}
+						}else{
+							if(goodFiles == null){
+								goodFiles = opShip.get().getName();
+							}else{
+								goodFiles = goodFiles + ", " + opShip.get().getName();
+							}
+						}
+					}
+					if(badFiles != null){
+						Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "The following " + type.getName() + " have issues loading. Use '/Ships info <ship name>' if you want more detail on the failed load \n " + badFiles);
+					}
+					}
+				}
+				if(goodFiles != null){
+					Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "The following ships are loading without issue \n" + goodFiles);
+				}
+			}
+			
+		}, 1);
 	}
 
 	private void displayVersionChecking() {
@@ -122,8 +151,9 @@ public class ShipsMain extends JavaPlugin {
 		registerCMDs();
 		registerShipTypes();
 		displayVersionChecking();
+		loadShips();
 
-	}
+	} 
 
 	public static String formatCMDHelp(String message) {
 		return ChatColor.AQUA + message;

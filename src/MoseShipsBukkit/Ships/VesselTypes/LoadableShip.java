@@ -95,6 +95,13 @@ public abstract class LoadableShip extends ShipsData {
 	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z) {
 		return Movement.teleport(this, loc, X, Y, Z);
 	}
+	
+	@Override
+	public List<Block> updateBasicStructure() {
+		List<Block> structure = super.updateBasicStructure();
+		getLocalDatabase().saveBasicShip(this);
+		return structure;
+	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
@@ -117,22 +124,32 @@ public abstract class LoadableShip extends ShipsData {
 		return this;
 	}
 
-	public static void addToRam(LoadableShip type) {
+	public static boolean addToRam(LoadableShip type) {
+		for(LoadableShip ship : SHIPS){
+			if(ship.getName().equalsIgnoreCase(type.getName())){
+				return false;
+			}
+		}
 		SHIPS.add(type);
+		return true;
 	}
 
 	public static Optional<LoadableShip> getShip(String name) {
 		for (LoadableShip ship : SHIPS) {
+			System.out.println("ship found: " + ship.getName());
 			if (ship.getName().equalsIgnoreCase(name)) {
 				return Optional.of(ship);
 			}
 		}
+		System.out.println("Attempting to force load " + name);
 		return ShipLoader.loadShip(name);
 	}
 
 	public static Optional<LoadableShip> getShip(SignType type, Sign sign, boolean refresh) {
+		System.out.println("type: " + type.name());
 		if (type.equals(SignType.LICENCE)) {
 			String text = sign.getLine(2);
+			System.out.println("Attempting to find " + text);
 			return getShip(ChatColor.stripColor(text));
 		} else {
 			return getShip(sign.getBlock(), refresh);
@@ -149,6 +166,7 @@ public abstract class LoadableShip extends ShipsData {
 			}
 		}
 		for (LoadableShip ship : getShips()) {
+			System.out.println("loaded Ship");
 			if (updateStructure) {
 				ship.updateBasicStructure();
 			}
@@ -167,16 +185,20 @@ public abstract class LoadableShip extends ShipsData {
 		List<LoadableShip> ships = new ArrayList<LoadableShip>();
 		ships.addAll(SHIPS);
 		for (StaticShipType type : StaticShipType.TYPES) {
-			File[] files = new File("config/Ships/VesselData/" + type.getName()).listFiles();
+			File[] files = new File("plugins/Ships/VesselData/" + type.getName()).listFiles();
 			if (files != null) {
 				for (File file : files) {
 					String name = file.getName().replace(".yml", "");
+					boolean check = false;
 					for (LoadableShip ship : ships) {
-						if (!ship.equals(name)) {
-							Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
-							if (opShip.isPresent()) {
-								ships.add(opShip.get());
-							}
+						if (ship.equals(name)) {
+							check = true;
+						}
+					}
+					if(!check){
+						Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
+						if (opShip.isPresent()) {
+							ships.add(opShip.get());
 						}
 					}
 				}
@@ -192,7 +214,7 @@ public abstract class LoadableShip extends ShipsData {
 				ships.add(ship);
 			}
 		}
-		File[] files = new File("config/Ships/VesselData/" + type.getName()).listFiles();
+		File[] files = new File("plugins/Ships/VesselData/" + type.getName()).listFiles();
 		if (files != null) {
 			for (File file : files) {
 				String name = file.getName().replace(".yml", "");
