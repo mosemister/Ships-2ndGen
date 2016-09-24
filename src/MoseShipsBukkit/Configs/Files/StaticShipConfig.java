@@ -1,6 +1,7 @@
 package MoseShipsBukkit.Configs.Files;
 
 import java.io.File;
+import java.io.IOException;
 
 import MoseShipsBukkit.Configs.BasicConfig;
 
@@ -14,10 +15,12 @@ public class StaticShipConfig extends BasicConfig {
 
 	public StaticShipConfig(File file) {
 		super(file);
+		new IOException("File config " + file.getName()).printStackTrace();
 	}
 	
 	public StaticShipConfig(String name) {
 		super(new File("plugins/Ships/Configuration/ShipTypes/" + name + ".yml"));
+		new IOException("File config " + name).printStackTrace();
 	}
 	
 	public int getDefaultSpeed(){

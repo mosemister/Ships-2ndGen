@@ -129,6 +129,7 @@ public class WaterShip extends WaterType implements LiveRequiredPercent{
 			StaticShipTypeUtil.inject(this);
 			File file = new File("plugins/Ships/Configuration/ShipTypes/WaterShip.yml");
 			if(!file.exists()){
+				System.out.println("file does not exist");
 				StaticShipConfig config = new StaticShipConfig(file);
 				config.set(2, StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
 				config.set(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
