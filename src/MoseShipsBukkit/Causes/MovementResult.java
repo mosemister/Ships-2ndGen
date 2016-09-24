@@ -56,6 +56,15 @@ public class MovementResult {
 	}
 
 	public static abstract class CauseKeys<T extends Object> {
+		
+		public static CauseKeys<Boolean> NOT_IN_WATER = new CauseKeys<Boolean>() {
+			
+			@Override
+			public void sendMessage(final Player player, Object value) {
+				player.sendMessage(ShipsMain.format("Ship is not in water", true));
+			};
+			
+		};
 
 		public static CauseKeys<List<MovingBlock>> MOVING_BLOCKS = new CauseKeys<List<MovingBlock>>() {
 
@@ -138,13 +147,13 @@ public class MovementResult {
 			}
 
 		};
-		public static CauseKeys<TwoStore<BlockState, Integer>> NOT_ENOUGH_PERCENT = new CauseKeys<TwoStore<BlockState, Integer>>() {
+		public static CauseKeys<TwoStore<BlockState, Float>> NOT_ENOUGH_PERCENT = new CauseKeys<TwoStore<BlockState, Float>>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof TwoStore) {
-					TwoStore<BlockState, Integer> value2 = (TwoStore<BlockState, Integer>) value;
+					TwoStore<BlockState, Float> value2 = (TwoStore<BlockState, Float>) value;
 					player.sendMessage(ShipsMain.format("You need " + value2.getSecond() + " more blocks of "
 							+ value2.getFirst().getMaterial() + ":" + value2.getFirst().getData(), true));
 				}

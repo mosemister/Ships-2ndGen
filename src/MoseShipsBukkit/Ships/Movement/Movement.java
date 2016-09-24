@@ -14,6 +14,7 @@ import MoseShipsBukkit.Ships.Movement.Collide.CollideType;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithmUtils;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.WaterShip;
 
 public class Movement {
 
@@ -21,7 +22,35 @@ public class Movement {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		for (Block loc : ship.getBasicStructure()) {
+		List<Block> structure = ship.getBasicStructure();
+		if(ship instanceof WaterShip){
+			for(Block block : structure){
+				for(Block block2 : structure){
+					if((block.getX() == block2.getX())){
+						Block small = block2;
+						if(block.getX() > block2.getX()){
+							small = block;
+						}
+						int def = block2.getX() - block.getX();
+						for(int A = 0; A < def; A++){
+							Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+							structure.add(loc.getBlock());
+						}
+					}else if(block.getZ() == block2.getZ()){
+						Block small = block2;
+						if(block.getZ() > block2.getZ()){
+							small = block;
+						}
+						int def = block2.getZ() - block.getZ();
+						for(int A = 0; A < def; A++){
+							Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+							structure.add(loc.getBlock());
+						}
+					}
+				}
+			}
+		}
+		for (Block loc : structure) {
 			MovingBlock block = new MovingBlock(loc, X, Y, Z);
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);

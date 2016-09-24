@@ -1,5 +1,6 @@
 package MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +9,10 @@ import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
+import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
+import MoseShipsBukkit.Configs.Files.StaticShipConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
@@ -71,8 +74,28 @@ public class WaterShip extends WaterType implements LiveRequiredPercent{
 
 	@Override
 	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {
-		// TODO Auto-generated method stub
-		return null;
+		MovementResult result = new MovementResult();
+		int waterLevel = getWaterLevel();
+		switch(waterLevel){
+			case -1:
+				result.put(MovementResult.CauseKeys.NOT_IN_WATER, true);
+				return Optional.of(result);
+			default:
+				int blockCount = 0;
+				for(MovingBlock block : blocks){
+					if(BlockState.contains(block.getOrigin().getBlock(), g_materials)){
+						blockCount++;
+					}
+				}
+				float percent = (blockCount*100)/blocks.size();
+				if(percent >= g_block_percent){
+					return Optional.empty();
+				}else{
+					result.put(MovementResult.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(g_materials[0], (g_block_percent - percent)));
+					return Optional.of(result);
+				}
+				
+		}
 	}
 
 	@Override
@@ -104,26 +127,39 @@ public class WaterShip extends WaterType implements LiveRequiredPercent{
 		
 		public StaticWaterShip(){
 			StaticShipTypeUtil.inject(this);
+			File file = new File("plugins/Ships/Configuration/ShipTypes/WaterShip.yml");
+			if(!file.exists()){
+				StaticShipConfig config = new StaticShipConfig(file);
+				config.set(2, StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
+				config.set(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
+				config.set(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
+				config.set(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
+				config.set(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
+				config.save();
+			}
 		}
 
 		@Override
 		public String getName() {
-			return "WaterShip";
+			return "Ship";
 		}
 
 		@Override
 		public int getDefaultSpeed() {
-			return 2;
+			StaticShipConfig config = new StaticShipConfig("WaterShip");
+			return config.getDefaultSpeed();
 		}
 
 		@Override
 		public int getBoostSpeed() {
-			return 2;
+			StaticShipConfig config = new StaticShipConfig("WaterShip");
+			return config.getDefaultBoostSpeed();
 		}
 
 		@Override
 		public int getAltitudeSpeed() {
-			return 2;
+			StaticShipConfig config = new StaticShipConfig("WaterShip");
+			return config.getDefaultAltitudeSpeed();
 		}
 
 		@Override
@@ -132,9 +168,8 @@ public class WaterShip extends WaterType implements LiveRequiredPercent{
 		}
 
 		@Override
-		public Optional<LoadableShip> createVessel(String name, Block licence) {
-			// TODO Auto-generated method stub
-			return null;
+		public Optional<LoadableShip> createVessel(String name, Block sign) {
+			return Optional.of((LoadableShip) new WaterShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
@@ -147,7 +182,7 @@ public class WaterShip extends WaterType implements LiveRequiredPercent{
 			BlockState[] states = BlockState.getStates(sStates);
 			ship.setPercentBlocks(states);
 			
-			return Optional.of(ship);
+			return Optional.of((LoadableShip)ship);
 		}
 
 		@Override

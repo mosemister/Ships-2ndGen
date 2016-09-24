@@ -38,7 +38,6 @@ public class Prototype3 implements BasicBlockFinder {
 			Block block = loc.getRelative(face);
 			if (BlockList.BLOCK_LIST.contains(block.getType(), block.getData(), ListType.MATERIALS)) {
 				if (!BLOCKS.contains(block)) {
-					System.out.println("prototype 3: " + block);
 					BLOCKS.add(block);
 					getNextBlock(limit, block, directions);
 				}
