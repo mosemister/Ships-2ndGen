@@ -1,26 +1,26 @@
 package MoseShipsBukkit.Configs.Files;
 
 import java.io.File;
-import java.io.IOException;
 
 import MoseShipsBukkit.Configs.BasicConfig;
 
 public class StaticShipConfig extends BasicConfig {
 	
-	public static final String DATABASE_DEFAULT_SPEED = "";
-	public static final String DATABASE_DEFAULT_BOOST = "";
-	public static final String DATABASE_DEFAULT_ALTITUDE = "";
-	public static final String DATABASE_DEFAULT_MAX_SIZE = "";
-	public static final String DATABASE_DEFAULT_MIN_SIZE = "";
+	public static final String DATABASE_DEFAULT_SPEED = "Default.Speed.Speed";
+	public static final String DATABASE_DEFAULT_BOOST = "Default.Speed.Boost";
+	public static final String DATABASE_DEFAULT_ALTITUDE = "Default.Speed.Altitude";
+	public static final String DATABASE_DEFAULT_MAX_SIZE = "Default.Size.Max";
+	public static final String DATABASE_DEFAULT_MIN_SIZE = "Default.Size.Min";
+	
+	public static final String DATABASE_REQUIRED_BLOCKS = "Default.Requirement.Block.Blocks";
+	public static final String DATABASE_REQUIRED_PERCENT = "Default.Requirement.Block.Percent";
 
 	public StaticShipConfig(File file) {
 		super(file);
-		new IOException("File config " + file.getName()).printStackTrace();
 	}
 	
 	public StaticShipConfig(String name) {
 		super(new File("plugins/Ships/Configuration/ShipTypes/" + name + ".yml"));
-		new IOException("File config " + name).printStackTrace();
 	}
 	
 	public int getDefaultSpeed(){

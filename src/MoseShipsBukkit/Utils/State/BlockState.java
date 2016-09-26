@@ -28,6 +28,11 @@ public class BlockState {
 		return DATA;
 	}
 	
+	@SuppressWarnings("deprecation")
+	public String toNoString(){
+		return MATERIAL.getId() + ":" + DATA;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof BlockState){
@@ -63,7 +68,7 @@ public class BlockState {
 		BlockState[] states2 = new BlockState[states.size()];
 		for(int A = 0; A < states.size(); A++){
 			String value = states.get(A);
-			String[] args = value.split(",");
+			String[] args = value.split(":");
 			byte data = Byte.parseByte(args[1]);
 			Material material = Material.getMaterial(Integer.parseInt(args[0]));
 			

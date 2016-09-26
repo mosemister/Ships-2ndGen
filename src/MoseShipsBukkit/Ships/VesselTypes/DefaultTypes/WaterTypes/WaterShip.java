@@ -2,11 +2,13 @@ package MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import MoseShips.Stores.TwoStore;
@@ -131,11 +133,13 @@ public class WaterShip extends WaterType implements LiveRequiredPercent{
 			if(!file.exists()){
 				System.out.println("file does not exist");
 				StaticShipConfig config = new StaticShipConfig(file);
-				config.set(2, StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
-				config.set(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
-				config.set(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
-				config.set(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
-				config.set(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
+				config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
+				config.setOverride(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
+				config.setOverride(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
+				config.setOverride(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
+				config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
+				config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte)-1).toNoString()), StaticShipConfig.DATABASE_REQUIRED_BLOCKS);
+				config.setOverride(40, StaticShipConfig.DATABASE_REQUIRED_PERCENT);
 				config.save();
 			}
 		}
@@ -188,14 +192,16 @@ public class WaterShip extends WaterType implements LiveRequiredPercent{
 
 		@Override
 		public int getDefaultRequiredPercent() {
-			// TODO Auto-generated method stub
-			return 0;
+			StaticShipConfig config = new StaticShipConfig("WaterShip");
+			return config.get(Integer.class, StaticShipConfig.DATABASE_REQUIRED_PERCENT);
 		}
 
 		@Override
 		public BlockState[] getDefaultPersentBlocks() {
-			// TODO Auto-generated method stub
-			return null;
+			StaticShipConfig config = new StaticShipConfig("WaterShip");
+			List<String> list = config.getList(String.class, StaticShipConfig.DATABASE_REQUIRED_BLOCKS);
+			BlockState[] states = BlockState.getStates(list);
+			return states;
 		}
 		
 	}

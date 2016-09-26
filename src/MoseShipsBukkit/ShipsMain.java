@@ -149,9 +149,9 @@ public class ShipsMain extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ShipsListeners(), this);
 		getCommand("Ships").setExecutor(new ShipsCMD.Executer());
 		BlockList.BLOCK_LIST.reload();
+		registerShipTypes();
 		registerSnapshotTypes();
 		registerCMDs();
-		registerShipTypes();
 		displayVersionChecking();
 		loadShips();
 
