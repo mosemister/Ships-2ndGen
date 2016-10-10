@@ -16,13 +16,13 @@ import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
  * algorithms will fire the targeted SectionMoveEvent, however custom algorithms
  * may not.
  */
-public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEvent<S> {
+public abstract class SectionMovedEvent extends ShipsEvent {
 
-	public SectionMovedEvent(S ship) {
+	public SectionMovedEvent(LoadableShip ship) {
 		super(ship);
 	}
 
-	public static class BlockMovedEvent<S extends LoadableShip> extends SectionMovedEvent<S> {
+	public static class BlockMovedEvent extends SectionMovedEvent {
 
 		MovingBlock BLOCK;
 
@@ -32,7 +32,7 @@ public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEve
 		 * block moving instead of all the parts
 		 */
 
-		public BlockMovedEvent(S ship, MovingBlock block) {
+		public BlockMovedEvent(LoadableShip ship, MovingBlock block) {
 			super(ship);
 			BLOCK = block;
 		}
@@ -46,7 +46,7 @@ public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEve
 		}
 	}
 
-	public static class EntityMovedEvent<S extends LoadableShip> extends SectionMovedEvent<S> {
+	public static class EntityMovedEvent extends SectionMovedEvent {
 
 		Location LOCATION;
 		Entity ENTITY;
@@ -57,7 +57,7 @@ public abstract class SectionMovedEvent<S extends LoadableShip> extends ShipsEve
 		 * entity moving instead of all the parts
 		 */
 
-		public EntityMovedEvent(S ship, Entity entity, Location movingTo) {
+		public EntityMovedEvent(LoadableShip ship, Entity entity, Location movingTo) {
 			super(ship);
 			LOCATION = movingTo;
 			ENTITY = entity;

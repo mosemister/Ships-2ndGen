@@ -20,55 +20,47 @@ import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterType;
 public class Movement {
 
 	public static Optional<MovementResult> move(LoadableShip ship, int X, int Y, int Z) {
-		System.out.println("moved by XYZ");
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
 		final int D = structure.size();
-		if(ship instanceof WaterType){
-			System.out.println("is water type");
-			for(int B = 0; B < D; B++){
-				for(int C = 0; C < D; C++){
-					if(B != C){
+		if (ship instanceof WaterType) {
+			for (int B = 0; B < D; B++) {
+				for (int C = 0; C < D; C++) {
+					if (B != C) {
 						Block block = structure.get(B);
 						Block block2 = structure.get(C);
-					if((block.getX() == block2.getX())){
-						Block small = block2;
-						Block large = block;
-						if(block.getZ() > block2.getZ()){
-							small = block;
-							large = block2;
-						}
-						int def = large.getZ() - small.getZ();
-						System.out.println("{ \n " + small.getX() + ", " + small.getY() + ", " + small.getZ()
-						+ "\n " + large.getX() + ", " + large.getY() + ", " + large.getZ()
-						+ "\n " + def);
-						
-						
-						for(int A = 0; A < def; A++){
-							Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
-							if(loc.getBlock().getType().equals(Material.AIR)){
-								System.out.println("Added block on X");
-								structure.add(loc.getBlock());
+						if ((block.getX() == block2.getX())) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getZ() - small.getZ();
+
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						} else if (block.getZ() == block2.getZ()) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getX() - small.getX();
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
 							}
 						}
-					}else if(block.getZ() == block2.getZ()){
-						Block small = block2;
-						Block large = block;
-						if(block.getZ() > block2.getZ()){
-							small = block;
-							large = block2;
-						}
-						int def = large.getX() - small.getX();
-						for(int A = 0; A < def; A++){
-							Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
-							if(loc.getBlock().getType().equals(Material.AIR)){
-								System.out.println("Added block on Z");
-								structure.add(loc.getBlock());
-							}
-						}
-					}
 					}
 				}
 			}
@@ -89,7 +81,49 @@ public class Movement {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
-		for (Block loc : ship.getBasicStructure()) {
+		List<Block> structure = ship.getBasicStructure();
+		final int D = structure.size();
+		if (ship instanceof WaterType) {
+			for (int B = 0; B < D; B++) {
+				for (int C = 0; C < D; C++) {
+					if (B != C) {
+						Block block = structure.get(B);
+						Block block2 = structure.get(C);
+						if ((block.getX() == block2.getX())) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getZ() - small.getZ();
+
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						} else if (block.getZ() == block2.getZ()) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getX() - small.getX();
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for (Block loc : structure) {
 			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateRight(centre.getBlock());
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
@@ -105,7 +139,49 @@ public class Movement {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
-		for (Block loc : ship.getBasicStructure()) {
+		List<Block> structure = ship.getBasicStructure();
+		final int D = structure.size();
+		if (ship instanceof WaterType) {
+			for (int B = 0; B < D; B++) {
+				for (int C = 0; C < D; C++) {
+					if (B != C) {
+						Block block = structure.get(B);
+						Block block2 = structure.get(C);
+						if ((block.getX() == block2.getX())) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getZ() - small.getZ();
+
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						} else if (block.getZ() == block2.getZ()) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getX() - small.getX();
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for (Block loc : structure) {
 			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateLeft(centre.getBlock());
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
@@ -126,13 +202,54 @@ public class Movement {
 		return Optional.of(new MovementResult());
 	}
 
-	public static Optional<MovementResult> teleport(LoadableShip ship, Location loc) {
-		System.out.println("teleport on NO XYZ");
+	public static Optional<MovementResult> teleport(LoadableShip ship, Location tel) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		for (Block loc2 : ship.getBasicStructure()) {
-			MovingBlock block = new MovingBlock(loc2, loc);
+		List<Block> structure = ship.getBasicStructure();
+		final int D = structure.size();
+		if (ship instanceof WaterType) {
+			for (int B = 0; B < D; B++) {
+				for (int C = 0; C < D; C++) {
+					if (B != C) {
+						Block block = structure.get(B);
+						Block block2 = structure.get(C);
+						if ((block.getX() == block2.getX())) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getZ() - small.getZ();
+
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						} else if (block.getZ() == block2.getZ()) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getX() - small.getX();
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for (Block loc2 : structure) {
+			MovingBlock block = new MovingBlock(loc2, tel);
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
 			}
@@ -142,13 +259,54 @@ public class Movement {
 		return move(ship, blocks);
 	}
 
-	public static Optional<MovementResult> teleport(LoadableShip ship, Location loc, int X, int Y, int Z) {
-		System.out.println("teleport on XYZ");
+	public static Optional<MovementResult> teleport(LoadableShip ship, Location tel, int X, int Y, int Z) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		Location loc2 = loc.add(X, Y, Z);
-		for (Block loc3 : ship.getBasicStructure()) {
+		Location loc2 = tel.add(X, Y, Z);
+		List<Block> structure = ship.getBasicStructure();
+		final int D = structure.size();
+		if (ship instanceof WaterType) {
+			for (int B = 0; B < D; B++) {
+				for (int C = 0; C < D; C++) {
+					if (B != C) {
+						Block block = structure.get(B);
+						Block block2 = structure.get(C);
+						if ((block.getX() == block2.getX())) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getZ() - small.getZ();
+
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						} else if (block.getZ() == block2.getZ()) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getX() - small.getX();
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for (Block loc3 : structure) {
 			MovingBlock block = new MovingBlock(loc3, loc2);
 			if (block.getCollision(ship.getBasicStructure()).equals(CollideType.COLLIDE)) {
 				return Optional.of(cause);
@@ -160,12 +318,53 @@ public class Movement {
 	}
 
 	public static Optional<MovementResult> teleport(LoadableShip ship, StoredMovement movement) {
-		System.out.println("teleport on stored movement");
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Block loc2 = movement.getEndResult(ship.getLocation().getBlock());
-		for (Block loc3 : ship.getBasicStructure()) {
+		List<Block> structure = ship.getBasicStructure();
+		final int D = structure.size();
+		if (ship instanceof WaterType) {
+			for (int B = 0; B < D; B++) {
+				for (int C = 0; C < D; C++) {
+					if (B != C) {
+						Block block = structure.get(B);
+						Block block2 = structure.get(C);
+						if ((block.getX() == block2.getX())) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getZ() - small.getZ();
+
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						} else if (block.getZ() == block2.getZ()) {
+							Block small = block2;
+							Block large = block;
+							if (block.getZ() > block2.getZ()) {
+								small = block;
+								large = block2;
+							}
+							int def = large.getX() - small.getX();
+							for (int A = 0; A < def; A++) {
+								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+								if (loc.getBlock().getType().equals(Material.AIR)) {
+									structure.add(loc.getBlock());
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		for (Block loc3 : structure) {
 			MovingBlock block = new MovingBlock(loc3, loc2.getLocation());
 			if (movement.getRotation().isPresent()) {
 				block.rotate(movement.getRotation().get(), ship.getLocation().getBlock());
@@ -191,7 +390,7 @@ public class Movement {
 		double X = to.getX() - origin.getX();
 		double Y = to.getY() - origin.getY();
 		double Z = to.getZ() - origin.getZ();
-		for(Entity entity : entities){
+		for (Entity entity : entities) {
 			Location eLoc = entity.getLocation();
 			double tX = eLoc.getX() + X;
 			double tY = eLoc.getY() + Y;
@@ -206,7 +405,8 @@ public class Movement {
 	}
 
 	public static enum Rotate {
-		LEFT, RIGHT;
+		LEFT,
+		RIGHT;
 	}
 
 }

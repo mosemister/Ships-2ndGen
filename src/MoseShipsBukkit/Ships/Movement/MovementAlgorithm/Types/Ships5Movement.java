@@ -37,13 +37,11 @@ public class Ships5Movement implements MovementAlgorithm {
 			MovingBlock block = blocks.get(A);
 			newStructure.add(block.getMovingTo().getBlock());
 			block.move();
-			if (type.getLocation().getBlock().equals(block.getOrigin().getBlock())){
+			if (type.getLocation().getBlock().equals(block.getOrigin().getBlock())) {
 				lic = block.getMovingTo().getBlock();
-				System.out.println("Licence block updated: " + lic);
 			}
 		}
-		/*
-		 * blocks.stream().forEach(block -> {
+		/* blocks.stream().forEach(block -> {
 		 * newStructure.add(block.getMovingTo());
 		 * block.move(BlockChangeFlag.NONE); MovementType mType =
 		 * block.getMovementType(); Optional<Direction> opConnected =
@@ -54,8 +52,7 @@ public class Ships5Movement implements MovementAlgorithm {
 		 * BlockRotate.getRotation(opConnected.get(), RotateType.LEFT); } break;
 		 * default: break;
 		 * 
-		 * } });
-		 */
+		 * } }); */
 		Location loc = blocks.get(0).getMovingTo().clone().subtract(blocks.get(0).getOrigin());
 		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
 				loc.getBlockZ());

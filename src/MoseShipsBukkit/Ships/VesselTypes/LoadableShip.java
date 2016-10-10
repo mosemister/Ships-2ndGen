@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Ships.ShipsData;
@@ -33,8 +36,12 @@ public abstract class LoadableShip extends ShipsData {
 
 	public abstract Map<String, Object> getInfo();
 
+	public abstract void onSave(ShipsLocalDatabase database);
+
+	public abstract void onRemove(@Nullable Player player);
+
 	public abstract StaticShipType getStatic();
-	
+
 	protected boolean g_moving = false;
 	protected int g_max_blocks = 4000;
 	protected int g_min_blocks = 200;
@@ -48,31 +55,41 @@ public abstract class LoadableShip extends ShipsData {
 	public LoadableShip(ShipsData data) {
 		super(data);
 	}
-	
-	public int getMaxBlocks(){
+
+	public int getMaxBlocks() {
 		return g_max_blocks;
 	}
-	
-	public LoadableShip setMaxBlocks(int A){
+
+	public LoadableShip setMaxBlocks(int A) {
 		g_max_blocks = A;
 		return this;
 	}
 
-	public int getMinBlocks(){
+	public int getMinBlocks() {
 		return g_min_blocks;
 	}
-	
-	public LoadableShip setMinBlocks(int A){
+
+	public LoadableShip setMinBlocks(int A) {
 		g_min_blocks = A;
 		return this;
 	}
-	
-	public boolean isMoving(){
+
+	public boolean isMoving() {
 		return g_moving;
 	}
-	
-	public void setMoving(boolean check){
+
+	public void setMoving(boolean check) {
 		g_moving = check;
+	}
+
+	public void remove() {
+		remove(null);
+	}
+
+	public void remove(Player player) {
+		SHIPS.remove(this);
+		onRemove(player);
+		getLocalDatabase().getFile().delete();
 	}
 
 	public ShipsLocalDatabase getLocalDatabase() {
@@ -111,7 +128,7 @@ public abstract class LoadableShip extends ShipsData {
 	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z) {
 		return Movement.teleport(this, loc, X, Y, Z);
 	}
-	
+
 	@Override
 	public List<Block> updateBasicStructure() {
 		List<Block> structure = super.updateBasicStructure();
@@ -141,8 +158,8 @@ public abstract class LoadableShip extends ShipsData {
 	}
 
 	public static boolean addToRam(LoadableShip type) {
-		for(LoadableShip ship : SHIPS){
-			if(ship.getName().equalsIgnoreCase(type.getName())){
+		for (LoadableShip ship : SHIPS) {
+			if (ship.getName().equalsIgnoreCase(type.getName())) {
 				return false;
 			}
 		}
@@ -152,20 +169,16 @@ public abstract class LoadableShip extends ShipsData {
 
 	public static Optional<LoadableShip> getShip(String name) {
 		for (LoadableShip ship : SHIPS) {
-			System.out.println("ship found: " + ship.getName());
 			if (ship.getName().equalsIgnoreCase(name)) {
 				return Optional.of(ship);
 			}
 		}
-		System.out.println("Attempting to force load " + name);
 		return ShipLoader.loadShip(name);
 	}
 
 	public static Optional<LoadableShip> getShip(SignType type, Sign sign, boolean refresh) {
-		System.out.println("type: " + type.name());
 		if (type.equals(SignType.LICENCE)) {
 			String text = sign.getLine(2);
-			System.out.println("Attempting to find " + text);
 			return getShip(ChatColor.stripColor(text));
 		} else {
 			return getShip(sign.getBlock(), refresh);
@@ -182,7 +195,6 @@ public abstract class LoadableShip extends ShipsData {
 			}
 		}
 		for (LoadableShip ship : getShips()) {
-			System.out.println("loaded Ship");
 			if (updateStructure) {
 				ship.updateBasicStructure();
 			}
@@ -211,7 +223,7 @@ public abstract class LoadableShip extends ShipsData {
 							check = true;
 						}
 					}
-					if(!check){
+					if (!check) {
 						Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
 						if (opShip.isPresent()) {
 							ships.add(opShip.get());

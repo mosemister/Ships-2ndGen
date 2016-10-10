@@ -1,19 +1,21 @@
 package MoseShipsBukkit.CMD.Commands;
 
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.CMD.ShipsCMD;
+import MoseShipsBukkit.Events.Vessel.Command.ShipTrackEvent;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Signs.ShipsSigns;
+import MoseShipsBukkit.Utils.State.BlockState;
 
 public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 
@@ -23,7 +25,9 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 
 	@Override
 	public String[] getAliases() {
-		String[] args = { "sign" };
+		String[] args = {
+			"sign"
+		};
 		return args;
 	}
 
@@ -61,36 +65,33 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 	@SuppressWarnings("deprecation")
 	public void track(final Player player, int sec) {
 		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
-		System.out.println("targeted block found");
 		if (loc.getState() instanceof Sign) {
-			System.out.println("targeted block is Sign");
 			Sign sign = (Sign) loc.getState();
 			Optional<ShipsSigns.SignType> sSign = ShipsSigns.getSignType(sign);
 			if (sSign.isPresent()) {
-				System.out.println("is a ship sign");
 				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {
-					System.out.println("Ship found");
 					LoadableShip ship = opShip.get();
-					final List<Block> structure = ship.updateBasicStructure();
-					player.sendMessage("Now showing the structure of "+ ship.getName() + " (size of " + structure.size() + ") for " + sec + " seconds");
-					for (Block block : structure) {
-						player.sendBlockChange(block.getLocation(), Material.BEDROCK, (byte) 0);
+					final ShipTrackEvent event = new ShipTrackEvent(ship);
+					Bukkit.getServer().getPluginManager().callEvent(event);
+					player.sendMessage("Now showing the structure of " + ship.getName() + " (size of " + event.getShowing().size() + ") for " + sec + " seconds");
+					for (Entry<Location, BlockState> entry : event.getShowing().entrySet()) {
+						player.sendBlockChange(entry.getKey(), entry.getValue().getMaterial(), entry.getValue().getData());
 					}
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 
 						@Override
 						public void run() {
-							for (Block block : structure) {
-								player.sendBlockChange(block.getLocation(), block.getType(), block.getData());
-								if(block.getState() instanceof Sign){
-									Sign sign = (Sign)block.getState();
-									player.sendSignChange(block.getLocation(), sign.getLines());
+							for (Entry<Location, BlockState> entry : event.getShowing().entrySet()) {
+								player.sendBlockChange(entry.getKey(), entry.getValue().getMaterial(), entry.getValue().getData());
+								if (entry.getKey().getBlock().getState() instanceof Sign) {
+									Sign sign = (Sign) entry.getKey().getBlock().getState();
+									player.sendSignChange(entry.getKey(), sign.getLines());
 								}
 							}
 						}
 
-					}, (sec*20));
+					}, (sec * 20));
 				}
 			}
 		}

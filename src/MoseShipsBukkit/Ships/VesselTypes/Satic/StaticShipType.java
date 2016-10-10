@@ -11,7 +11,7 @@ import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
 public interface StaticShipType {
-	
+
 	public static List<StaticShipType> TYPES = new ArrayList<StaticShipType>();
 
 	public String getName();

@@ -24,15 +24,15 @@ public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot,
 			Furnace furnace = (Furnace) block.getState();
 			FurnaceInventory inv = furnace.getInventory();
 			ItemStack fuel = inv.getFuel();
-			if(fuel != null){
+			if (fuel != null) {
 				g_fuel = fuel.clone();
 			}
 			ItemStack burn = inv.getSmelting();
-			if(burn != null){
+			if (burn != null) {
 				g_burn = burn.clone();
 			}
 			ItemStack result = inv.getResult();
-			if(result != null){
+			if (result != null) {
 				g_result = result.clone();
 			}
 			inv.clear();

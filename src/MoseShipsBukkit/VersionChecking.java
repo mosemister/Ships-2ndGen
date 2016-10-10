@@ -76,7 +76,9 @@ public class VersionChecking {
 	}
 
 	public enum VersionOutcome {
-		GREATER, LOWER, EQUAL;
+		GREATER,
+		LOWER,
+		EQUAL;
 	}
 
 }

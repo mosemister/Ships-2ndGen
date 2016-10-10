@@ -134,7 +134,7 @@ public class MovingBlock {
 		double X = MOVING_TO.getX() - (MOVING_TO.getX() - symmetry) * 2.0D - shift;
 		double Y = MOVING_TO.getY();
 		double Z = MOVING_TO.getZ() + shift;
-		MOVING_TO = new Location(MOVING_TO.getWorld(), X, Y, Z);
+		MOVING_TO = new Location(MOVING_TO.getWorld(), Z, Y, X);
 		return this;
 	}
 
@@ -146,7 +146,7 @@ public class MovingBlock {
 		double X = MOVING_TO.getX() - shift;
 		double Y = MOVING_TO.getY();
 		double Z = MOVING_TO.getZ() - (MOVING_TO.getZ() - symmetry) * 2.0 + shift;
-		MOVING_TO = new Location(MOVING_TO.getWorld(), X, Y, Z);
+		MOVING_TO = new Location(MOVING_TO.getWorld(), Z, Y, X);
 		return this;
 	}
 
@@ -192,7 +192,10 @@ public class MovingBlock {
 	}
 
 	public enum Priority {
-		NORMAL, PRIORITY, SPECIAL, AIR;
+		NORMAL,
+		PRIORITY,
+		SPECIAL,
+		AIR;
 	}
 
 }

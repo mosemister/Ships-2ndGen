@@ -5,16 +5,16 @@ import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Ships.ShipsData;
 
-public abstract class ShipsEvent<T extends ShipsData> extends Event {
+public abstract class ShipsEvent extends Event {
 
-	T SHIP;
+	ShipsData SHIP;
 	protected static HandlerList HANDLER;
 
-	public ShipsEvent(T ship) {
+	public ShipsEvent(ShipsData ship) {
 		SHIP = ship;
 	}
 
-	public T getShip() {
+	public ShipsData getShip() {
 		return SHIP;
 	}
 

@@ -55,11 +55,7 @@ public class ShipsSigns {
 	public enum SignType {
 		LICENCE(ChatColor.YELLOW + "[Ships]"),
 		MOVE(ChatColor.YELLOW + "[Move]", ChatColor.GREEN + "{Engine}", "Boost"),
-		WHEEL(
-				ChatColor.YELLOW + "[Wheel]",
-				ChatColor.RED + "\\\\||//",
-				ChatColor.RED + "==||==",
-				ChatColor.RED + "//==\\\\"),
+		WHEEL(ChatColor.YELLOW + "[Wheel]", ChatColor.RED + "\\\\||//", ChatColor.RED + "==||==", ChatColor.RED + "//==\\\\"),
 		EOT(ChatColor.YELLOW + "[EOT]"),
 		ALTITUDE(ChatColor.YELLOW + "[Altitude]");
 

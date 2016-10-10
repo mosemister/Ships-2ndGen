@@ -11,12 +11,12 @@ import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public abstract class ShipsTransformEvent<S extends LoadableShip> extends ShipsEvent<S> {
+public abstract class ShipsTransformEvent extends ShipsEvent {
 
 	List<MovingBlock> BLOCKS;
 	StoredMovement MOVEMENT;
 
-	public ShipsTransformEvent(S ship, StoredMovement move, List<MovingBlock> structure) {
+	public ShipsTransformEvent(LoadableShip ship, StoredMovement move, List<MovingBlock> structure) {
 		super(ship);
 		BLOCKS = structure;
 		MOVEMENT = move;
@@ -30,26 +30,26 @@ public abstract class ShipsTransformEvent<S extends LoadableShip> extends ShipsE
 		return HANDLER;
 	}
 
-	public static class Move<S extends LoadableShip> extends ShipsTransformEvent<S> {
+	public static class Move extends ShipsTransformEvent {
 
-		public Move(S ship, StoredMovement movement, List<MovingBlock> structure) {
+		public Move(LoadableShip ship, StoredMovement movement, List<MovingBlock> structure) {
 			super(ship, movement, structure);
 			MOVEMENT = movement;
 		}
 
-		public Move(S ship, Location loc, List<MovingBlock> structure) {
+		public Move(LoadableShip ship, Location loc, List<MovingBlock> structure) {
 			super(ship, new StoredMovement(loc, null, 0, 0, 0), structure);
 		}
 
-		public Move(S ship, Location loc, Movement.Rotate rotate, List<MovingBlock> structure) {
+		public Move(LoadableShip ship, Location loc, Movement.Rotate rotate, List<MovingBlock> structure) {
 			super(ship, new StoredMovement(loc, rotate, 0, 0, 0), structure);
 		}
 
-		public Move(S ship, Location loc, Movement.Rotate rotate, int X, int Y, int Z, List<MovingBlock> structure) {
+		public Move(LoadableShip ship, Location loc, Movement.Rotate rotate, int X, int Y, int Z, List<MovingBlock> structure) {
 			super(ship, new StoredMovement(loc, rotate, X, Y, Z), structure);
 		}
 
-		public Move(S ship, int X, int Y, int Z, List<MovingBlock> structure) {
+		public Move(LoadableShip ship, int X, int Y, int Z, List<MovingBlock> structure) {
 			super(ship, new StoredMovement(null, null, X, Y, Z), structure);
 		}
 
@@ -59,17 +59,17 @@ public abstract class ShipsTransformEvent<S extends LoadableShip> extends ShipsE
 
 	}
 
-	public static class Teleport<S extends LoadableShip> extends ShipsTransformEvent<S> {
+	public static class Teleport extends ShipsTransformEvent {
 
-		public Teleport(S ship, StoredMovement movement, List<MovingBlock> structure) {
+		public Teleport(LoadableShip ship, StoredMovement movement, List<MovingBlock> structure) {
 			super(ship, movement, structure);
 		}
 
 	}
 
-	public static class Rotate<S extends LoadableShip> extends ShipsTransformEvent<S> {
+	public static class Rotate extends ShipsTransformEvent {
 
-		public Rotate(S ship, StoredMovement movement, List<MovingBlock> structure) {
+		public Rotate(LoadableShip ship, StoredMovement movement, List<MovingBlock> structure) {
 			super(ship, movement, structure);
 		}
 

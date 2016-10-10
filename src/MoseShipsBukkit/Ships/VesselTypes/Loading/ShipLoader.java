@@ -52,12 +52,9 @@ public class ShipLoader {
 		OneStore<File> file = new OneStore<File>(null);
 		for (StaticShipType type : StaticShipType.TYPES) {
 			File folder = new File(root, type.getName());
-			Bukkit.getServer().getConsoleSender().sendMessage(folder.getAbsolutePath());
 			File[] files = folder.listFiles();
 			if (files != null) {
-				Bukkit.getServer().getConsoleSender().sendMessage("files dont equal null");
 				for (File sFile : files) {
-					Bukkit.getServer().getConsoleSender().sendMessage(sFile.getAbsolutePath());
 					if (sFile.getName().equals(name + ".yml")) {
 						file.setFirst(sFile);
 						break;
@@ -78,7 +75,7 @@ public class ShipLoader {
 		String sSubPilots = config.get(String.class, ShipsData.DATABASE_SUB_PILOTS);
 		String[] sTel = config.get(String.class, ShipsData.DATABASE_TELEPORT).split(",");
 		String sWorld = config.get(String.class, ShipsData.DATABASE_WORLD);
-		
+
 		if (sWorld == null) {
 			return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.UNREADABLE_WORLD);
 		}
@@ -152,8 +149,6 @@ public class ShipLoader {
 
 				Optional<LoadableShip> opShip = type.loadVessel(data, config);
 				if (opShip.isPresent()) {
-					LoadableShip ship = opShip.get();
-					System.out.println("Ship loaded: \n Max Blocks: " + ship.getMaxBlocks() + " \n Min Blocks:" + ship.getMinBlocks() + " \n Name: " + ship.getName() + " \n Structure: " + ship.getBasicStructure() + " \n Licence: " + ship.getLocation() + " \n Owner: " + ship.getOwner().get() + "\n Teleport: " + ship.getTeleportToLocation());
 					return new TwoStore<LoadableShip, ShipLoadingError>(opShip.get(), ShipLoadingError.NOT_CURRUPT);
 				} else {
 					return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.LOADER_ISSUE);

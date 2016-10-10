@@ -17,13 +17,19 @@ public class Prototype3 implements BasicBlockFinder {
 
 	@Override
 	public List<Block> getConnectedBlocks(int limit, Block loc) {
-		if(loc == null){
+		if (loc == null) {
 			throw new NullPointerException();
 		}
 		BLOCKS = new ArrayList<Block>();
 		COUNT = 0;
-		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
-				BlockFace.WEST };
+		BlockFace[] faces = {
+			BlockFace.DOWN,
+			BlockFace.EAST,
+			BlockFace.NORTH,
+			BlockFace.SOUTH,
+			BlockFace.UP,
+			BlockFace.WEST
+		};
 		getNextBlock(limit, loc, faces);
 		return BLOCKS;
 	}

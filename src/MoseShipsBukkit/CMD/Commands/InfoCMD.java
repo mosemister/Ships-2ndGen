@@ -25,7 +25,9 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 
 	@Override
 	public String[] getAliases() {
-		String[] args = { "Info" };
+		String[] args = {
+			"Info"
+		};
 		return args;
 	}
 

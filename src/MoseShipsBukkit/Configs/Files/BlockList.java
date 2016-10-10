@@ -22,24 +22,24 @@ public class BlockList extends BasicConfig {
 		super("/Configuration/BlockList");
 		applyMissing();
 	}
-	
-	public void reload(){
+
+	public void reload() {
 		BLOCKS = new HashMap<BlockState, ListType>();
 		List<BlockState> list = new ArrayList<BlockState>();
-		for(Material material : Material.values()){
-			for(byte A = -1; A < 25; A++){
+		for (Material material : Material.values()) {
+			for (byte A = -1; A < 25; A++) {
 				String value = get(String.class, material.name() + ".DataValue" + A);
-				if(value != null){
+				if (value != null) {
 					ListType type = ListType.valueFrom(value);
-					if(type == null){
+					if (type == null) {
 						list.add(new BlockState(material, A));
-					}else{
+					} else {
 						BLOCKS.put(new BlockState(material, A), type);
 					}
 				}
 			}
 		}
-		if(list.size() != 0){
+		if (list.size() != 0) {
 			Bukkit.getServer().getConsoleSender().sendMessage("The following failed to load /n" + list);
 		}
 	}
@@ -51,15 +51,15 @@ public class BlockList extends BasicConfig {
 		save();
 		return this;
 	}
-	
-	public ListType resetMaterial(Material material, byte data, ListType type){
+
+	public ListType resetMaterial(Material material, byte data, ListType type) {
 		return BLOCKS.replace(new BlockState(material, data), type);
 	}
-	
-	public List<BlockState> getBlocks(ListType type){
+
+	public List<BlockState> getBlocks(ListType type) {
 		List<BlockState> states = new ArrayList<BlockState>();
-		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
-			if(entry.getValue().equals(type)){
+		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
+			if (entry.getValue().equals(type)) {
 				states.add(entry.getKey());
 			}
 		}
@@ -227,8 +227,8 @@ public class BlockList extends BasicConfig {
 
 	public List<BlockState> getMaterialsList() {
 		List<BlockState> list = new ArrayList<BlockState>();
-		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
-			if(entry.getValue().equals(ListType.MATERIALS)){
+		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
+			if (entry.getValue().equals(ListType.MATERIALS)) {
 				list.add(entry.getKey());
 			}
 		}
@@ -237,8 +237,8 @@ public class BlockList extends BasicConfig {
 
 	public List<BlockState> getRamMaterialsList() {
 		List<BlockState> list = new ArrayList<BlockState>();
-		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
-			if(entry.getValue().equals(ListType.RAM)){
+		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
+			if (entry.getValue().equals(ListType.RAM)) {
 				list.add(entry.getKey());
 			}
 		}
@@ -247,8 +247,8 @@ public class BlockList extends BasicConfig {
 
 	public List<BlockState> getUnusedMaterialsList() {
 		List<BlockState> list = new ArrayList<BlockState>();
-		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
-			if(entry.getValue().equals(ListType.NONE)){
+		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
+			if (entry.getValue().equals(ListType.NONE)) {
 				list.add(entry.getKey());
 			}
 		}
@@ -256,14 +256,14 @@ public class BlockList extends BasicConfig {
 	}
 
 	public boolean contains(Material material, byte data, ListType type) {
-		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
-			if(entry.getKey().getMaterial().equals(material)){
-				if(entry.getValue().equals(type)){
-					if(data == -1){
+		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
+			if (entry.getKey().getMaterial().equals(material)) {
+				if (entry.getValue().equals(type)) {
+					if (data == -1) {
 						return true;
-					}else if(entry.getKey().getData() == data){
+					} else if (entry.getKey().getData() == data) {
 						return true;
-					}else if(entry.getKey().getData() == -1){
+					} else if (entry.getKey().getData() == -1) {
 						return true;
 					}
 				}
@@ -274,26 +274,28 @@ public class BlockList extends BasicConfig {
 
 	public List<BlockState> getContains(Material material, ListType type) {
 		List<BlockState> list = new ArrayList<BlockState>();
-		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
-			if(entry.getValue().equals(type)){
-				if(entry.getKey().getMaterial().equals(material)){
+		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
+			if (entry.getValue().equals(type)) {
+				if (entry.getKey().getMaterial().equals(material)) {
 					list.add(entry.getKey());
 				}
 			}
 		}
 		return list;
 	}
-	
+
 	@Override
 	public BasicConfig save() {
-		for(Entry<BlockState, ListType> entry : BLOCKS.entrySet()){
+		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
 			set(entry.getValue().name(), entry.getKey().getMaterial().name() + ".DataValue" + entry.getKey().getData());
 		}
 		return super.save();
 	}
 
 	public static enum ListType {
-		MATERIALS("-m", "m"), RAM("-r", "r"), NONE("-n", "n");
+		MATERIALS("-m", "m"),
+		RAM("-r", "r"),
+		NONE("-n", "n");
 
 		String[] g_ali;
 

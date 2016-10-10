@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
@@ -14,6 +15,7 @@ import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirType;
+import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 
@@ -25,6 +27,10 @@ public class OpShip extends AirType {
 
 	public OpShip(ShipsData ship) {
 		super(ship);
+	}
+
+	@Override
+	public void onRemove(Player player) {
 	}
 
 	@Override
@@ -40,6 +46,10 @@ public class OpShip extends AirType {
 	@Override
 	public int getMaxBlocks() {
 		return 300;
+	}
+
+	@Override
+	public void onSave(ShipsLocalDatabase database) {
 	}
 
 	@Override
@@ -95,7 +105,7 @@ public class OpShip extends AirType {
 
 		@Override
 		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
-			return Optional.of((LoadableShip) new OpShip(data));		
+			return Optional.of((LoadableShip) new OpShip(data));
 		}
 
 	}

@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
@@ -24,6 +25,7 @@ import MoseShipsBukkit.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
 import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
@@ -32,6 +34,28 @@ import MoseShipsBukkit.Signs.ShipsSigns.SignType;
 import MoseShipsBukkit.Utils.Permissions;
 
 public class ShipsListeners implements Listener {
+
+	@EventHandler
+	public void blockBreak(BlockBreakEvent event) {
+		Block block = event.getBlock();
+		Player player = event.getPlayer();
+		if (block.getState() instanceof Sign) {
+			Sign sign = (Sign) block.getState();
+			Optional<SignType> opSignType = ShipsSigns.getSignType(sign);
+			if (opSignType.isPresent()) {
+				SignType type = opSignType.get();
+				if (type.equals(SignType.LICENCE)) {
+					Optional<LoadableShip> opShip = LoadableShip.getShip(type, sign, false);
+					if (opShip.isPresent()) {
+						LoadableShip ship = opShip.get();
+						if (((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(player.getUniqueId()))) || (player.hasPermission(Permissions.REMOVE_SHIP_LICENCE_OTHER))) {
+							ship.remove();
+						}
+					}
+				}
+			}
+		}
+	}
 
 	@EventHandler
 	public void signCreate(SignChangeEvent event) {
@@ -59,7 +83,7 @@ public class ShipsListeners implements Listener {
 							if (opShip.isPresent()) {
 								final LoadableShip ship = opShip.get();
 								ship.setOwner(player);
-								ShipsCreateEvent<LoadableShip> SCEvent = new ShipsCreateEvent<LoadableShip>(ship);
+								ShipsCreateEvent SCEvent = new ShipsCreateEvent(ship);
 								// Bukkit.getPluginManager().callEvent(SCEvent);
 								if (!SCEvent.isCancelled()) {
 
@@ -93,20 +117,15 @@ public class ShipsListeners implements Listener {
 		Block block = event.getClickedBlock();
 		BlockFace direction = event.getBlockFace().getOppositeFace();
 		Player player = event.getPlayer();
-		System.out.println("interact");
 		if ((event.getAction().equals(Action.LEFT_CLICK_BLOCK))
 				|| (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
-			System.out.println("is Block");
 			if (block.getState() instanceof Sign) {
-				System.out.println("is Sign");
 				Sign sign = (Sign) block.getState();
 				Optional<SignType> signType = ShipsSigns.getSignType(ChatColor.stripColor(sign.getLine(0)));
 				if (signType.isPresent()) {
-					System.out.println("is ships sign");
 					Optional<LoadableShip> opType = LoadableShip.getShip(signType.get(), sign, true);
 					if (opType.isPresent()) {
 						LoadableShip ship = opType.get();
-						System.out.println("Ship found " + ship.getName());
 						LoadableShip.addToRam(ship);
 						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 							switch (signType.get()) {
@@ -150,17 +169,20 @@ public class ShipsListeners implements Listener {
 									break;
 								case WHEEL:
 									Optional<MovementResult> causeRotate = ship.rotate(Rotate.RIGHT);
-									if(causeRotate.isPresent()){
+									if (causeRotate.isPresent()) {
 										MovementResult result = causeRotate.get();
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-										if(failed.isPresent()){
+										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
 											store.getFirst().sendMessage(player, store.getSecond());
 										}
 									}
 									break;
 								case ALTITUDE:
-									Optional<MovementResult> causeMove = ship.move(0, -ship.getStatic().getAltitudeSpeed(),
+									if (ship instanceof LiveLockedAltitude) {
+										return;
+									}
+									Optional<MovementResult> causeMove = ship.move(0, ship.getStatic().getAltitudeSpeed(),
 											0);
 									if (causeMove.isPresent()) {
 										MovementResult result = causeMove.get();
@@ -170,11 +192,15 @@ public class ShipsListeners implements Listener {
 											store.getFirst().sendMessage(player, store.getSecond());
 										}
 									}
+
 									break;
 							}
-						}else{
-							switch(signType.get()){
+						} else {
+							switch (signType.get()) {
 								case ALTITUDE:
+									if (ship instanceof LiveLockedAltitude) {
+										return;
+									}
 									Optional<MovementResult> causeMove = ship.move(0, -ship.getStatic().getAltitudeSpeed(),
 											0);
 									if (causeMove.isPresent()) {
@@ -219,15 +245,15 @@ public class ShipsListeners implements Listener {
 									break;
 								case WHEEL:
 									Optional<MovementResult> causeRotate = ship.rotate(Rotate.LEFT);
-									if(causeRotate.isPresent()){
+									if (causeRotate.isPresent()) {
 										MovementResult result = causeRotate.get();
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-										if(failed.isPresent()){
+										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
 											store.getFirst().sendMessage(player, store.getSecond());
 										}
 									}
-									break;								
+									break;
 							}
 						}
 					}

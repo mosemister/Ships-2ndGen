@@ -9,6 +9,8 @@ public class ShipsConfig extends BasicConfig {
 	public static final String PATH_ALGORITHMS_BLOCKFINDER = "Algorithms.BlockFinder";
 	public static final String PATH_ALGORITHMS_MOVEMENT = "Algorithms.Movement";
 
+	public static final String PATH_ONSNEAK_REMOVE_SHIP = "Configuration.OnSneak.RemoveShipsBlocks";
+
 	public static final ShipsConfig CONFIG = new ShipsConfig();
 
 	public ShipsConfig() {

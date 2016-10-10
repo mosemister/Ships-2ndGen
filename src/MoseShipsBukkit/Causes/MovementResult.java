@@ -56,19 +56,22 @@ public class MovementResult {
 	}
 
 	public static abstract class CauseKeys<T extends Object> {
-		
+
 		public static CauseKeys<Boolean> NOT_IN_WATER = new CauseKeys<Boolean>() {
-			
+
 			@Override
 			public void sendMessage(final Player player, Object value) {
 				player.sendMessage(ShipsMain.format("Ship is not in water", true));
 			};
-			
+
 		};
 
 		public static CauseKeys<List<MovingBlock>> MOVING_BLOCKS = new CauseKeys<List<MovingBlock>>() {
 
-			@SuppressWarnings({ "unchecked", "deprecation" })
+			@SuppressWarnings({
+				"unchecked",
+				"deprecation"
+			})
 			@Override
 			public void sendMessage(final Player player, Object value) {
 				if (value instanceof List) {

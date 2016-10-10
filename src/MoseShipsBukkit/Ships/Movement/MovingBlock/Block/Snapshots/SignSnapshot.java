@@ -17,7 +17,7 @@ public class SignSnapshot extends BlockSnapshot implements RotatableSnapshot, Sp
 	public SignSnapshot(BlockState state) {
 		super(state);
 	}
-	
+
 	@Override
 	public void onRemove(Block block) {
 		if (block.getState() instanceof Sign) {

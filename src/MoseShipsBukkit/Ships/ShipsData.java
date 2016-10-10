@@ -41,9 +41,9 @@ public class ShipsData extends DataHolder {
 	public ShipsData(String name, Block sign, Location teleport) {
 		NAME = name;
 		MAIN_BLOCK = sign;
-		if(teleport == null){
+		if (teleport == null) {
 			TELEPORT = sign.getLocation();
-		}else{
+		} else {
 			TELEPORT = teleport;
 		}
 	}
@@ -79,8 +79,8 @@ public class ShipsData extends DataHolder {
 	public World getWorld() {
 		return MAIN_BLOCK.getWorld();
 	}
-	
-	public Map<String, String> getBasicData(){
+
+	public Map<String, String> getBasicData() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("Name: ", NAME);
 		map.put("Licence: ", MAIN_BLOCK.getX() + ", " + MAIN_BLOCK.getY() + ", " + MAIN_BLOCK.getZ() + ", " + MAIN_BLOCK.getWorld().getName());
@@ -92,12 +92,12 @@ public class ShipsData extends DataHolder {
 	public List<Block> getBasicStructure() {
 		return STRUCTURE;
 	}
-	
-	public List<Entity> getEntities(){
+
+	public List<Entity> getEntities() {
 		List<Entity> entities = new ArrayList<Entity>();
-		for (Entity entity : MAIN_BLOCK.getWorld().getEntities()){
+		for (Entity entity : MAIN_BLOCK.getWorld().getEntities()) {
 			Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
-			if(STRUCTURE.contains(block)){
+			if (STRUCTURE.contains(block)) {
 				entities.add(entity);
 			}
 		}
@@ -122,10 +122,8 @@ public class ShipsData extends DataHolder {
 		if (trackLimit == null) {
 			trackLimit = 5000;
 		}
-		final int size = STRUCTURE.size();
 		List<Block> list = BlockFinderUtils.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
 		STRUCTURE = list;
-		System.out.println("Updated structure from " + size + " to " + STRUCTURE.size());
 		return list;
 	}
 

@@ -6,11 +6,11 @@ import org.bukkit.event.HandlerList;
 import MoseShipsBukkit.Events.Vessel.ShipsEvent;
 import MoseShipsBukkit.Ships.ShipsData;
 
-public class ShipsCreateEvent<S extends ShipsData> extends ShipsEvent<S> implements Cancellable {
+public class ShipsCreateEvent extends ShipsEvent implements Cancellable {
 
 	boolean CANCELLED;
 
-	public ShipsCreateEvent(S ship) {
+	public ShipsCreateEvent(ShipsData ship) {
 		super(ship);
 	}
 

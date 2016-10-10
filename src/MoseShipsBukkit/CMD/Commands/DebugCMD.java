@@ -19,7 +19,9 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 
 	@Override
 	public String[] getAliases() {
-		String[] args = { "debug" };
+		String[] args = {
+			"debug"
+		};
 		return args;
 	}
 

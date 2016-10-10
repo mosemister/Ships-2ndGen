@@ -56,6 +56,7 @@ public class ShipsLocalDatabase extends BasicConfig {
 				}
 			}
 		}
+		data.onSave(this);
 		save();
 		return this;
 	}
