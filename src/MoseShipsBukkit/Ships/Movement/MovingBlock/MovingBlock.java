@@ -15,6 +15,7 @@ import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.AttachableSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.RotatableSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
+import MoseShipsBukkit.Utils.State.BlockState;
 import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 
 public class MovingBlock {
@@ -102,17 +103,19 @@ public class MovingBlock {
 	}
 
 	@SuppressWarnings("deprecation")
-	public CollideType getCollision(List<Block> ignore) {
+	public CollideType getCollision(List<Block> ignore, BlockState... ignore2) {
 		if (ignore.contains(MOVING_TO.getBlock())) {
-			return CollideType.NONE;
+			return CollideType.COLLIDE_WITH_SELF;
+		} else if (BlockState.contains(MOVING_TO.getBlock(), ignore2)){
+			return CollideType.COLLIDE_WITH_IGNORED_TYPE;
 		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(),
 				BlockList.ListType.MATERIALS)) {
-			return CollideType.COLLIDE;
+			return CollideType.COLLIDE_WITH_MATERIAL;
 		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(),
 				BlockList.ListType.RAM)) {
 			return CollideType.RAM;
 		} else {
-			return CollideType.NONE;
+			return CollideType.COLLIDE;
 		}
 	}
 

@@ -154,13 +154,16 @@ public class ShipsListeners implements Listener {
 											}
 										}
 									} else {
+										System.out.println("Move");
 										Optional<MovementResult> cause = ship.move(direction,
 												ship.getStatic().getDefaultSpeed());
 										if (cause.isPresent()) {
+											System.out.println("cause found");
 											MovementResult result = cause.get();
 											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
 													.getFailedCause();
 											if (failed.isPresent()) {
+												System.out.println("failed found");
 												TwoStore<CauseKeys<Object>, Object> store = failed.get();
 												store.getFirst().sendMessage(player, store.getSecond());
 											}

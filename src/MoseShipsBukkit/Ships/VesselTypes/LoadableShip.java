@@ -27,6 +27,7 @@ import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
+import MoseShipsBukkit.Utils.State.BlockState;
 
 public abstract class LoadableShip extends ShipsData {
 
@@ -133,37 +134,37 @@ public abstract class LoadableShip extends ShipsData {
 		return new ShipsLocalDatabase(this);
 	}
 
-	public Optional<MovementResult> move(BlockFace dir, int speed) {
+	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
 		Block block = new Location(getWorld(), 0, 0, 0).getBlock().getRelative(dir, speed);
-		return Movement.move(this, block.getX(), block.getY(), block.getZ());
+		return Movement.move(this, block.getX(), block.getY(), block.getZ(), movingTo);
 	}
 
-	public Optional<MovementResult> move(int X, int Y, int Z) {
-		return Movement.move(this, X, Y, Z);
+	public Optional<MovementResult> move(int X, int Y, int Z, BlockState... movingTo) {
+		return Movement.move(this, X, Y, Z, movingTo);
 	}
 
-	public Optional<MovementResult> rotateLeft() {
-		return Movement.rotateLeft(this);
+	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
+		return Movement.rotateLeft(this, movingTo);
 	}
 
-	public Optional<MovementResult> rotateRight() {
-		return Movement.rotateRight(this);
+	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
+		return Movement.rotateRight(this, movingTo);
 	}
 
-	public Optional<MovementResult> rotate(Rotate type) {
-		return Movement.rotate(this, type);
+	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
+		return Movement.rotate(this, type, movingTo);
 	}
 
-	public Optional<MovementResult> teleport(StoredMovement move) {
-		return Movement.teleport(this, move);
+	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
+		return Movement.teleport(this, move, movingTo);
 	}
 
-	public Optional<MovementResult> teleport(Location loc) {
-		return Movement.teleport(this, loc);
+	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
+		return Movement.teleport(this, loc, movingTo);
 	}
 
-	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z) {
-		return Movement.teleport(this, loc, X, Y, Z);
+	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
+		return Movement.teleport(this, loc, X, Y, Z, movingTo);
 	}
 
 	@Override

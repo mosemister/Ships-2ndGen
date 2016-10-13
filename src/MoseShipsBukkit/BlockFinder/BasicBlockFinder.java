@@ -10,7 +10,7 @@ public interface BasicBlockFinder {
 	static final List<BasicBlockFinder> LIST = new ArrayList<BasicBlockFinder>();
 
 	public List<Block> getConnectedBlocks(int limit, Block loc);
-
+	
 	public String getName();
 
 }

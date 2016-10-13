@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
@@ -75,10 +76,10 @@ public class MovementResult {
 			@Override
 			public void sendMessage(final Player player, Object value) {
 				if (value instanceof List) {
-					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 2 seconds", true));
+					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 3 seconds", true));
 					final List<MovingBlock> list = (List<MovingBlock>) value;
 					for (MovingBlock block : list) {
-						player.sendBlockChange(block.getMovingTo(), block.getMaterial(), block.getDataValue());
+						player.sendBlockChange(block.getMovingTo(), Material.BEDROCK, (byte)0);
 					}
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 

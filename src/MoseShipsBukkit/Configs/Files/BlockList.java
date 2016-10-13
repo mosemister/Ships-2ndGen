@@ -16,10 +16,10 @@ public class BlockList extends BasicConfig {
 
 	Map<BlockState, ListType> BLOCKS = new HashMap<BlockState, ListType>();
 
-	public static final BlockList BLOCK_LIST = new BlockList();
+	public static final BlockList BLOCK_LIST = new BlockList("/Configuration/BlockList");
 
-	public BlockList() {
-		super("/Configuration/BlockList");
+	public BlockList(String path) {
+		super(path);
 		applyMissing();
 	}
 

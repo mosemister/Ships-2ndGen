@@ -14,7 +14,7 @@ public class Prototype3 implements BasicBlockFinder {
 
 	int COUNT;
 	List<Block> BLOCKS;
-
+	
 	@Override
 	public List<Block> getConnectedBlocks(int limit, Block loc) {
 		if (loc == null) {
