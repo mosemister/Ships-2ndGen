@@ -24,7 +24,7 @@ public class BlockListCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPla
 	public String[] getAliases() {
 		String[] args = {
 			"blockList",
-			"Materials"
+			"materials"
 		};
 		return args;
 	}

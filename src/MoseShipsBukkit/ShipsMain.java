@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import MoseShipsBukkit.CMD.ShipsCMD;
@@ -237,7 +238,10 @@ public class ShipsMain extends JavaPlugin {
 		NAME = getName();
 		VERSION = getDescription().getVersion();
 		getServer().getPluginManager().registerEvents(new ShipsListeners(), this);
-		getCommand("Ships").setExecutor(new ShipsCMD.Executer());
+		PluginCommand command = getCommand("Ships");
+		ShipsCMD.Executer cmd = new ShipsCMD.Executer();
+		command.setExecutor(cmd);
+		command.setTabCompleter(cmd);
 		BlockList.BLOCK_LIST.reload();
 		registerShipTypes();
 		registerSnapshotTypes();

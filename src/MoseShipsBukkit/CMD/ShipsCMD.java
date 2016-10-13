@@ -9,6 +9,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.CMD.Commands.HelpCMD;
@@ -35,7 +36,19 @@ public interface ShipsCMD {
 		public boolean execute(BlockCommandSender sender, String... args);
 	}
 
-	public class Executer implements CommandExecutor {
+	public interface ShipsPlayerTabComplete extends ShipsCMD {
+		public List<String> onTab(Player player, String... args);
+	}
+
+	public interface ShipsConsoleTabComplete extends ShipsCMD {
+		public List<String> onTab(ConsoleCommandSender console, String... args);
+	}
+
+	public interface ShipsBlockTabComplete extends ShipsCMD {
+		public List<String> onTab(BlockCommandSender sender, String... args);
+	}
+
+	public class Executer implements CommandExecutor, TabCompleter {
 
 		@Override
 		public boolean onCommand(CommandSender sender, Command cmd, String length, String[] args) {
@@ -104,6 +117,78 @@ public interface ShipsCMD {
 				new IOException("The source " + sender + " is not regonised.");
 			}
 			return false;
+		}
+
+		@Override
+		public List<String> onTabComplete(CommandSender sender, Command cmd, String length, String[] args) {
+			String target = args[args.length - 1];
+			if (sender instanceof Player) {
+				if (args.length == 1) {
+					List<String> ret = new ArrayList<String>();
+					for (ShipsCMD sCmd : SHIPS_COMMANDS) {
+						if (sCmd instanceof ShipsPlayerCMD) {
+							if (((sCmd.getPermission() != null) && (((Player) sender).hasPermission(sCmd.getPermission()))) || (sCmd.getPermission() == null)) {
+								for (String ali : sCmd.getAliases()) {
+									if (ali.toLowerCase().startsWith(target.toLowerCase())) {
+										ret.add(ali);
+									}
+								}
+							}
+						}
+					}
+					return ret;
+				} else {
+					for (ShipsCMD sCmd : SHIPS_COMMANDS) {
+						if (sCmd instanceof ShipsPlayerTabComplete) {
+							ShipsPlayerTabComplete tab = (ShipsPlayerTabComplete) sCmd;
+							tab.onTab((Player) sender, args);
+						}
+					}
+				}
+			} else if (sender instanceof ConsoleCommandSender) {
+				if (args.length == 1) {
+					List<String> ret = new ArrayList<String>();
+					for (ShipsCMD sCmd : SHIPS_COMMANDS) {
+						if (sCmd instanceof ShipsConsoleCMD) {
+							for (String ali : sCmd.getAliases()) {
+								if (ali.toLowerCase().startsWith(target.toLowerCase())) {
+									ret.add(ali);
+								}
+							}
+						}
+					}
+					return ret;
+				} else {
+					for (ShipsCMD sCmd : SHIPS_COMMANDS) {
+						if (sCmd instanceof ShipsConsoleTabComplete) {
+							ShipsConsoleTabComplete tab = (ShipsConsoleTabComplete) sCmd;
+							tab.onTab((ConsoleCommandSender) sender, args);
+						}
+					}
+				}
+			} else if (sender instanceof BlockCommandSender) {
+				if (args.length == 1) {
+					List<String> ret = new ArrayList<String>();
+					for (ShipsCMD sCmd : SHIPS_COMMANDS) {
+						if (sCmd instanceof ShipsBlockCMD) {
+							for (String ali : sCmd.getAliases()) {
+								if (ali.toLowerCase().startsWith(target.toLowerCase())) {
+									ret.add(ali);
+								}
+							}
+						}
+					}
+					return ret;
+				} else {
+					for (ShipsCMD sCmd : SHIPS_COMMANDS) {
+						if (sCmd instanceof ShipsBlockTabComplete) {
+							ShipsBlockTabComplete tab = (ShipsBlockTabComplete) sCmd;
+							tab.onTab((BlockCommandSender) sender, args);
+						}
+					}
+				}
+			}
+			return new ArrayList<String>();
 		}
 
 	}
