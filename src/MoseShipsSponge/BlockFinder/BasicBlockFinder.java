@@ -25,6 +25,9 @@ public interface BasicBlockFinder {
 
 	public static BasicBlockFinder getConfigSelected() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_BLOCKFINDER);
+		if(name == null){
+			return SHIPS5;
+		}
 		Optional<BasicBlockFinder> opBlock = getFinder(name);
 		if (opBlock.isPresent()) {
 			return opBlock.get();

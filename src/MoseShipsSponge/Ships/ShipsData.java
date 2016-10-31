@@ -116,7 +116,13 @@ public class ShipsData extends DataHolder {
 	}
 
 	public List<Location<World>> updateBasicStructure() {
-		int trackLimit = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		System.out.println("\n Config: " + ShipsConfig.CONFIG);
+		System.out.println("track limit path: " + ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		Integer trackLimit = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		if(trackLimit == null){
+			trackLimit = 5000;
+		}
+		System.out.println("BlocFinder: " + BasicBlockFinder.getConfigSelected());
 		List<Location<World>> list = BasicBlockFinder.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
 		STRUCTURE = list;
 		return list;

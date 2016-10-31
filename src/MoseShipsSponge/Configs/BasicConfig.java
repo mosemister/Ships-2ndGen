@@ -61,7 +61,6 @@ public class BasicConfig {
 
 	public boolean set(Object object, Object... path) {
 		if (path != null) {
-			System.out.println("\n object: " + object);
 			if (has(path)) {
 				root.getNode(path).setValue(object);
 				return true;

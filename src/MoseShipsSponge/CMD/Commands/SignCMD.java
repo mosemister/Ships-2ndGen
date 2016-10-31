@@ -66,6 +66,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD{
 		BlockRay<World> blockRay = BlockRay.from(player).filter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 5)).build();
 		
 		while(blockRay.hasNext()){
+			System.out.println("Next Block");
 			BlockRayHit<World> hit = blockRay.next();
 			Location<World> loc = hit.getLocation();
 			Optional<TileEntity> opTile = loc.getTileEntity();
