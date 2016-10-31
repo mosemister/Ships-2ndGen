@@ -9,6 +9,6 @@ public interface StaticRequiredPercent {
 
 	public int getDefaultRequiredPercent();
 
-	public BlockState[] getDefaultPersentBlocks();
+	public BlockState[] getDefaultPercentBlocks();
 
 }

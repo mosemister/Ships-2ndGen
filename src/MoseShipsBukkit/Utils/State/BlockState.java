@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
 public class BlockState {
 
@@ -37,6 +38,31 @@ public class BlockState {
 	@SuppressWarnings("deprecation")
 	public String toNoString() {
 		return MATERIAL.getId() + ":" + DATA;
+	}
+
+	public boolean looseMatch(BlockState state) {
+		if ((state.getMaterial().equals(MATERIAL)) && ((DATA == state.getData()) || (DATA == -1) || (state.getData() == -1))) {
+			return true;
+		}
+		return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean looseMatch(Block block) {
+		if ((block.getType().equals(MATERIAL)) && ((DATA == block.getData()) || (DATA == -1) || (block.getData() == -1))) {
+			return true;
+		}
+		return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	public boolean looseMatch(ItemStack item) {
+		if (item != null) {
+			if ((item.getType().equals(MATERIAL)) && ((DATA == item.getData().getData()) || (DATA == -1) || (item.getData().getData() == -1))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override

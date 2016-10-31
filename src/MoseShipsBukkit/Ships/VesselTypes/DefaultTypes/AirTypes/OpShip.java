@@ -64,7 +64,17 @@ public class OpShip extends AirType {
 
 	@Override
 	public Map<String, Object> getInfo() {
-		return new HashMap<String, Object>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		if(g_user == null){
+			map.put("Owner", "None");
+		}else{
+			map.put("Owner", g_user.getName());
+		}
+		map.put("size", updateBasicStructure().size());
+		map.put("type", "OPShip");
+		map.put("is loaded", this.isLoaded());
+		map.put("is moving", this.isMoving());
+		return map;
 	}
 
 	@Override

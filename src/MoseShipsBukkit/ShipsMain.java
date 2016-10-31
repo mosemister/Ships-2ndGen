@@ -17,6 +17,7 @@ import MoseShipsBukkit.Listeners.ShipsListeners;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.*;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.Airship;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.WaterShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
@@ -116,7 +117,9 @@ public class ShipsMain extends JavaPlugin {
 		BlockSnapshot.VALUE_TYPES.put(Material.SPRUCE_WOOD_STAIRS, StairsSnapshot.class);
 		BlockSnapshot.VALUE_TYPES.put(Material.WOOD_STAIRS, StairsSnapshot.class);
 		// craft bench
-
+		
+		//fire
+		BlockSnapshot.VALUE_TYPES.put(Material.FIRE, FireSnapshot.class);
 		// ladder
 		BlockSnapshot.VALUE_TYPES.put(Material.LADDER, LadderSnapshot.class);
 		// lever
@@ -158,6 +161,7 @@ public class ShipsMain extends JavaPlugin {
 	private void registerShipTypes() {
 		new OpShip.StaticOPShip();
 		new WaterShip.StaticWaterShip();
+		new Airship.StaticAirship();
 	}
 
 	private void loadShips() {

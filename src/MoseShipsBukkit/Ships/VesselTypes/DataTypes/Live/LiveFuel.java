@@ -14,6 +14,6 @@ public interface LiveFuel extends LiveData {
 
 	public int getConsumptionAmount();
 
-	public boolean removeFuel(int Amount);
+	public boolean removeFuel(int amount);
 
 }

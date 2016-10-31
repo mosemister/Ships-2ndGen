@@ -31,15 +31,15 @@ public class ShipsData extends DataHolder {
 	public static final String DATABASE_TELEPORT = "ShipsMeta.Location.Teleport";
 	public static final String DATABASE_STRUCTURE = "ShipsStructure.BasicStructure";
 
-	protected String NAME;
-	protected OfflinePlayer USER;
+	protected String g_name;
+	protected OfflinePlayer g_user;
 	protected List<OfflinePlayer> SUB_PILOTS = new ArrayList<OfflinePlayer>();
 	protected List<Block> STRUCTURE = new ArrayList<Block>();
 	protected Block MAIN_BLOCK;
 	protected Location TELEPORT;
 
 	public ShipsData(String name, Block sign, Location teleport) {
-		NAME = name;
+		g_name = name;
 		MAIN_BLOCK = sign;
 		if (teleport == null) {
 			TELEPORT = sign.getLocation();
@@ -60,15 +60,15 @@ public class ShipsData extends DataHolder {
 	}
 
 	public String getName() {
-		return NAME;
+		return g_name;
 	}
 
 	public Optional<OfflinePlayer> getOwner() {
-		return Optional.ofNullable(USER);
+		return Optional.ofNullable(g_user);
 	}
 
 	public ShipsData setOwner(OfflinePlayer user) {
-		USER = user;
+		g_user = user;
 		return this;
 	}
 
@@ -82,7 +82,7 @@ public class ShipsData extends DataHolder {
 
 	public Map<String, String> getBasicData() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("Name: ", NAME);
+		map.put("Name: ", g_name);
 		map.put("Licence: ", MAIN_BLOCK.getX() + ", " + MAIN_BLOCK.getY() + ", " + MAIN_BLOCK.getZ() + ", " + MAIN_BLOCK.getWorld().getName());
 		map.put("Teleport: ", TELEPORT.getX() + ", " + TELEPORT.getY() + ", " + TELEPORT.getZ() + ", " + TELEPORT.getWorld().getName());
 		map.put("Structure size:", STRUCTURE.size() + "");
@@ -155,11 +155,11 @@ public class ShipsData extends DataHolder {
 
 	public ShipsData cloneOnto(ShipsData data) {
 		data.MAIN_BLOCK = this.MAIN_BLOCK;
-		data.NAME = this.NAME;
+		data.g_name = this.g_name;
 		data.STRUCTURE = this.STRUCTURE;
 		data.SUB_PILOTS = this.SUB_PILOTS;
 		data.TELEPORT = this.TELEPORT;
-		data.USER = this.USER;
+		data.g_user = this.g_user;
 		data.DATA = this.DATA;
 		return data;
 	}

@@ -26,7 +26,7 @@ public class MovementResult {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <E extends Object> void put(CauseKeys<E> key, E value) {
+	public <E extends Object> MovementResult put(CauseKeys<E> key, E value) {
 		for (TwoStore<CauseKeys<Object>, Object> store : CAUSES) {
 			if (store.getFirst().equals(key)) {
 				CAUSES.remove(store);
@@ -35,6 +35,7 @@ public class MovementResult {
 		TwoStore<CauseKeys<Object>, Object> store = new TwoStore<CauseKeys<Object>, Object>((CauseKeys<Object>) key,
 				value);
 		CAUSES.add(store);
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,13 +58,22 @@ public class MovementResult {
 	}
 
 	public static abstract class CauseKeys<T extends Object> {
+		
+		public static CauseKeys<Boolean> FUEL_REMOVE_ERROR = new CauseKeys<Boolean>() {
+
+			@Override
+			public void sendMessage(Player player, Object value) {
+				player.sendMessage("Ships failed to collect fuel to remove");
+			}
+			
+		};
 
 		public static CauseKeys<Boolean> NOT_IN_WATER = new CauseKeys<Boolean>() {
 
 			@Override
 			public void sendMessage(final Player player, Object value) {
 				player.sendMessage(ShipsMain.format("Ship is not in water", true));
-			};
+			}
 
 		};
 
@@ -120,9 +130,13 @@ public class MovementResult {
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof BlockState) {
 					BlockState state = (BlockState) value;
+					if(state.getMaterial().equals(Material.FIRE)){
+						player.sendMessage("You are missing a burner from your ship");
+					}else{
 					player.sendMessage(ShipsMain.format(
 							"You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship",
 							true));
+					}
 				}
 
 			}

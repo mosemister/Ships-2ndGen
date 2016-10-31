@@ -1,5 +1,9 @@
 package MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
@@ -12,10 +16,14 @@ import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 
 public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot, SpecialSnapshot {
 
-	ItemStack g_fuel, g_burn, g_result;
+	Map<Integer, ItemStack> g_inv = new HashMap<Integer, ItemStack>();
 
 	public FurnaceSnapshot(BlockState state) {
 		super(state);
+	}
+	
+	public Map<Integer, ItemStack> getInventory(){
+		return g_inv;
 	}
 
 	@Override
@@ -23,17 +31,11 @@ public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot,
 		if (block.getState() instanceof Furnace) {
 			Furnace furnace = (Furnace) block.getState();
 			FurnaceInventory inv = furnace.getInventory();
-			ItemStack fuel = inv.getFuel();
-			if (fuel != null) {
-				g_fuel = fuel.clone();
-			}
-			ItemStack burn = inv.getSmelting();
-			if (burn != null) {
-				g_burn = burn.clone();
-			}
-			ItemStack result = inv.getResult();
-			if (result != null) {
-				g_result = result.clone();
+			for (int A = 0; A < inv.getSize(); A++) {
+				ItemStack item = inv.getItem(A);
+				if (item != null) {
+					g_inv.put(A, item.clone());
+				}
 			}
 			inv.clear();
 		}
@@ -44,9 +46,9 @@ public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot,
 		if (block.getState() instanceof Furnace) {
 			Furnace furnace = (Furnace) block.getState();
 			FurnaceInventory inv = furnace.getInventory();
-			inv.setFuel(g_fuel);
-			inv.setResult(g_result);
-			inv.setSmelting(g_burn);
+			for (Entry<Integer, ItemStack> entry : g_inv.entrySet()) {
+				inv.setItem(entry.getKey(), entry.getValue());
+			}
 		}
 
 	}

@@ -32,6 +32,10 @@ public class MovingBlock {
 		MOVING_TO = original.getRelative(X, Y, Z).getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
 	}
+	
+	public BlockSnapshot getSnapshot(){
+		return STATE;
+	}
 
 	public Location getOrigin() {
 		return STATE.getLocation();

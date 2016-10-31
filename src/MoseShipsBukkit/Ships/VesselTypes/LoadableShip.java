@@ -117,6 +117,7 @@ public abstract class LoadableShip extends ShipsData {
 	}
 
 	public void setMoving(boolean check) {
+		g_remove = false;
 		g_moving = check;
 	}
 

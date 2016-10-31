@@ -1,11 +1,12 @@
 package MoseShipsBukkit.Listeners;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -18,11 +19,15 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import MoseShips.Stores.TwoStore;
+
 import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
+import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
+import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateFailedEvent;
+import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
@@ -31,9 +36,48 @@ import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Signs.ShipsSigns;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
+import MoseShipsBukkit.Utils.LocationUtils;
 import MoseShipsBukkit.Utils.Permissions;
 
 public class ShipsListeners implements Listener {
+
+	private boolean removeLicence(Sign sign, Player player) {
+		Optional<SignType> opSignType = ShipsSigns.getSignType(sign);
+		if (opSignType.isPresent()) {
+			SignType type = opSignType.get();
+			if (type.equals(SignType.LICENCE)) {
+				Optional<LoadableShip> opShip = LoadableShip.getShip(type, sign, false);
+				if (opShip.isPresent()) {
+					LoadableShip ship = opShip.get();
+					if (((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(player.getUniqueId()))) || (player.hasPermission(Permissions.REMOVE_SHIP_LICENCE_OTHER))) {
+						ship.remove();
+						player.sendMessage(ShipsMain.format(ship.getName() + " has been removed", false));
+						if ((ship.getOwner().isPresent()) && (!player.getUniqueId().equals(ship.getOwner().get().getUniqueId()))) {
+							OfflinePlayer oPlayer = ship.getOwner().get();
+							if (oPlayer.isOnline()) {
+								oPlayer.getPlayer().sendMessage(ShipsMain.format(ship.getName() + " has been removed by " + player.getDisplayName(), false));
+							}
+						}
+						if (ShipsConfig.CONFIG.get(Boolean.class, ShipsConfig.PATH_ONSNEAK_REMOVE_SHIP)) {
+							for (int A = 0; A < ship.getBasicStructure().size(); A++) {
+								final Block target = ship.getBasicStructure().get(A);
+								Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
+
+									@Override
+									public void run() {
+										target.breakNaturally();
+									}
+
+								}, (A * 4));
+							}
+						}
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
 	@EventHandler
 	public void blockBreak(BlockBreakEvent event) {
@@ -41,64 +85,68 @@ public class ShipsListeners implements Listener {
 		Player player = event.getPlayer();
 		if (block.getState() instanceof Sign) {
 			Sign sign = (Sign) block.getState();
-			Optional<SignType> opSignType = ShipsSigns.getSignType(sign);
-			if (opSignType.isPresent()) {
-				SignType type = opSignType.get();
-				if (type.equals(SignType.LICENCE)) {
-					Optional<LoadableShip> opShip = LoadableShip.getShip(type, sign, false);
-					if (opShip.isPresent()) {
-						LoadableShip ship = opShip.get();
-						if (((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(player.getUniqueId()))) || (player.hasPermission(Permissions.REMOVE_SHIP_LICENCE_OTHER))) {
-							ship.remove();
-						}
-					}
-				}
-			}
+			removeLicence(sign, player);
+		}
+		for (Sign sign : LocationUtils.getAttachedSigns(block)) {
+			removeLicence(sign, player);
 		}
 	}
 
 	@EventHandler
 	public void signCreate(SignChangeEvent event) {
-		Map<String, Object> causes = new HashMap<String, Object>();
 		Optional<SignType> opSignType = ShipsSigns.getSignType(event.getLine(0));
 		if (opSignType.isPresent()) {
 			SignType signType = opSignType.get();
 			if (signType.equals(SignType.LICENCE)) {
-				if (event.getLines().length >= 3) {
-					Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
-					if (opShipType.isPresent()) {
-						StaticShipType type = opShipType.get();
+				if (event.getLines().length < 3) {
+					return;
+				}
+				Player player = event.getPlayer();
+				Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
+				
+				
+				if (!opShipType.isPresent()) {
+					ShipsCreateFailedEvent.ConflictType conflictType = new ShipsCreateFailedEvent.ConflictType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), event
+							.getLine(1));
+					Bukkit.getServer().getPluginManager().callEvent(conflictType);
+					return;
+				}
 
-						// PLAYER CAUSE
-						Player player = event.getPlayer();
-						if (!Permissions.hasPermissionToMake(player, type)) {
-							return;
-						}
-						causes.put("Player", player);
+				StaticShipType type = opShipType.get();
 
-						AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<StaticShipType>(
-								type, event.getBlock());
-						if (!ATCSEvent.isCancelled()) {
-							Optional<LoadableShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
-							if (opShip.isPresent()) {
-								final LoadableShip ship = opShip.get();
-								ship.setOwner(player);
-								ShipsCreateEvent SCEvent = new ShipsCreateEvent(ship);
-								// Bukkit.getPluginManager().callEvent(SCEvent);
-								if (!SCEvent.isCancelled()) {
+				// PLAYER CAUSE
+				if (!Permissions.hasPermissionToMake(player, type)) {
+					return;
+				}
 
-									// PLAYER
-									player.sendMessage(ShipsMain.format("Ship created", false));
-									LoadableShip.addToRam(ship);
+				Optional<LoadableShip> opConflict = LoadableShip.getShip(event.getLine(2));
+				if (opConflict.isPresent()) {
+					ShipsCreateFailedEvent.ConflictName conflictName = new ShipsCreateFailedEvent.ConflictName(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()),
+							opConflict.get());
+					Bukkit.getServer().getPluginManager().callEvent(conflictName);
+					return;
+				}
+				AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<StaticShipType>(
+						type, event.getBlock());
+				if (!ATCSEvent.isCancelled()) {
+					Optional<LoadableShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
+					if (opShip.isPresent()) {
+						final LoadableShip ship = opShip.get();
+						ship.setOwner(player);
+						ShipsCreateEvent SCEvent = new ShipsCreateEvent(ship);
+						// Bukkit.getPluginManager().callEvent(SCEvent);
+						if (!SCEvent.isCancelled()) {
 
-									event.setLine(0, ChatColor.YELLOW + "[Ships]");
-									event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
-									event.setLine(2, ChatColor.GREEN + ship.getName());
-									event.setLine(3, ChatColor.GREEN + event.getLine(3));
-									ShipsLocalDatabase database = ship.getLocalDatabase();
-									database.saveBasicShip(ship);
-								}
-							}
+							// PLAYER
+							player.sendMessage(ShipsMain.format("Ship created", false));
+							LoadableShip.addToRam(ship);
+
+							event.setLine(0, ChatColor.YELLOW + "[Ships]");
+							event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
+							event.setLine(2, ChatColor.GREEN + ship.getName());
+							event.setLine(3, ChatColor.GREEN + event.getLine(3));
+							ShipsLocalDatabase database = ship.getLocalDatabase();
+							database.saveBasicShip(ship);
 						}
 					}
 				}
@@ -136,8 +184,7 @@ public class ShipsListeners implements Listener {
 									Map<String, Object> info = ship.getInfo();
 									player.sendMessage(ShipsMain.format("Information about " + ship.getName(), false));
 									for (Entry<String, Object> data : info.entrySet()) {
-										player.sendMessage(
-												ShipsMain.formatCMDHelp(data.getKey() + ": " + data.getValue()));
+										player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + data.getKey() + ": " + ChatColor.RESET + "" + ChatColor.AQUA + data.getValue());
 									}
 									break;
 								case MOVE:
@@ -264,5 +311,4 @@ public class ShipsListeners implements Listener {
 			}
 		}
 	}
-
 }
