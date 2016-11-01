@@ -112,16 +112,19 @@ public class ShipLoader {
 					}
 				}
 
-				List<Block> structure = new ArrayList<Block>();
-				int posX = 0;
-				int posY = 0;
-				int target = 0;
-				for (String values : lStructure) {
-					String[] valuesArgs = values.split(",");
-					for (String value : valuesArgs) {
-						try {
-							int pos = Integer.parseInt(value);
-							switch (target) {
+				if (lStructure == null) {
+					data.updateBasicStructure();
+				} else {
+					List<Block> structure = new ArrayList<Block>();
+					int posX = 0;
+					int posY = 0;
+					int target = 0;
+					for (String values : lStructure) {
+						String[] valuesArgs = values.split(",");
+						for (String value : valuesArgs) {
+							try {
+								int pos = Integer.parseInt(value);
+								switch (target) {
 								case 0:
 									posX = pos;
 									break;
@@ -131,13 +134,14 @@ public class ShipLoader {
 								case 2:
 									structure.add(new Location(world, posX, posY, pos).getBlock());
 									break;
+								}
+							} catch (NumberFormatException e) {
+								break;
 							}
-						} catch (NumberFormatException e) {
-							break;
 						}
 					}
+					data.setBasicStructure(structure, lic.getBlock());
 				}
-				data.setBasicStructure(structure, lic.getBlock());
 
 				if (sSubPilots != null) {
 					List<OfflinePlayer> subPilots = new ArrayList<OfflinePlayer>();
