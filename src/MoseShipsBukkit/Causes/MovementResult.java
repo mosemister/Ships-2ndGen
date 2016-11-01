@@ -58,14 +58,14 @@ public class MovementResult {
 	}
 
 	public static abstract class CauseKeys<T extends Object> {
-		
+
 		public static CauseKeys<Boolean> FUEL_REMOVE_ERROR = new CauseKeys<Boolean>() {
 
 			@Override
 			public void sendMessage(Player player, Object value) {
 				player.sendMessage("Ships failed to collect fuel to remove");
 			}
-			
+
 		};
 
 		public static CauseKeys<Boolean> NOT_IN_WATER = new CauseKeys<Boolean>() {
@@ -89,7 +89,7 @@ public class MovementResult {
 					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 3 seconds", true));
 					final List<MovingBlock> list = (List<MovingBlock>) value;
 					for (MovingBlock block : list) {
-						player.sendBlockChange(block.getMovingTo(), Material.BEDROCK, (byte)0);
+						player.sendBlockChange(block.getMovingTo(), Material.BEDROCK, (byte) 0);
 					}
 					Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 
@@ -130,12 +130,12 @@ public class MovementResult {
 			public void sendMessage(Player player, Object value) {
 				if (value instanceof BlockState) {
 					BlockState state = (BlockState) value;
-					if(state.getMaterial().equals(Material.FIRE)){
+					if (state.getMaterial().equals(Material.FIRE)) {
 						player.sendMessage("You are missing a burner from your ship");
-					}else{
-					player.sendMessage(ShipsMain.format(
-							"You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship",
-							true));
+					} else {
+						player.sendMessage(ShipsMain.format(
+								"You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship",
+								true));
 					}
 				}
 

@@ -17,7 +17,8 @@ public class ButtonSnapshot extends BlockSnapshot implements AttachableSnapshot,
 	public byte getRotateLeft() {
 		byte data = getData().getData();
 		switch (data) {
-			case 1: return 4;
+			case 1:
+				return 4;
 			case 2:
 				return 3;
 			case 3:

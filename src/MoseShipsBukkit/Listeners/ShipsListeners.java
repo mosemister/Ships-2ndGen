@@ -103,8 +103,7 @@ public class ShipsListeners implements Listener {
 				}
 				Player player = event.getPlayer();
 				Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
-				
-				
+
 				if (!opShipType.isPresent()) {
 					ShipsCreateFailedEvent.ConflictType conflictType = new ShipsCreateFailedEvent.ConflictType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), event
 							.getLine(1));
@@ -121,9 +120,13 @@ public class ShipsListeners implements Listener {
 
 				Optional<LoadableShip> opConflict = LoadableShip.getShip(event.getLine(2));
 				if (opConflict.isPresent()) {
-					ShipsCreateFailedEvent.ConflictName conflictName = new ShipsCreateFailedEvent.ConflictName(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()),
-							opConflict.get());
-					Bukkit.getServer().getPluginManager().callEvent(conflictName);
+					/* ShipsCreateFailedEvent.ConflictName conflictName = new
+					 * ShipsCreateFailedEvent.ConflictName(new
+					 * ShipsData(event.getLine(2), event.getBlock(),
+					 * player.getLocation()),
+					 * opConflict.get());
+					 * Bukkit.getServer().getPluginManager().callEvent(
+					 * conflictName); */
 					return;
 				}
 				AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<StaticShipType>(
@@ -201,16 +204,13 @@ public class ShipsListeners implements Listener {
 											}
 										}
 									} else {
-										System.out.println("Move");
 										Optional<MovementResult> cause = ship.move(direction,
 												ship.getStatic().getDefaultSpeed());
 										if (cause.isPresent()) {
-											System.out.println("cause found");
 											MovementResult result = cause.get();
 											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
 													.getFailedCause();
 											if (failed.isPresent()) {
-												System.out.println("failed found");
 												TwoStore<CauseKeys<Object>, Object> store = failed.get();
 												store.getFirst().sendMessage(player, store.getSecond());
 											}

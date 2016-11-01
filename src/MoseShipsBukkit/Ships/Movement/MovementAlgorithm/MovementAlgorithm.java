@@ -3,6 +3,8 @@ package MoseShipsBukkit.Ships.Movement.MovementAlgorithm;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.entity.Entity;
+
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.Types.Ships5Movement;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.Types.Ships6Movement;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
@@ -15,8 +17,20 @@ public interface MovementAlgorithm {
 	public static Ships5Movement SHIPS5 = new Ships5Movement();
 	public static Ships6Movement SHIPS6 = new Ships6Movement();
 
-	public void move(LoadableShip vessel, List<MovingBlock> blocks);
+	/**
+	 * This will called if your algorithm is activated and when a ship is attempting to move
+	 * @param vessel = The targeted vessel attempting to move
+	 * @param blocks = The location of the block of the ship and where it wants to be moved to
+	 * @param onBoard = a list of entities that have been found
+	 * @return = if the entities should be teleported 
+	 */
+	public boolean move(LoadableShip vessel, List<MovingBlock> blocks, List<Entity> onBoard);
 
+	
+	/**
+	 * this is the name of the algorithm for the owner to activate
+	 * @return = the name
+	 */
 	public String getName();
 
 }

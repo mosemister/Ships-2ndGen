@@ -27,21 +27,21 @@ public class ShipsCreateEvent extends ShipsEvent implements Cancellable {
 	public static HandlerList getHandlerList() {
 		return HANDLER;
 	}
-	
+
 	public static class Sign extends ShipsCreateEvent {
 
 		public Sign(ShipsData ship) {
 			super(ship);
 		}
-		
-		public Sign getLicence(){
-			return (Sign)getShip().getLocation().getBlock().getState();
+
+		public Sign getLicence() {
+			return (Sign) getShip().getLocation().getBlock().getState();
 		}
-		
-		public static HandlerList getHandlerList(){
+
+		public static HandlerList getHandlerList() {
 			return HANDLER;
 		}
-		
+
 	}
 
 }

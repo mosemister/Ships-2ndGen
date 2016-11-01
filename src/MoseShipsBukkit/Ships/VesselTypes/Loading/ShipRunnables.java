@@ -24,7 +24,7 @@ public class ShipRunnables {
 
 				}
 
-			}, 0, (time*20));
+			}, 0, (time * 20));
 		}
 	}
 
@@ -34,7 +34,6 @@ public class ShipRunnables {
 			LoadableShip ship = list.get(A);
 			if (ship.willRemoveNextCycle()) {
 				ship.unload();
-				System.out.println("Unloaded ship: " + ship.getName());
 			} else {
 				ship.setRemoveNextCycle(true);
 			}

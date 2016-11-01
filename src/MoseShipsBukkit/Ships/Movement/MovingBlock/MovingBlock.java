@@ -32,8 +32,8 @@ public class MovingBlock {
 		MOVING_TO = original.getRelative(X, Y, Z).getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
 	}
-	
-	public BlockSnapshot getSnapshot(){
+
+	public BlockSnapshot getSnapshot() {
 		return STATE;
 	}
 
@@ -110,7 +110,7 @@ public class MovingBlock {
 	public CollideType getCollision(List<Block> ignore, BlockState... ignore2) {
 		if (ignore.contains(MOVING_TO.getBlock())) {
 			return CollideType.COLLIDE_WITH_SELF;
-		} else if (BlockState.contains(MOVING_TO.getBlock(), ignore2)){
+		} else if (BlockState.contains(MOVING_TO.getBlock(), ignore2)) {
 			return CollideType.COLLIDE_WITH_IGNORED_TYPE;
 		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock().getType(), MOVING_TO.getBlock().getData(),
 				BlockList.ListType.MATERIALS)) {

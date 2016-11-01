@@ -39,21 +39,21 @@ import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, LiveRequiredPercent{
+public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
 
 	int g_req_percent;
 	int g_cons_amount;
 	BlockState[] g_req_p_blocks;
 	BlockState[] g_req_fuel;
-	
+
 	public Airship(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
-	
-	public Airship(ShipsData data){
+
+	public Airship(ShipsData data) {
 		super(data);
 	}
-	
+
 	public Airship setRequiredPercent(int A) {
 		g_req_percent = A;
 		return this;
@@ -63,13 +63,13 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 		g_req_p_blocks = blocks;
 		return this;
 	}
-	
-	public Airship setFuels(BlockState... states){
+
+	public Airship setFuels(BlockState... states) {
 		g_req_fuel = states;
 		return this;
 	}
-	
-	public Airship setFuelConsumption(int A){
+
+	public Airship setFuelConsumption(int A) {
 		g_cons_amount = A;
 		return this;
 	}
@@ -88,8 +88,7 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 				blocks.add(block);
 			}
 		}
-		int percent = (int) (blocks.size() * 100.0f)/structure.size();
-		System.out.println("Structure: " + structure.size() + " Blocks: " + blocks.size() + " percent: " + percent);
+		int percent = (int) (blocks.size() * 100.0f) / structure.size();
 		return percent;
 	}
 
@@ -100,14 +99,16 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 
 	@Override
 	public BlockState[] getRequiredBlocks() {
-		BlockState[] req = {new BlockState(Material.FIRE)};
+		BlockState[] req = {
+			new BlockState(Material.FIRE)
+		};
 		return req;
 	}
 
 	@Override
 	public boolean hasRequiredBlock() {
-		for(Block block : getBasicStructure()){
-			if(block.getType().equals(Material.FIRE)){
+		for (Block block : getBasicStructure()) {
+			if (block.getType().equals(Material.FIRE)) {
 				return true;
 			}
 		}
@@ -117,13 +118,13 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 	@Override
 	public int getFuel() {
 		int fuel = 0;
-		for(Block block : getBasicStructure()){
-			if(block.getState() instanceof Furnace){
-				Furnace furn = (Furnace)block.getState();
+		for (Block block : getBasicStructure()) {
+			if (block.getState() instanceof Furnace) {
+				Furnace furn = (Furnace) block.getState();
 				FurnaceInventory inv = furn.getInventory();
-				for (ItemStack itemS : inv.getContents()){
-					for(BlockState state : g_req_fuel){
-						if(state.looseMatch(itemS)){
+				for (ItemStack itemS : inv.getContents()) {
+					for (BlockState state : g_req_fuel) {
+						if (state.looseMatch(itemS)) {
 							fuel = fuel + itemS.getAmount();
 						}
 					}
@@ -147,26 +148,26 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 	public boolean removeFuel(final int take) {
 		int amountRequired = take;
 		Map<Furnace, Integer> map = new HashMap<Furnace, Integer>();
-		for(Block block : getBasicStructure()){
-			if(amountRequired == 0){
+		for (Block block : getBasicStructure()) {
+			if (amountRequired == 0) {
 				break;
 			}
-			if(block.getState() instanceof Furnace){
-				Furnace furn = (Furnace)block.getState();
+			if (block.getState() instanceof Furnace) {
+				Furnace furn = (Furnace) block.getState();
 				FurnaceInventory inv = furn.getInventory();
-				for(ItemStack item : inv.getContents()){
-					if(amountRequired == 0){
+				for (ItemStack item : inv.getContents()) {
+					if (amountRequired == 0) {
 						break;
 					}
-					for(BlockState state : g_req_fuel){
-						if(amountRequired == 0){
+					for (BlockState state : g_req_fuel) {
+						if (amountRequired == 0) {
 							break;
 						}
-						if(state.looseMatch(item)){
-							if(amountRequired < item.getAmount()){
+						if (state.looseMatch(item)) {
+							if (amountRequired < item.getAmount()) {
 								map.put(furn, amountRequired);
 								amountRequired = 0;
-							}else{
+							} else {
 								map.put(furn, item.getAmount());
 								amountRequired = amountRequired - item.getAmount();
 							}
@@ -175,26 +176,24 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 				}
 			}
 		}
-		System.out.println("Fuel consumption: " + take + " consumptionTake: " + amountRequired + " sizeFound: " + map.size());
-		if(amountRequired == 0){
-			for(Entry<Furnace, Integer> entry : map.entrySet()){
+		if (amountRequired == 0) {
+			for (Entry<Furnace, Integer> entry : map.entrySet()) {
 				FurnaceInventory inv = entry.getKey().getInventory();
 				int amountTaken = 0;
-				for(ItemStack item : inv.getContents()){
-					if(amountTaken == take){
+				for (ItemStack item : inv.getContents()) {
+					if (amountTaken == take) {
 						break;
 					}
-					for(BlockState state : g_req_fuel){
-						if(amountTaken == take){
+					for (BlockState state : g_req_fuel) {
+						if (amountTaken == take) {
 							break;
 						}
-						if(state.looseMatch(item)){
-							System.out.println("amount taken: " + amountTaken);
-							if(item.getAmount() >= entry.getValue()){
+						if (state.looseMatch(item)) {
+							if (item.getAmount() >= entry.getValue()) {
 								item.setAmount(item.getAmount() - entry.getValue());
 								amountTaken = take;
 								break;
-							}else{
+							} else {
 								inv.remove(item);
 								amountTaken = amountTaken + item.getAmount();
 							}
@@ -211,20 +210,19 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {
 		int hasPercent = getAmountOfPercentBlocks();
 		int percent = getRequiredPercent();
-		if(!hasRequiredBlock()){
+		if (!hasRequiredBlock()) {
 			return Optional.of(new MovementResult().put(MovementResult.CauseKeys.MISSING_REQUIRED_BLOCK, new BlockState(Material.FIRE)));
 		}
-		if(hasPercent < percent){
-			System.out.println("has: " + hasPercent + " needs: " + percent);
-			return Optional.of(new MovementResult().put(MovementResult.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float)(percent - hasPercent))));
+		if (hasPercent < percent) {
+			return Optional.of(new MovementResult().put(MovementResult.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) (percent - hasPercent))));
 		}
-		if(getFuel() >= getConsumptionAmount()){
-			if(removeFuel(getConsumptionAmount())){
+		if (getFuel() >= getConsumptionAmount()) {
+			if (removeFuel(getConsumptionAmount())) {
 				return Optional.empty();
-			}else{
+			} else {
 				return Optional.of(new MovementResult().put(MovementResult.CauseKeys.FUEL_REMOVE_ERROR, true));
 			}
-		}else{
+		} else {
 			return Optional.of(new MovementResult().put(MovementResult.CauseKeys.OUT_OF_FUEL, true));
 		}
 	}
@@ -242,11 +240,11 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 	@Override
 	public void onSave(ShipsLocalDatabase database) {
 		List<String> blocks = new ArrayList<String>();
-		for(BlockState state : g_req_p_blocks){
+		for (BlockState state : g_req_p_blocks) {
 			blocks.add(state.toNoString());
 		}
 		List<String> fuels = new ArrayList<String>();
-		for(BlockState state : g_req_fuel){
+		for (BlockState state : g_req_fuel) {
 			fuels.add(state.toNoString());
 		}
 		database.set(g_req_percent, LiveRequiredPercent.REQUIRED_PERCENT);
@@ -263,48 +261,47 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 	public StaticAirship getStatic() {
 		return StaticShipTypeUtil.getType(StaticAirship.class).get();
 	}
-	
-	
-	//this adds the movable blocks
-	
+
+	// this adds the movable blocks
+
 	@Override
 	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
 		return super.move(dir, speed, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
 		return super.rotate(type, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
 		return super.rotateRight(new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
 		return super.rotateLeft(new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
 		return super.teleport(loc, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
 		return super.teleport(move, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
 		return super.teleport(loc, X, Y, Z, new BlockState(Material.AIR));
 	}
-	
-	public static class StaticAirship implements StaticShipType, StaticFuel, StaticRequiredPercent{
 
-		public StaticAirship(){
+	public static class StaticAirship implements StaticShipType, StaticFuel, StaticRequiredPercent {
+
+		public StaticAirship() {
 			StaticShipTypeUtil.inject(this);
 			File file = new File("plugins/Ships/Configuration/ShipTypes/Airship.yml");
 			if (!file.exists()) {
@@ -321,7 +318,7 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 				config.save();
 			}
 		}
-		
+
 		@Override
 		public String getName() {
 			return "Airship";
@@ -354,7 +351,7 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 			ship.setPercentBlocks(getDefaultPercentBlocks());
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
-			return Optional.of((LoadableShip)ship);
+			return Optional.of((LoadableShip) ship);
 		}
 
 		@Override
@@ -364,8 +361,7 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 			ship.setPercentBlocks(getDefaultPercentBlocks());
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
-			
-			
+
 			return Optional.of((LoadableShip) ship);
 		}
 
@@ -385,7 +381,9 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 
 		@Override
 		public BlockState[] getDefaultFuelMaterial() {
-			BlockState[] ret = {new BlockState(Material.COAL)};
+			BlockState[] ret = {
+				new BlockState(Material.COAL)
+			};
 			return ret;
 		}
 
@@ -393,7 +391,7 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 		public int getDefaultConsumptionAmount() {
 			return 1;
 		}
-		
+
 	}
 
 }

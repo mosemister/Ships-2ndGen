@@ -125,15 +125,15 @@ public class ShipLoader {
 							try {
 								int pos = Integer.parseInt(value);
 								switch (target) {
-								case 0:
-									posX = pos;
-									break;
-								case 1:
-									posY = pos;
-									break;
-								case 2:
-									structure.add(new Location(world, posX, posY, pos).getBlock());
-									break;
+									case 0:
+										posX = pos;
+										break;
+									case 1:
+										posY = pos;
+										break;
+									case 2:
+										structure.add(new Location(world, posX, posY, pos).getBlock());
+										break;
 								}
 							} catch (NumberFormatException e) {
 								break;

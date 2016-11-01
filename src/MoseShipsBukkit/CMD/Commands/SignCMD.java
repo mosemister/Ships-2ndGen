@@ -64,9 +64,9 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 		}
 		return false;
 	}
-	
+
 	@SuppressWarnings("deprecation")
-	public void individualTrack(final Player player){
+	public void individualTrack(final Player player) {
 		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
 		if (loc.getState() instanceof Sign) {
 			Sign sign = (Sign) loc.getState();
@@ -76,19 +76,19 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 				if (opShip.isPresent()) {
 					LoadableShip ship = opShip.get();
 					final ShipTrackEvent event = new ShipTrackEvent(ship);
-					//Bukkit.getServer().getPluginManager().callEvent(event);
+					// Bukkit.getServer().getPluginManager().callEvent(event);
 					int A = 0;
 					for (final Entry<Location, BlockState> entry : event.getShowing().entrySet()) {
 						A++;
-						Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable(){
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 
 							@Override
 							public void run() {
 								player.sendBlockChange(entry.getKey(), entry.getValue().getMaterial(), entry.getValue().getData());
 							}
-							
-						}, (A*10));
-						Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable(){
+
+						}, (A * 10));
+						Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 
 							@Override
 							public void run() {
@@ -99,8 +99,8 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 									player.sendSignChange(entry.getKey(), sign.getLines());
 								}
 							}
-							
-						}, ((A+1)*10));
+
+						}, ((A + 1) * 10));
 					}
 				}
 			}
@@ -118,7 +118,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 				if (opShip.isPresent()) {
 					LoadableShip ship = opShip.get();
 					final ShipTrackEvent event = new ShipTrackEvent(ship);
-					//Bukkit.getServer().getPluginManager().callEvent(event);
+					// Bukkit.getServer().getPluginManager().callEvent(event);
 					player.sendMessage("Now showing the structure of " + ship.getName() + " (size of " + event.getShowing().size() + ") for " + sec + " seconds");
 					for (Entry<Location, BlockState> entry : event.getShowing().entrySet()) {
 						player.sendBlockChange(entry.getKey(), entry.getValue().getMaterial(), entry.getValue().getData());

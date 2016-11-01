@@ -35,12 +35,12 @@ public class ShipsData extends DataHolder {
 	protected OfflinePlayer g_user;
 	protected List<OfflinePlayer> SUB_PILOTS = new ArrayList<OfflinePlayer>();
 	protected List<Block> STRUCTURE = new ArrayList<Block>();
-	protected Block MAIN_BLOCK;
+	protected Block g_main;
 	protected Location TELEPORT;
 
 	public ShipsData(String name, Block sign, Location teleport) {
 		g_name = name;
-		MAIN_BLOCK = sign;
+		g_main = sign;
 		if (teleport == null) {
 			TELEPORT = sign.getLocation();
 		} else {
@@ -53,8 +53,8 @@ public class ShipsData extends DataHolder {
 	}
 
 	public Optional<Sign> getLicence() {
-		if (MAIN_BLOCK.getState() instanceof Sign) {
-			return Optional.of((Sign) MAIN_BLOCK.getState());
+		if (g_main.getState() instanceof Sign) {
+			return Optional.of((Sign) g_main.getState());
 		}
 		return Optional.empty();
 	}
@@ -77,13 +77,13 @@ public class ShipsData extends DataHolder {
 	}
 
 	public World getWorld() {
-		return MAIN_BLOCK.getWorld();
+		return g_main.getWorld();
 	}
 
 	public Map<String, String> getBasicData() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("Name: ", g_name);
-		map.put("Licence: ", MAIN_BLOCK.getX() + ", " + MAIN_BLOCK.getY() + ", " + MAIN_BLOCK.getZ() + ", " + MAIN_BLOCK.getWorld().getName());
+		map.put("Licence: ", g_main.getX() + ", " + g_main.getY() + ", " + g_main.getZ() + ", " + g_main.getWorld().getName());
 		map.put("Teleport: ", TELEPORT.getX() + ", " + TELEPORT.getY() + ", " + TELEPORT.getZ() + ", " + TELEPORT.getWorld().getName());
 		map.put("Structure size:", STRUCTURE.size() + "");
 		return map;
@@ -95,7 +95,7 @@ public class ShipsData extends DataHolder {
 
 	public List<Entity> getEntities() {
 		List<Entity> entities = new ArrayList<Entity>();
-		for (Entity entity : MAIN_BLOCK.getWorld().getEntities()) {
+		for (Entity entity : g_main.getWorld().getEntities()) {
 			Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
 			if (STRUCTURE.contains(block)) {
 				entities.add(entity);
@@ -122,26 +122,26 @@ public class ShipsData extends DataHolder {
 		if (trackLimit == null) {
 			trackLimit = 5000;
 		}
-		List<Block> list = BlockFinderUtils.getConfigSelected().getConnectedBlocks(trackLimit, MAIN_BLOCK);
+		List<Block> list = BlockFinderUtils.getConfigSelected().getConnectedBlocks(trackLimit, g_main);
 		STRUCTURE = list;
 		return list;
 	}
 
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
 		STRUCTURE = locs;
-		MAIN_BLOCK = licence;
+		g_main = licence;
 		return locs;
 	}
 
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		STRUCTURE = locs;
-		MAIN_BLOCK = licence;
+		g_main = licence;
 		TELEPORT = teleport;
 		return locs;
 	}
 
 	public Location getLocation() {
-		return MAIN_BLOCK.getLocation();
+		return g_main.getLocation();
 	}
 
 	public Location getTeleportToLocation() {
@@ -154,7 +154,7 @@ public class ShipsData extends DataHolder {
 	}
 
 	public ShipsData cloneOnto(ShipsData data) {
-		data.MAIN_BLOCK = this.MAIN_BLOCK;
+		data.g_main = this.g_main;
 		data.g_name = this.g_name;
 		data.STRUCTURE = this.STRUCTURE;
 		data.SUB_PILOTS = this.SUB_PILOTS;

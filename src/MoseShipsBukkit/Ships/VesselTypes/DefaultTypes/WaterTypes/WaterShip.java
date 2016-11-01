@@ -67,7 +67,7 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 	@Override
 	public int getAmountOfPercentBlocks() {
 		List<Block> structure = getBasicStructure();
-		if(structure.isEmpty()){
+		if (structure.isEmpty()) {
 			return this.g_block_percent;
 		}
 		List<Block> blocks = new ArrayList<Block>();
@@ -140,12 +140,12 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 	public Map<String, Object> getInfo() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		List<String> requiredPBlocks = new ArrayList<String>();
-		for(BlockState state : this.g_materials){
+		for (BlockState state : this.g_materials) {
 			requiredPBlocks.add(state.toString());
 		}
-		if(g_user == null){
+		if (g_user == null) {
 			map.put("Owner", "None");
-		}else{
+		} else {
 			map.put("Owner", g_user.getName());
 		}
 		map.put("Size", updateBasicStructure().size());
@@ -153,7 +153,7 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 		map.put("Is loaded", this.isLoaded());
 		map.put("Needed percent (current/required)", this.getAmountOfPercentBlocks() + "/" + this.g_block_percent);
 		map.put("Percent blocks (any)", requiredPBlocks);
-		
+
 		return map;
 	}
 
@@ -161,37 +161,37 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 	public StaticWaterShip getStatic() {
 		return StaticShipTypeUtil.getType(StaticWaterShip.class).get();
 	}
-	
+
 	@Override
 	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
 		return super.move(dir, speed, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
 		return super.rotate(type, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
 		return super.rotateRight(new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
 		return super.rotateLeft(new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
 		return super.teleport(loc, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
 		return super.teleport(move, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
 		return super.teleport(loc, X, Y, Z, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));

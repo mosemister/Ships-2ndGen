@@ -65,9 +65,9 @@ public class OpShip extends AirType {
 	@Override
 	public Map<String, Object> getInfo() {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		if(g_user == null){
+		if (g_user == null) {
 			map.put("Owner", "None");
-		}else{
+		} else {
 			map.put("Owner", g_user.getName());
 		}
 		map.put("size", updateBasicStructure().size());
@@ -81,37 +81,37 @@ public class OpShip extends AirType {
 	public StaticShipType getStatic() {
 		return StaticShipTypeUtil.getType(StaticOPShip.class).get();
 	}
-	
+
 	@Override
 	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
 		return super.move(dir, speed, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
 		return super.rotate(type, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
 		return super.rotateRight(new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
 		return super.rotateLeft(new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
 		return super.teleport(loc, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
 		return super.teleport(move, new BlockState(Material.AIR));
 	}
-	
+
 	@Override
 	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
 		return super.teleport(loc, X, Y, Z, new BlockState(Material.AIR));

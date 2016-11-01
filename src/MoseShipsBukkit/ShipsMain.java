@@ -43,7 +43,7 @@ public class ShipsMain extends JavaPlugin {
 		new HelpCMD();
 		new BlockListCMD();
 	}
-	
+
 	private void registerRepeaters() {
 		ShipRunnables.registerShipsUnloader();
 	}
@@ -57,7 +57,7 @@ public class ShipsMain extends JavaPlugin {
 		// chest
 		BlockSnapshot.VALUE_TYPES.put(Material.CHEST, ChestSnapshot.class);
 		BlockSnapshot.VALUE_TYPES.put(Material.TRAPPED_CHEST, ChestSnapshot.class);
-		//ender
+		// ender
 		BlockSnapshot.VALUE_TYPES.put(Material.ENDER_CHEST, EnderChestSnapshot.class);
 		// cmd
 		BlockSnapshot.VALUE_TYPES.put(Material.COMMAND, CommandBlockSnapshot.class);
@@ -117,8 +117,8 @@ public class ShipsMain extends JavaPlugin {
 		BlockSnapshot.VALUE_TYPES.put(Material.SPRUCE_WOOD_STAIRS, StairsSnapshot.class);
 		BlockSnapshot.VALUE_TYPES.put(Material.WOOD_STAIRS, StairsSnapshot.class);
 		// craft bench
-		
-		//fire
+
+		// fire
 		BlockSnapshot.VALUE_TYPES.put(Material.FIRE, FireSnapshot.class);
 		// ladder
 		BlockSnapshot.VALUE_TYPES.put(Material.LADDER, LadderSnapshot.class);

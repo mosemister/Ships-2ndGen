@@ -71,12 +71,12 @@ public class Movement {
 			CollideType collideType = block.getCollision(ship.getBasicStructure(), movingTo);
 			if (collideType.equals(CollideType.COLLIDE)) {
 				collide.add(block);
-			}else{
+			} else {
 				blocks.add(block);
 			}
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		if(!collide.isEmpty()){
+		if (!collide.isEmpty()) {
 			return Optional.of(cause);
 		}
 		return move(ship, blocks);
@@ -133,12 +133,12 @@ public class Movement {
 			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateRight(centre.getBlock());
 			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
 				collide.add(block);
-			}else{
-			blocks.add(block);
+			} else {
+				blocks.add(block);
 			}
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		if(!collide.isEmpty()){
+		if (!collide.isEmpty()) {
 			return Optional.of(cause);
 		}
 		return move(ship, blocks);
@@ -195,12 +195,12 @@ public class Movement {
 			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateLeft(centre.getBlock());
 			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
 				collide.add(block);
-			}else{
+			} else {
 				blocks.add(block);
 			}
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		if(!collide.isEmpty()){
+		if (!collide.isEmpty()) {
 			return Optional.of(cause);
 		}
 		return move(ship, blocks);
@@ -266,12 +266,12 @@ public class Movement {
 			MovingBlock block = new MovingBlock(loc2, tel);
 			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
 				collide.add(block);
-			}else{
+			} else {
 				blocks.add(block);
 			}
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		if(!collide.isEmpty()){
+		if (!collide.isEmpty()) {
 			return Optional.of(cause);
 		}
 		return move(ship, blocks);
@@ -328,12 +328,12 @@ public class Movement {
 			MovingBlock block = new MovingBlock(loc3, loc2);
 			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
 				collide.add(block);
-			}else{
+			} else {
 				blocks.add(block);
 			}
 		}
 		cause.put(CauseKeys.MOVING_BLOCKS, collide);
-		if(!collide.isEmpty()){
+		if (!collide.isEmpty()) {
 			return Optional.of(cause);
 		}
 		return move(ship, blocks);
@@ -393,12 +393,12 @@ public class Movement {
 			}
 			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
 				collide.add(block);
-			}else{
+			} else {
 				blocks.add(block);
 			}
 		}
 		cause.put(MovementResult.CauseKeys.MOVING_BLOCKS, collide);
-		if(!collide.isEmpty()){
+		if (!collide.isEmpty()) {
 			return Optional.of(cause);
 		}
 		return move(ship, blocks);
@@ -410,22 +410,23 @@ public class Movement {
 			return opFail;
 		}
 		final List<Entity> entities = ship.getEntities();
-		MovementAlgorithmUtils.getConfig().move(ship, blocks);
-		Location origin = blocks.get(0).getOrigin();
-		Location to = blocks.get(0).getMovingTo();
-		double X = to.getX() - origin.getX();
-		double Y = to.getY() - origin.getY();
-		double Z = to.getZ() - origin.getZ();
-		for (Entity entity : entities) {
-			Location eLoc = entity.getLocation();
-			double tX = eLoc.getX() + X;
-			double tY = eLoc.getY() + Y;
-			double tZ = eLoc.getZ() + Z;
-			Location eTo = new Location(eLoc.getWorld(), tX, tY, tZ);
-			eTo.setDirection(eLoc.getDirection());
-			eTo.setPitch(eLoc.getPitch());
-			eTo.setYaw(eLoc.getYaw());
-			entity.teleport(eTo);
+		if (MovementAlgorithmUtils.getConfig().move(ship, blocks, entities)) {
+			Location origin = blocks.get(0).getOrigin();
+			Location to = blocks.get(0).getMovingTo();
+			double X = to.getX() - origin.getX();
+			double Y = to.getY() - origin.getY();
+			double Z = to.getZ() - origin.getZ();
+			for (Entity entity : entities) {
+				Location eLoc = entity.getLocation();
+				double tX = eLoc.getX() + X;
+				double tY = eLoc.getY() + Y;
+				double tZ = eLoc.getZ() + Z;
+				Location eTo = new Location(eLoc.getWorld(), tX, tY, tZ);
+				eTo.setDirection(eLoc.getDirection());
+				eTo.setPitch(eLoc.getPitch());
+				eTo.setYaw(eLoc.getYaw());
+				entity.teleport(eTo);
+			}
 		}
 		return Optional.empty();
 	}

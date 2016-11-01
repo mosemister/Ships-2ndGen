@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
@@ -15,7 +16,7 @@ import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterType;
 public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
-	public void move(LoadableShip type, List<MovingBlock> blocksUn) {
+	public boolean move(LoadableShip type, List<MovingBlock> blocksUn, List<Entity> entities) {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		int waterLevel = 63;
 		if (type instanceof WaterType) {
@@ -57,6 +58,7 @@ public class Ships5Movement implements MovementAlgorithm {
 		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
 				loc.getBlockZ());
 		type.setBasicStructure(newStructure, lic, tBlock.getMovingTo());
+		return true;
 	}
 
 	@Override

@@ -47,7 +47,7 @@ public abstract class LoadableShip extends ShipsData {
 	protected int g_max_blocks = 4000;
 	protected int g_min_blocks = 200;
 	protected boolean g_remove = true;
-	
+
 	static List<LoadableShip> SHIPS = new ArrayList<LoadableShip>();
 
 	public LoadableShip(String name, Block sign, Location teleport) {
@@ -57,37 +57,37 @@ public abstract class LoadableShip extends ShipsData {
 	public LoadableShip(ShipsData data) {
 		super(data);
 	}
-	
-	public boolean willRemoveNextCycle(){
+
+	public boolean willRemoveNextCycle() {
 		return g_remove;
 	}
-	
-	public LoadableShip setRemoveNextCycle(boolean remove){
+
+	public LoadableShip setRemoveNextCycle(boolean remove) {
 		g_remove = remove;
 		return this;
 	}
-		
-	public boolean isLoaded(){
-		for(LoadableShip ship : SHIPS){
-			if(ship.getName().equals(getName())){
+
+	public boolean isLoaded() {
+		for (LoadableShip ship : SHIPS) {
+			if (ship.getName().equals(getName())) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	public LoadableShip load(){
-		if(isLoaded()){
+
+	public LoadableShip load() {
+		if (isLoaded()) {
 			return this;
 		}
 		SHIPS.add(this);
 		return this;
 	}
-	
-	public LoadableShip unload(){
-		for(int A = 0; A < SHIPS.size(); A++){
+
+	public LoadableShip unload() {
+		for (int A = 0; A < SHIPS.size(); A++) {
 			LoadableShip ship = SHIPS.get(A);
-			if(ship.getName().equals(getName())){
+			if (ship.getName().equals(getName())) {
 				SHIPS.remove(ship);
 			}
 		}
@@ -178,6 +178,13 @@ public abstract class LoadableShip extends ShipsData {
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
 		List<Block> structure = super.setBasicStructure(locs, licence);
+		getLocalDatabase().saveBasicShip(this);
+		return structure;
+	}
+	
+	@Override
+	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
+		List<Block> structure = super.setBasicStructure(locs, licence, teleport);
 		getLocalDatabase().saveBasicShip(this);
 		return structure;
 	}

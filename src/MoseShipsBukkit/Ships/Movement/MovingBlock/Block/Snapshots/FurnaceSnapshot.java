@@ -21,8 +21,8 @@ public class FurnaceSnapshot extends BlockSnapshot implements RotatableSnapshot,
 	public FurnaceSnapshot(BlockState state) {
 		super(state);
 	}
-	
-	public Map<Integer, ItemStack> getInventory(){
+
+	public Map<Integer, ItemStack> getInventory() {
 		return g_inv;
 	}
 
