@@ -15,23 +15,42 @@ import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
+import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirType;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public class OpShip extends AirType {
+public class OpShip extends AirType implements LiveAutoPilotable, LiveFallable {
 
+	AutoPilot g_auto_pilot;
+	
 	public OpShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
 
 	public OpShip(ShipsData ship) {
 		super(ship);
+	}
+	
+	@Override
+	public Optional<AutoPilot> getAutoPilotData() {
+		return Optional.ofNullable(g_auto_pilot);
+	}
+	
+	@Override
+	public OpShip setAutoPilotData(AutoPilot pilot){
+		if(g_auto_pilot != null){
+			g_auto_pilot.stop();
+		}
+		g_auto_pilot = pilot;
+		return this;
 	}
 
 	@Override

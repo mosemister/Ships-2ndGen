@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 import MoseShipsBukkit.BlockFinder.Algorithms.Prototype3;
+import MoseShipsBukkit.BlockFinder.Algorithms.Prototype4;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Signs.ShipsSigns;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
@@ -15,6 +16,7 @@ import MoseShipsBukkit.Signs.ShipsSigns.SignType;
 public class BlockFinderUtils {
 
 	public static final BasicBlockFinder SHIPS5 = new Prototype3();
+	public static final BasicBlockFinder SHIPS6 = new Prototype4();
 
 	public static BasicBlockFinder getConfigSelected() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_BLOCKFINDER);
@@ -22,7 +24,7 @@ public class BlockFinderUtils {
 		if (opBlock.isPresent()) {
 			return opBlock.get();
 		}
-		return SHIPS5;
+		return SHIPS6;
 	}
 
 	public static boolean isValid(List<Block> list) {
@@ -43,11 +45,13 @@ public class BlockFinderUtils {
 	public static List<BasicBlockFinder> getFinders() {
 		List<BasicBlockFinder> finder = new ArrayList<BasicBlockFinder>(BasicBlockFinder.LIST);
 		finder.add(SHIPS5);
+		finder.add(SHIPS6);
 		return finder;
 	}
 
 	public static Optional<BasicBlockFinder> getFinder(String name) {
 		for (BasicBlockFinder finder : BasicBlockFinder.LIST) {
+			System.out.println(finder.getName() + " | " + name);
 			if (finder.getName().equalsIgnoreCase(name)) {
 				return Optional.of(finder);
 			}

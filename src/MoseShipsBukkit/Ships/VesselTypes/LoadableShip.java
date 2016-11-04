@@ -29,11 +29,9 @@ import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public abstract class LoadableShip extends ShipsData {
+public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	public abstract Optional<MovementResult> hasRequirements(List<MovingBlock> blocks);
-
-	public abstract boolean shouldFall();
 
 	public abstract Map<String, Object> getInfo();
 
@@ -166,6 +164,20 @@ public abstract class LoadableShip extends ShipsData {
 
 	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
 		return Movement.teleport(this, loc, X, Y, Z, movingTo);
+	}
+	
+	@Override
+	public ShipsData cloneOnto(ShipsData data) {
+		super.cloneOnto(data);
+		if(data instanceof LoadableShip){
+			LoadableShip ship = (LoadableShip)data;
+			ship.g_moving = this.g_moving;
+			ship.g_max_blocks = this.g_max_blocks;
+			ship.g_min_blocks = this.g_min_blocks;
+			ship.g_remove = this.g_remove;
+			return ship;
+		}
+		return data;
 	}
 
 	@Override

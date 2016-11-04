@@ -25,6 +25,9 @@ public class Movement {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
+		if(structure.isEmpty()){
+			ship.updateBasicStructure();
+		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
 			for (int B = 0; B < D; B++) {
@@ -88,6 +91,9 @@ public class Movement {
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
 		List<Block> structure = ship.getBasicStructure();
+		if(structure.isEmpty()){
+			ship.updateBasicStructure();
+		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
 			for (int B = 0; B < D; B++) {
@@ -150,6 +156,9 @@ public class Movement {
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
 		List<Block> structure = ship.getBasicStructure();
+		if(structure.isEmpty()){
+			ship.updateBasicStructure();
+		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
 			for (int B = 0; B < D; B++) {
@@ -221,6 +230,9 @@ public class Movement {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
+		if(structure.isEmpty()){
+			ship.updateBasicStructure();
+		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
 			for (int B = 0; B < D; B++) {
@@ -283,6 +295,9 @@ public class Movement {
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location loc2 = tel.add(X, Y, Z);
 		List<Block> structure = ship.getBasicStructure();
+		if(structure.isEmpty()){
+			ship.updateBasicStructure();
+		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
 			for (int B = 0; B < D; B++) {
@@ -338,13 +353,15 @@ public class Movement {
 		}
 		return move(ship, blocks);
 	}
-
+	
 	public static Optional<MovementResult> teleport(LoadableShip ship, StoredMovement movement, BlockState... movingTo) {
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		Block loc2 = movement.getEndResult(ship.getLocation().getBlock());
 		List<Block> structure = ship.getBasicStructure();
+		if(structure.isEmpty()){
+			ship.updateBasicStructure();
+		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
 			for (int B = 0; B < D; B++) {
@@ -386,18 +403,18 @@ public class Movement {
 				}
 			}
 		}
-		for (Block loc3 : structure) {
-			MovingBlock block = new MovingBlock(loc3, loc2.getLocation());
-			if (movement.getRotation().isPresent()) {
-				block.rotate(movement.getRotation().get(), ship.getLocation().getBlock());
-			}
-			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
+		for (Block loc : structure) {
+			Block result = movement.getEndResult(loc);
+			System.out.println(result);
+			MovingBlock block = new MovingBlock(loc, result);
+			CollideType collideType = block.getCollision(ship.getBasicStructure(), movingTo);
+			if (collideType.equals(CollideType.COLLIDE)) {
 				collide.add(block);
 			} else {
 				blocks.add(block);
 			}
 		}
-		cause.put(MovementResult.CauseKeys.MOVING_BLOCKS, collide);
+		cause.put(CauseKeys.MOVING_BLOCKS, collide);
 		if (!collide.isEmpty()) {
 			return Optional.of(cause);
 		}

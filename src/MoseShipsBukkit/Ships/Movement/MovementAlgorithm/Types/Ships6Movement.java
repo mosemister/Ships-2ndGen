@@ -24,6 +24,9 @@ public class Ships6Movement implements MovementAlgorithm {
 
 	@Override
 	public boolean move(final LoadableShip vessel, final List<MovingBlock> blocksUn, final List<Entity> onBoard) {
+		if(blocksUn.isEmpty()){
+			return false;
+		}
 		final Map<Entity, Location> map = new HashMap<Entity, Location>();
 		for (Entity entity : onBoard) {
 			map.put(entity, entity.getLocation());

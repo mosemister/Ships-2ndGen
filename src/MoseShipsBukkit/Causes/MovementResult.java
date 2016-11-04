@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Ships.Movement.AutoPilot;
+import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Utils.State.BlockState;
 

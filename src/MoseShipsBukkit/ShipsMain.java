@@ -42,6 +42,7 @@ public class ShipsMain extends JavaPlugin {
 		new SignCMD();
 		new HelpCMD();
 		new BlockListCMD();
+		new AutoPilotCMD();
 	}
 
 	private void registerRepeaters() {

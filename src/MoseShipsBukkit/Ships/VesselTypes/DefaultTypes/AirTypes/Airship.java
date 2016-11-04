@@ -25,9 +25,12 @@ import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
+import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFuel;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredBlock;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredPercent;
@@ -39,12 +42,13 @@ import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
+public class Airship extends AirType implements LiveAutoPilotable, LiveFallable, LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
 
 	int g_req_percent;
 	int g_cons_amount;
 	BlockState[] g_req_p_blocks;
 	BlockState[] g_req_fuel;
+	AutoPilot g_auto_pilot;
 
 	public Airship(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
@@ -73,6 +77,20 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 		g_cons_amount = A;
 		return this;
 	}
+	
+	@Override
+	public Optional<AutoPilot> getAutoPilotData() {
+		return Optional.ofNullable(g_auto_pilot);
+	}
+	
+	@Override
+	public Airship setAutoPilotData(AutoPilot pilot){
+		if(g_auto_pilot != null){
+			g_auto_pilot.stop();
+		}
+		g_auto_pilot = pilot;
+		return this;
+	}
 
 	@Override
 	public int getRequiredPercent() {
@@ -82,6 +100,7 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 	@Override
 	public int getAmountOfPercentBlocks() {
 		List<Block> structure = getBasicStructure();
+		if(!structure.isEmpty()){
 		List<Block> blocks = new ArrayList<Block>();
 		for (Block block : structure) {
 			if (BlockState.contains(block, getPercentBlocks())) {
@@ -90,6 +109,8 @@ public class Airship extends AirType implements LiveFuel, LiveRequiredBlock, Liv
 		}
 		int percent = (int) (blocks.size() * 100.0f) / structure.size();
 		return percent;
+		}
+		return 0;
 	}
 
 	@Override

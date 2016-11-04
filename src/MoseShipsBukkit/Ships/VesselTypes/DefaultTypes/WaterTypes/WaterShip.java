@@ -112,11 +112,6 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 	}
 
 	@Override
-	public boolean shouldFall() {
-		return false;
-	}
-
-	@Override
 	public void onSave(ShipsLocalDatabase database) {
 		List<String> list = new ArrayList<String>();
 		for (BlockState state : g_materials) {
