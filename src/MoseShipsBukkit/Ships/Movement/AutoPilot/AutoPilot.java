@@ -81,7 +81,7 @@ public class AutoPilot {
 	}
 
 	public AutoPilot(LiveAutoPilotable type, double X, double Y, double Z, int speed, @Nullable OfflinePlayer user) {
-		int height = 143;
+		int height = 150;
 		Location moveTo = type.getLocation().clone().add(X, Y, Z);
 
 		int toX = moveTo.getBlockX();
@@ -101,9 +101,13 @@ public class AutoPilot {
 		List<Location> listFour = getBetween(stageThree, moveTo, speed);
 		List<Location> collection = new ArrayList<Location>();
 		collection.addAll(listOne);
+		collection.add(stageOne);
 		collection.addAll(listTwo);
+		collection.add(stageTwo);
 		collection.addAll(listThree);
+		collection.add(stageThree);
 		collection.addAll(listFour);
+		System.out.println("size of movements: " + collection.size());
 		for (Location loc : collection) {
 			StoredMovement.Builder builder = new StoredMovement.Builder();
 			builder.setTeleportTo(loc);
@@ -147,6 +151,7 @@ public class AutoPilot {
 							PROCESSES = null;
 						}
 						PROCESSED = PROCESSED + 1;
+						System.out.println("Attempting to move");
 						Optional<MovementResult> move = SHIP.teleport(MOVEMENTS.get(B));
 						if (move.isPresent()) {
 							MovementResult result = move.get();
@@ -222,12 +227,11 @@ public class AutoPilot {
 	}
 
 	private List<Location> getBetween(Location loc1, Location loc2, int spacing) {
+		System.out.println("\n X = " + loc1.getX() + " Y = " + loc1.getY() + " Z = " + loc1.getZ() + "\n X = " + loc2.getX() + " Y = " + loc2.getY() + " Z = " + loc2.getZ());
 		List<Location> blocks = new ArrayList<Location>();
 		World world = loc1.getWorld();
 		if (loc1.getBlockX() == loc2.getBlockX()) {
-			System.out.println("X == same");
 			if (loc1.getBlockZ() < loc2.getBlockZ()) {
-				System.out.println("Z is greater then loc2");
 				int x = loc2.getBlockX();
 				int y = loc2.getBlockY();
 				int z = loc2.getBlockZ();
@@ -257,7 +261,6 @@ public class AutoPilot {
 				return blocks;
 			}
 		} else {
-			System.out.println("Z == same");
 			if (loc1.getBlockX() > loc2.getBlockX()) {
 				int x = loc2.getBlockX();
 				int y = loc2.getBlockY();

@@ -30,6 +30,8 @@ public class ShipsConfig extends BasicConfig {
 	public static final String PATH_MESSAGE_ENVIROMENT_NOT_IN_WATER = "Configuration.Messages.Enviroment.NotInWater";
 	public static final String PATH_MESSAGE_ENVIROMENT_DETCTION_AHEAD = "Configuration.Messages.Enviroment.DetectionAhead";
 	public static final String PATH_MESSAGE_AUTOPILOT_FINISHED = "Configuration.Messages.AutoPilot.Finished";
+	public static final String PATH_MESSAGE_SIGN_CREATE_FAILED_NAME = "Configuration.Messages.Sign.Create.Failed.ByName";
+	public static final String PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE = "Configuration.Messages.Sign.Create.Failed.ByType";
 
 	public static final ShipsConfig CONFIG = new ShipsConfig("Configuration/Config");
 
@@ -65,6 +67,8 @@ public class ShipsConfig extends BasicConfig {
 		set("Ship is not in water", PATH_MESSAGE_ENVIROMENT_NOT_IN_WATER);
 		set("Ship found detection, they are %block% for %time%", PATH_MESSAGE_ENVIROMENT_DETCTION_AHEAD);
 		set("%Ship% auto-pilot finished", PATH_MESSAGE_AUTOPILOT_FINISHED);
+		set("%Name% has already been taken", PATH_MESSAGE_SIGN_CREATE_FAILED_NAME);
+		set("%Type% is not a ship type", PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE);
 		
 		save();
 		return this;

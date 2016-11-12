@@ -105,9 +105,16 @@ public class ShipsListeners implements Listener {
 				Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
 
 				if (!opShipType.isPresent()) {
-					ShipsCreateFailedEvent.ConflictType conflictType = new ShipsCreateFailedEvent.ConflictType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), event
+					ShipsCreateFailedEvent.ConflictType conflictType = new ShipsCreateFailedEvent.ConflictType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
 							.getLine(1));
 					Bukkit.getServer().getPluginManager().callEvent(conflictType);
+					String message = conflictType.getMessage();
+					if (message.contains("%Type%")) {
+						message.replace("%Type%", event.getLine(1));
+					}
+					if (conflictType.willMessageDisplay()) {
+						player.sendMessage(ShipsMain.format(message, true));
+					}
 					return;
 				}
 
@@ -120,13 +127,18 @@ public class ShipsListeners implements Listener {
 
 				Optional<LoadableShip> opConflict = LoadableShip.getShip(event.getLine(2));
 				if (opConflict.isPresent()) {
-					/* ShipsCreateFailedEvent.ConflictName conflictName = new
-					 * ShipsCreateFailedEvent.ConflictName(new
-					 * ShipsData(event.getLine(2), event.getBlock(),
-					 * player.getLocation()),
-					 * opConflict.get());
-					 * Bukkit.getServer().getPluginManager().callEvent(
-					 * conflictName); */
+					ShipsCreateFailedEvent.ConflictName conflictName = new ShipsCreateFailedEvent.ConflictName(new ShipsData(event.getLine(2), event.getBlock(),
+							player.getLocation()), player,
+							opConflict.get());
+					Bukkit.getServer().getPluginManager().callEvent(
+							conflictName);
+					String message = conflictName.getMessage();
+					if (message.contains("%Type%")) {
+						message.replace("%Type%", event.getLine(1));
+					}
+					if (conflictName.willMessageDisplay()) {
+						player.sendMessage(ShipsMain.format(message, true));
+					}
 					return;
 				}
 				AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<StaticShipType>(
