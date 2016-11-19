@@ -101,6 +101,12 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	@Override
 	public boolean startScheduler() {
+		long repeate = 1;
+		if(ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE) != null){
+			repeate = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE).longValue();
+		}else{
+			repeate = ShipsConfig.CONFIG.get(Double.class, ShipsConfig.PATH_SCHEDULER_REPEATE).longValue();
+		}
 		final LoadableShip ship = (LoadableShip) this;
 		if (g_sche_id != -1) {
 			g_sche_id = Bukkit.getScheduler().scheduleSyncRepeatingTask(ShipsMain.getPlugin(), new Runnable() {
@@ -118,7 +124,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 
 				}
 
-			}, 0, ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE));
+			}, 0, repeate);
 			return true;
 		} else {
 			return false;

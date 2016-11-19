@@ -36,7 +36,7 @@ public class Ships6Movement implements MovementAlgorithm {
 		ShipsConfig config = ShipsConfig.CONFIG;
 		long repeate = 1;
 		if(config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE) != null){
-			repeate = config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE);
+			repeate = config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE).intValue();
 		}else{
 			Double ret = config.get(Double.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE);
 			repeate = ret.longValue();
