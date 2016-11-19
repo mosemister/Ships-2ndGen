@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
@@ -19,20 +18,18 @@ import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
 import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.Movement.StoredMovement;
-import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticRequiredPercent;
-import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterType;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.AbstractWaterType;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLockedAltitude {
+public class WaterShip extends AbstractWaterType implements LiveRequiredPercent, LiveLockedAltitude {
 
 	int g_block_percent = getStatic().getDefaultRequiredPercent();
 	BlockState[] g_materials = getStatic().getDefaultPercentBlocks();
@@ -120,6 +117,10 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 		database.setOverride(g_block_percent, LiveRequiredPercent.REQUIRED_PERCENT);
 		database.setOverride(list, LiveRequiredPercent.REQUIRED_BLOCKS);
 	}
+	
+	@Override
+	public void onRepeate() {		
+	}
 
 	@Override
 	public int getMaxBlocks() {
@@ -155,41 +156,6 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 	@Override
 	public StaticWaterShip getStatic() {
 		return StaticShipTypeUtil.getType(StaticWaterShip.class).get();
-	}
-
-	@Override
-	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
-		return super.move(dir, speed, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
-	}
-
-	@Override
-	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
-		return super.rotate(type, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
-	}
-
-	@Override
-	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
-		return super.rotateRight(new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
-	}
-
-	@Override
-	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
-		return super.rotateLeft(new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
-		return super.teleport(loc, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
-		return super.teleport(move, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
-		return super.teleport(loc, X, Y, Z, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
 
 	public static class StaticWaterShip implements StaticShipType, StaticRequiredPercent {
@@ -271,5 +237,4 @@ public class WaterShip extends WaterType implements LiveRequiredPercent, LiveLoc
 		}
 
 	}
-
 }

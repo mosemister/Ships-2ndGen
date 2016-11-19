@@ -10,13 +10,13 @@ import org.bukkit.material.MaterialData;
 
 import MoseShipsBukkit.Configs.Files.BlockList;
 import MoseShipsBukkit.Ships.Movement.MovementType;
+import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.Movement.Collide.CollideType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.AttachableSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.BlockSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.RotatableSnapshot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.SpecialSnapshot;
 import MoseShipsBukkit.Utils.State.BlockState;
-import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 
 public class MovingBlock {
 

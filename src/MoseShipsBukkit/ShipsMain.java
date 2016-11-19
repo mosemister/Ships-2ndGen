@@ -29,6 +29,7 @@ public class ShipsMain extends JavaPlugin {
 	public static String NAME;
 	public static String VERSION;
 	public static final String[] TESTED_MC = {
+		"1.11.0",
 		"1.10.2",
 		"1.10.0",
 		"1.9.4"

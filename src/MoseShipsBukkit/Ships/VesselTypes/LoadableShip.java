@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -16,18 +17,23 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
+import MoseShips.Stores.TwoStore;
+import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
+import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
+import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.Movement.Movement;
+import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
-import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
+import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
-import MoseShipsBukkit.Utils.State.BlockState;
 
 public abstract class LoadableShip extends ShipsData implements LiveData {
 
@@ -39,32 +45,109 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	public abstract void onRemove(@Nullable Player player);
 
+	public abstract void onRepeate();
+
 	public abstract StaticShipType getStatic();
+
+	@Override
+	public abstract Optional<MovementResult> move(BlockFace dir, int speed);
+
+	@Override
+	public abstract Optional<MovementResult> move(int X, int Y, int Z);
+
+	@Override
+	public abstract Optional<MovementResult> rotateLeft();
+
+	@Override
+	public abstract Optional<MovementResult> rotateRight();
+
+	@Override
+	public abstract Optional<MovementResult> teleport(StoredMovement move);
+
+	@Override
+	public abstract Optional<MovementResult> teleport(Location loc);
+
+	@Override
+	public abstract Optional<MovementResult> teleport(Location loc, int X, int Y, int Z);
 
 	protected boolean g_moving = false;
 	protected int g_max_blocks = 4000;
 	protected int g_min_blocks = 200;
+	protected int g_sche_id = -1;
+	protected int g_time_repeated = 0;
 	protected boolean g_remove = true;
 
 	static List<LoadableShip> SHIPS = new ArrayList<LoadableShip>();
 
 	public LoadableShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
+		startScheduler();
 	}
 
 	public LoadableShip(ShipsData data) {
 		super(data);
 	}
 
+	@Override
+	public int getSchedulerRepeatedCount() {
+		return g_time_repeated;
+	}
+
+	@Override
+	public LoadableShip pauseScheduler() {
+		Bukkit.getScheduler().cancelTask(g_sche_id);
+		return this;
+	}
+
+	@Override
+	public boolean startScheduler() {
+		final LoadableShip ship = (LoadableShip) this;
+		if (g_sche_id != -1) {
+			g_sche_id = Bukkit.getScheduler().scheduleSyncRepeatingTask(ShipsMain.getPlugin(), new Runnable() {
+
+				@Override
+				public void run() {
+					onRepeate();
+					if (ship instanceof LiveFallable) {
+						ship.onShouldFall();
+					}
+					if(ship instanceof LiveAutoPilotable){
+						ship.onAutoPilot();
+					}
+					g_time_repeated++;
+
+				}
+
+			}, 0, ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE));
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public Optional<MovementResult> rotate(Rotate type) {
+		switch (type) {
+			case LEFT:
+				return rotateLeft();
+			case RIGHT:
+				return rotateRight();
+		}
+		return null;
+	}
+
+	@Override
 	public boolean willRemoveNextCycle() {
 		return g_remove;
 	}
 
+	@Override
 	public LoadableShip setRemoveNextCycle(boolean remove) {
 		g_remove = remove;
 		return this;
 	}
 
+	@Override
 	public boolean isLoaded() {
 		for (LoadableShip ship : SHIPS) {
 			if (ship.getName().equals(getName())) {
@@ -74,6 +157,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		return false;
 	}
 
+	@Override
 	public LoadableShip load() {
 		if (isLoaded()) {
 			return this;
@@ -82,6 +166,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		return this;
 	}
 
+	@Override
 	public LoadableShip unload() {
 		for (int A = 0; A < SHIPS.size(); A++) {
 			LoadableShip ship = SHIPS.get(A);
@@ -92,24 +177,29 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		return this;
 	}
 
+	@Override
 	public int getMaxBlocks() {
 		return g_max_blocks;
 	}
 
+	@Override
 	public LoadableShip setMaxBlocks(int A) {
 		g_max_blocks = A;
 		return this;
 	}
 
+	@Override
 	public int getMinBlocks() {
 		return g_min_blocks;
 	}
 
+	@Override
 	public LoadableShip setMinBlocks(int A) {
 		g_min_blocks = A;
 		return this;
 	}
 
+	@Override
 	public boolean isMoving() {
 		return g_moving;
 	}
@@ -119,58 +209,28 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		g_moving = check;
 	}
 
+	@Override
 	public void remove() {
 		remove(null);
 	}
 
+	@Override
 	public void remove(Player player) {
 		SHIPS.remove(this);
 		onRemove(player);
 		getLocalDatabase().getFile().delete();
 	}
 
+	@Override
 	public ShipsLocalDatabase getLocalDatabase() {
 		return new ShipsLocalDatabase(this);
 	}
 
-	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
-		Block block = new Location(getWorld(), 0, 0, 0).getBlock().getRelative(dir, speed);
-		return Movement.move(this, block.getX(), block.getY(), block.getZ(), movingTo);
-	}
-
-	public Optional<MovementResult> move(int X, int Y, int Z, BlockState... movingTo) {
-		return Movement.move(this, X, Y, Z, movingTo);
-	}
-
-	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
-		return Movement.rotateLeft(this, movingTo);
-	}
-
-	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
-		return Movement.rotateRight(this, movingTo);
-	}
-
-	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
-		return Movement.rotate(this, type, movingTo);
-	}
-
-	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
-		return Movement.teleport(this, move, movingTo);
-	}
-
-	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
-		return Movement.teleport(this, loc, movingTo);
-	}
-
-	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
-		return Movement.teleport(this, loc, X, Y, Z, movingTo);
-	}
-	
 	@Override
 	public ShipsData cloneOnto(ShipsData data) {
 		super.cloneOnto(data);
-		if(data instanceof LoadableShip){
-			LoadableShip ship = (LoadableShip)data;
+		if (data instanceof LoadableShip) {
+			LoadableShip ship = (LoadableShip) data;
 			ship.g_moving = this.g_moving;
 			ship.g_max_blocks = this.g_max_blocks;
 			ship.g_min_blocks = this.g_min_blocks;
@@ -193,7 +253,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		getLocalDatabase().saveBasicShip(this);
 		return structure;
 	}
-	
+
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		List<Block> structure = super.setBasicStructure(locs, licence, teleport);
@@ -213,6 +273,51 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		super.setOwner(user);
 		getLocalDatabase().saveBasicShip(this);
 		return this;
+	}
+	
+	private void onShouldFall(){
+		ShipsConfig config = ShipsConfig.CONFIG;
+		
+		if ((g_time_repeated % config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_FALL)) == 0) {
+			if (((LiveFallable) this).shouldFall()) {
+				move(0, -2, 0);
+			}
+		}
+	}
+	
+	private void onAutoPilot(){
+		ShipsConfig config = ShipsConfig.CONFIG;
+		LiveAutoPilotable ship2 = (LiveAutoPilotable) this;
+		if ((g_time_repeated % config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_AUTOPILOT)) == 0) {
+			Optional<AutoPilot> opData = ship2.getAutoPilotData();
+			if (opData.isPresent()) {
+				AutoPilot data = opData.get();
+				if (data.getMovesDone() == (data.getMovements().size() - 1)) {
+					if (data.isRepeating()) {
+						data.setMovesDone(0);
+					} else {
+						ship2.setAutoPilotData(null);
+					}
+				}
+				data.setMovesDone(data.getMovesDone() + 1);
+
+				System.out.println("Attempting to move");
+				StoredMovement movement = data.getMovements().get(data.getMovesDone());
+				Optional<MovementResult> move = teleport(movement);
+				if (move.isPresent()) {
+					MovementResult result = move.get();
+					if (result.getFailedCause().isPresent()) {
+						if (data.getTargetPlayer().isPresent()) {
+							if (data.getTargetPlayer().get().isOnline()) {
+								TwoStore<CauseKeys<Object>, Object> fail = result.getFailedCause().get();
+								fail.getFirst().sendMessage(data.getTargetPlayer().get().getPlayer(), fail.getSecond());
+							}
+						}
+						ship2.setAutoPilotData(null);
+					}
+				}
+			}
+		}
 	}
 
 	public static boolean addToRam(LoadableShip type) {

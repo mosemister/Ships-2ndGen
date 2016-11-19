@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
+import MoseShipsBukkit.VersionChecking;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Utils.State.BlockState;
 
@@ -27,14 +28,16 @@ public class BlockList extends BasicConfig {
 		BLOCKS = new HashMap<BlockState, ListType>();
 		List<BlockState> list = new ArrayList<BlockState>();
 		for (Material material : Material.values()) {
-			for (byte A = -1; A < 25; A++) {
-				String value = get(String.class, material.name() + ".DataValue" + A);
-				if (value != null) {
-					ListType type = ListType.valueFrom(value);
-					if (type == null) {
-						list.add(new BlockState(material, A));
-					} else {
-						BLOCKS.put(new BlockState(material, A), type);
+			if (material.isBlock()) {
+				for (byte A = -1; A < 25; A++) {
+					String value = get(String.class, material.name() + ".DataValue" + A);
+					if (value != null) {
+						ListType type = ListType.valueFrom(value);
+						if (type == null) {
+							list.add(new BlockState(material, A));
+						} else {
+							BLOCKS.put(new BlockState(material, A), type);
+						}
 					}
 				}
 			}
@@ -46,7 +49,9 @@ public class BlockList extends BasicConfig {
 
 	public BlockList applyMissing() {
 		for (Material material : Material.values()) {
-			set(getDefaultValue(material).name(), material.name() + ".DataValue-1");
+			if (material.isBlock()) {
+				set(getDefaultValue(material).name(), material.name() + ".DataValue-1");
+			}
 		}
 		save();
 		return this;
@@ -198,6 +203,25 @@ public class BlockList extends BasicConfig {
 		list.add(new BlockState(Material.JUNGLE_DOOR));
 		list.add(new BlockState(Material.DARK_OAK_FENCE));
 		list.add(new BlockState(Material.ACACIA_FENCE));
+		if(!VersionChecking.isGreater(VersionChecking.MINECRAFT_VERSION, 1, 11, 0).equals(VersionChecking.VersionOutcome.LOWER)){
+			list.add(new BlockState(Material.OBSERVER));
+			list.add(new BlockState(Material.BLACK_SHULKER_BOX));
+			list.add(new BlockState(Material.WHITE_SHULKER_BOX));
+			list.add(new BlockState(Material.ORANGE_SHULKER_BOX));
+			list.add(new BlockState(Material.MAGENTA_SHULKER_BOX));
+			list.add(new BlockState(Material.LIGHT_BLUE_SHULKER_BOX));
+			list.add(new BlockState(Material.YELLOW_SHULKER_BOX));
+			list.add(new BlockState(Material.LIME_SHULKER_BOX));
+			list.add(new BlockState(Material.PINK_SHULKER_BOX));
+			list.add(new BlockState(Material.GRAY_SHULKER_BOX));
+			list.add(new BlockState(Material.SILVER_SHULKER_BOX));
+			list.add(new BlockState(Material.CYAN_SHULKER_BOX));
+			list.add(new BlockState(Material.PURPLE_SHULKER_BOX));
+			list.add(new BlockState(Material.BLUE_SHULKER_BOX));
+			list.add(new BlockState(Material.BROWN_SHULKER_BOX));
+			list.add(new BlockState(Material.GREEN_SHULKER_BOX));
+			list.add(new BlockState(Material.RED_SHULKER_BOX));
+		}
 		return list;
 	}
 

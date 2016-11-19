@@ -28,7 +28,7 @@ import MoseShipsBukkit.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
 import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateFailedEvent;
 import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
+import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;

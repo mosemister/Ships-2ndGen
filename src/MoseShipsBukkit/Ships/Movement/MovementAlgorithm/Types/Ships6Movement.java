@@ -18,7 +18,7 @@ import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterType;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.AbstractWaterType;
 
 public class Ships6Movement implements MovementAlgorithm {
 
@@ -34,7 +34,13 @@ public class Ships6Movement implements MovementAlgorithm {
 		}
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		ShipsConfig config = ShipsConfig.CONFIG;
-		long repeate = config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE);
+		long repeate = 1;
+		if(config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE) != null){
+			repeate = config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE);
+		}else{
+			Double ret = config.get(Double.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE);
+			repeate = ret.longValue();
+		}
 		int stackSize = 100;
 		final List<List<MovingBlock>> list = new ArrayList<List<MovingBlock>>();
 		List<MovingBlock> toAdd = new ArrayList<MovingBlock>();
@@ -49,8 +55,8 @@ public class Ships6Movement implements MovementAlgorithm {
 		list.add(toAdd);
 		final Location licence = vessel.getLocation();
 		int waterLevel = 63;
-		if (vessel instanceof WaterType) {
-			WaterType type2 = (WaterType) vessel;
+		if (vessel instanceof AbstractWaterType) {
+			AbstractWaterType type2 = (AbstractWaterType) vessel;
 			waterLevel = type2.getWaterLevel();
 		}
 		final int waterLevelFinal = waterLevel;

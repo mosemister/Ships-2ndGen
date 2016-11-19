@@ -5,6 +5,10 @@ public enum MovementType {
 	FORWARDS,
 	ROTATE_LEFT,
 	ROTATE_RIGHT,
-	TELEPORT
+	TELEPORT;
 
+	public static enum Rotate {
+		LEFT,
+		RIGHT;
+	}
 }

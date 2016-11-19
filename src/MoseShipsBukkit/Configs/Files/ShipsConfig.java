@@ -12,6 +12,10 @@ public class ShipsConfig extends BasicConfig {
 	public static final String PATH_ALGORITHMS_MOVEMENT = "Advanced.Algorithms.Movement";
 	public static final String PATH_ALGORITHMS_CLEARFREQUENCY = "Advanced.Algorithms.ClearFrequency";
 
+	public static final String PATH_SCHEDULER_REPEATE = "Advanced.Scheduler.Repeate";
+	public static final String PATH_SCHEDULER_AUTOPILOT = "Advanced.Scheduler.Autopilot";
+	public static final String PATH_SCHEDULER_FALL = "Advanced.Scheduler.Fall";
+	
 	public static final String PATH_ONSNEAK_REMOVE_SHIP = "Configuration.OnSneak.RemoveShipsBlocks";
 	
 	public static final String PATH_COLLIDE_SHOW_TIME = "Configuration.Collide.DisplayTime";

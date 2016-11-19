@@ -84,10 +84,9 @@ public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD{
 					player.sendMessage(ShipsMain.format(args[1] + " is not valid", true));
 					return true;
 				}
-				if(ap.start()){
-					player.sendMessage(ShipsMain.format(ship.getName() + " is now in autopilot mode. Estimated " + ap.getMovements().size() + " moves", false));
-					return true;
-				}
+				shipA.setAutoPilotData(ap);
+				player.sendMessage(ShipsMain.format(ship.getName() + " is now in autopilot mode. Estimated " + ap.getMovements().size() + " moves", false));
+				return true;
 			}catch(NumberFormatException e){
 				e.printStackTrace();
 			}

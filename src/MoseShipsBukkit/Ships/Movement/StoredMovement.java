@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
+import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 
 public class StoredMovement {
 

@@ -12,7 +12,6 @@ import java.util.Optional;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Furnace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceInventory;
@@ -24,9 +23,7 @@ import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
 import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
-import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
@@ -36,13 +33,13 @@ import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredBlock;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticFuel;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticRequiredPercent;
-import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirType;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public class Airship extends AirType implements LiveAutoPilotable, LiveFallable, LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
+public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveFallable, LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
 
 	int g_req_percent;
 	int g_cons_amount;
@@ -85,9 +82,6 @@ public class Airship extends AirType implements LiveAutoPilotable, LiveFallable,
 	
 	@Override
 	public Airship setAutoPilotData(AutoPilot pilot){
-		if(g_auto_pilot != null){
-			g_auto_pilot.stop();
-		}
 		g_auto_pilot = pilot;
 		return this;
 	}
@@ -250,6 +244,9 @@ public class Airship extends AirType implements LiveAutoPilotable, LiveFallable,
 
 	@Override
 	public boolean shouldFall() {
+		if(getFuel() == 0){
+			return true;
+		}
 		return false;
 	}
 
@@ -282,42 +279,9 @@ public class Airship extends AirType implements LiveAutoPilotable, LiveFallable,
 	public StaticAirship getStatic() {
 		return StaticShipTypeUtil.getType(StaticAirship.class).get();
 	}
-
-	// this adds the movable blocks
-
+	
 	@Override
-	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
-		return super.move(dir, speed, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
-		return super.rotate(type, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
-		return super.rotateRight(new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
-		return super.rotateLeft(new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
-		return super.teleport(loc, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
-		return super.teleport(move, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
-		return super.teleport(loc, X, Y, Z, new BlockState(Material.AIR));
+	public void onRepeate() {
 	}
 
 	public static class StaticAirship implements StaticShipType, StaticFuel, StaticRequiredPercent {
@@ -414,5 +378,4 @@ public class Airship extends AirType implements LiveAutoPilotable, LiveFallable,
 		}
 
 	}
-
 }

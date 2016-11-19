@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.Vessel.ShipsEvent;
-import MoseShipsBukkit.Ships.Movement.Movement;
+import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
@@ -41,11 +41,11 @@ public abstract class ShipsTransformEvent extends ShipsEvent {
 			super(ship, new StoredMovement(loc, null, 0, 0, 0), structure);
 		}
 
-		public Move(LoadableShip ship, Location loc, Movement.Rotate rotate, List<MovingBlock> structure) {
+		public Move(LoadableShip ship, Location loc, MovementType.Rotate rotate, List<MovingBlock> structure) {
 			super(ship, new StoredMovement(loc, rotate, 0, 0, 0), structure);
 		}
 
-		public Move(LoadableShip ship, Location loc, Movement.Rotate rotate, int X, int Y, int Z, List<MovingBlock> structure) {
+		public Move(LoadableShip ship, Location loc, MovementType.Rotate rotate, int X, int Y, int Z, List<MovingBlock> structure) {
 			super(ship, new StoredMovement(loc, rotate, X, Y, Z), structure);
 		}
 

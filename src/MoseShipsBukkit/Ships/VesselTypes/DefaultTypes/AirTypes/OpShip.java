@@ -6,28 +6,23 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
-import MoseShipsBukkit.Ships.Movement.Movement.Rotate;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
-import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirType;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
-import MoseShipsBukkit.Utils.State.BlockState;
 
-public class OpShip extends AirType implements LiveAutoPilotable, LiveFallable {
+public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFallable {
 
 	AutoPilot g_auto_pilot;
 	
@@ -46,15 +41,16 @@ public class OpShip extends AirType implements LiveAutoPilotable, LiveFallable {
 	
 	@Override
 	public OpShip setAutoPilotData(AutoPilot pilot){
-		if(g_auto_pilot != null){
-			g_auto_pilot.stop();
-		}
 		g_auto_pilot = pilot;
 		return this;
 	}
 
 	@Override
 	public void onRemove(Player player) {
+	}
+	
+	@Override
+	public void onRepeate() {
 	}
 
 	@Override
@@ -99,41 +95,6 @@ public class OpShip extends AirType implements LiveAutoPilotable, LiveFallable {
 	@Override
 	public StaticShipType getStatic() {
 		return StaticShipTypeUtil.getType(StaticOPShip.class).get();
-	}
-
-	@Override
-	public Optional<MovementResult> move(BlockFace dir, int speed, BlockState... movingTo) {
-		return super.move(dir, speed, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> rotate(Rotate type, BlockState... movingTo) {
-		return super.rotate(type, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> rotateRight(BlockState... movingTo) {
-		return super.rotateRight(new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> rotateLeft(BlockState... movingTo) {
-		return super.rotateLeft(new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(Location loc, BlockState... movingTo) {
-		return super.teleport(loc, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(StoredMovement move, BlockState... movingTo) {
-		return super.teleport(move, new BlockState(Material.AIR));
-	}
-
-	@Override
-	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, BlockState... movingTo) {
-		return super.teleport(loc, X, Y, Z, new BlockState(Material.AIR));
 	}
 
 	public static class StaticOPShip implements StaticShipType {

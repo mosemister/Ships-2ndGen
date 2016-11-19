@@ -11,11 +11,12 @@ import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
+import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.Movement.Collide.CollideType;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithmUtils;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterType;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.WaterType;
 import MoseShipsBukkit.Utils.State.BlockState;
 
 public class Movement {
@@ -446,11 +447,6 @@ public class Movement {
 			}
 		}
 		return Optional.empty();
-	}
-
-	public static enum Rotate {
-		LEFT,
-		RIGHT;
 	}
 
 }

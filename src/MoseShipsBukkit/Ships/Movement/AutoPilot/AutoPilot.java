@@ -6,17 +6,12 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import MoseShips.Maps.OrderedMap;
-import MoseShips.Stores.TwoStore;
-import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.MovementResult;
-import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 
@@ -27,7 +22,6 @@ public class AutoPilot {
 	OfflinePlayer USER;
 	int TARGET;
 	boolean SHOULD_REPEATE;
-	List<Integer> PROCESSES;
 	int PROCESSED = 0;
 
 	public AutoPilot(LiveAutoPilotable type, List<StoredMovement> movements, boolean repeate, int start,
@@ -118,64 +112,13 @@ public class AutoPilot {
 		SHOULD_REPEATE = false;
 		USER = user;
 	}
-
-	public boolean isRunning() {
-		return (PROCESSES != null);
-	}
-
-	public void stop() {
-		if (PROCESSES != null) {
-			for (int process : PROCESSES) {
-				Bukkit.getScheduler().cancelTask(process);
-			}
-			PROCESSES = null;
-			PROCESSED = 0;
-		}
-
-	}
-
-	public boolean start() {
-		return start(60);
-	}
-
-	public boolean start(long delay) {
-		if (!isRunning()) {
-			List<Integer> processes = new ArrayList<Integer>();
-			for (int A = 0; A < MOVEMENTS.size(); A++) {
-				final int B = A;
-				Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
-
-					@Override
-					public void run() {
-						if (B == (MOVEMENTS.size() - 1)) {
-							PROCESSES = null;
-						}
-						PROCESSED = PROCESSED + 1;
-						System.out.println("Attempting to move");
-						Optional<MovementResult> move = SHIP.teleport(MOVEMENTS.get(B));
-						if (move.isPresent()) {
-							MovementResult result = move.get();
-							if (result.getFailedCause().isPresent()) {
-								if (USER.isOnline()) {
-									TwoStore<CauseKeys<Object>, Object> fail = result.getFailedCause().get();
-									fail.getFirst().sendMessage(USER.getPlayer(), fail.getSecond());
-								}
-								stop();
-							}
-						}
-					}
-
-				}, (B * delay));
-			}
-			PROCESSES = processes;
-			SHIP.setAutoPilotData(this);
-			return true;
-		}
-		return false;
-	}
 	
 	public int getMovesDone(){
 		return PROCESSED;
+	}
+	
+	public void setMovesDone(int A){
+		PROCESSED = A;
 	}
 
 	public List<StoredMovement> getMovements() {
@@ -192,25 +135,6 @@ public class AutoPilot {
 
 	public boolean isRepeating() {
 		return SHOULD_REPEATE;
-	}
-
-	public Optional<MovementResult> next() {
-		if (MOVEMENTS.size() != 0) {
-			if (MOVEMENTS.size() < TARGET) {
-				StoredMovement movement = MOVEMENTS.get(TARGET);
-				Optional<MovementResult> opFail = SHIP.teleport(movement);
-				TARGET++;
-				return opFail;
-			} else if (SHOULD_REPEATE) {
-				StoredMovement movement = MOVEMENTS.get(0);
-				Optional<MovementResult> opFail = SHIP.teleport(movement);
-				TARGET++;
-				return opFail;
-			}
-		}
-		MovementResult fail = new MovementResult();
-		fail.put(MovementResult.CauseKeys.AUTO_PILOT_OUT_OF_MOVES, this);
-		return Optional.of(fail);
 	}
 
 	public OrderedMap<Integer, Block> getPath() {
