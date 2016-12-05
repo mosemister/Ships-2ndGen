@@ -12,7 +12,9 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.VersionChecking;
+import MoseShipsBukkit.BlockFinder.BlockFinderUtils;
 import MoseShipsBukkit.CMD.ShipsCMD;
+import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithmUtils;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoadingError;
@@ -87,7 +89,7 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 				tMCVersion = tMCVersion + ". " + mc;
 			}
 		}
-
+		
 		source.sendMessage(ShipsMain.formatCMDHelp("|----[Ships info]----|"));
 		source.sendMessage(ShipsMain.formatCMDHelp("Ships Version: " + shipsVersion[0]));
 		source.sendMessage(ShipsMain.formatCMDHelp("Ships Version Name: " + shipsVersion[1]));
@@ -98,6 +100,8 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 			source.sendMessage(ShipsMain.formatCMDHelp("recommended MC version: (") + ChatColor.RED + MCVersion
 					+ ShipsMain.formatCMDHelp(") " + tMCVersion));
 		}
+		source.sendMessage(ShipsMain.formatCMDHelp("BlockFinder Algorithm: " + BlockFinderUtils.getConfigSelected().getName()));
+		source.sendMessage(ShipsMain.formatCMDHelp("Movement Algorithm: " + MovementAlgorithmUtils.getConfig().getName()));
 	}
 
 	private void shipInfo(CommandSender source, LoadableShip ship) {

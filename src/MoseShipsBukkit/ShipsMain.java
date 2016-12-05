@@ -19,6 +19,7 @@ import MoseShipsBukkit.Ships.Movement.MovingBlock.Block.Snapshots.*;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.Airship;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.Hybrid.HybridShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.WaterShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipRunnables;
@@ -164,6 +165,7 @@ public class ShipsMain extends JavaPlugin {
 		new OpShip.StaticOPShip();
 		new WaterShip.StaticWaterShip();
 		new Airship.StaticAirship();
+		new HybridShip.StaticHybridShip();
 	}
 
 	private void loadShips() {

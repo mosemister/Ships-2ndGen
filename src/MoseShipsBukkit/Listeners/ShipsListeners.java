@@ -95,26 +95,31 @@ public class ShipsListeners implements Listener {
 	@EventHandler
 	public void signCreate(SignChangeEvent event) {
 		Optional<SignType> opSignType = ShipsSigns.getSignType(event.getLine(0));
+		System.out.println("Checking Sign Type");
 		if (opSignType.isPresent()) {
+			System.out.println("Sign type found");
 			SignType signType = opSignType.get();
 			if (signType.equals(SignType.LICENCE)) {
+				System.out.println("Sign is licence");
 				if (event.getLines().length < 3) {
+					System.out.println("Doesnt have 3 lines");
 					return;
 				}
 				Player player = event.getPlayer();
 				Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
 
 				if (!opShipType.isPresent()) {
-					ShipsCreateFailedEvent.ConflictType conflictType = new ShipsCreateFailedEvent.ConflictType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
+					/*ShipsCreateFailedEvent.ConflictType conflictType = new ShipsCreateFailedEvent.ConflictType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
 							.getLine(1));
 					Bukkit.getServer().getPluginManager().callEvent(conflictType);
-					String message = conflictType.getMessage();
+					String message = conflictType.getMessage();*/
+					String message = "%Type% does not exsit";
 					if (message.contains("%Type%")) {
 						message.replace("%Type%", event.getLine(1));
 					}
-					if (conflictType.willMessageDisplay()) {
+					//if (conflictType.willMessageDisplay()) {
 						player.sendMessage(ShipsMain.format(message, true));
-					}
+					//}
 					return;
 				}
 
@@ -189,7 +194,7 @@ public class ShipsListeners implements Listener {
 					Optional<LoadableShip> opType = LoadableShip.getShip(signType.get(), sign, true);
 					if (opType.isPresent()) {
 						LoadableShip ship = opType.get();
-						LoadableShip.addToRam(ship);
+						ship.load();
 						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 							switch (signType.get()) {
 								case EOT:
@@ -212,7 +217,7 @@ public class ShipsListeners implements Listener {
 													.getFailedCause();
 											if (failed.isPresent()) {
 												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(player, store.getSecond());
+												store.getFirst().sendMessage(ship, player, store.getSecond());
 											}
 										}
 									} else {
@@ -224,7 +229,7 @@ public class ShipsListeners implements Listener {
 													.getFailedCause();
 											if (failed.isPresent()) {
 												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(player, store.getSecond());
+												store.getFirst().sendMessage(ship, player, store.getSecond());
 											}
 										}
 									}
@@ -236,7 +241,7 @@ public class ShipsListeners implements Listener {
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(player, store.getSecond());
+											store.getFirst().sendMessage(ship, player, store.getSecond());
 										}
 									}
 									break;
@@ -251,7 +256,7 @@ public class ShipsListeners implements Listener {
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(player, store.getSecond());
+											store.getFirst().sendMessage(ship, player, store.getSecond());
 										}
 									}
 
@@ -270,7 +275,7 @@ public class ShipsListeners implements Listener {
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(player, store.getSecond());
+											store.getFirst().sendMessage(ship, player, store.getSecond());
 										}
 									}
 									break;
@@ -279,6 +284,12 @@ public class ShipsListeners implements Listener {
 								case LICENCE:
 									break;
 								case MOVE:
+									BlockFace[] faces = {BlockFace.DOWN, BlockFace.UP};
+									for(BlockFace face : faces){
+										if(event.getBlockFace().equals(face)){
+											return;
+										}
+									}
 									if (sign.getLine(2).equals("{Boost}")) {
 										Optional<MovementResult> cause = ship.move(direction,
 												ship.getStatic().getBoostSpeed());
@@ -288,7 +299,7 @@ public class ShipsListeners implements Listener {
 													.getFailedCause();
 											if (failed.isPresent()) {
 												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(player, store.getSecond());
+												store.getFirst().sendMessage(ship, player, store.getSecond());
 											}
 										}
 									} else {
@@ -300,7 +311,7 @@ public class ShipsListeners implements Listener {
 													.getFailedCause();
 											if (failed.isPresent()) {
 												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(player, store.getSecond());
+												store.getFirst().sendMessage(ship, player, store.getSecond());
 											}
 										}
 									}
@@ -312,7 +323,7 @@ public class ShipsListeners implements Listener {
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(player, store.getSecond());
+											store.getFirst().sendMessage(ship, player, store.getSecond());
 										}
 									}
 									break;

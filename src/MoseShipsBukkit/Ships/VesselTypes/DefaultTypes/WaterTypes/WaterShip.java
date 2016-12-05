@@ -14,6 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
+import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
@@ -202,6 +203,11 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 		@Override
 		public boolean autoPilot() {
 			return false;
+		}
+		
+		@Override
+		public ShipsMain getPlugin(){
+			return ShipsMain.getPlugin();
 		}
 
 		@Override

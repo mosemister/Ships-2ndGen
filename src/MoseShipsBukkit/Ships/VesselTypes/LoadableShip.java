@@ -75,6 +75,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	protected int g_min_blocks = 200;
 	protected int g_sche_id = -1;
 	protected int g_time_repeated = 0;
+	protected int g_time_last_stu_update = 0;
 	protected boolean g_remove = true;
 
 	static List<LoadableShip> SHIPS = new ArrayList<LoadableShip>();
@@ -102,9 +103,9 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	@Override
 	public boolean startScheduler() {
 		long repeate = 1;
-		if(ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE) != null){
+		if (ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE) != null) {
 			repeate = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE).longValue();
-		}else{
+		} else {
 			repeate = ShipsConfig.CONFIG.get(Double.class, ShipsConfig.PATH_SCHEDULER_REPEATE).longValue();
 		}
 		final LoadableShip ship = (LoadableShip) this;
@@ -117,9 +118,10 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 					if (ship instanceof LiveFallable) {
 						ship.onShouldFall();
 					}
-					if(ship instanceof LiveAutoPilotable){
+					if (ship instanceof LiveAutoPilotable) {
 						ship.onAutoPilot();
 					}
+					g_time_last_stu_update = g_time_last_stu_update + 1;
 					g_time_repeated++;
 
 				}
@@ -180,6 +182,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 				SHIPS.remove(ship);
 			}
 		}
+		pauseScheduler();
 		return this;
 	}
 
@@ -248,22 +251,35 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	@Override
 	public List<Block> updateBasicStructure() {
-		List<Block> structure = super.updateBasicStructure();
-		getLocalDatabase().saveBasicShip(this);
-		return structure;
+		ShipsConfig config = ShipsConfig.CONFIG;
+		int time = config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_STRUCTURE);
+		if (g_time_last_stu_update > time) {
+			List<Block> structure = super.updateBasicStructure();
+			getLocalDatabase().saveBasicShip(this);
+			g_time_last_stu_update = 0;
+			return structure;
+		}
+		return new ArrayList<Block>();
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
+		ShipsConfig config = ShipsConfig.CONFIG;
+		int time = config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_STRUCTURE);
+		if (g_time_last_stu_update > time) {
 		List<Block> structure = super.setBasicStructure(locs, licence);
 		getLocalDatabase().saveBasicShip(this);
+		g_time_last_stu_update = 0;
 		return structure;
+		}
+		return new ArrayList<Block>();
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		List<Block> structure = super.setBasicStructure(locs, licence, teleport);
 		getLocalDatabase().saveBasicShip(this);
+		g_time_last_stu_update = 0;
 		return structure;
 	}
 
@@ -280,18 +296,18 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		getLocalDatabase().saveBasicShip(this);
 		return this;
 	}
-	
-	private void onShouldFall(){
+
+	private void onShouldFall() {
 		ShipsConfig config = ShipsConfig.CONFIG;
-		
+
 		if ((g_time_repeated % config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_FALL)) == 0) {
 			if (((LiveFallable) this).shouldFall()) {
 				move(0, -2, 0);
 			}
 		}
 	}
-	
-	private void onAutoPilot(){
+
+	private void onAutoPilot() {
 		ShipsConfig config = ShipsConfig.CONFIG;
 		LiveAutoPilotable ship2 = (LiveAutoPilotable) this;
 		if ((g_time_repeated % config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_AUTOPILOT)) == 0) {
@@ -316,7 +332,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 						if (data.getTargetPlayer().isPresent()) {
 							if (data.getTargetPlayer().get().isOnline()) {
 								TwoStore<CauseKeys<Object>, Object> fail = result.getFailedCause().get();
-								fail.getFirst().sendMessage(data.getTargetPlayer().get().getPlayer(), fail.getSecond());
+								fail.getFirst().sendMessage(this, data.getTargetPlayer().get().getPlayer(), fail.getSecond());
 							}
 						}
 						ship2.setAutoPilotData(null);

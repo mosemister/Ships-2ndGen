@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
@@ -126,6 +127,11 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 		@Override
 		public boolean autoPilot() {
 			return true;
+		}
+		
+		@Override
+		public ShipsMain getPlugin(){
+			return ShipsMain.getPlugin();
 		}
 
 		@Override

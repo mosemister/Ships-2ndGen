@@ -18,7 +18,7 @@ import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.ItemStack;
 
 import MoseShips.Stores.TwoStore;
-
+import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
@@ -327,6 +327,11 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		@Override
 		public boolean autoPilot() {
 			return false;
+		}
+		
+		@Override
+		public ShipsMain getPlugin(){
+			return ShipsMain.getPlugin();
 		}
 
 		@Override

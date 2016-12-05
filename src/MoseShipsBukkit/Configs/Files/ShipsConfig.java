@@ -15,6 +15,7 @@ public class ShipsConfig extends BasicConfig {
 	public static final String PATH_SCHEDULER_REPEATE = "Advanced.Scheduler.Repeate";
 	public static final String PATH_SCHEDULER_AUTOPILOT = "Advanced.Scheduler.Autopilot";
 	public static final String PATH_SCHEDULER_FALL = "Advanced.Scheduler.Fall";
+	public static final String PATH_SCHEDULER_STRUCTURE = "Advanced.Scheduler.Structure";
 	
 	public static final String PATH_ONSNEAK_REMOVE_SHIP = "Configuration.OnSneak.RemoveShipsBlocks";
 	
@@ -28,6 +29,7 @@ public class ShipsConfig extends BasicConfig {
 	public static final String PATH_MESSAGE_FUEL_OUT = "Configuration.Messages.Fuel.OutOfFuel";
 	public static final String PATH_MESSAGE_REQUIRED_BLOCK_MISSING = "Configuration.Messages.RequiredBlock.MissingBlock";
 	public static final String PATH_MESSAGE_REQUIRED_BLOCK_MISSING_BURNER = "Configuration.Messages.RequiredBlock.MissingBurner";
+	public static final String PATH_MESSAGE_SIZE_NONE = "Configuration.Messages.Size.None";
 	public static final String PATH_MESSAGE_SIZE_MAX = "Configuration.Messages.Size.TooLarge";
 	public static final String PATH_MESSAGE_SIZE_MIN = "Configuration.Messages.Size.TooSmall";
 	public static final String PATH_MESSAGE_PERCENT_NOT_ENOUGH = "Configuration.Messages.Percent.NotEnoughPercent";
@@ -52,6 +54,11 @@ public class ShipsConfig extends BasicConfig {
 		set("Ships 6", PATH_ALGORITHMS_MOVEMENT);
 		set("Ships 5", PATH_ALGORITHMS_BLOCKFINDER);
 		set(10, PATH_ALGORITHMS_CLEARFREQUENCY);
+		// SCHEDULER
+		set(2, PATH_SCHEDULER_AUTOPILOT);
+		set(6, PATH_SCHEDULER_FALL);
+		set(1, PATH_SCHEDULER_STRUCTURE);
+		set(20, PATH_SCHEDULER_REPEATE);
 		// ONSNEAK stuff
 		set(false, PATH_ONSNEAK_REMOVE_SHIP);
 		// SIGN

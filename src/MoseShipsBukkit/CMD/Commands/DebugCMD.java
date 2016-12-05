@@ -8,8 +8,11 @@ import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.CMD.ShipsCMD;
 import MoseShipsBukkit.Configs.Files.BlockList;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
+import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoadingError;
+import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
+import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 
 public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCMD {
 
@@ -49,6 +52,7 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 		if (args.length == 1) {
 			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug load <vessel name>"));
 			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug reload <config/materials>"));
+			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug list <type, ships>"));
 			return true;
 		} else if (args[1].equalsIgnoreCase("load")) {
 			if (args.length > 2) {
@@ -75,6 +79,25 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 				} else {
 					source.sendMessage(ShipsMain.format("Can not find configuration file", true));
 				}
+			}
+		} else if (args[1].equalsIgnoreCase("list")) {
+			if (args.length == 2) {
+				run(source, "debug");
+			} else if (args[2].equalsIgnoreCase("Type")) {
+				source.sendMessage("|----[Ships]----|");
+				source.sendMessage("[ShipType name] | [Plugin]");
+				for (StaticShipType type : StaticShipTypeUtil.getTypes()) {
+					source.sendMessage(type.getName() + " | " + type.getPlugin().getName());
+				}
+				return true;
+			} else if (args[2].equalsIgnoreCase("Ships")) {
+				source.sendMessage("|----[Ships]----|");
+				source.sendMessage("[Ship name] | [Ship Type] | [X] | [Y] | [Z] | [world] | [loaded]");
+				for (LoadableShip ship : LoadableShip.getShips()) {
+					source.sendMessage(ship.getName() + " | " + ship.getStatic().getName() + " | " + ship.getLocation().getBlockX() + " | " + ship.getLocation().getBlockY() + " | " + ship
+							.getLocation().getBlockZ() + " | " + ship.getWorld().getName() + " | " + ship.isLoaded());
+				}
+				return true;
 			}
 		}
 		return false;

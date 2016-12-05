@@ -22,12 +22,13 @@ import MoseShipsBukkit.Utils.State.BlockState;
 public class Movement {
 
 	public static Optional<MovementResult> move(LoadableShip ship, int X, int Y, int Z, BlockState... movingTo) {
+		ship.load();
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
 		if(structure.isEmpty()){
-			ship.updateBasicStructure();
+			return Optional.of(new MovementResult().put(CauseKeys.MISSING_BLOCKS, true));
 		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
@@ -87,13 +88,14 @@ public class Movement {
 	}
 
 	public static Optional<MovementResult> rotateRight(LoadableShip ship, BlockState... movingTo) {
+		ship.load();
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
 		List<Block> structure = ship.getBasicStructure();
 		if(structure.isEmpty()){
-			ship.updateBasicStructure();
+			return Optional.of(new MovementResult().put(CauseKeys.MISSING_BLOCKS, true));
 		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
@@ -152,13 +154,14 @@ public class Movement {
 	}
 
 	public static Optional<MovementResult> rotateLeft(LoadableShip ship, BlockState... movingTo) {
+		ship.load();
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
 		List<Block> structure = ship.getBasicStructure();
 		if(structure.isEmpty()){
-			ship.updateBasicStructure();
+			return Optional.of(new MovementResult().put(CauseKeys.MISSING_BLOCKS, true));
 		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
@@ -227,12 +230,13 @@ public class Movement {
 	}
 
 	public static Optional<MovementResult> teleport(LoadableShip ship, Location tel, BlockState... movingTo) {
+		ship.load();
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
 		if(structure.isEmpty()){
-			ship.updateBasicStructure();
+			return Optional.of(new MovementResult().put(CauseKeys.MISSING_BLOCKS, true));
 		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
@@ -291,13 +295,14 @@ public class Movement {
 	}
 
 	public static Optional<MovementResult> teleport(LoadableShip ship, Location tel, int X, int Y, int Z, BlockState... movingTo) {
+		ship.load();
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location loc2 = tel.add(X, Y, Z);
 		List<Block> structure = ship.getBasicStructure();
 		if(structure.isEmpty()){
-			ship.updateBasicStructure();
+			return Optional.of(new MovementResult().put(CauseKeys.MISSING_BLOCKS, true));
 		}
 		final int D = structure.size();
 		if (ship instanceof WaterType) {
@@ -356,6 +361,7 @@ public class Movement {
 	}
 	
 	public static Optional<MovementResult> teleport(LoadableShip ship, StoredMovement movement, BlockState... movingTo) {
+		ship.load();
 		MovementResult cause = new MovementResult();
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();

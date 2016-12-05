@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.bukkit.block.Block;
+import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
@@ -23,6 +24,8 @@ public interface StaticShipType {
 	public int getAltitudeSpeed();
 
 	public boolean autoPilot();
+	
+	public Plugin getPlugin();
 
 	public Optional<LoadableShip> createVessel(String name, Block licence);
 

@@ -24,7 +24,7 @@ public class BlockFinderUtils {
 		if (opBlock.isPresent()) {
 			return opBlock.get();
 		}
-		return SHIPS6;
+		return SHIPS5;
 	}
 
 	public static boolean isValid(List<Block> list) {
@@ -50,7 +50,7 @@ public class BlockFinderUtils {
 	}
 
 	public static Optional<BasicBlockFinder> getFinder(String name) {
-		for (BasicBlockFinder finder : BasicBlockFinder.LIST) {
+		for (BasicBlockFinder finder : getFinders()) {
 			System.out.println(finder.getName() + " | " + name);
 			if (finder.getName().equalsIgnoreCase(name)) {
 				return Optional.of(finder);

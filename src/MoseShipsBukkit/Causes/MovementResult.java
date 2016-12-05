@@ -13,8 +13,10 @@ import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.ShipsMain;
+import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
+import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Utils.State.BlockState;
 
 public class MovementResult {
@@ -62,7 +64,7 @@ public class MovementResult {
 		public static CauseKeys<Boolean> FUEL_REMOVE_ERROR = new CauseKeys<Boolean>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				player.sendMessage("Ships failed to collect fuel to remove");
 			}
 
@@ -71,7 +73,7 @@ public class MovementResult {
 		public static CauseKeys<Boolean> NOT_IN_WATER = new CauseKeys<Boolean>() {
 
 			@Override
-			public void sendMessage(final Player player, Object value) {
+			public void sendMessage(LoadableShip ship, final Player player, Object value) {
 				player.sendMessage(ShipsMain.format("Ship is not in water", true));
 			}
 
@@ -84,7 +86,7 @@ public class MovementResult {
 				"deprecation"
 			})
 			@Override
-			public void sendMessage(final Player player, Object value) {
+			public void sendMessage(LoadableShip ship, final Player player, Object value) {
 				if (value instanceof List) {
 					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 3 seconds", true));
 					final List<MovingBlock> list = (List<MovingBlock>) value;
@@ -111,7 +113,7 @@ public class MovementResult {
 		public static CauseKeys<AutoPilot> AUTO_PILOT_OUT_OF_MOVES = new CauseKeys<AutoPilot>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				player.sendMessage(ShipsMain.format("AutoPilot ran out of moves", true));
 			}
 
@@ -119,7 +121,7 @@ public class MovementResult {
 		public static CauseKeys<Boolean> OUT_OF_FUEL = new CauseKeys<Boolean>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				player.sendMessage(ShipsMain.format("Out of fuel", true));
 			}
 
@@ -127,7 +129,7 @@ public class MovementResult {
 		public static CauseKeys<BlockState> MISSING_REQUIRED_BLOCK = new CauseKeys<BlockState>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof BlockState) {
 					BlockState state = (BlockState) value;
 					if (state.getMaterial().equals(Material.FIRE)) {
@@ -142,10 +144,23 @@ public class MovementResult {
 			}
 
 		};
+		public static CauseKeys<Boolean> MISSING_BLOCKS = new CauseKeys<Boolean>() {
+
+			@Override
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
+				String message = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIZE_NONE);
+				if(message.contains("%Ship%")){
+					message = message.replace("%Ship%", ship.getName());
+				}
+				player.sendMessage(message);
+				
+			}
+			
+		};
 		public static CauseKeys<Integer> NOT_ENOUGH_BLOCKS = new CauseKeys<Integer>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof Integer) {
 					int blocks = (Integer) value;
 					player.sendMessage(ShipsMain.format("You need " + blocks + " more blocks", true));
@@ -157,7 +172,7 @@ public class MovementResult {
 		public static CauseKeys<Integer> TOO_MANY_BLOCKS = new CauseKeys<Integer>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof Integer) {
 					int blocks = (Integer) value;
 					player.sendMessage(ShipsMain.format("You need " + blocks + " less blocks", true));
@@ -169,7 +184,7 @@ public class MovementResult {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof TwoStore) {
 					TwoStore<BlockState, Float> value2 = (TwoStore<BlockState, Float>) value;
 					player.sendMessage(ShipsMain.format("You need " + value2.getSecond() + " more blocks of "
@@ -179,7 +194,7 @@ public class MovementResult {
 
 		};
 
-		public abstract void sendMessage(Player player, Object value);
+		public abstract void sendMessage(LoadableShip ship, Player player, Object value);
 	}
 
 }
