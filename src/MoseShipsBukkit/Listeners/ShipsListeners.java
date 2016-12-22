@@ -24,9 +24,9 @@ import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
-import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
-import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipsCreateFailedFromConflictingNames;
-import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipsCreateFailedFromMissingType;
+import MoseShipsBukkit.Events.Vessel.Create.ShipCreateEvent;
+import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipCreateFailedFromConflictingNames;
+import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipCreateFailedFromMissingType;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
@@ -105,7 +105,7 @@ public class ShipsListeners implements Listener {
 				Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
 
 				if (!opShipType.isPresent()) {
-					ShipsCreateFailedFromMissingType conflictType = new ShipsCreateFailedFromMissingType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
+					ShipCreateFailedFromMissingType conflictType = new ShipCreateFailedFromMissingType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
 							.getLine(1));
 					Bukkit.getServer().getPluginManager().callEvent(conflictType);
 					String message = conflictType.getMessage();
@@ -127,7 +127,7 @@ public class ShipsListeners implements Listener {
 
 				Optional<LoadableShip> opConflict = LoadableShip.getShip(event.getLine(2));
 				if (opConflict.isPresent()) {
-					ShipsCreateFailedFromConflictingNames conflictName = new ShipsCreateFailedFromConflictingNames(new ShipsData(event.getLine(2), event.getBlock(),
+					ShipCreateFailedFromConflictingNames conflictName = new ShipCreateFailedFromConflictingNames(new ShipsData(event.getLine(2), event.getBlock(),
 							player.getLocation()), player,
 							opConflict.get());
 					Bukkit.getServer().getPluginManager().callEvent(
@@ -145,7 +145,7 @@ public class ShipsListeners implements Listener {
 				if (opShip.isPresent()) {
 					final LoadableShip ship = opShip.get();
 					ship.setOwner(player);
-					ShipsCreateEvent SCEvent = new ShipsCreateEvent(ship);
+					ShipCreateEvent SCEvent = new ShipCreateEvent(ship);
 					Bukkit.getPluginManager().callEvent(SCEvent);
 					if (!SCEvent.isCancelled()) {
 						// PLAYER

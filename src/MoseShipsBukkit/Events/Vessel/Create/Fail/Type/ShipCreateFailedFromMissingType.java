@@ -4,14 +4,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
-import MoseShipsBukkit.Events.Vessel.Create.Fail.ShipsCreateFailedEvent;
+import MoseShipsBukkit.Events.Vessel.Create.Fail.ShipCreateFailedEvent;
 import MoseShipsBukkit.Ships.ShipsData;
 
-public class ShipsCreateFailedFromMissingType extends ShipsCreateFailedEvent{
+public class ShipCreateFailedFromMissingType extends ShipCreateFailedEvent{
 
 	String g_type;
 	
-	public ShipsCreateFailedFromMissingType(ShipsData data, Player player, String type) {
+	public ShipCreateFailedFromMissingType(ShipsData data, Player player, String type) {
 		super(data, player, ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE));
 		g_type = type;
 	}

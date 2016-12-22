@@ -5,19 +5,19 @@ import java.util.List;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.Events.Vessel.ShipsEvent;
+import MoseShipsBukkit.Events.Vessel.ShipEvent;
 import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public class ShipsTransformEvent extends Event implements ShipsEvent{
+public class ShipTransformEvent extends Event implements ShipEvent{
 	
 	List<MovingBlock> g_blocks;
 	MovementType g_type;
 	LoadableShip g_ship;
 	static HandlerList g_handlers = new HandlerList();
 	
-	public ShipsTransformEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks){
+	public ShipTransformEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks){
 		g_ship = ship;
 		g_blocks = blocks;
 		g_type = type;

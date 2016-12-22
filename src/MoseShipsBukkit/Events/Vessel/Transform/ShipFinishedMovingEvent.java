@@ -8,9 +8,9 @@ import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public class ShipsFinishedMovingEvent extends ShipsTransformEvent{
+public class ShipFinishedMovingEvent extends ShipTransformEvent{
 
-	public ShipsFinishedMovingEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks) {
+	public ShipFinishedMovingEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks) {
 		super(ship, type, blocks);
 	}
 	

@@ -8,11 +8,11 @@ import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.Events.Vessel.ShipsEvent;
+import MoseShipsBukkit.Events.Vessel.ShipEvent;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public class ShipTrackEvent extends Event implements ShipsEvent {
+public class ShipTrackEvent extends Event implements ShipEvent {
 
 	private ShipsData g_data;
 	private Map<Location, BlockState> g_structure;

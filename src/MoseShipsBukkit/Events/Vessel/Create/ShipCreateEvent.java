@@ -4,16 +4,16 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.Events.Vessel.ShipsEvent;
+import MoseShipsBukkit.Events.Vessel.ShipEvent;
 import MoseShipsBukkit.Ships.ShipsData;
 
-public class ShipsCreateEvent extends Event implements ShipsEvent, Cancellable {
+public class ShipCreateEvent extends Event implements ShipEvent, Cancellable {
 	
 	boolean g_cancelled = false;
 	ShipsData g_ship;
 	protected static HandlerList g_handlers = new HandlerList();
 	
-	public ShipsCreateEvent(ShipsData data){
+	public ShipCreateEvent(ShipsData data){
 		g_ship = data;
 	}
 

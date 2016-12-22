@@ -4,10 +4,10 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.Events.Vessel.ShipsEvent;
+import MoseShipsBukkit.Events.Vessel.ShipEvent;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public class ShipsLoadEvent extends Event implements ShipsEvent, Cancellable{
+public class ShipLoadEvent extends Event implements ShipEvent, Cancellable{
 
 	LoadableShip g_ship;
 	boolean g_cancelled;

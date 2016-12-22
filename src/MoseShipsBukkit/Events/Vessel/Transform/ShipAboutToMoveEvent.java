@@ -9,11 +9,11 @@ import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public class ShipsAboutToMoveEvent extends ShipsTransformEvent implements Cancellable{
+public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancellable{
 
 	boolean g_cancelled;
 	
-	public ShipsAboutToMoveEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks) {
+	public ShipAboutToMoveEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks) {
 		super(ship, type, blocks);
 	}
 

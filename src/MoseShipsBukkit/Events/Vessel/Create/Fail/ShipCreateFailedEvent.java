@@ -3,17 +3,17 @@ package MoseShipsBukkit.Events.Vessel.Create.Fail;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
+import MoseShipsBukkit.Events.Vessel.Create.ShipCreateEvent;
 import MoseShipsBukkit.Ships.ShipsData;
 
-public abstract class ShipsCreateFailedEvent extends ShipsCreateEvent{
+public abstract class ShipCreateFailedEvent extends ShipCreateEvent{
 	
 	String g_message;
 	String g_original_message;
 	boolean g_display_message = true;
 	Player g_player;
 	
-	public ShipsCreateFailedEvent(ShipsData data, Player player, String message) {
+	public ShipCreateFailedEvent(ShipsData data, Player player, String message) {
 		super(data);
 		g_message = message;
 		g_original_message = message;
@@ -37,12 +37,12 @@ public abstract class ShipsCreateFailedEvent extends ShipsCreateEvent{
 		return g_display_message;
 	}
 	
-	public ShipsCreateFailedEvent setMessage(String message){
+	public ShipCreateFailedEvent setMessage(String message){
 		g_message = message;
 		return this;
 	}
 	
-	public ShipsCreateFailedEvent setMessageWillDisplay(boolean check){
+	public ShipCreateFailedEvent setMessageWillDisplay(boolean check){
 		g_display_message = check;
 		return this;
 	}

@@ -3,12 +3,12 @@ package MoseShipsBukkit.Events.Vessel.Create.Success;
 import org.bukkit.block.Sign;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
+import MoseShipsBukkit.Events.Vessel.Create.ShipCreateEvent;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public class ShipsSignCreateEvent extends ShipsCreateEvent{
+public class ShipSignCreateEvent extends ShipCreateEvent{
 
-	public ShipsSignCreateEvent(LoadableShip data) {
+	public ShipSignCreateEvent(LoadableShip data) {
 		super(data);
 	}
 	
