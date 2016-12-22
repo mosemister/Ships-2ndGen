@@ -279,10 +279,6 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 	public StaticAirship getStatic() {
 		return StaticShipTypeUtil.getType(StaticAirship.class).get();
 	}
-	
-	@Override
-	public void onRepeate() {
-	}
 
 	public static class StaticAirship implements StaticShipType, StaticFuel, StaticRequiredPercent {
 

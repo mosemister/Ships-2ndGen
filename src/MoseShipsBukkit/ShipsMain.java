@@ -22,7 +22,6 @@ import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.Hybrid.HybridShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.WaterShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
-import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipRunnables;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.*;
 
 public class ShipsMain extends JavaPlugin {
@@ -45,10 +44,6 @@ public class ShipsMain extends JavaPlugin {
 		new HelpCMD();
 		new BlockListCMD();
 		new AutoPilotCMD();
-	}
-
-	private void registerRepeaters() {
-		ShipRunnables.registerShipsUnloader();
 	}
 
 	private void registerSnapshotTypes() {
@@ -261,8 +256,6 @@ public class ShipsMain extends JavaPlugin {
 		registerCMDs();
 		displayVersionChecking();
 		loadShips();
-		registerRepeaters();
-
 	}
 
 	public static String formatCMDHelp(String message) {

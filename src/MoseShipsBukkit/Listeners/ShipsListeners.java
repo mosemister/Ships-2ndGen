@@ -24,9 +24,9 @@ import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
-import MoseShipsBukkit.Events.StaticVessel.Create.AboutToCreateShipEvent;
 import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateEvent;
-import MoseShipsBukkit.Events.Vessel.Create.ShipsCreateFailedEvent;
+import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipsCreateFailedFromConflictingNames;
+import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipsCreateFailedFromMissingType;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
@@ -95,31 +95,26 @@ public class ShipsListeners implements Listener {
 	@EventHandler
 	public void signCreate(SignChangeEvent event) {
 		Optional<SignType> opSignType = ShipsSigns.getSignType(event.getLine(0));
-		System.out.println("Checking Sign Type");
 		if (opSignType.isPresent()) {
-			System.out.println("Sign type found");
 			SignType signType = opSignType.get();
 			if (signType.equals(SignType.LICENCE)) {
-				System.out.println("Sign is licence");
 				if (event.getLines().length < 3) {
-					System.out.println("Doesnt have 3 lines");
 					return;
 				}
 				Player player = event.getPlayer();
 				Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
 
 				if (!opShipType.isPresent()) {
-					/*ShipsCreateFailedEvent.ConflictType conflictType = new ShipsCreateFailedEvent.ConflictType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
+					ShipsCreateFailedFromMissingType conflictType = new ShipsCreateFailedFromMissingType(new ShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
 							.getLine(1));
 					Bukkit.getServer().getPluginManager().callEvent(conflictType);
-					String message = conflictType.getMessage();*/
-					String message = "%Type% does not exsit";
+					String message = conflictType.getMessage();
 					if (message.contains("%Type%")) {
 						message.replace("%Type%", event.getLine(1));
 					}
-					//if (conflictType.willMessageDisplay()) {
+					if (conflictType.shouldMessageDisplay()) {
 						player.sendMessage(ShipsMain.format(message, true));
-					//}
+					}
 					return;
 				}
 
@@ -132,7 +127,7 @@ public class ShipsListeners implements Listener {
 
 				Optional<LoadableShip> opConflict = LoadableShip.getShip(event.getLine(2));
 				if (opConflict.isPresent()) {
-					ShipsCreateFailedEvent.ConflictName conflictName = new ShipsCreateFailedEvent.ConflictName(new ShipsData(event.getLine(2), event.getBlock(),
+					ShipsCreateFailedFromConflictingNames conflictName = new ShipsCreateFailedFromConflictingNames(new ShipsData(event.getLine(2), event.getBlock(),
 							player.getLocation()), player,
 							opConflict.get());
 					Bukkit.getServer().getPluginManager().callEvent(
@@ -141,33 +136,27 @@ public class ShipsListeners implements Listener {
 					if (message.contains("%Type%")) {
 						message.replace("%Type%", event.getLine(1));
 					}
-					if (conflictName.willMessageDisplay()) {
+					if (conflictName.shouldMessageDisplay()) {
 						player.sendMessage(ShipsMain.format(message, true));
 					}
 					return;
 				}
-				AboutToCreateShipEvent<StaticShipType> ATCSEvent = new AboutToCreateShipEvent<StaticShipType>(
-						type, event.getBlock());
-				if (!ATCSEvent.isCancelled()) {
-					Optional<LoadableShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
-					if (opShip.isPresent()) {
-						final LoadableShip ship = opShip.get();
-						ship.setOwner(player);
-						ShipsCreateEvent SCEvent = new ShipsCreateEvent(ship);
-						// Bukkit.getPluginManager().callEvent(SCEvent);
-						if (!SCEvent.isCancelled()) {
-
-							// PLAYER
-							player.sendMessage(ShipsMain.format("Ship created", false));
-							LoadableShip.addToRam(ship);
-
-							event.setLine(0, ChatColor.YELLOW + "[Ships]");
-							event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
-							event.setLine(2, ChatColor.GREEN + ship.getName());
-							event.setLine(3, ChatColor.GREEN + event.getLine(3));
-							ShipsLocalDatabase database = ship.getLocalDatabase();
-							database.saveBasicShip(ship);
-						}
+				Optional<LoadableShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
+				if (opShip.isPresent()) {
+					final LoadableShip ship = opShip.get();
+					ship.setOwner(player);
+					ShipsCreateEvent SCEvent = new ShipsCreateEvent(ship);
+					Bukkit.getPluginManager().callEvent(SCEvent);
+					if (!SCEvent.isCancelled()) {
+						// PLAYER
+						player.sendMessage(ShipsMain.format("Ship created", false));
+						LoadableShip.addToRam(ship);
+						event.setLine(0, ChatColor.YELLOW + "[Ships]");
+						event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
+						event.setLine(2, ChatColor.GREEN + ship.getName());
+						event.setLine(3, ChatColor.GREEN + event.getLine(3));
+						ShipsLocalDatabase database = ship.getLocalDatabase();
+						database.saveBasicShip(ship);
 					}
 				}
 				return;
@@ -329,6 +318,8 @@ public class ShipsListeners implements Listener {
 									break;
 							}
 						}
+					}else{
+						player.sendMessage(ShipsMain.format("Can not find the connected ship", true));
 					}
 				}
 			}

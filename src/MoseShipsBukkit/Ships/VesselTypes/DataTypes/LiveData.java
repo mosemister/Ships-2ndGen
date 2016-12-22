@@ -36,7 +36,6 @@ public interface LiveData {
 	public int getMaxBlocks();
 	public int getMinBlocks();
 	public ShipsLocalDatabase getLocalDatabase();
-	public int getSchedulerRepeatedCount();
 	
 	public boolean hasLocation(Location loc);
 	
@@ -55,9 +54,6 @@ public interface LiveData {
 	public ShipsData cloneOnto(ShipsData data);
 	
 	public boolean willRemoveNextCycle();
-	
-	public LoadableShip pauseScheduler();
-	public boolean startScheduler();
 	
 	public LoadableShip load();
 	public LoadableShip unload();

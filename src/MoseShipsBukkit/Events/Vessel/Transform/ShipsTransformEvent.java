@@ -2,81 +2,47 @@ package MoseShipsBukkit.Events.Vessel.Transform;
 
 import java.util.List;
 
-import org.bukkit.Location;
+import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.Vessel.ShipsEvent;
 import MoseShipsBukkit.Ships.Movement.MovementType;
-import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public abstract class ShipsTransformEvent extends ShipsEvent {
-
-	List<MovingBlock> BLOCKS;
-	StoredMovement MOVEMENT;
-
-	public ShipsTransformEvent(LoadableShip ship, StoredMovement move, List<MovingBlock> structure) {
-		super(ship);
-		BLOCKS = structure;
-		MOVEMENT = move;
+public class ShipsTransformEvent extends Event implements ShipsEvent{
+	
+	List<MovingBlock> g_blocks;
+	MovementType g_type;
+	LoadableShip g_ship;
+	static HandlerList g_handlers = new HandlerList();
+	
+	public ShipsTransformEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks){
+		g_ship = ship;
+		g_blocks = blocks;
+		g_type = type;
+	}
+	
+	public MovementType getMovementType(){
+		return g_type;
+	}
+	
+	public List<MovingBlock> getMovingBlocks(){
+		return g_blocks;
 	}
 
-	public List<MovingBlock> getStructure() {
-		return BLOCKS;
+	@Override
+	public LoadableShip getShip() {
+		return g_ship;
 	}
 
-	public static HandlerList getHandlerList() {
-		return HANDLER;
+	@Override
+	public HandlerList getHandlers() {
+		return g_handlers;
 	}
-
-	public static class Move extends ShipsTransformEvent {
-
-		public Move(LoadableShip ship, StoredMovement movement, List<MovingBlock> structure) {
-			super(ship, movement, structure);
-			MOVEMENT = movement;
-		}
-
-		public Move(LoadableShip ship, Location loc, List<MovingBlock> structure) {
-			super(ship, new StoredMovement(loc, null, 0, 0, 0), structure);
-		}
-
-		public Move(LoadableShip ship, Location loc, MovementType.Rotate rotate, List<MovingBlock> structure) {
-			super(ship, new StoredMovement(loc, rotate, 0, 0, 0), structure);
-		}
-
-		public Move(LoadableShip ship, Location loc, MovementType.Rotate rotate, int X, int Y, int Z, List<MovingBlock> structure) {
-			super(ship, new StoredMovement(loc, rotate, X, Y, Z), structure);
-		}
-
-		public Move(LoadableShip ship, int X, int Y, int Z, List<MovingBlock> structure) {
-			super(ship, new StoredMovement(null, null, X, Y, Z), structure);
-		}
-
-		public static HandlerList getHandlerList() {
-			return HANDLER;
-		}
-
-	}
-
-	public static class Teleport extends ShipsTransformEvent {
-
-		public Teleport(LoadableShip ship, StoredMovement movement, List<MovingBlock> structure) {
-			super(ship, movement, structure);
-		}
-
-	}
-
-	public static class Rotate extends ShipsTransformEvent {
-
-		public Rotate(LoadableShip ship, StoredMovement movement, List<MovingBlock> structure) {
-			super(ship, movement, structure);
-		}
-
-		public static HandlerList getHandlerList() {
-			return HANDLER;
-		}
-
+	
+	public static HandlerList getHandlerList(){
+		return g_handlers;
 	}
 
 }

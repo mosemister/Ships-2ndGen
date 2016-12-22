@@ -1,6 +1,5 @@
 package MoseShipsBukkit.BlockFinder.Algorithms;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ public class Prototype4 implements BasicBlockFinder {
 	@SuppressWarnings("deprecation")
 	@Override
 	public List<Block> getConnectedBlocks(int limit, Block loc) {
-		new IOException("Checking").printStackTrace();
 		int count = 0;
 		BlockFace[] faces = {BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST};
 		List<Block> ret = new ArrayList<Block>();
@@ -41,11 +39,9 @@ public class Prototype4 implements BasicBlockFinder {
 					}
 				}
 			}
-			System.out.println("Before: Process: " + process.size() + " Target: " + target.size() + " Return: " + ret.size());
 			process.clear();
 			process.addAll(target);
 			target.clear();
-			System.out.println("After: Process: " + process.size() + " Target: " + target.size() + " Return: " + ret.size());
 		}
 		return ret;
 	}

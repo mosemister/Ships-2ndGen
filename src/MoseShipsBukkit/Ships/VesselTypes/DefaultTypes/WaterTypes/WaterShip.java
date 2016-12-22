@@ -118,10 +118,6 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 		database.setOverride(g_block_percent, LiveRequiredPercent.REQUIRED_PERCENT);
 		database.setOverride(list, LiveRequiredPercent.REQUIRED_BLOCKS);
 	}
-	
-	@Override
-	public void onRepeate() {		
-	}
 
 	@Override
 	public int getMaxBlocks() {

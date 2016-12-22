@@ -8,7 +8,6 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -17,23 +16,19 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import MoseShips.Stores.TwoStore;
-import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.MovementResult;
-import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
-import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
-import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
+import MoseShipsBukkit.Ships.VesselTypes.Running.ShipsTaskRunner;
+import MoseShipsBukkit.Ships.VesselTypes.Running.Tasks.StructureCheckingTask;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
+import MoseShipsBukkit.Utils.LocationUtils;
 
 public abstract class LoadableShip extends ShipsData implements LiveData {
 
@@ -44,8 +39,6 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	public abstract void onSave(ShipsLocalDatabase database);
 
 	public abstract void onRemove(@Nullable Player player);
-
-	public abstract void onRepeate();
 
 	public abstract StaticShipType getStatic();
 
@@ -73,64 +66,17 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	protected boolean g_moving = false;
 	protected int g_max_blocks = 4000;
 	protected int g_min_blocks = 200;
-	protected int g_sche_id = -1;
-	protected int g_time_repeated = 0;
-	protected int g_time_last_stu_update = 0;
-	protected boolean g_remove = true;
+	protected boolean g_remove = false;
+	ShipsTaskRunner g_task_runner = new ShipsTaskRunner(this);
 
 	static List<LoadableShip> SHIPS = new ArrayList<LoadableShip>();
 
 	public LoadableShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
-		startScheduler();
 	}
 
 	public LoadableShip(ShipsData data) {
 		super(data);
-	}
-
-	@Override
-	public int getSchedulerRepeatedCount() {
-		return g_time_repeated;
-	}
-
-	@Override
-	public LoadableShip pauseScheduler() {
-		Bukkit.getScheduler().cancelTask(g_sche_id);
-		return this;
-	}
-
-	@Override
-	public boolean startScheduler() {
-		long repeate = 1;
-		if (ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE) != null) {
-			repeate = ShipsConfig.CONFIG.get(Integer.class, ShipsConfig.PATH_SCHEDULER_REPEATE).longValue();
-		} else {
-			repeate = ShipsConfig.CONFIG.get(Double.class, ShipsConfig.PATH_SCHEDULER_REPEATE).longValue();
-		}
-		final LoadableShip ship = (LoadableShip) this;
-		if (g_sche_id != -1) {
-			g_sche_id = Bukkit.getScheduler().scheduleSyncRepeatingTask(ShipsMain.getPlugin(), new Runnable() {
-
-				@Override
-				public void run() {
-					onRepeate();
-					if (ship instanceof LiveFallable) {
-						ship.onShouldFall();
-					}
-					if (ship instanceof LiveAutoPilotable) {
-						ship.onAutoPilot();
-					}
-					g_time_last_stu_update = g_time_last_stu_update + 1;
-					g_time_repeated++;
-
-				}
-
-			}, 0, repeate);
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	@Override
@@ -176,13 +122,8 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	@Override
 	public LoadableShip unload() {
-		for (int A = 0; A < SHIPS.size(); A++) {
-			LoadableShip ship = SHIPS.get(A);
-			if (ship.getName().equals(getName())) {
-				SHIPS.remove(ship);
-			}
-		}
-		pauseScheduler();
+		SHIPS.remove(this);
+		g_task_runner.pauseScheduler();
 		return this;
 	}
 
@@ -251,12 +192,11 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	@Override
 	public List<Block> updateBasicStructure() {
-		ShipsConfig config = ShipsConfig.CONFIG;
-		int time = config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_STRUCTURE);
-		if (g_time_last_stu_update > time) {
+		StructureCheckingTask checking = g_task_runner.getTasks(StructureCheckingTask.class).iterator().next();
+		if (checking.canUpdateStructure()) {
 			List<Block> structure = super.updateBasicStructure();
 			getLocalDatabase().saveBasicShip(this);
-			g_time_last_stu_update = 0;
+			checking.setUpdateStructure(false);
 			return structure;
 		}
 		return new ArrayList<Block>();
@@ -264,12 +204,11 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
-		ShipsConfig config = ShipsConfig.CONFIG;
-		int time = config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_STRUCTURE);
-		if (g_time_last_stu_update > time) {
+		StructureCheckingTask checking = g_task_runner.getTasks(StructureCheckingTask.class).iterator().next();
+		if (checking.canUpdateStructure()) {
 		List<Block> structure = super.setBasicStructure(locs, licence);
 		getLocalDatabase().saveBasicShip(this);
-		g_time_last_stu_update = 0;
+		checking.setUpdateStructure(false);
 		return structure;
 		}
 		return new ArrayList<Block>();
@@ -279,7 +218,8 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		List<Block> structure = super.setBasicStructure(locs, licence, teleport);
 		getLocalDatabase().saveBasicShip(this);
-		g_time_last_stu_update = 0;
+		StructureCheckingTask checking = g_task_runner.getTasks(StructureCheckingTask.class).iterator().next();
+		checking.setUpdateStructure(false);
 		return structure;
 	}
 
@@ -297,63 +237,17 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		return this;
 	}
 
-	private void onShouldFall() {
-		ShipsConfig config = ShipsConfig.CONFIG;
-
-		if ((g_time_repeated % config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_FALL)) == 0) {
-			if (((LiveFallable) this).shouldFall()) {
-				move(0, -2, 0);
-			}
-		}
-	}
-
-	private void onAutoPilot() {
-		ShipsConfig config = ShipsConfig.CONFIG;
-		LiveAutoPilotable ship2 = (LiveAutoPilotable) this;
-		if ((g_time_repeated % config.get(Integer.class, ShipsConfig.PATH_SCHEDULER_AUTOPILOT)) == 0) {
-			Optional<AutoPilot> opData = ship2.getAutoPilotData();
-			if (opData.isPresent()) {
-				AutoPilot data = opData.get();
-				if (data.getMovesDone() == (data.getMovements().size() - 1)) {
-					if (data.isRepeating()) {
-						data.setMovesDone(0);
-					} else {
-						ship2.setAutoPilotData(null);
-					}
-				}
-				data.setMovesDone(data.getMovesDone() + 1);
-
-				System.out.println("Attempting to move");
-				StoredMovement movement = data.getMovements().get(data.getMovesDone());
-				Optional<MovementResult> move = teleport(movement);
-				if (move.isPresent()) {
-					MovementResult result = move.get();
-					if (result.getFailedCause().isPresent()) {
-						if (data.getTargetPlayer().isPresent()) {
-							if (data.getTargetPlayer().get().isOnline()) {
-								TwoStore<CauseKeys<Object>, Object> fail = result.getFailedCause().get();
-								fail.getFirst().sendMessage(this, data.getTargetPlayer().get().getPlayer(), fail.getSecond());
-							}
-						}
-						ship2.setAutoPilotData(null);
-					}
-				}
-			}
-		}
-	}
-
 	public static boolean addToRam(LoadableShip type) {
-		for (LoadableShip ship : SHIPS) {
+		for (LoadableShip ship : getShips()) {
 			if (ship.getName().equalsIgnoreCase(type.getName())) {
 				return false;
 			}
 		}
-		SHIPS.add(type);
 		return true;
 	}
 
 	public static Optional<LoadableShip> getShip(String name) {
-		for (LoadableShip ship : SHIPS) {
+		for (LoadableShip ship : getShips()) {
 			if (ship.getName().equalsIgnoreCase(name)) {
 				return Optional.of(ship);
 			}
@@ -375,7 +269,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 			if (updateStructure) {
 				ship.updateBasicStructure();
 			}
-			if (ship.getBasicStructure().contains(loc)) {
+			if (LocationUtils.blockContains(ship.getBasicStructure(), loc)) {
 				return Optional.of(ship);
 			}
 		}
@@ -383,7 +277,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 			if (updateStructure) {
 				ship.updateBasicStructure();
 			}
-			if (ship.getBasicStructure().contains(loc)) {
+			if (LocationUtils.blockContains(ship.getBasicStructure(), loc)) {
 				return Optional.of(ship);
 			}
 		}

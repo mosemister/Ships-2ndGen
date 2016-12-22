@@ -1,22 +1,18 @@
-package MoseShipsBukkit.Events.Vessel.Create;
+package MoseShipsBukkit.Events.Vessel.Load;
 
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.Vessel.ShipsEvent;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 
-public class ShipsCreateEvent extends Event implements ShipsEvent, Cancellable {
-	
-	boolean g_cancelled = false;
-	ShipsData g_ship;
-	protected static HandlerList g_handlers = new HandlerList();
-	
-	public ShipsCreateEvent(ShipsData data){
-		g_ship = data;
-	}
+public class ShipsLoadEvent extends Event implements ShipsEvent, Cancellable{
 
+	LoadableShip g_ship;
+	boolean g_cancelled;
+	static HandlerList g_handlers = new HandlerList();
+	
 	@Override
 	public boolean isCancelled() {
 		return g_cancelled;
@@ -28,7 +24,7 @@ public class ShipsCreateEvent extends Event implements ShipsEvent, Cancellable {
 	}
 
 	@Override
-	public ShipsData getShip() {
+	public LoadableShip getShip() {
 		return g_ship;
 	}
 

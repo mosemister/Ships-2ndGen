@@ -65,7 +65,7 @@ public class MovingBlock {
 
 	public MovementType getMovementType() {
 		if ((getOrigin().getBlockX() == MOVING_TO.getBlockX()) && (getOrigin().getBlockZ() == MOVING_TO.getBlockZ())) {
-			return MovementType.FORWARDS;
+			return MovementType.DIRECTIONAL;
 		} else if ((getOrigin().getBlockX() > MOVING_TO.getBlockX())
 				|| (getOrigin().getBlockZ() > MOVING_TO.getBlockZ())) {
 			return MovementType.ROTATE_RIGHT;

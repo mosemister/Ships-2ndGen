@@ -18,7 +18,7 @@ import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.AbstractWaterType;
+import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.WaterType;
 
 public class Ships6Movement implements MovementAlgorithm {
 
@@ -55,8 +55,8 @@ public class Ships6Movement implements MovementAlgorithm {
 		list.add(toAdd);
 		final Location licence = vessel.getLocation();
 		int waterLevel = 63;
-		if (vessel instanceof AbstractWaterType) {
-			AbstractWaterType type2 = (AbstractWaterType) vessel;
+		if (vessel instanceof WaterType) {
+			WaterType type2 = (WaterType) vessel;
 			waterLevel = type2.getWaterLevel();
 		}
 		final int waterLevelFinal = waterLevel;

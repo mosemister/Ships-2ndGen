@@ -49,10 +49,6 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 	@Override
 	public void onRemove(Player player) {
 	}
-	
-	@Override
-	public void onRepeate() {
-	}
 
 	@Override
 	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {

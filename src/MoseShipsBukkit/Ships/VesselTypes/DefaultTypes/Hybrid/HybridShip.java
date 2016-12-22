@@ -50,10 +50,6 @@ public class HybridShip extends AbstractWaterType implements AirType{
 	}
 
 	@Override
-	public void onRepeate() {
-	}
-
-	@Override
 	public StaticShipType getStatic() {
 		return StaticShipTypeUtil.getType(StaticHybridShip.class).get();
 	}

@@ -412,7 +412,6 @@ public class Movement {
 		}
 		for (Block loc : structure) {
 			Block result = movement.getEndResult(loc);
-			System.out.println("\n X:" + loc.getX() + " Y:" + loc.getY() + " Z:" + loc.getZ() + "\n X:" + result.getX() + " Y:" + result.getY() + " Z:" + result.getZ());
 			MovingBlock block = new MovingBlock(loc, result);
 			CollideType collideType = block.getCollision(ship.getBasicStructure(), movingTo);
 			if (collideType.equals(CollideType.COLLIDE)) {

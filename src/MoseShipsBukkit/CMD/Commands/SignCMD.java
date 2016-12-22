@@ -76,7 +76,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 				if (opShip.isPresent()) {
 					LoadableShip ship = opShip.get();
 					final ShipTrackEvent event = new ShipTrackEvent(ship);
-					// Bukkit.getServer().getPluginManager().callEvent(event);
+					 Bukkit.getServer().getPluginManager().callEvent(event);
 					int A = 0;
 					for (final Entry<Location, BlockState> entry : event.getShowing().entrySet()) {
 						A++;
@@ -118,7 +118,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 				if (opShip.isPresent()) {
 					LoadableShip ship = opShip.get();
 					final ShipTrackEvent event = new ShipTrackEvent(ship);
-					// Bukkit.getServer().getPluginManager().callEvent(event);
+					Bukkit.getServer().getPluginManager().callEvent(event);
 					player.sendMessage("Now showing the structure of " + ship.getName() + " (size of " + event.getShowing().size() + ") for " + sec + " seconds");
 					for (Entry<Location, BlockState> entry : event.getShowing().entrySet()) {
 						player.sendBlockChange(entry.getKey(), entry.getValue().getMaterial(), entry.getValue().getData());

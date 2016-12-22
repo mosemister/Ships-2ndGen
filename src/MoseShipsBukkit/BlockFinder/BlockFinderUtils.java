@@ -51,7 +51,6 @@ public class BlockFinderUtils {
 
 	public static Optional<BasicBlockFinder> getFinder(String name) {
 		for (BasicBlockFinder finder : getFinders()) {
-			System.out.println(finder.getName() + " | " + name);
 			if (finder.getName().equalsIgnoreCase(name)) {
 				return Optional.of(finder);
 			}
