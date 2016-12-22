@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
@@ -25,9 +26,8 @@ import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.WaterType;
 public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
-	public void move(LoadableShip type, List<MovingBlock> blocksUn) {
+	public boolean move(LoadableShip type, List<MovingBlock> blocksUn, List<Entity> onBoard) {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
-		System.out.println("moving blocks size: " + blocks.size());
 		int waterLevel = 63;
 		if(type instanceof WaterType){
 			WaterType type2 = (WaterType)type;
@@ -69,7 +69,7 @@ public class Ships5Movement implements MovementAlgorithm {
 		MovingBlock lBlock = new MovingBlock(type.getLocation(), vec.getX(), vec.getY(), vec.getZ());
 		type.setBasicStructure(newStructure, lBlock.getMovingTo(), tBlock.getMovingTo());
 		// moveEntitys(move);
-
+		return true;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -21,8 +22,16 @@ import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class Movement {
 
-	public static Optional<MovementResult> move(LoadableShip ship, int X, int Y, int Z, Cause intCause) {
-		return move(ship, new Vector3i(X, Y, Z), intCause);
+	public static Optional<MovementResult> move(LoadableShip ship, int X, int Y, int Z, Cause intCause, BlockState... movingTo) {
+		ship.load();
+		MovementResult moveCause = new MovementResult();
+		MovementResult cause = new MovementResult();
+		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		List<MovingBlock> collide = new ArrayList<MovingBlock>();
+		List<Location<World>> structure = ship.getBasicStructure();
+		if(structure.isEmpty()){
+			return Optional.of(new MovementResult().put(CauseKeys.MISSING_BLOCKS, true));
+}
 	}
 
 	public static Optional<MovementResult> rotateRight(LoadableShip ship, Cause intCause) {

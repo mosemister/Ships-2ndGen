@@ -11,12 +11,15 @@ import java.util.stream.Collectors;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.scheduler.Task;
+import org.spongepowered.api.text.Text;
 
 import MoseShips.Stores.TwoStore;
 
 import MoseShipsSponge.ShipsMain;
+import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.Utils.AutoPilot;
+import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class MovementResult {
 
@@ -53,11 +56,30 @@ public class MovementResult {
 
 	public static abstract class CauseKeys<T extends Object> {
 
+		public static CauseKeys<Boolean> FUEL_REMOVE_ERROR = new CauseKeys<Boolean>(){
+
+			@Override
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
+				player.sendMessage(Text.of("Ships failed to collect fuel to remove"));
+				
+			}
+			
+		};
+		
+		public static CauseKeys<Boolean> NOT_IN_WATER = new CauseKeys<Boolean>() {
+
+			@Override
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
+				player.sendMessage(ShipsMain.format("Ship is not in water", true));
+			}
+			
+		};
+		
 		public static CauseKeys<List<MovingBlock>> MOVING_BLOCKS = new CauseKeys<List<MovingBlock>>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof List) {
 					player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 2 seconds", true));
 					List<MovingBlock> list = (List<MovingBlock>) value;
@@ -85,7 +107,7 @@ public class MovementResult {
 		public static CauseKeys<AutoPilot> AUTO_PILOT_OUT_OF_MOVES = new CauseKeys<AutoPilot>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				player.sendMessage(ShipsMain.format("AutoPilot ran out of moves", true));
 			}
 
@@ -93,7 +115,7 @@ public class MovementResult {
 		public static CauseKeys<Boolean> OUT_OF_FUEL = new CauseKeys<Boolean>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				player.sendMessage(ShipsMain.format("Out of fuel", true));
 			}
 
@@ -101,7 +123,7 @@ public class MovementResult {
 		public static CauseKeys<BlockState> MISSING_REQUIRED_BLOCK = new CauseKeys<BlockState>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof BlockState) {
 					BlockState state = (BlockState) value;
 					player.sendMessage(ShipsMain.format("You are missing " + state.getName() + " from your ship", true));
@@ -110,10 +132,22 @@ public class MovementResult {
 			}
 
 		};
+		public static CauseKeys<Boolean> MISSING_BLLOCKS = new CauseKeys<Boolean>(){
+
+			@Override
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
+				String message = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIZE_NONE);
+				if(message.contains("%Ship%")){
+					message = message.replace("%Ship%", ship.getName());
+				}
+				player.sendMessage(Text.of(message));
+			}
+			
+		};
 		public static CauseKeys<Integer> NOT_ENOUGH_BLOCKS = new CauseKeys<Integer>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof Integer) {
 					int blocks = (int) value;
 					player.sendMessage(ShipsMain.format("You need " + blocks + " more blocks", true));
@@ -125,7 +159,7 @@ public class MovementResult {
 		public static CauseKeys<Integer> TOO_MANY_BLOCKS = new CauseKeys<Integer>() {
 
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof Integer) {
 					int blocks = (int) value;
 					player.sendMessage(ShipsMain.format("You need " + blocks + " less blocks", true));
@@ -133,20 +167,20 @@ public class MovementResult {
 			}
 
 		};
-		public static CauseKeys<TwoStore<BlockState, Integer>> NOT_ENOUGH_PERCENT = new CauseKeys<TwoStore<BlockState, Integer>>() {
+		public static CauseKeys<TwoStore<BlockState, Float>> NOT_ENOUGH_PERCENT = new CauseKeys<TwoStore<BlockState, Float>>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public void sendMessage(Player player, Object value) {
+			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				if (value instanceof TwoStore) {
-					TwoStore<BlockState, Integer> value2 = (TwoStore<BlockState, Integer>) value;
+					TwoStore<BlockState, Float> value2 = (TwoStore<BlockState, Float>) value;
 					player.sendMessage(ShipsMain.format("You need " + value2.getSecond() + " more blocks of " + value2.getFirst().getName(), true));
 				}
 			}
 
 		};
 
-		public abstract void sendMessage(Player player, Object value);
+		public abstract void sendMessage(LoadableShip ship, Player player, Object value);
 	}
 
 }
