@@ -21,6 +21,7 @@ import MoseShipsBukkit.Configs.Files.StaticShipConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticRequiredPercent;
@@ -207,12 +208,12 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 		}
 
 		@Override
-		public Optional<LoadableShip> createVessel(String name, Block sign) {
+		public Optional<LiveData> createVessel(String name, Block sign) {
 			return Optional.of((LoadableShip) new WaterShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
-		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
 			WaterShip ship = new WaterShip(data);
 			int percent = config.get(Integer.class, LiveRequiredPercent.REQUIRED_PERCENT);
 			ship.setRequiredPercent(percent);

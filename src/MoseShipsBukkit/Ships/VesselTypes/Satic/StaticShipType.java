@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 
 public interface StaticShipType {
 
@@ -27,8 +27,8 @@ public interface StaticShipType {
 	
 	public Plugin getPlugin();
 
-	public Optional<LoadableShip> createVessel(String name, Block licence);
+	public Optional<LiveData> createVessel(String name, Block licence);
 
-	public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config);
+	public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config);
 
 }

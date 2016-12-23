@@ -4,21 +4,16 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.Vessel.Create.ShipCreateEvent;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.ShipsData;
 
 public class ShipSignCreateEvent extends ShipCreateEvent{
 
-	public ShipSignCreateEvent(LoadableShip data) {
+	public ShipSignCreateEvent(ShipsData data) {
 		super(data);
 	}
 	
 	public Sign getSign(){
 		return getShip().getLicence().get();
-	}
-	
-	@Override
-	public LoadableShip getShip() {
-		return (LoadableShip)super.getShip();
 	}
 	
 	public static HandlerList getHandlerList(){

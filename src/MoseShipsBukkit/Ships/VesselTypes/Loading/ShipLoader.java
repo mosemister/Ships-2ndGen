@@ -17,6 +17,7 @@ import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 
@@ -151,9 +152,9 @@ public class ShipLoader {
 					data.getSubPilots().addAll(subPilots);
 				}
 
-				Optional<LoadableShip> opShip = type.loadVessel(data, config);
+				Optional<LiveData> opShip = type.loadVessel(data, config);
 				if (opShip.isPresent()) {
-					return new TwoStore<LoadableShip, ShipLoadingError>(opShip.get(), ShipLoadingError.NOT_CURRUPT);
+					return new TwoStore<LoadableShip, ShipLoadingError>((LoadableShip)opShip.get(), ShipLoadingError.NOT_CURRUPT);
 				} else {
 					return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.LOADER_ISSUE);
 				}

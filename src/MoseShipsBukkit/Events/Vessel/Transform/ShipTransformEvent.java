@@ -8,16 +8,16 @@ import org.bukkit.event.HandlerList;
 import MoseShipsBukkit.Events.Vessel.ShipEvent;
 import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 
 public class ShipTransformEvent extends Event implements ShipEvent{
 	
 	List<MovingBlock> g_blocks;
 	MovementType g_type;
-	LoadableShip g_ship;
+	LiveData g_ship;
 	static HandlerList g_handlers = new HandlerList();
 	
-	public ShipTransformEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks){
+	public ShipTransformEvent(LiveData ship, MovementType type, List<MovingBlock> blocks){
 		g_ship = ship;
 		g_blocks = blocks;
 		g_type = type;
@@ -32,7 +32,7 @@ public class ShipTransformEvent extends Event implements ShipEvent{
 	}
 
 	@Override
-	public LoadableShip getShip() {
+	public LiveData getShip() {
 		return g_ship;
 	}
 

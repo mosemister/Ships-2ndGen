@@ -17,8 +17,9 @@ import MoseShipsBukkit.Causes.MovementResult;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
+import MoseShipsBukkit.Ships.VesselTypes.Running.ShipsTaskRunner;
+import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 
 public interface LiveData {
 	
@@ -36,6 +37,8 @@ public interface LiveData {
 	public int getMaxBlocks();
 	public int getMinBlocks();
 	public ShipsLocalDatabase getLocalDatabase();
+	public ShipsTaskRunner getTaskRunner();
+	public StaticShipType getStatic();
 	
 	public boolean hasLocation(Location loc);
 	
@@ -44,19 +47,19 @@ public interface LiveData {
 	
 	public List<Block> updateBasicStructure();
 	
-	public LoadableShip setOwner(OfflinePlayer player);
+	public LiveData setOwner(OfflinePlayer player);
 	public List<Block> setBasicStructure(List<Block> locs, Block licence);
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport);
-	public LoadableShip setRemoveNextCycle(boolean remove);
-	public LoadableShip setMaxBlocks(int A);
-	public LoadableShip setMinBlocks(int A);
+	public LiveData setRemoveNextCycle(boolean remove);
+	public LiveData setMaxBlocks(int A);
+	public LiveData setMinBlocks(int A);
 	
 	public ShipsData cloneOnto(ShipsData data);
 	
 	public boolean willRemoveNextCycle();
 	
-	public LoadableShip load();
-	public LoadableShip unload();
+	public LiveData load();
+	public LiveData unload();
 	
 	public void remove();
 	public void remove(Player player);

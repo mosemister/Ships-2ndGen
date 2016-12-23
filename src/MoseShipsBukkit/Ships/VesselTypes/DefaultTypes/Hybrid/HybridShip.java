@@ -15,6 +15,7 @@ import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AirType;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.AbstractWaterType;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
@@ -91,13 +92,13 @@ public class HybridShip extends AbstractWaterType implements AirType{
 		}
 
 		@Override
-		public Optional<LoadableShip> createVessel(String name, Block licence) {
+		public Optional<LiveData> createVessel(String name, Block licence) {
 			LoadableShip ship = new HybridShip(name, licence, licence.getLocation());
 			return Optional.of(ship);
 		}
 
 		@Override
-		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
 			LoadableShip ship = new HybridShip(data);
 			return Optional.of(ship);
 		}

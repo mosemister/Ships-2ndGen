@@ -30,6 +30,7 @@ import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipCreateFailedFromMissin
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
@@ -141,16 +142,16 @@ public class ShipsListeners implements Listener {
 					}
 					return;
 				}
-				Optional<LoadableShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
+				Optional<LiveData> opShip = type.createVessel(event.getLine(2), event.getBlock());
 				if (opShip.isPresent()) {
-					final LoadableShip ship = opShip.get();
+					final LiveData ship = opShip.get();
 					ship.setOwner(player);
-					ShipCreateEvent SCEvent = new ShipCreateEvent(ship);
+					ShipCreateEvent SCEvent = new ShipCreateEvent((ShipsData)ship);
 					Bukkit.getPluginManager().callEvent(SCEvent);
 					if (!SCEvent.isCancelled()) {
 						// PLAYER
 						player.sendMessage(ShipsMain.format("Ship created", false));
-						LoadableShip.addToRam(ship);
+						ship.load();
 						event.setLine(0, ChatColor.YELLOW + "[Ships]");
 						event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
 						event.setLine(2, ChatColor.GREEN + ship.getName());

@@ -7,13 +7,13 @@ import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 
 public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancellable{
 
 	boolean g_cancelled;
 	
-	public ShipAboutToMoveEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks) {
+	public ShipAboutToMoveEvent(LiveData ship, MovementType type, List<MovingBlock> blocks) {
 		super(ship, type, blocks);
 	}
 

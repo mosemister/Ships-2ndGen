@@ -6,11 +6,11 @@ import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 
 public class ShipFinishedMovingEvent extends ShipTransformEvent{
 
-	public ShipFinishedMovingEvent(LoadableShip ship, MovementType type, List<MovingBlock> blocks) {
+	public ShipFinishedMovingEvent(LiveData ship, MovementType type, List<MovingBlock> blocks) {
 		super(ship, type, blocks);
 	}
 	

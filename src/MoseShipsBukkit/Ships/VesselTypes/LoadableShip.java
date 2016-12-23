@@ -78,6 +78,11 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	public LoadableShip(ShipsData data) {
 		super(data);
 	}
+	
+	@Override
+	public ShipsTaskRunner getTaskRunner() {
+		return g_task_runner;
+	}
 
 	@Override
 	public Optional<MovementResult> rotate(Rotate type) {
@@ -235,15 +240,6 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		super.setOwner(user);
 		getLocalDatabase().saveBasicShip(this);
 		return this;
-	}
-
-	public static boolean addToRam(LoadableShip type) {
-		for (LoadableShip ship : getShips()) {
-			if (ship.getName().equalsIgnoreCase(type.getName())) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	public static Optional<LoadableShip> getShip(String name) {

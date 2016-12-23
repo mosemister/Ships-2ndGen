@@ -6,18 +6,18 @@ import org.bukkit.event.HandlerList;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Events.Vessel.Create.Fail.ShipCreateFailedEvent;
 import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 
 public class ShipCreateFailedFromConflictingNames extends ShipCreateFailedEvent {
 
-	LoadableShip g_conflict;
+	LiveData g_conflict;
 	
-	public ShipCreateFailedFromConflictingNames(ShipsData data, Player player, LoadableShip ship) {
+	public ShipCreateFailedFromConflictingNames(ShipsData data, Player player, LiveData ship) {
 		super(data, player, ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_NAME));
 		g_conflict = ship;
 	}
 	
-	public LoadableShip getConflict(){
+	public LiveData getConflict(){
 		return g_conflict;
 	}
 	

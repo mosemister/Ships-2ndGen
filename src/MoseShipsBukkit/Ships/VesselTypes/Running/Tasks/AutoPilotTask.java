@@ -8,14 +8,14 @@ import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Ships.VesselTypes.Running.ShipsTask;
 
 public class AutoPilotTask implements ShipsTask {
 
 	@Override
-	public void onRun(LoadableShip ship) {
+	public void onRun(LiveData ship) {
 		LiveAutoPilotable ship2 = (LiveAutoPilotable)ship;
 		Optional<AutoPilot> opData = ship2.getAutoPilotData();
 		if (opData.isPresent()) {

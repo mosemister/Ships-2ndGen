@@ -5,11 +5,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.Vessel.ShipEvent;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 
 public class ShipUnloadEvent extends Event implements Cancellable, ShipEvent{
 	
-	LoadableShip g_ship;
+	LiveData g_ship;
 	boolean g_cancelled;
 	static HandlerList g_handlers = new HandlerList();
 	
@@ -24,7 +24,7 @@ public class ShipUnloadEvent extends Event implements Cancellable, ShipEvent{
 	}
 
 	@Override
-	public LoadableShip getShip() {
+	public LiveData getShip() {
 		return g_ship;
 	}
 

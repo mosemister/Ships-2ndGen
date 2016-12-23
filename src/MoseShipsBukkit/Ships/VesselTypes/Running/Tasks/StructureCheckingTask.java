@@ -1,7 +1,7 @@
 package MoseShipsBukkit.Ships.VesselTypes.Running.Tasks;
 
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.Running.ShipsTask;
 
 public class StructureCheckingTask implements ShipsTask{
@@ -9,7 +9,7 @@ public class StructureCheckingTask implements ShipsTask{
 	boolean g_can_update_structure = true;
 	
 	@Override
-	public void onRun(LoadableShip ship) {
+	public void onRun(LiveData ship) {
 		g_can_update_structure = true;
 	}
 	

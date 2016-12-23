@@ -16,6 +16,7 @@ import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;
@@ -131,12 +132,12 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 		}
 
 		@Override
-		public Optional<LoadableShip> createVessel(String name, Block sign) {
+		public Optional<LiveData> createVessel(String name, Block sign) {
 			return Optional.of((LoadableShip) new OpShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
-		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
 			return Optional.of((LoadableShip) new OpShip(data));
 		}
 

@@ -25,7 +25,7 @@ import MoseShipsBukkit.Configs.Files.StaticShipConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFuel;
@@ -35,6 +35,7 @@ import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticFuel;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticRequiredPercent;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
+import MoseShipsBukkit.Ships.VesselTypes.Running.Tasks.FallingTask;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.State.BlockState;
@@ -49,6 +50,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 
 	public Airship(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
+		getTaskRunner().register(ShipsMain.getPlugin(), new FallingTask());
 	}
 
 	public Airship(ShipsData data) {
@@ -331,24 +333,24 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		}
 
 		@Override
-		public Optional<LoadableShip> createVessel(String name, Block licence) {
+		public Optional<LiveData> createVessel(String name, Block licence) {
 			Airship ship = new Airship(name, licence, licence.getLocation());
 			ship.setRequiredPercent(getDefaultRequiredPercent());
 			ship.setPercentBlocks(getDefaultPercentBlocks());
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
-			return Optional.of((LoadableShip) ship);
+			return Optional.of(ship);
 		}
 
 		@Override
-		public Optional<LoadableShip> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
 			Airship ship = new Airship(data);
 			ship.setRequiredPercent(getDefaultRequiredPercent());
 			ship.setPercentBlocks(getDefaultPercentBlocks());
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
 
-			return Optional.of((LoadableShip) ship);
+			return Optional.of(ship);
 		}
 
 		@Override

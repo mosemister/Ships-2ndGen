@@ -14,14 +14,15 @@ import MoseShipsBukkit.SerializedData;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.ShipsData;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
 
 public class ShipsLocalDatabase extends BasicConfig {
 
-	public ShipsLocalDatabase(LoadableShip ship) {
+	public ShipsLocalDatabase(LiveData ship) {
 		super(new File("plugins/Ships/VesselData/" + ship.getStatic().getName() + "/" + ship.getName() + ".yml"));
 	}
 
-	public ShipsLocalDatabase saveBasicShip(LoadableShip data) {
+	public ShipsLocalDatabase saveBasicShip(LiveData data) {
 		List<String> pilots = new ArrayList<String>();
 		for (OfflinePlayer player : data.getSubPilots()) {
 			pilots.add(player.getUniqueId().toString());
@@ -47,16 +48,19 @@ public class ShipsLocalDatabase extends BasicConfig {
 		setOverride(data.getTeleportToLocation().getWorld().getName(), ShipsData.DATABASE_WORLD);
 		setOverride(block, ShipsData.DATABASE_BLOCK);
 		setOverride(teleport, ShipsData.DATABASE_TELEPORT);
-		for (DataHolder d : data.getAllData()) {
-			if (d instanceof SerializedData) {
-				SerializedData serData = (SerializedData) d;
-				Set<Entry<String, Object>> entrySet = serData.getSerializedData().entrySet();
-				for (Entry<String, Object> entry : entrySet) {
-					set(entry.getValue(), entry.getKey());
+		if (data instanceof LoadableShip) {
+			LoadableShip ship = (LoadableShip) data;
+			for (DataHolder d : ship.getAllData()) {
+				if (d instanceof SerializedData) {
+					SerializedData serData = (SerializedData) d;
+					Set<Entry<String, Object>> entrySet = serData.getSerializedData().entrySet();
+					for (Entry<String, Object> entry : entrySet) {
+						set(entry.getValue(), entry.getKey());
+					}
 				}
 			}
+			ship.onSave(this);
 		}
-		data.onSave(this);
 		save();
 		return this;
 	}
