@@ -7,49 +7,51 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.annotation.Nullable;
+
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
-
-import com.flowpowered.math.vector.Vector3i;
 
 import MoseShips.Bypasses.FinalBypass;
 
 import MoseShipsSponge.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Ships.ShipsData;
-import MoseShipsSponge.Ships.Movement.Movement;
-import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipsLocalDatabase;
+import MoseShipsSponge.Ships.VesselTypes.Running.ShipsTaskRunner;
 import MoseShipsSponge.Signs.ShipsSigns.SignType;
-import MoseShipsSponge.Utils.LocationUtils;
 
-public abstract class LoadableShip extends ShipsData {
+public abstract class LoadableShip extends ShipsData implements LiveData {
 
 	public abstract Optional<MovementResult> hasRequirements(List<MovingBlock> blocks, Cause cause);
 
-	public abstract boolean shouldFall();
-
-	public abstract int getMaxBlocks();
-
-	public abstract int getMinBlocks();
-
 	public abstract Map<Text, Object> getInfo();
-
+	
+	public abstract void onSave(ShipsLocalDatabase database);
+	
+	public abstract void onRemove(@Nullable Player player);
+	
 	public abstract StaticShipType getStatic();
+	
+	protected boolean g_moving = false;
+	protected int g_max_blocks = 4000;
+	protected int g_min_blocks = 200;
+	protected boolean g_remove = false;
+	ShipsTaskRunner g_task_runner = new ShipsTaskRunner(this);
 
-	static List<LoadableShip> SHIPS = new ArrayList<>();
+	static List<LoadableShip> gs_ships = new ArrayList<>();
 
 	public LoadableShip(String name, Location<World> sign, Location<World> teleport) {
 		super(name, sign, teleport);
@@ -58,63 +60,113 @@ public abstract class LoadableShip extends ShipsData {
 	public LoadableShip(ShipsData data) {
 		super(data);
 	}
-
-	public ShipsLocalDatabase getLocalDatabase() {
+	
+	@Override
+	public ShipsTaskRunner getTaskRunner(){
+		return g_task_runner;
+	}
+	
+	@Override
+	public Optional<MovementResult> rotate(Rotate type, Cause cause){
+		switch(type){
+			case LEFT: return rotateLeft(cause);
+			case RIGHT: return rotateRight(cause);
+		}
+		return null;
+	}
+	
+	@Override
+	public boolean willRemoveNextCycle(){
+		return g_remove;
+	}
+	
+	@Override
+	public LoadableShip setRemoveNextCycle(boolean remove){
+		g_remove = remove;
+		return this;
+	}
+	
+	@Override
+	public boolean isLoaded(){
+		return gs_ships.stream().anyMatch(ship -> ship.getName().equals(getName()));
+	}
+	
+	@Override
+	public LoadableShip load(){
+		if(isLoaded()){
+			return this;
+		}
+		gs_ships.add(this);
+		return this;
+	}
+	
+	@Override
+	public LoadableShip unload(){
+		gs_ships.remove(this);
+		g_task_runner.pauseScheduler();
+		return this;
+	}
+	
+	@Override
+	public int getMaxBlocks(){
+		return g_max_blocks;
+	}
+	
+	@Override
+	public int getMinBlocks(){
+		return g_min_blocks;
+	}
+	
+	@Override
+	public LoadableShip setMaxBlocks(int A){
+		g_max_blocks = A;
+		return this;
+	}
+	
+	@Override
+	public LoadableShip setMinBlocks(int A){
+		g_min_blocks = A;
+		return this;
+	}
+	
+	@Override
+	public boolean isMoving(){
+		return g_moving;
+	}
+	
+	@Override
+	public void remove(){
+		remove(null);
+	}
+	
+	@Override
+	public void remove(@Nullable Player player){
+		gs_ships.remove(this);
+		onRemove(player);
+		getLocalDatabase().getFile().delete();
+	}
+	
+	@Override
+	public ShipsLocalDatabase getLocalDatabase(){
 		return new ShipsLocalDatabase(this);
 	}
-
-	public Optional<MovementResult> move(Vector3i moveBy, Cause cause) {
-		return Movement.move(this, moveBy, cause);
-	}
-
-	public Optional<MovementResult> move(Direction dir, int speed, Cause cause) {
-		System.out.println("speed: " + speed);
-		Vector3i vector3i = LocationUtils.getReletive(dir, speed);
-		return move(vector3i, cause);
-	}
-
-	public Optional<MovementResult> move(int X, int Y, int Z, Cause cause) {
-		return Movement.move(this, X, Y, Z, cause);
-	}
-
-	public Optional<MovementResult> rotateLeft(Cause cause) {
-		return Movement.rotateLeft(this, cause);
-	}
-
-	public Optional<MovementResult> rotateRight(Cause cause) {
-		return Movement.rotateRight(this, cause);
-	}
-
-	public Optional<MovementResult> rotate(Rotate type, Cause cause) {
-		return Movement.rotate(this, cause, type);
-	}
-
-	public Optional<MovementResult> teleport(StoredMovement move) {
-		return Movement.teleport(this, move);
-	}
-
-	@SuppressWarnings("unchecked")
-	public Optional<MovementResult> teleport(Location<? extends Extent> loc, Cause cause) {
-		Location<World> loc2 = null;
-		if (loc.getExtent() instanceof Chunk) {
-			Chunk chunk = (Chunk) loc.getExtent();
-			loc2 = chunk.getWorld().getLocation(loc.getBlockPosition());
-		} else {
-			loc2 = (Location<World>) loc;
+	
+	@Override
+	public ShipsData cloneOnto(ShipsData data){
+		super.cloneOnto(data);
+		if (data instanceof LoadableShip) {
+			LoadableShip ship = (LoadableShip) data;
+			ship.g_moving = this.g_moving;
+			ship.g_max_blocks = this.g_max_blocks;
+			ship.g_min_blocks = this.g_min_blocks;
+			ship.g_remove = this.g_remove;
+			return ship;
 		}
-		return Movement.teleport(this, loc2, cause);
+		return data;
 	}
-
-	@SuppressWarnings("unchecked")
-	public Optional<MovementResult> teleport(Location<? extends Extent> loc, int X, int Y, int Z, Cause cause) {
-		Location<World> loc2 = null;
-		if (loc.getExtent() instanceof Chunk) {
-			Chunk chunk = (Chunk) loc.getExtent();
-			loc2 = chunk.getWorld().getLocation(loc.getBlockPosition());
-		} else {
-			loc2 = (Location<World>) loc;
-		}
-		return Movement.teleport(this, loc2, X, Y, Z, cause);
+	
+	public void setMoving(boolean check){
+		g_moving = check;
 	}
 
 	@Override
@@ -138,12 +190,8 @@ public abstract class LoadableShip extends ShipsData {
 		return this;
 	}
 
-	public static void inject(LoadableShip type) {
-		SHIPS.add(type);
-	}
-
 	public static Optional<LoadableShip> getShip(String name) {
-		return SHIPS.stream().filter(s -> s.getName().equals(name)).findFirst();
+		return gs_ships.stream().filter(s -> s.getName().equals(name)).findFirst();
 	}
 
 	public static Optional<LoadableShip> getShip(Text text) {
@@ -182,7 +230,7 @@ public abstract class LoadableShip extends ShipsData {
 				return shipType.get();
 			} else {
 				FinalBypass<LoadableShip> shipType = new FinalBypass<>(null);
-				SHIPS.stream().forEach(s -> {
+				gs_ships.stream().forEach(s -> {
 					s.getBasicStructure().stream().forEach(l -> {
 						if (l.equals(sign.getLocation())) {
 							shipType.set(s);
@@ -201,7 +249,7 @@ public abstract class LoadableShip extends ShipsData {
 			loc = chunk.getWorld().getLocation(loc.getBlockPosition());
 		}
 		final Location<World> loc2 = (Location<World>) loc;
-		return SHIPS.stream().filter(s -> {
+		return gs_ships.stream().filter(s -> {
 			// CHECK THOUGH ALL SHIPS
 			if (updateStructure) {
 				// UPDATE THE STRUCTURE IF SPECIFIED
@@ -212,12 +260,12 @@ public abstract class LoadableShip extends ShipsData {
 	}
 
 	public static List<LoadableShip> getReasentlyUsedShips() {
-		return SHIPS;
+		return gs_ships;
 	}
 
 	public static List<LoadableShip> getShips() {
 		List<LoadableShip> ships = new ArrayList<>();
-		ships.addAll(SHIPS);
+		ships.addAll(gs_ships);
 		StaticShipType.TYPES.stream().forEach(t -> {
 			File[] files = new File("config/Ships/VesselData/" + t.getName()).listFiles();
 			if (files != null) {
@@ -237,7 +285,7 @@ public abstract class LoadableShip extends ShipsData {
 
 	public static <T extends StaticShipType> List<LoadableShip> getShips(StaticShipType type) {
 		List<LoadableShip> ships = new ArrayList<>();
-		SHIPS.stream().forEach(s -> {
+		gs_ships.stream().forEach(s -> {
 			if (type.equals(s.getStatic())) {
 				ships.add(s);
 			}

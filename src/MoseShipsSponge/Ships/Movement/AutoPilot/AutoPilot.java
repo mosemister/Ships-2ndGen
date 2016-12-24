@@ -1,21 +1,8 @@
 package MoseShipsSponge.Ships.Movement.AutoPilot;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
-import org.spongepowered.api.entity.living.player.User;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
-
-import MoseShips.Maps.OrderedMap;
-import MoseShipsSponge.Ships.Movement.StoredMovement;
-
 public class AutoPilot {
 	
-	List<StoredMovement> MOVEMENTS = new ArrayList<StoredMovement>();
+	/*List<StoredMovement> MOVEMENTS = new ArrayList<StoredMovement>();
 	LiveAutoPilotable SHIP;
 	User USER;
 	int TARGET;
@@ -214,5 +201,5 @@ public class AutoPilot {
 			}
 		}
 }
-
+*/
 }

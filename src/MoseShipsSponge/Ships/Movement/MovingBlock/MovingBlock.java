@@ -1,11 +1,13 @@
 package MoseShipsSponge.Ships.Movement.MovingBlock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
@@ -27,7 +29,6 @@ import MoseShipsSponge.Configs.Files.BlockList;
 import MoseShipsSponge.Ships.Movement.MovementType;
 import MoseShipsSponge.Ships.Movement.Collide.CollideType;
 import MoseShipsSponge.Ships.Movement.Movement.Rotate;
-import MoseShipsSponge.Utils.LocationUtils;
 
 public class MovingBlock {
 
@@ -51,7 +52,6 @@ public class MovingBlock {
 
 	public MovingBlock(Location<World> original, Vector3i vector) {
 		ORIGIN = original;
-		System.out.println("MovingBlock created: " + vector.getX() + " | " + vector.getY() + " | " + vector.getZ());
 		MOVING_TO = original.add(vector.toDouble());
 		STATE = original.createSnapshot();
 	}
@@ -63,10 +63,18 @@ public class MovingBlock {
 	public Location<World> getMovingTo() {
 		return MOVING_TO;
 	}
+	
+	public BlockType getType(){
+		return STATE.getState().getType();
+	}
+	
+	public BlockState getState(){
+		return STATE.getState();
+	}
 
 	public MovementType getMovementType() {
 		if ((ORIGIN.getBlockX() == MOVING_TO.getBlockX()) && (ORIGIN.getBlockZ() == MOVING_TO.getBlockZ())) {
-			return MovementType.FORWARDS;
+			return MovementType.DIRECTIONAL;
 		} else if ((ORIGIN.getBlockX() > MOVING_TO.getBlockX()) || (ORIGIN.getBlockZ() > MOVING_TO.getBlockZ())) {
 			return MovementType.ROTATE_RIGHT;
 		} else {
@@ -108,16 +116,20 @@ public class MovingBlock {
 		return Priority.getType(STATE.getState().getType());
 	}
 
-	public CollideType getCollision(List<Location<World>> ignore) {
-		if (LocationUtils.blockWorldContains(ignore, MOVING_TO)) {
-			return CollideType.NONE;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)) {
-			return CollideType.COLLIDE;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)) {
+	public CollideType getCollision(List<Location<World>> ignore, BlockState... ignore2) {
+		if (ignore.contains(MOVING_TO.getBlock())) {
+			return CollideType.COLLIDE_WITH_SELF;
+		} else if (Arrays.asList(ignore2).contains(MOVING_TO.getBlock())) {
+			return CollideType.COLLIDE_WITH_IGNORED_TYPE;
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(),
+				BlockList.ListType.MATERIALS)) {
+			return CollideType.COLLIDE_WITH_MATERIAL;
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(),
+				BlockList.ListType.RAM)) {
 			return CollideType.RAM;
 		} else {
-			return CollideType.NONE;
-		}
+			return CollideType.COLLIDE;
+}
 	}
 
 	public MovingBlock rotate(Rotate rotate, Location<World> centre) {

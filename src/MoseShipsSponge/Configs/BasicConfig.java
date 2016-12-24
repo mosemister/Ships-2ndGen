@@ -61,7 +61,7 @@ public class BasicConfig {
 
 	public boolean set(Object object, Object... path) {
 		if (path != null) {
-			if (has(path)) {
+			if (!has(path)) {
 				root.getNode(path).setValue(object);
 				return true;
 			}

@@ -8,12 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.trait.BlockTrait;
-import org.spongepowered.api.text.Text;
 
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.BasicConfig;
@@ -47,7 +45,7 @@ public class BlockList extends BasicConfig {
 			}
 		});
 		if(list.size() != 0){
-			Sponge.getServer().getConsole().sendMessage(Text.of("The following failed to load \n" + list));
+			//Sponge.getServer().getConsole().sendMessage(Text.of("The following failed to load \n" + list));
 		}
 	}
 	

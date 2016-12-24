@@ -1,12 +1,16 @@
 package MoseShipsSponge.Ships;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.living.player.User;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -103,6 +107,27 @@ public class ShipsData extends DataHolder {
 
 	public List<Location<World>> getBasicStructure() {
 		return STRUCTURE;
+	}
+	
+	public Map<String, String> getBasicData() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("Name: ", NAME);
+		map.put("Licence: ", MAIN_BLOCK.getX() + ", " + MAIN_BLOCK.getY() + ", " + MAIN_BLOCK.getZ() + ", " + MAIN_BLOCK.getExtent().getName());
+		map.put("Teleport: ", TELEPORT.getX() + ", " + TELEPORT.getY() + ", " + TELEPORT.getZ() + ", " + TELEPORT.getExtent().getName());
+		map.put("Structure size:", STRUCTURE.size() + "");
+		return map;
+}
+	
+	public List<Entity> getEntities(){
+		List<Entity> entities = new ArrayList<>();
+		
+		MAIN_BLOCK.getExtent().getEntities().stream().forEach(e -> {
+			Location<World> block = e.getLocation().getBlockRelative(Direction.DOWN);
+			if(STRUCTURE.contains(block)){
+				entities.add(e);
+			}
+		});
+		return entities;
 	}
 	
 	public boolean hasLocation(Location<World> loc){

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.Location;
@@ -16,9 +17,10 @@ import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
-import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirType;
+import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;
+import MoseShipsSponge.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 
-public class OpShip extends AirType {
+public class OpShip extends AbstractAirType {
 
 	public OpShip(String name, Location<World> sign, Location<World> teleport) {
 		super(name, sign, teleport);
@@ -34,11 +36,6 @@ public class OpShip extends AirType {
 	}
 
 	@Override
-	public boolean shouldFall() {
-		return false;
-	}
-
-	@Override
 	public int getMaxBlocks() {
 		return 300;
 	}
@@ -50,8 +47,24 @@ public class OpShip extends AirType {
 
 	@Override
 	public Map<Text, Object> getInfo() {
-		return new HashMap<Text, Object>();
+		HashMap<Text, Object> map = new HashMap<>();
+		if (USER == null) {
+			map.put(Text.of("Owner"), "None");
+		} else {
+			map.put(Text.of("Owner"), USER.getName());
+		}
+		map.put(Text.of("size"), updateBasicStructure().size());
+		map.put(Text.of("type"), "OPShip");
+		map.put(Text.of("is loaded"), this.isLoaded());
+		map.put(Text.of("is moving"), this.isMoving());
+		return map;
 	}
+
+	@Override
+	public void onSave(ShipsLocalDatabase database) {}
+
+	@Override
+	public void onRemove(Player player) {}
 
 	@Override
 	public StaticShipType getStatic() {

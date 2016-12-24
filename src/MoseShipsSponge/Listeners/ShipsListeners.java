@@ -21,8 +21,6 @@ import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import com.flowpowered.math.vector.Vector3i;
-
 import MoseShips.Stores.TwoStore;
 
 import MoseShipsSponge.ShipsMain;
@@ -78,7 +76,7 @@ public class ShipsListeners {
 										Player player = opPlayer.get();
 										player.sendMessage(ShipsMain.format("Ship created", false));
 									}
-									LoadableShip.inject(ship);
+									ship.load();
 									List<Text> lines = new ArrayList<>();
 									lines.add(Text.builder("[Ships]").color(TextColors.YELLOW).build());
 									lines.add(Text.builder(ship.getStatic().getName()).color(TextColors.BLUE).build());
@@ -132,7 +130,7 @@ public class ShipsListeners {
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(player, store.getSecond());
+											store.getFirst().sendMessage(ship, player, store.getSecond());
 										}
 									}
 								} else {
@@ -142,7 +140,7 @@ public class ShipsListeners {
 										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 										if (failed.isPresent()) {
 											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(player, store.getSecond());
+											store.getFirst().sendMessage(ship, player, store.getSecond());
 										}
 									}
 								}
@@ -150,13 +148,13 @@ public class ShipsListeners {
 							case WHEEL:
 								break;
 							case ALTITUDE:
-								Optional<MovementResult> cause = ship.move(new Vector3i(0, -ship.getStatic().getAltitudeSpeed(), 0), ShipsCause.SIGN_CLICK.buildCause());
+								Optional<MovementResult> cause = ship.move(0, -ship.getStatic().getAltitudeSpeed(), 0, ShipsCause.SIGN_CLICK.buildCause());
 								if (cause.isPresent()) {
 									MovementResult result = cause.get();
 									Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
 									if (failed.isPresent()) {
 										TwoStore<CauseKeys<Object>, Object> store = failed.get();
-										store.getFirst().sendMessage(player, store.getSecond());
+										store.getFirst().sendMessage(ship, player, store.getSecond());
 									}
 								}
 								break;

@@ -1,25 +1,12 @@
 package MoseShipsSponge.CMD.Commands;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.util.blockray.BlockRay;
-import org.spongepowered.api.util.blockray.BlockRayHit;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.CMD.ShipsCMD;
-import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
-import MoseShipsSponge.Signs.ShipsSigns;
 
 public class SignCMD implements ShipsCMD.ShipsPlayerCMD{
 
@@ -63,7 +50,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD{
 	}
 	
 	public void track(Player player, int sec){
-		BlockRay<World> blockRay = BlockRay.from(player).filter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 5)).build();
+		/*BlockRay<World> blockRay = BlockRay.from(player).filter(BlockRay.continueAfterFilter(BlockRay.onlyAirFilter(), 5)).build();
 		
 		while(blockRay.hasNext()){
 			System.out.println("Next Block");
@@ -93,7 +80,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD{
 					}
 				}
 			}
-		}
+		}*/
 	}
 
 }

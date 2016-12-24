@@ -18,7 +18,6 @@ import MoseShips.Stores.TwoStore;
 import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.Files.ShipsConfig;
 import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsSponge.Ships.Utils.AutoPilot;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class MovementResult {
@@ -30,10 +29,11 @@ public class MovementResult {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <E extends Object> void put(CauseKeys<E> key, E value) {
+	public <E extends Object> MovementResult put(CauseKeys<E> key, E value) {
 		CAUSES.removeAll(CAUSES.stream().filter(e -> e.getFirst().equals(key)).collect(Collectors.toList()));
 		TwoStore<CauseKeys<Object>, Object> store = new TwoStore<CauseKeys<Object>, Object>((CauseKeys<Object>) key, value);
 		CAUSES.add(store);
+		return this;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -104,14 +104,14 @@ public class MovementResult {
 			}
 
 		};
-		public static CauseKeys<AutoPilot> AUTO_PILOT_OUT_OF_MOVES = new CauseKeys<AutoPilot>() {
+		/*public static CauseKeys<AutoPilot> AUTO_PILOT_OUT_OF_MOVES = new CauseKeys<AutoPilot>() {
 
 			@Override
 			public void sendMessage(LoadableShip ship, Player player, Object value) {
 				player.sendMessage(ShipsMain.format("AutoPilot ran out of moves", true));
 			}
 
-		};
+		};*/
 		public static CauseKeys<Boolean> OUT_OF_FUEL = new CauseKeys<Boolean>() {
 
 			@Override
@@ -132,7 +132,7 @@ public class MovementResult {
 			}
 
 		};
-		public static CauseKeys<Boolean> MISSING_BLLOCKS = new CauseKeys<Boolean>(){
+		public static CauseKeys<Boolean> MISSING_BLOCKS = new CauseKeys<Boolean>(){
 
 			@Override
 			public void sendMessage(LoadableShip ship, Player player, Object value) {
