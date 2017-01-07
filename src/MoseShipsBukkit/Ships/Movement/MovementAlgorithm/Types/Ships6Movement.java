@@ -17,13 +17,13 @@ import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.WaterType;
 
 public class Ships6Movement implements MovementAlgorithm {
 
 	@Override
-	public boolean move(final LoadableShip vessel, final List<MovingBlock> blocksUn, final List<Entity> onBoard) {
+	public boolean move(final LiveShip vessel, final List<MovingBlock> blocksUn, final List<Entity> onBoard) {
 		if(blocksUn.isEmpty()){
 			return false;
 		}

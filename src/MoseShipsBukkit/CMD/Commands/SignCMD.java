@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.CMD.ShipsCMD;
+import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Events.Vessel.Command.ShipTrackEvent;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Signs.ShipsSigns;
@@ -75,7 +76,8 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {
 					LoadableShip ship = opShip.get();
-					final ShipTrackEvent event = new ShipTrackEvent(ship);
+					ShipsCause cause = new ShipsCause(player, sign, sSign.get(), ship);
+					final ShipTrackEvent event = new ShipTrackEvent(cause, ship);
 					 Bukkit.getServer().getPluginManager().callEvent(event);
 					int A = 0;
 					for (final Entry<Location, BlockState> entry : event.getShowing().entrySet()) {
@@ -117,7 +119,8 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {
 					LoadableShip ship = opShip.get();
-					final ShipTrackEvent event = new ShipTrackEvent(ship);
+					ShipsCause cause = new ShipsCause(player, sec, sign, sSign.get(), ship);
+					final ShipTrackEvent event = new ShipTrackEvent(cause, ship);
 					Bukkit.getServer().getPluginManager().callEvent(event);
 					player.sendMessage("Now showing the structure of " + ship.getName() + " (size of " + event.getShowing().size() + ") for " + sec + " seconds");
 					for (Entry<Location, BlockState> entry : event.getShowing().entrySet()) {

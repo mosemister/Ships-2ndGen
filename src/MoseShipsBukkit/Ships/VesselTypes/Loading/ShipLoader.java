@@ -15,9 +15,9 @@ import org.bukkit.block.Block;
 import MoseShips.Stores.OneStore;
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
 
@@ -68,14 +68,14 @@ public class ShipLoader {
 
 	private static TwoStore<LoadableShip, ShipLoadingError> pLoadShip(File file) {
 		BasicConfig config = new BasicConfig(file);
-		String[] sLic = config.get(String.class, ShipsData.DATABASE_BLOCK).split(",");
-		String name = config.get(String.class, ShipsData.DATABASE_NAME);
-		String sType = config.get(String.class, ShipsData.DATABASE_TYPE);
-		String sPilot = config.get(String.class, ShipsData.DATABASE_PILOT);
-		List<String> lStructure = config.getList(String.class, ShipsData.DATABASE_STRUCTURE);
-		String sSubPilots = config.get(String.class, ShipsData.DATABASE_SUB_PILOTS);
-		String[] sTel = config.get(String.class, ShipsData.DATABASE_TELEPORT).split(",");
-		String sWorld = config.get(String.class, ShipsData.DATABASE_WORLD);
+		String[] sLic = config.get(String.class, AbstractShipsData.DATABASE_BLOCK).split(",");
+		String name = config.get(String.class, AbstractShipsData.DATABASE_NAME);
+		String sType = config.get(String.class, AbstractShipsData.DATABASE_TYPE);
+		String sPilot = config.get(String.class, AbstractShipsData.DATABASE_PILOT);
+		List<String> lStructure = config.getList(String.class, AbstractShipsData.DATABASE_STRUCTURE);
+		String sSubPilots = config.get(String.class, AbstractShipsData.DATABASE_SUB_PILOTS);
+		String[] sTel = config.get(String.class, AbstractShipsData.DATABASE_TELEPORT).split(",");
+		String sWorld = config.get(String.class, AbstractShipsData.DATABASE_WORLD);
 
 		if (sWorld == null) {
 			return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.UNREADABLE_WORLD);
@@ -103,7 +103,7 @@ public class ShipLoader {
 			Optional<StaticShipType> opType = StaticShipTypeUtil.getType(sType);
 			if (opType.isPresent()) {
 				StaticShipType type = opType.get();
-				ShipsData data = new ShipsData(name, lic.getBlock(), tel);
+				AbstractShipsData data = new AbstractShipsData(name, lic.getBlock(), tel);
 				if (sPilot != null) {
 					OfflinePlayer user = Bukkit.getOfflinePlayer(UUID.fromString(sPilot));
 					if (user != null) {
@@ -152,7 +152,7 @@ public class ShipLoader {
 					data.getSubPilots().addAll(subPilots);
 				}
 
-				Optional<LiveData> opShip = type.loadVessel(data, config);
+				Optional<LiveShip> opShip = type.loadVessel(data, config);
 				if (opShip.isPresent()) {
 					return new TwoStore<LoadableShip, ShipLoadingError>((LoadableShip)opShip.get(), ShipLoadingError.NOT_CURRUPT);
 				} else {

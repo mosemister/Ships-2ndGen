@@ -10,12 +10,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.MovementResult;
+import MoseShipsBukkit.Causes.Failed.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AirType;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.AbstractWaterType;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
@@ -28,7 +28,7 @@ public class HybridShip extends AbstractWaterType implements AirType{
 		super(name, sign, teleport);
 	}
 
-	public HybridShip(ShipsData data) {
+	public HybridShip(AbstractShipsData data) {
 		super(data);
 	}
 
@@ -92,13 +92,13 @@ public class HybridShip extends AbstractWaterType implements AirType{
 		}
 
 		@Override
-		public Optional<LiveData> createVessel(String name, Block licence) {
+		public Optional<LiveShip> createVessel(String name, Block licence) {
 			LoadableShip ship = new HybridShip(name, licence, licence.getLocation());
 			return Optional.of(ship);
 		}
 
 		@Override
-		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			LoadableShip ship = new HybridShip(data);
 			return Optional.of(ship);
 		}

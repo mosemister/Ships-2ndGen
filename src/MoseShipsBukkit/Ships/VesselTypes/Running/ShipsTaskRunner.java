@@ -13,7 +13,7 @@ import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.Running.Tasks.StructureCheckingTask;
 import MoseShipsBukkit.Ships.VesselTypes.Running.Tasks.UnloadTask;
 
@@ -22,16 +22,16 @@ public class ShipsTaskRunner {
 	protected int g_sche_id = -1;
 	protected int g_time_repeated = 0;
 	protected Map<ShipsTask, Plugin> g_tasks = new HashMap<ShipsTask, Plugin>();
-	protected LiveData g_ship;
+	protected LiveShip g_ship;
 	
-	public ShipsTaskRunner(LiveData ship){
+	public ShipsTaskRunner(LiveShip ship){
 		g_ship = ship;
 		g_tasks.put(new UnloadTask(), ShipsMain.getPlugin());
 		g_tasks.put(new StructureCheckingTask(), ShipsMain.getPlugin());
 		startScheduler();
 	}
 	
-	public LiveData getAttachedShip(){
+	public LiveShip getAttachedShip(){
 		return g_ship;
 	}
 	

@@ -1,7 +1,7 @@
 package MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes;
 
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
-public interface AirType extends LiveData {
+public interface AirType extends LiveShip {
 
 }

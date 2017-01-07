@@ -19,13 +19,13 @@ import org.bukkit.inventory.ItemStack;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.MovementResult;
+import MoseShipsBukkit.Causes.Failed.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFuel;
@@ -53,7 +53,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		getTaskRunner().register(ShipsMain.getPlugin(), new FallingTask());
 	}
 
-	public Airship(ShipsData data) {
+	public Airship(AbstractShipsData data) {
 		super(data);
 	}
 
@@ -228,19 +228,19 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		int hasPercent = getAmountOfPercentBlocks();
 		int percent = getRequiredPercent();
 		if (!hasRequiredBlock()) {
-			return Optional.of(new MovementResult().put(MovementResult.CauseKeys.MISSING_REQUIRED_BLOCK, new BlockState(Material.FIRE)));
+			return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.MISSING_REQUIRED_BLOCK, new BlockState(Material.FIRE)));
 		}
 		if (hasPercent < percent) {
-			return Optional.of(new MovementResult().put(MovementResult.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) (percent - hasPercent))));
+			return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) (percent - hasPercent))));
 		}
 		if (getFuel() >= getConsumptionAmount()) {
 			if (removeFuel(getConsumptionAmount())) {
 				return Optional.empty();
 			} else {
-				return Optional.of(new MovementResult().put(MovementResult.CauseKeys.FUEL_REMOVE_ERROR, true));
+				return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.FUEL_REMOVE_ERROR, true));
 			}
 		} else {
-			return Optional.of(new MovementResult().put(MovementResult.CauseKeys.OUT_OF_FUEL, true));
+			return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.OUT_OF_FUEL, true));
 		}
 	}
 
@@ -333,7 +333,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		}
 
 		@Override
-		public Optional<LiveData> createVessel(String name, Block licence) {
+		public Optional<LiveShip> createVessel(String name, Block licence) {
 			Airship ship = new Airship(name, licence, licence.getLocation());
 			ship.setRequiredPercent(getDefaultRequiredPercent());
 			ship.setPercentBlocks(getDefaultPercentBlocks());
@@ -343,7 +343,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		}
 
 		@Override
-		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			Airship ship = new Airship(data);
 			ship.setRequiredPercent(getDefaultRequiredPercent());
 			ship.setPercentBlocks(getDefaultPercentBlocks());

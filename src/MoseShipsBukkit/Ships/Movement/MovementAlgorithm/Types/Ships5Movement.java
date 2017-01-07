@@ -10,13 +10,13 @@ import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.MovementAlgorithm;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.WaterTypes.MainTypes.WaterType;
 
 public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
-	public boolean move(LoadableShip type, List<MovingBlock> blocksUn, List<Entity> entities) {
+	public boolean move(LiveShip type, List<MovingBlock> blocksUn, List<Entity> entities) {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		int waterLevel = 63;
 		if (type instanceof WaterType) {

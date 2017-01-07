@@ -5,22 +5,30 @@ import java.util.List;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Events.Vessel.ShipEvent;
 import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
 public class ShipTransformEvent extends Event implements ShipEvent{
 	
 	List<MovingBlock> g_blocks;
 	MovementType g_type;
-	LiveData g_ship;
+	LiveShip g_ship;
+	ShipsCause g_cause;
 	static HandlerList g_handlers = new HandlerList();
 	
-	public ShipTransformEvent(LiveData ship, MovementType type, List<MovingBlock> blocks){
+	public ShipTransformEvent(ShipsCause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks){
 		g_ship = ship;
 		g_blocks = blocks;
 		g_type = type;
+		g_cause = cause;
+	}
+	
+	@Override
+	public ShipsCause getCause(){
+		return g_cause;
 	}
 	
 	public MovementType getMovementType(){
@@ -32,7 +40,7 @@ public class ShipTransformEvent extends Event implements ShipEvent{
 	}
 
 	@Override
-	public LiveData getShip() {
+	public LiveShip getShip() {
 		return g_ship;
 	}
 

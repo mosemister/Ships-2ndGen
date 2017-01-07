@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.Types.Ships5Movement;
 import MoseShipsBukkit.Ships.Movement.MovementAlgorithm.Types.Ships6Movement;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
 public interface MovementAlgorithm {
 
@@ -24,7 +24,7 @@ public interface MovementAlgorithm {
 	 * @param onBoard = a list of entities that have been found
 	 * @return = if the entities should be teleported 
 	 */
-	public boolean move(LoadableShip vessel, List<MovingBlock> blocks, List<Entity> onBoard);
+	public boolean move(LiveShip vessel, List<MovingBlock> blocks, List<Entity> onBoard);
 
 	
 	/**

@@ -18,9 +18,10 @@ import MoseShips.CustomDataHolder.DataHolder;
 
 import MoseShipsBukkit.BlockFinder.BlockFinderUtils;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.ShipsData;
 import MoseShipsBukkit.Utils.LocationUtils;
 
-public class ShipsData extends DataHolder {
+public class AbstractShipsData extends DataHolder implements ShipsData {
 
 	public static final String DATABASE_NAME = "ShipsMeta.Name";
 	public static final String DATABASE_TYPE = "ShipsMeta.Type";
@@ -38,7 +39,7 @@ public class ShipsData extends DataHolder {
 	protected Block g_main;
 	protected Location TELEPORT;
 
-	public ShipsData(String name, Block sign, Location teleport) {
+	public AbstractShipsData(String name, Block sign, Location teleport) {
 		g_name = name;
 		g_main = sign;
 		if (teleport == null) {
@@ -48,10 +49,19 @@ public class ShipsData extends DataHolder {
 		}
 	}
 
-	public ShipsData(ShipsData data) {
-		data.cloneOnto(this);
+	public AbstractShipsData(ShipsData data) {
+		g_name = data.getName();
+		Optional<OfflinePlayer> opOwner = data.getOwner();
+		if(opOwner.isPresent()){
+			g_user = opOwner.get();
+		}
+		SUB_PILOTS = data.getSubPilots();
+		STRUCTURE = data.getBasicStructure();
+		g_main = data.getLocation().getBlock();
+		TELEPORT = data.getTeleportToLocation();
 	}
 
+	@Override
 	public Optional<Sign> getLicence() {
 		if (g_main.getState() instanceof Sign) {
 			return Optional.of((Sign) g_main.getState());
@@ -59,27 +69,33 @@ public class ShipsData extends DataHolder {
 		return Optional.empty();
 	}
 
+	@Override
 	public String getName() {
 		return g_name;
 	}
 
+	@Override
 	public Optional<OfflinePlayer> getOwner() {
 		return Optional.ofNullable(g_user);
 	}
 
-	public ShipsData setOwner(OfflinePlayer user) {
+	@Override
+	public AbstractShipsData setOwner(OfflinePlayer user) {
 		g_user = user;
 		return this;
 	}
 
+	@Override
 	public List<OfflinePlayer> getSubPilots() {
 		return SUB_PILOTS;
 	}
 
+	@Override
 	public World getWorld() {
 		return g_main.getWorld();
 	}
 
+	@Override
 	public Map<String, String> getBasicData() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("Name: ", g_name);
@@ -89,10 +105,12 @@ public class ShipsData extends DataHolder {
 		return map;
 	}
 
+	@Override
 	public List<Block> getBasicStructure() {
 		return STRUCTURE;
 	}
 
+	@Override
 	public List<Entity> getEntities() {
 		List<Entity> entities = new ArrayList<Entity>();
 		for (Entity entity : g_main.getWorld().getEntities()) {
@@ -104,6 +122,7 @@ public class ShipsData extends DataHolder {
 		return entities;
 	}
 
+	@Override
 	public boolean hasLocation(Location loc) {
 		if (!loc.getWorld().equals(getWorld())) {
 			return false;
@@ -116,6 +135,7 @@ public class ShipsData extends DataHolder {
 		return false;
 	}
 
+	@Override
 	public List<Block> updateBasicStructure() {
 		Integer trackLimit = ShipsConfig.CONFIG.get(Integer.class,
 				ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
@@ -127,12 +147,14 @@ public class ShipsData extends DataHolder {
 		return list;
 	}
 
+	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
 		STRUCTURE = locs;
 		g_main = licence;
 		return locs;
 	}
 
+	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		STRUCTURE = locs;
 		g_main = licence;
@@ -140,28 +162,20 @@ public class ShipsData extends DataHolder {
 		return locs;
 	}
 
+	@Override
 	public Location getLocation() {
 		return g_main.getLocation();
 	}
 
+	@Override
 	public Location getTeleportToLocation() {
 		return TELEPORT;
 	}
 
-	public ShipsData setTeleportToLocation(Location loc) {
+	@Override
+	public AbstractShipsData setTeleportToLocation(Location loc) {
 		TELEPORT = loc;
 		return this;
-	}
-
-	public ShipsData cloneOnto(ShipsData data) {
-		data.g_main = this.g_main;
-		data.g_name = this.g_name;
-		data.STRUCTURE = this.STRUCTURE;
-		data.SUB_PILOTS = this.SUB_PILOTS;
-		data.TELEPORT = this.TELEPORT;
-		data.g_user = this.g_user;
-		data.DATA = this.DATA;
-		return data;
 	}
 
 }

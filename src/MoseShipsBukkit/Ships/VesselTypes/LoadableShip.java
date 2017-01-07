@@ -8,20 +8,22 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import MoseShipsBukkit.Causes.MovementResult;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Causes.ShipsCause;
+import MoseShipsBukkit.Causes.Failed.MovementResult;
+import MoseShipsBukkit.Events.Vessel.Load.ShipLoadEvent;
+import MoseShipsBukkit.Events.Vessel.Load.ShipUnloadEvent;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
-import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsBukkit.Ships.VesselTypes.Running.ShipsTaskRunner;
@@ -30,7 +32,7 @@ import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
 import MoseShipsBukkit.Signs.ShipsSigns.SignType;
 import MoseShipsBukkit.Utils.LocationUtils;
 
-public abstract class LoadableShip extends ShipsData implements LiveData {
+public abstract class LoadableShip extends AbstractShipsData implements LiveShip {
 
 	public abstract Optional<MovementResult> hasRequirements(List<MovingBlock> blocks);
 
@@ -41,27 +43,6 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	public abstract void onRemove(@Nullable Player player);
 
 	public abstract StaticShipType getStatic();
-
-	@Override
-	public abstract Optional<MovementResult> move(BlockFace dir, int speed);
-
-	@Override
-	public abstract Optional<MovementResult> move(int X, int Y, int Z);
-
-	@Override
-	public abstract Optional<MovementResult> rotateLeft();
-
-	@Override
-	public abstract Optional<MovementResult> rotateRight();
-
-	@Override
-	public abstract Optional<MovementResult> teleport(StoredMovement move);
-
-	@Override
-	public abstract Optional<MovementResult> teleport(Location loc);
-
-	@Override
-	public abstract Optional<MovementResult> teleport(Location loc, int X, int Y, int Z);
 
 	protected boolean g_moving = false;
 	protected int g_max_blocks = 4000;
@@ -75,7 +56,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		super(name, sign, teleport);
 	}
 
-	public LoadableShip(ShipsData data) {
+	public LoadableShip(AbstractShipsData data) {
 		super(data);
 	}
 	
@@ -85,12 +66,12 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	}
 
 	@Override
-	public Optional<MovementResult> rotate(Rotate type) {
+	public Optional<MovementResult> rotate(Rotate type, ShipsCause cause) {
 		switch (type) {
 			case LEFT:
-				return rotateLeft();
+				return rotateLeft(cause);
 			case RIGHT:
-				return rotateRight();
+				return rotateRight(cause);
 		}
 		return null;
 	}
@@ -117,16 +98,22 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	}
 
 	@Override
-	public LoadableShip load() {
+	public LoadableShip load(ShipsCause cause) {
 		if (isLoaded()) {
 			return this;
 		}
-		SHIPS.add(this);
+		ShipLoadEvent event = new ShipLoadEvent(cause, this);
+		Bukkit.getPluginManager().callEvent(event);
+		if(!event.isCancelled()){
+			SHIPS.add(this);
+		}
 		return this;
 	}
 
 	@Override
-	public LoadableShip unload() {
+	public LoadableShip unload(ShipsCause cause) {
+		ShipUnloadEvent event = new ShipUnloadEvent(cause, this);
+		Bukkit.getPluginManager().callEvent(event);
 		SHIPS.remove(this);
 		g_task_runner.pauseScheduler();
 		return this;
@@ -179,20 +166,6 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 	@Override
 	public ShipsLocalDatabase getLocalDatabase() {
 		return new ShipsLocalDatabase(this);
-	}
-
-	@Override
-	public ShipsData cloneOnto(ShipsData data) {
-		super.cloneOnto(data);
-		if (data instanceof LoadableShip) {
-			LoadableShip ship = (LoadableShip) data;
-			ship.g_moving = this.g_moving;
-			ship.g_max_blocks = this.g_max_blocks;
-			ship.g_min_blocks = this.g_min_blocks;
-			ship.g_remove = this.g_remove;
-			return ship;
-		}
-		return data;
 	}
 
 	@Override
@@ -334,7 +307,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		return ships;
 	}
 
-	public static List<LoadableShip> getShipsByRequirements(Class<? extends LiveData> type) {
+	public static List<LoadableShip> getShipsByRequirements(Class<? extends LiveShip> type) {
 		List<LoadableShip> ships = new ArrayList<LoadableShip>();
 		for (LoadableShip ship : getShips()) {
 			if (type.isInstance(ship)) {

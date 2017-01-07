@@ -1,10 +1,10 @@
 package MoseShipsBukkit.Ships.VesselTypes.Running;
 
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
 public interface ShipsTask {
 	
-	public void onRun(LiveData ship);
+	public void onRun(LiveShip ship);
 	public long getDelay();
 
 }

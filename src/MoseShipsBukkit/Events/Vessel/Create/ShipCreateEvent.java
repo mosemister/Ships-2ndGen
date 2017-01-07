@@ -4,17 +4,26 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Events.Vessel.ShipEvent;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 
+
+/**
+ * implemented
+ * @author Mose
+ *
+ */
 public class ShipCreateEvent extends Event implements ShipEvent, Cancellable {
 	
 	boolean g_cancelled = false;
-	ShipsData g_ship;
+	AbstractShipsData g_ship;
+	ShipsCause g_cause;
 	protected static HandlerList g_handlers = new HandlerList();
 	
-	public ShipCreateEvent(ShipsData data){
+	public ShipCreateEvent(ShipsCause cause, AbstractShipsData data){
 		g_ship = data;
+		g_cause = cause;
 	}
 
 	@Override
@@ -28,13 +37,18 @@ public class ShipCreateEvent extends Event implements ShipEvent, Cancellable {
 	}
 
 	@Override
-	public ShipsData getShip() {
+	public AbstractShipsData getShip() {
 		return g_ship;
 	}
 
 	@Override
 	public HandlerList getHandlers() {
 		return g_handlers;
+	}
+	
+	@Override
+	public ShipsCause getCause() {
+		return g_cause;
 	}
 	
 	public static HandlerList getHandlerList(){

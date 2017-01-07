@@ -1,8 +1,8 @@
 package MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live;
 
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
-public interface LiveFallable extends LiveData {
+public interface LiveFallable extends LiveShip {
 	
 	public boolean shouldFall();
 

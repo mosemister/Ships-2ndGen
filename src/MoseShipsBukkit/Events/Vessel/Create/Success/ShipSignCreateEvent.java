@@ -3,13 +3,20 @@ package MoseShipsBukkit.Events.Vessel.Create.Success;
 import org.bukkit.block.Sign;
 import org.bukkit.event.HandlerList;
 
+import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Events.Vessel.Create.ShipCreateEvent;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 
+
+/**
+ * implemented 
+ * @author Mose
+ *
+ */
 public class ShipSignCreateEvent extends ShipCreateEvent{
 
-	public ShipSignCreateEvent(ShipsData data) {
-		super(data);
+	public ShipSignCreateEvent(ShipsCause cause, AbstractShipsData data) {
+		super(cause, data);
 	}
 	
 	public Sign getSign(){

@@ -16,13 +16,13 @@ import org.bukkit.plugin.Plugin;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.MovementResult;
-import MoseShipsBukkit.Causes.MovementResult.CauseKeys;
+import MoseShipsBukkit.Causes.Failed.MovementResult;
+import MoseShipsBukkit.Causes.Failed.MovementResult.CauseKeys;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticRequiredPercent;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;
@@ -40,7 +40,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 		super(name, sign, teleport);
 	}
 
-	public Marsship(ShipsData data) {
+	public Marsship(AbstractShipsData data) {
 		super(data);
 	}
 
@@ -166,7 +166,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 		}
 
 		@Override
-		public Optional<LiveData> createVessel(String name, Block licence) {
+		public Optional<LiveShip> createVessel(String name, Block licence) {
 			Marsship ship = new Marsship(name, licence, licence.getLocation());
 			ship.g_req_p_blocks = getDefaultPercentBlocks();
 			ship.g_req_percent = getDefaultRequiredPercent();
@@ -174,7 +174,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 		}
 
 		@Override
-		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			Marsship ship = new Marsship(data);
 			List<String> sStates = config.getList(String.class, LiveRequiredPercent.REQUIRED_BLOCKS);
 			BlockState[] states = BlockState.getStates(sStates);

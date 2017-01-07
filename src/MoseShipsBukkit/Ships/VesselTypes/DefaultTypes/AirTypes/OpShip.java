@@ -10,13 +10,13 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.MovementResult;
+import MoseShipsBukkit.Causes.Failed.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
 import MoseShipsBukkit.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;
@@ -32,7 +32,7 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 		super(name, sign, teleport);
 	}
 
-	public OpShip(ShipsData ship) {
+	public OpShip(AbstractShipsData ship) {
 		super(ship);
 	}
 	
@@ -132,12 +132,12 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 		}
 
 		@Override
-		public Optional<LiveData> createVessel(String name, Block sign) {
+		public Optional<LiveShip> createVessel(String name, Block sign) {
 			return Optional.of((LoadableShip) new OpShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
-		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			return Optional.of((LoadableShip) new OpShip(data));
 		}
 

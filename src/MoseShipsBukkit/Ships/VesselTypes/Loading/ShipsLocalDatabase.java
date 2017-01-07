@@ -12,17 +12,17 @@ import org.bukkit.block.Block;
 import MoseShips.CustomDataHolder.DataHolder;
 import MoseShipsBukkit.SerializedData;
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
 public class ShipsLocalDatabase extends BasicConfig {
 
-	public ShipsLocalDatabase(LiveData ship) {
+	public ShipsLocalDatabase(LiveShip ship) {
 		super(new File("plugins/Ships/VesselData/" + ship.getStatic().getName() + "/" + ship.getName() + ".yml"));
 	}
 
-	public ShipsLocalDatabase saveBasicShip(LiveData data) {
+	public ShipsLocalDatabase saveBasicShip(LiveShip data) {
 		List<String> pilots = new ArrayList<String>();
 		for (OfflinePlayer player : data.getSubPilots()) {
 			pilots.add(player.getUniqueId().toString());
@@ -38,16 +38,16 @@ public class ShipsLocalDatabase extends BasicConfig {
 				+ data.getLocation().getBlockZ());
 		String teleport = (data.getTeleportToLocation().getBlockX() + "," + data.getTeleportToLocation().getBlockY()
 				+ "," + data.getTeleportToLocation().getBlockZ());
-		setOverride(structure, ShipsData.DATABASE_STRUCTURE);
-		setOverride(data.getName(), ShipsData.DATABASE_NAME);
-		setOverride(data.getStatic().getName(), ShipsData.DATABASE_TYPE);
+		setOverride(structure, AbstractShipsData.DATABASE_STRUCTURE);
+		setOverride(data.getName(), AbstractShipsData.DATABASE_NAME);
+		setOverride(data.getStatic().getName(), AbstractShipsData.DATABASE_TYPE);
 		if (data.getOwner().isPresent()) {
-			setOverride(data.getOwner().get().getUniqueId().toString(), ShipsData.DATABASE_PILOT);
+			setOverride(data.getOwner().get().getUniqueId().toString(), AbstractShipsData.DATABASE_PILOT);
 		}
-		setOverride(pilots, ShipsData.DATABASE_SUB_PILOTS);
-		setOverride(data.getTeleportToLocation().getWorld().getName(), ShipsData.DATABASE_WORLD);
-		setOverride(block, ShipsData.DATABASE_BLOCK);
-		setOverride(teleport, ShipsData.DATABASE_TELEPORT);
+		setOverride(pilots, AbstractShipsData.DATABASE_SUB_PILOTS);
+		setOverride(data.getTeleportToLocation().getWorld().getName(), AbstractShipsData.DATABASE_WORLD);
+		setOverride(block, AbstractShipsData.DATABASE_BLOCK);
+		setOverride(teleport, AbstractShipsData.DATABASE_TELEPORT);
 		if (data instanceof LoadableShip) {
 			LoadableShip ship = (LoadableShip) data;
 			for (DataHolder d : ship.getAllData()) {

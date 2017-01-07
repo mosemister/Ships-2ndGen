@@ -15,13 +15,13 @@ import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.MovementResult;
+import MoseShipsBukkit.Causes.Failed.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Static.StaticRequiredPercent;
@@ -36,7 +36,7 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 	int g_block_percent = getStatic().getDefaultRequiredPercent();
 	BlockState[] g_materials = getStatic().getDefaultPercentBlocks();
 
-	public WaterShip(ShipsData data) {
+	public WaterShip(AbstractShipsData data) {
 		super(data);
 	}
 
@@ -90,7 +90,7 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 		int waterLevel = getWaterLevel();
 		switch (waterLevel) {
 			case -1:
-				result.put(MovementResult.CauseKeys.NOT_IN_WATER, true);
+				result.put(MoseShipsBukkit.Causes.Failed.CauseKeys.NOT_IN_WATER, true);
 				return Optional.of(result);
 			default:
 				int blockCount = 0;
@@ -103,7 +103,7 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 				if (percent >= g_block_percent) {
 					return Optional.empty();
 				} else {
-					result.put(MovementResult.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(g_materials[0], (g_block_percent - percent)));
+					result.put(MoseShipsBukkit.Causes.Failed.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(g_materials[0], (g_block_percent - percent)));
 					return Optional.of(result);
 				}
 
@@ -208,12 +208,12 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 		}
 
 		@Override
-		public Optional<LiveData> createVessel(String name, Block sign) {
+		public Optional<LiveShip> createVessel(String name, Block sign) {
 			return Optional.of((LoadableShip) new WaterShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
-		public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config) {
+		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			WaterShip ship = new WaterShip(data);
 			int percent = config.get(Integer.class, LiveRequiredPercent.REQUIRED_PERCENT);
 			ship.setRequiredPercent(percent);

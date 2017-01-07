@@ -8,8 +8,8 @@ import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Ships.ShipsData;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
 public interface StaticShipType {
 
@@ -27,8 +27,8 @@ public interface StaticShipType {
 	
 	public Plugin getPlugin();
 
-	public Optional<LiveData> createVessel(String name, Block licence);
+	public Optional<LiveShip> createVessel(String name, Block licence);
 
-	public Optional<LiveData> loadVessel(ShipsData data, BasicConfig config);
+	public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config);
 
 }

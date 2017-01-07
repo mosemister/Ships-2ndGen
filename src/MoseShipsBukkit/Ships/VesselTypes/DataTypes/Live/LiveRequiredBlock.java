@@ -1,9 +1,9 @@
 package MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live;
 
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Utils.State.BlockState;
 
-public interface LiveRequiredBlock extends LiveData {
+public interface LiveRequiredBlock extends LiveShip {
 
 	public static final String REQUIRED_BLOCKS = "ShipsData.RequiredBlocks";
 

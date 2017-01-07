@@ -5,16 +5,17 @@ import java.util.List;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
+import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Ships.Movement.MovementType;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveData;
+import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 
 public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancellable{
 
 	boolean g_cancelled;
 	
-	public ShipAboutToMoveEvent(LiveData ship, MovementType type, List<MovingBlock> blocks) {
-		super(ship, type, blocks);
+	public ShipAboutToMoveEvent(ShipsCause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks) {
+		super(cause, ship, type, blocks);
 	}
 
 	@Override

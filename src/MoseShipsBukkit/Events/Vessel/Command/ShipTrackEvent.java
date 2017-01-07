@@ -8,26 +8,35 @@ import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Events.Vessel.ShipEvent;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Utils.State.BlockState;
 
+
+/**
+ * Implemented
+ * @author Mose
+ *
+ */
 public class ShipTrackEvent extends Event implements ShipEvent {
 
-	private ShipsData g_data;
+	private AbstractShipsData g_data;
 	private Map<Location, BlockState> g_structure;
+	private ShipsCause g_cause;
 	
 	private static final HandlerList g_handlers = new HandlerList();
 	
-	public ShipTrackEvent(ShipsData data){
+	public ShipTrackEvent(ShipsCause cause, AbstractShipsData data){
 		g_data = data;
+		g_cause = cause;
 		g_structure = new HashMap<>();
 		data.getBasicStructure().stream().forEach(b -> {
 			g_structure.put(b.getLocation(), new BlockState(Material.BEDROCK));
 		});
 	}
 	
-	public ShipTrackEvent(ShipsData data, Map<Location, BlockState> map){
+	public ShipTrackEvent(AbstractShipsData data, Map<Location, BlockState> map){
 		g_data = data;
 		g_structure = map;
 	}
@@ -37,13 +46,18 @@ public class ShipTrackEvent extends Event implements ShipEvent {
 	}
 	
 	@Override
-	public ShipsData getShip() {
+	public AbstractShipsData getShip() {
 		return g_data;
 	}
 
 	@Override
 	public HandlerList getHandlers() {
 		return g_handlers;
+	}
+	
+	@Override
+	public ShipsCause getCause() {
+		return g_cause;
 	}
 	
 	public static HandlerList getHandlerList(){

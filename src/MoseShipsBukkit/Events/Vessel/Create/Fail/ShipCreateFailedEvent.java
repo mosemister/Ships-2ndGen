@@ -3,8 +3,15 @@ package MoseShipsBukkit.Events.Vessel.Create.Fail;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
+import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Events.Vessel.Create.ShipCreateEvent;
-import MoseShipsBukkit.Ships.ShipsData;
+import MoseShipsBukkit.Ships.AbstractShipsData;
+
+/**
+ * implemented
+ * @author Mose
+ *
+ */
 
 public abstract class ShipCreateFailedEvent extends ShipCreateEvent{
 	
@@ -13,8 +20,8 @@ public abstract class ShipCreateFailedEvent extends ShipCreateEvent{
 	boolean g_display_message = true;
 	Player g_player;
 	
-	public ShipCreateFailedEvent(ShipsData data, Player player, String message) {
-		super(data);
+	public ShipCreateFailedEvent(ShipsCause cause, AbstractShipsData data, Player player, String message) {
+		super(cause, data);
 		g_message = message;
 		g_original_message = message;
 		g_player = player;
