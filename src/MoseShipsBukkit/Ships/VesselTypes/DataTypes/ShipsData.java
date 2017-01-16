@@ -11,6 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 
+import MoseShipsBukkit.Ships.VesselTypes.Structure.ShipStructure;
+
 public interface ShipsData {
 	
 	public Optional<Sign> getLicence();
@@ -20,6 +22,7 @@ public interface ShipsData {
 	public World getWorld();
 	public Map<String, String> getBasicData();
 	public List<Block> getBasicStructure();
+	public ShipStructure getStructure();
 	public List<Entity> getEntities();
 	public Location getLocation();
 	public Location getTeleportToLocation();

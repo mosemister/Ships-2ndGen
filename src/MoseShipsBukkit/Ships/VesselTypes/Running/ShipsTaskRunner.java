@@ -51,7 +51,7 @@ public class ShipsTaskRunner {
 				list.add((T)task);
 			}
 		}
-		return new HashSet<>(list);
+		return new HashSet<T>(list);
 	}
 	
 	public void register(Plugin plugin, ShipsTask task){

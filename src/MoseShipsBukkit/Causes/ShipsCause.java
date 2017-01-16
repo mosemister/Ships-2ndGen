@@ -9,7 +9,7 @@ import java.util.Set;
 
 public class ShipsCause {
 	
-	List<Object> g_causes = new ArrayList<>();
+	List<Object> g_causes = new ArrayList<Object>();
 	
 	public ShipsCause(Object... cause){
 		g_causes = Arrays.asList(cause);
@@ -24,6 +24,7 @@ public class ShipsCause {
 		g_causes.addAll(Arrays.asList(tCause));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ShipsCause(ShipsCause cause, List<Object> tCause){
 		g_causes.addAll(cause.get());
 		g_causes.addAll(Arrays.asList(tCause));

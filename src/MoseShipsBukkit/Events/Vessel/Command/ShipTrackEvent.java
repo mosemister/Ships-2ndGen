@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -30,10 +31,10 @@ public class ShipTrackEvent extends Event implements ShipEvent {
 	public ShipTrackEvent(ShipsCause cause, AbstractShipsData data){
 		g_data = data;
 		g_cause = cause;
-		g_structure = new HashMap<>();
-		data.getBasicStructure().stream().forEach(b -> {
-			g_structure.put(b.getLocation(), new BlockState(Material.BEDROCK));
-		});
+		g_structure = new HashMap<Location, BlockState>();
+		for(Block block : data.getBasicStructure()){
+			g_structure.put(block.getLocation(), new BlockState(Material.BEDROCK));
+		}
 	}
 	
 	public ShipTrackEvent(AbstractShipsData data, Map<Location, BlockState> map){

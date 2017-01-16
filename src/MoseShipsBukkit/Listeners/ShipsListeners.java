@@ -1,12 +1,7 @@
 package MoseShipsBukkit.Listeners;
 
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -18,69 +13,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import MoseShips.Stores.TwoStore;
-
 import MoseShipsBukkit.ShipsMain;
 import MoseShipsBukkit.Causes.ShipsCause;
-import MoseShipsBukkit.Causes.Failed.MovementResult;
-import MoseShipsBukkit.Causes.Failed.MovementResult.CauseKeys;
-import MoseShipsBukkit.Configs.Files.ShipsConfig;
-import MoseShipsBukkit.Events.Vessel.Create.ShipCreateEvent;
-import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipCreateFailedFromConflictingNames;
-import MoseShipsBukkit.Events.Vessel.Create.Fail.Type.ShipCreateFailedFromMissingType;
-import MoseShipsBukkit.Events.Vessel.Create.Success.ShipSignCreateEvent;
-import MoseShipsBukkit.Ships.AbstractShipsData;
-import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
-import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveLockedAltitude;
-import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
-import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
-import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipTypeUtil;
-import MoseShipsBukkit.Signs.ShipsSigns;
-import MoseShipsBukkit.Signs.ShipsSigns.SignType;
+import MoseShipsBukkit.Signs.ShipSign;
+import MoseShipsBukkit.Signs.ShipSignUtil;
 import MoseShipsBukkit.Utils.LocationUtils;
-import MoseShipsBukkit.Utils.Permissions;
 
 public class ShipsListeners implements Listener {
-
-	private boolean removeLicence(Sign sign, Player player) {
-		Optional<SignType> opSignType = ShipsSigns.getSignType(sign);
-		if (opSignType.isPresent()) {
-			SignType type = opSignType.get();
-			if (type.equals(SignType.LICENCE)) {
-				Optional<LoadableShip> opShip = LoadableShip.getShip(type, sign, false);
-				if (opShip.isPresent()) {
-					LoadableShip ship = opShip.get();
-					if (((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(player.getUniqueId()))) || (player.hasPermission(Permissions.REMOVE_SHIP_LICENCE_OTHER))) {
-						ship.remove();
-						player.sendMessage(ShipsMain.format(ship.getName() + " has been removed", false));
-						if ((ship.getOwner().isPresent()) && (!player.getUniqueId().equals(ship.getOwner().get().getUniqueId()))) {
-							OfflinePlayer oPlayer = ship.getOwner().get();
-							if (oPlayer.isOnline()) {
-								oPlayer.getPlayer().sendMessage(ShipsMain.format(ship.getName() + " has been removed by " + player.getDisplayName(), false));
-							}
-						}
-						if (ShipsConfig.CONFIG.get(Boolean.class, ShipsConfig.PATH_ONSNEAK_REMOVE_SHIP)) {
-							for (int A = 0; A < ship.getBasicStructure().size(); A++) {
-								final Block target = ship.getBasicStructure().get(A);
-								Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
-
-									@Override
-									public void run() {
-										target.breakNaturally();
-									}
-
-								}, (A * 4));
-							}
-						}
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
 
 	@EventHandler
 	public void blockBreak(BlockBreakEvent event) {
@@ -88,90 +28,24 @@ public class ShipsListeners implements Listener {
 		Player player = event.getPlayer();
 		if (block.getState() instanceof Sign) {
 			Sign sign = (Sign) block.getState();
-			removeLicence(sign, player);
+			Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
+			if(opSign.isPresent()){
+				opSign.get().onRemove(player, sign);
+			}
 		}
 		for (Sign sign : LocationUtils.getAttachedSigns(block)) {
-			removeLicence(sign, player);
+			Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
+			if(opSign.isPresent()){
+				opSign.get().onRemove(player, sign);
+			}
 		}
 	}
 
 	@EventHandler
 	public void signCreate(SignChangeEvent event) {
-		Optional<SignType> opSignType = ShipsSigns.getSignType(event.getLine(0));
-		if (opSignType.isPresent()) {
-			SignType signType = opSignType.get();
-			if (signType.equals(SignType.LICENCE)) {
-				if (event.getLines().length < 3) {
-					return;
-				}
-				Player player = event.getPlayer();
-				Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
-
-				if (!opShipType.isPresent()) {
-					ShipsCause cause = new ShipsCause(event, player, signType);
-					ShipCreateFailedFromMissingType conflictType = new ShipCreateFailedFromMissingType(cause, new AbstractShipsData(event.getLine(2), event.getBlock(), player.getLocation()), player, event
-							.getLine(1));
-					Bukkit.getServer().getPluginManager().callEvent(conflictType);
-					String message = conflictType.getMessage();
-					if (message.contains("%Type%")) {
-						message.replace("%Type%", event.getLine(1));
-					}
-					if (conflictType.shouldMessageDisplay()) {
-						player.sendMessage(ShipsMain.format(message, true));
-					}
-					return;
-				}
-
-				StaticShipType type = opShipType.get();
-
-				// PLAYER CAUSE
-				if (!Permissions.hasPermissionToMake(player, type)) {
-					return;
-				}
-
-				Optional<LoadableShip> opConflict = LoadableShip.getShip(event.getLine(2));
-				if (opConflict.isPresent()) {
-					ShipsCause cause = new ShipsCause(event, signType, player, type);
-					ShipCreateFailedFromConflictingNames conflictName = new ShipCreateFailedFromConflictingNames(cause, new AbstractShipsData(event.getLine(2), event.getBlock(),
-							player.getLocation()), player,
-							opConflict.get());
-					Bukkit.getServer().getPluginManager().callEvent(
-							conflictName);
-					String message = conflictName.getMessage();
-					if (message.contains("%Type%")) {
-						message.replace("%Type%", event.getLine(1));
-					}
-					if (conflictName.shouldMessageDisplay()) {
-						player.sendMessage(ShipsMain.format(message, true));
-					}
-					return;
-				}
-				Optional<LiveShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
-				if (opShip.isPresent()) {
-					final LiveShip ship = opShip.get();
-					ship.setOwner(player);
-					ShipsCause cause = new ShipsCause(event, player, signType, type, ship);
-					ShipCreateEvent SCEvent = new ShipSignCreateEvent(cause, (AbstractShipsData)ship);
-					Bukkit.getPluginManager().callEvent(SCEvent);
-					if (!SCEvent.isCancelled()) {
-						// PLAYER
-						player.sendMessage(ShipsMain.format("Ship created", false));
-						ship.load(cause);
-						event.setLine(0, ChatColor.YELLOW + "[Ships]");
-						event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
-						event.setLine(2, ChatColor.GREEN + ship.getName());
-						event.setLine(3, ChatColor.GREEN + event.getLine(3));
-						ShipsLocalDatabase database = ship.getLocalDatabase();
-						database.saveBasicShip(ship);
-					}
-				}
-				return;
-			} else {
-				String[] lines = signType.getDefaultLines().get();
-				for (int A = 0; A < lines.length; A++) {
-					event.setLine(A, lines[A]);
-				}
-			}
+		Optional<ShipSign> opSign = ShipSignUtil.getSign(event.getLine(0));
+		if(opSign.isPresent()){
+			opSign.get().onCreation(event);
 		}
 	}
 
@@ -184,145 +58,18 @@ public class ShipsListeners implements Listener {
 				|| (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			if (block.getState() instanceof Sign) {
 				Sign sign = (Sign) block.getState();
-				Optional<SignType> signType = ShipsSigns.getSignType(ChatColor.stripColor(sign.getLine(0)));
-				if (signType.isPresent()) {
-					Optional<LoadableShip> opType = LoadableShip.getShip(signType.get(), sign, true);
+				Optional<ShipSign> opSignType = ShipSignUtil.getSign(sign);
+				if (opSignType.isPresent()) {
+					Optional<LoadableShip> opType = LoadableShip.getShip(opSignType.get(), sign, true);
 					if (opType.isPresent()) {
 						LoadableShip ship = opType.get();
-						ShipsCause cause2 = new ShipsCause(event, player, direction, sign, signType.get(), ship);
+						ShipsCause cause2 = new ShipsCause(event, player, direction, sign, opSignType.get(), ship);
 						ship.load(cause2);
 						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-							switch (signType.get()) {
-								case EOT:
-
-									break;
-								case LICENCE:
-									Map<String, Object> info = ship.getInfo();
-									player.sendMessage(ShipsMain.format("Information about " + ship.getName(), false));
-									for (Entry<String, Object> data : info.entrySet()) {
-										player.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + data.getKey() + ": " + ChatColor.RESET + "" + ChatColor.AQUA + data.getValue());
-									}
-									break;
-								case MOVE:
-									if (sign.getLine(2).equals("{Boost}")) {
-										Optional<MovementResult> cause = ship.move(direction,
-												ship.getStatic().getBoostSpeed(), new ShipsCause(cause2, "Boost"));
-										if (cause.isPresent()) {
-											MovementResult result = cause.get();
-											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
-													.getFailedCause();
-											if (failed.isPresent()) {
-												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(ship, player, store.getSecond());
-											}
-										}
-									} else {
-										Optional<MovementResult> cause = ship.move(direction,
-												ship.getStatic().getDefaultSpeed(), new ShipsCause(cause2, "Speed"));
-										if (cause.isPresent()) {
-											MovementResult result = cause.get();
-											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
-													.getFailedCause();
-											if (failed.isPresent()) {
-												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(ship, player, store.getSecond());
-											}
-										}
-									}
-									break;
-								case WHEEL:
-									Optional<MovementResult> causeRotate = ship.rotate(Rotate.RIGHT, new ShipsCause(cause2, Rotate.RIGHT));
-									if (causeRotate.isPresent()) {
-										MovementResult result = causeRotate.get();
-										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-										if (failed.isPresent()) {
-											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(ship, player, store.getSecond());
-										}
-									}
-									break;
-								case ALTITUDE:
-									if (ship instanceof LiveLockedAltitude) {
-										return;
-									}
-									Optional<MovementResult> causeMove = ship.move(0, ship.getStatic().getAltitudeSpeed(),
-											0, new ShipsCause(cause2, "Up"));
-									if (causeMove.isPresent()) {
-										MovementResult result = causeMove.get();
-										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-										if (failed.isPresent()) {
-											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(ship, player, store.getSecond());
-										}
-									}
-
-									break;
-							}
-						} else {
-							switch (signType.get()) {
-								case ALTITUDE:
-									if (ship instanceof LiveLockedAltitude) {
-										return;
-									}
-									Optional<MovementResult> causeMove = ship.move(0, -ship.getStatic().getAltitudeSpeed(),
-											0, new ShipsCause(cause2, "Down"));
-									if (causeMove.isPresent()) {
-										MovementResult result = causeMove.get();
-										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-										if (failed.isPresent()) {
-											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(ship, player, store.getSecond());
-										}
-									}
-									break;
-								case EOT:
-									break;
-								case LICENCE:
-									break;
-								case MOVE:
-									BlockFace[] faces = {BlockFace.DOWN, BlockFace.UP};
-									for(BlockFace face : faces){
-										if(event.getBlockFace().equals(face)){
-											return;
-										}
-									}
-									if (sign.getLine(2).equals("{Boost}")) {
-										Optional<MovementResult> cause = ship.move(direction,
-												ship.getStatic().getBoostSpeed(), new ShipsCause(cause2, "Boost"));
-										if (cause.isPresent()) {
-											MovementResult result = cause.get();
-											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
-													.getFailedCause();
-											if (failed.isPresent()) {
-												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(ship, player, store.getSecond());
-											}
-										}
-									} else {
-										Optional<MovementResult> cause = ship.move(direction,
-												ship.getStatic().getDefaultSpeed(), new ShipsCause(cause2, "Speed"));
-										if (cause.isPresent()) {
-											MovementResult result = cause.get();
-											Optional<TwoStore<CauseKeys<Object>, Object>> failed = result
-													.getFailedCause();
-											if (failed.isPresent()) {
-												TwoStore<CauseKeys<Object>, Object> store = failed.get();
-												store.getFirst().sendMessage(ship, player, store.getSecond());
-											}
-										}
-									}
-									break;
-								case WHEEL:
-									Optional<MovementResult> causeRotate = ship.rotate(Rotate.LEFT, new ShipsCause(cause2, Rotate.LEFT));
-									if (causeRotate.isPresent()) {
-										MovementResult result = causeRotate.get();
-										Optional<TwoStore<CauseKeys<Object>, Object>> failed = result.getFailedCause();
-										if (failed.isPresent()) {
-											TwoStore<CauseKeys<Object>, Object> store = failed.get();
-											store.getFirst().sendMessage(ship, player, store.getSecond());
-										}
-									}
-									break;
+							if(player.isSneaking()){
+								opSignType.get().onShiftRightClick(player, sign, ship);
+							}else{
+								opSignType.get().onRightClick(player, sign, ship);
 							}
 						}
 					}else{

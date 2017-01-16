@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.ShipsMain;
+import MoseShipsBukkit.Causes.Failed.FailedMovement;
 import MoseShipsBukkit.Causes.Failed.MovementResult;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
@@ -224,23 +225,23 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 	}
 
 	@Override
-	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {
+	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
 		int hasPercent = getAmountOfPercentBlocks();
 		int percent = getRequiredPercent();
 		if (!hasRequiredBlock()) {
-			return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.MISSING_REQUIRED_BLOCK, new BlockState(Material.FIRE)));
+			return Optional.of(new FailedMovement(this, MovementResult.MISSING_REQUIRED_BLOCK, new BlockState(Material.FIRE)));
 		}
 		if (hasPercent < percent) {
-			return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) (percent - hasPercent))));
+			return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) (percent - hasPercent))));
 		}
 		if (getFuel() >= getConsumptionAmount()) {
 			if (removeFuel(getConsumptionAmount())) {
 				return Optional.empty();
 			} else {
-				return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.FUEL_REMOVE_ERROR, true));
+				return Optional.of(new FailedMovement(this, MovementResult.FUEL_REMOVE_ERROR, true));
 			}
 		} else {
-			return Optional.of(new MovementResult().put(MoseShipsBukkit.Causes.Failed.CauseKeys.OUT_OF_FUEL, true));
+			return Optional.of(new FailedMovement(this, MovementResult.OUT_OF_FUEL, true));
 		}
 	}
 
@@ -339,7 +340,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 			ship.setPercentBlocks(getDefaultPercentBlocks());
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
-			return Optional.of(ship);
+			return Optional.of((LiveShip)ship);
 		}
 
 		@Override
@@ -350,7 +351,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
 
-			return Optional.of(ship);
+			return Optional.of((LiveShip)ship);
 		}
 
 		@Override

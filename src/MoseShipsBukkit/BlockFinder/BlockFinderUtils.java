@@ -10,8 +10,9 @@ import org.bukkit.block.Sign;
 import MoseShipsBukkit.BlockFinder.Algorithms.Prototype3;
 import MoseShipsBukkit.BlockFinder.Algorithms.Prototype4;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
-import MoseShipsBukkit.Signs.ShipsSigns;
-import MoseShipsBukkit.Signs.ShipsSigns.SignType;
+import MoseShipsBukkit.Signs.ShipSign;
+import MoseShipsBukkit.Signs.ShipSignUtil;
+import MoseShipsBukkit.Signs.Types.ShipLicenceSign;
 
 public class BlockFinderUtils {
 
@@ -31,9 +32,9 @@ public class BlockFinderUtils {
 		for (Block block : list) {
 			if (block.getState() instanceof Sign) {
 				Sign sign = (Sign) block.getState();
-				Optional<SignType> opType = ShipsSigns.getSignType(sign);
+				Optional<ShipSign> opType = ShipSignUtil.getSign(sign);
 				if (opType.isPresent()) {
-					if (opType.get().equals(SignType.LICENCE)) {
+					if (opType.get() instanceof ShipLicenceSign) {
 						return true;
 					}
 				}
@@ -56,6 +57,15 @@ public class BlockFinderUtils {
 			}
 		}
 		return Optional.empty();
+	}
+	
+	public static BasicBlockFinder getFinder(Class<? extends BasicBlockFinder> finderType){
+		for(BasicBlockFinder finder: getFinders()){
+			if(finderType.isInstance(finder)){
+				return finder;
+			}
+		}
+		return null;
 	}
 
 }

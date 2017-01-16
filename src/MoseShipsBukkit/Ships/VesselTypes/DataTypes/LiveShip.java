@@ -1,6 +1,7 @@
 package MoseShipsBukkit.Ships.VesselTypes.DataTypes;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.bukkit.Location;
@@ -8,7 +9,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Causes.ShipsCause;
-import MoseShipsBukkit.Causes.Failed.MovementResult;
+import MoseShipsBukkit.Causes.Failed.FailedMovement;
 import MoseShipsBukkit.Ships.Movement.MovementType.Rotate;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
@@ -23,6 +24,7 @@ public interface LiveShip extends ShipsData{
 	public ShipsLocalDatabase getLocalDatabase();
 	public ShipsTaskRunner getTaskRunner();
 	public StaticShipType getStatic();
+	public Map<String, Object> getInfo();
 	
 	public boolean isMoving();
 	public boolean isLoaded();
@@ -33,7 +35,7 @@ public interface LiveShip extends ShipsData{
 		
 	public boolean willRemoveNextCycle();
 	
-	public abstract Optional<MovementResult> hasRequirements(List<MovingBlock> blocks);
+	public abstract Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks);
 	
 	public LiveShip load(ShipsCause cause);
 	public LiveShip unload(ShipsCause cause);
@@ -41,14 +43,14 @@ public interface LiveShip extends ShipsData{
 	public void remove();
 	public void remove(Player player);
 	
-	public Optional<MovementResult> move(BlockFace dir, int speed, ShipsCause cause);
-	public Optional<MovementResult> move(int X, int Y, int Z, ShipsCause cause);
-	public Optional<MovementResult> rotateLeft(ShipsCause cause);
-	public Optional<MovementResult> rotateRight(ShipsCause cause);
-	public Optional<MovementResult> rotate(Rotate type, ShipsCause cause);
-	public Optional<MovementResult> teleport(StoredMovement move, ShipsCause cause);
-	public Optional<MovementResult> teleport(Location loc, ShipsCause cause);
-	public Optional<MovementResult> teleport(Location loc, int X, int Y, int Z, ShipsCause cause);
+	public Optional<FailedMovement> move(BlockFace dir, int speed, ShipsCause cause);
+	public Optional<FailedMovement> move(int X, int Y, int Z, ShipsCause cause);
+	public Optional<FailedMovement> rotateLeft(ShipsCause cause);
+	public Optional<FailedMovement> rotateRight(ShipsCause cause);
+	public Optional<FailedMovement> rotate(Rotate type, ShipsCause cause);
+	public Optional<FailedMovement> teleport(StoredMovement move, ShipsCause cause);
+	public Optional<FailedMovement> teleport(Location loc, ShipsCause cause);
+	public Optional<FailedMovement> teleport(Location loc, int X, int Y, int Z, ShipsCause cause);
 
 	
 

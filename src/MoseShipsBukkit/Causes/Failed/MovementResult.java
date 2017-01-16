@@ -140,7 +140,7 @@ public abstract class MovementResult <T extends Object> {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public void sendMessage(LiveShip ship, Player player, List<MovingBlock> list) {
+		public void sendMessage(LiveShip ship, final Player player, final List<MovingBlock> list) {
 			player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 3 seconds", true));
 			for (MovingBlock block : list) {
 				player.sendBlockChange(block.getMovingTo(), Material.BEDROCK, (byte) 0);

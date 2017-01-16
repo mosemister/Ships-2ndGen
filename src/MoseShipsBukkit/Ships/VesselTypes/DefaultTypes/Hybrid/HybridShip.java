@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.Failed.MovementResult;
+import MoseShipsBukkit.Causes.Failed.FailedMovement;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
@@ -33,7 +33,7 @@ public class HybridShip extends AbstractWaterType implements AirType{
 	}
 
 	@Override
-	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {
+	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
 		return Optional.empty();
 	}
 
@@ -94,13 +94,13 @@ public class HybridShip extends AbstractWaterType implements AirType{
 		@Override
 		public Optional<LiveShip> createVessel(String name, Block licence) {
 			LoadableShip ship = new HybridShip(name, licence, licence.getLocation());
-			return Optional.of(ship);
+			return Optional.of((LiveShip)ship);
 		}
 
 		@Override
 		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			LoadableShip ship = new HybridShip(data);
-			return Optional.of(ship);
+			return Optional.of((LiveShip)ship);
 		}
 		
 	}

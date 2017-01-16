@@ -16,9 +16,8 @@ import org.bukkit.entity.Entity;
 
 import MoseShips.CustomDataHolder.DataHolder;
 
-import MoseShipsBukkit.BlockFinder.BlockFinderUtils;
-import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.ShipsData;
+import MoseShipsBukkit.Ships.VesselTypes.Structure.ShipStructure;
 import MoseShipsBukkit.Utils.LocationUtils;
 
 public class AbstractShipsData extends DataHolder implements ShipsData {
@@ -34,18 +33,18 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 
 	protected String g_name;
 	protected OfflinePlayer g_user;
-	protected List<OfflinePlayer> SUB_PILOTS = new ArrayList<OfflinePlayer>();
-	protected List<Block> STRUCTURE = new ArrayList<Block>();
+	protected List<OfflinePlayer> g_sub_pilots = new ArrayList<OfflinePlayer>();
+	protected ShipStructure g_structure = new ShipStructure();
 	protected Block g_main;
-	protected Location TELEPORT;
+	protected Location g_teleport;
 
 	public AbstractShipsData(String name, Block sign, Location teleport) {
 		g_name = name;
 		g_main = sign;
 		if (teleport == null) {
-			TELEPORT = sign.getLocation();
+			g_teleport = sign.getLocation();
 		} else {
-			TELEPORT = teleport;
+			g_teleport = teleport;
 		}
 	}
 
@@ -55,10 +54,10 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 		if(opOwner.isPresent()){
 			g_user = opOwner.get();
 		}
-		SUB_PILOTS = data.getSubPilots();
-		STRUCTURE = data.getBasicStructure();
+		g_sub_pilots = data.getSubPilots();
+		g_structure = data.getStructure();
 		g_main = data.getLocation().getBlock();
-		TELEPORT = data.getTeleportToLocation();
+		g_teleport = data.getTeleportToLocation();
 	}
 
 	@Override
@@ -87,7 +86,7 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 
 	@Override
 	public List<OfflinePlayer> getSubPilots() {
-		return SUB_PILOTS;
+		return g_sub_pilots;
 	}
 
 	@Override
@@ -100,14 +99,14 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("Name: ", g_name);
 		map.put("Licence: ", g_main.getX() + ", " + g_main.getY() + ", " + g_main.getZ() + ", " + g_main.getWorld().getName());
-		map.put("Teleport: ", TELEPORT.getX() + ", " + TELEPORT.getY() + ", " + TELEPORT.getZ() + ", " + TELEPORT.getWorld().getName());
-		map.put("Structure size:", STRUCTURE.size() + "");
+		map.put("Teleport: ", g_teleport.getX() + ", " + g_teleport.getY() + ", " + g_teleport.getZ() + ", " + g_teleport.getWorld().getName());
+		map.put("Structure size:", g_structure.getRaw().size() + "");
 		return map;
 	}
 
 	@Override
 	public List<Block> getBasicStructure() {
-		return STRUCTURE;
+		return g_structure.getRaw();
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 		List<Entity> entities = new ArrayList<Entity>();
 		for (Entity entity : g_main.getWorld().getEntities()) {
 			Block block = entity.getLocation().getBlock().getRelative(BlockFace.DOWN);
-			if (STRUCTURE.contains(block)) {
+			if (g_structure.getRaw().contains(block)) {
 				entities.add(entity);
 			}
 		}
@@ -127,7 +126,7 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 		if (!loc.getWorld().equals(getWorld())) {
 			return false;
 		}
-		for (Block block : STRUCTURE) {
+		for (Block block : g_structure.getRaw()) {
 			if (LocationUtils.blocksEqual(block.getLocation(), loc)) {
 				return true;
 			}
@@ -137,28 +136,23 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 
 	@Override
 	public List<Block> updateBasicStructure() {
-		Integer trackLimit = ShipsConfig.CONFIG.get(Integer.class,
-				ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
-		if (trackLimit == null) {
-			trackLimit = 5000;
-		}
-		List<Block> list = BlockFinderUtils.getConfigSelected().getConnectedBlocks(trackLimit, g_main);
-		STRUCTURE = list;
-		return list;
+		g_structure.updateStructure();
+		return g_structure.getRaw();
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
-		STRUCTURE = locs;
+		List<Block> list = g_structure.getRaw();
+		list.clear();
+		list.addAll(locs);
 		g_main = licence;
 		return locs;
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
-		STRUCTURE = locs;
-		g_main = licence;
-		TELEPORT = teleport;
+		setBasicStructure(locs, licence);
+		g_teleport = teleport;
 		return locs;
 	}
 
@@ -169,13 +163,18 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 
 	@Override
 	public Location getTeleportToLocation() {
-		return TELEPORT;
+		return g_teleport;
 	}
 
 	@Override
 	public AbstractShipsData setTeleportToLocation(Location loc) {
-		TELEPORT = loc;
+		g_teleport = loc;
 		return this;
+	}
+
+	@Override
+	public ShipStructure getStructure() {
+		return g_structure;
 	}
 
 }

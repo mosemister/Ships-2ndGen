@@ -15,7 +15,8 @@ import MoseShipsBukkit.CMD.ShipsCMD;
 import MoseShipsBukkit.Causes.ShipsCause;
 import MoseShipsBukkit.Events.Vessel.Command.ShipTrackEvent;
 import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Signs.ShipsSigns;
+import MoseShipsBukkit.Signs.ShipSign;
+import MoseShipsBukkit.Signs.ShipSignUtil;
 import MoseShipsBukkit.Utils.State.BlockState;
 
 public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
@@ -71,7 +72,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
 		if (loc.getState() instanceof Sign) {
 			Sign sign = (Sign) loc.getState();
-			Optional<ShipsSigns.SignType> sSign = ShipsSigns.getSignType(sign);
+			Optional<ShipSign> sSign = ShipSignUtil.getSign(sign);
 			if (sSign.isPresent()) {
 				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {
@@ -114,7 +115,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
 		if (loc.getState() instanceof Sign) {
 			Sign sign = (Sign) loc.getState();
-			Optional<ShipsSigns.SignType> sSign = ShipsSigns.getSignType(sign);
+			Optional<ShipSign> sSign = ShipSignUtil.getSign(sign);
 			if (sSign.isPresent()) {
 				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {

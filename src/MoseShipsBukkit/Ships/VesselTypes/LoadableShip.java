@@ -17,7 +17,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Causes.ShipsCause;
-import MoseShipsBukkit.Causes.Failed.MovementResult;
+import MoseShipsBukkit.Causes.Failed.FailedMovement;
 import MoseShipsBukkit.Events.Vessel.Load.ShipLoadEvent;
 import MoseShipsBukkit.Events.Vessel.Load.ShipUnloadEvent;
 import MoseShipsBukkit.Ships.AbstractShipsData;
@@ -26,15 +26,17 @@ import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsBukkit.Ships.VesselTypes.Loading.ShipsLocalDatabase;
+import MoseShipsBukkit.Ships.VesselTypes.Running.ShipsTask;
 import MoseShipsBukkit.Ships.VesselTypes.Running.ShipsTaskRunner;
 import MoseShipsBukkit.Ships.VesselTypes.Running.Tasks.StructureCheckingTask;
 import MoseShipsBukkit.Ships.VesselTypes.Satic.StaticShipType;
-import MoseShipsBukkit.Signs.ShipsSigns.SignType;
+import MoseShipsBukkit.Signs.ShipSign;
+import MoseShipsBukkit.Signs.Types.ShipLicenceSign;
 import MoseShipsBukkit.Utils.LocationUtils;
 
 public abstract class LoadableShip extends AbstractShipsData implements LiveShip {
 
-	public abstract Optional<MovementResult> hasRequirements(List<MovingBlock> blocks);
+	public abstract Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks);
 
 	public abstract Map<String, Object> getInfo();
 
@@ -66,7 +68,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	}
 
 	@Override
-	public Optional<MovementResult> rotate(Rotate type, ShipsCause cause) {
+	public Optional<FailedMovement> rotate(Rotate type, ShipsCause cause) {
 		switch (type) {
 			case LEFT:
 				return rotateLeft(cause);
@@ -160,6 +162,9 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	public void remove(Player player) {
 		SHIPS.remove(this);
 		onRemove(player);
+		for (ShipsTask task : getTaskRunner().getTasks()){
+			getTaskRunner().unregister(task);
+		}
 		getLocalDatabase().getFile().delete();
 	}
 
@@ -224,8 +229,8 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 		return ShipLoader.loadShip(name);
 	}
 
-	public static Optional<LoadableShip> getShip(SignType type, Sign sign, boolean refresh) {
-		if (type.equals(SignType.LICENCE)) {
+	public static Optional<LoadableShip> getShip(ShipSign type, Sign sign, boolean refresh) {
+		if (type instanceof ShipLicenceSign) {
 			String text = sign.getLine(2);
 			return getShip(ChatColor.stripColor(text));
 		} else {

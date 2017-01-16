@@ -16,8 +16,8 @@ import org.bukkit.plugin.Plugin;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.ShipsMain;
+import MoseShipsBukkit.Causes.Failed.FailedMovement;
 import MoseShipsBukkit.Causes.Failed.MovementResult;
-import MoseShipsBukkit.Causes.Failed.MovementResult.CauseKeys;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.Files.StaticShipConfig;
 import MoseShipsBukkit.Ships.AbstractShipsData;
@@ -45,18 +45,18 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 	}
 
 	@Override
-	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {
+	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
 		if (blocks.size() > g_max_blocks) {
-			return Optional.of(new MovementResult().put(CauseKeys.TOO_MANY_BLOCKS, blocks.size()));
+			return Optional.of(new FailedMovement(this, MovementResult.TOO_MANY_BLOCKS, blocks.size()));
 		}
 		if (blocks.size() < g_min_blocks) {
-			return Optional.of(new MovementResult().put(CauseKeys.NOT_ENOUGH_BLOCKS, blocks.size()));
+			return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_BLOCKS, blocks.size()));
 		}
 		int percent = getAmountOfPercentBlocks();
 		if(percent > g_req_percent){
 			return Optional.empty();
 		}
-		return Optional.of(new MovementResult().put(CauseKeys.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float)percent)));
+		return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float)percent)));
 	}
 
 	@Override
@@ -170,7 +170,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 			Marsship ship = new Marsship(name, licence, licence.getLocation());
 			ship.g_req_p_blocks = getDefaultPercentBlocks();
 			ship.g_req_percent = getDefaultRequiredPercent();
-			return Optional.of(ship);
+			return Optional.of((LiveShip)ship);
 		}
 
 		@Override
@@ -182,7 +182,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 			
 			ship.g_req_p_blocks = states;
 			ship.g_req_percent = percent;
-			return Optional.of(ship);
+			return Optional.of((LiveShip)ship);
 		}
 
 		@Override

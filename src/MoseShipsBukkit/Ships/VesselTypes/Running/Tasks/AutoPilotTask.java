@@ -2,10 +2,8 @@ package MoseShipsBukkit.Ships.VesselTypes.Running.Tasks;
 
 import java.util.Optional;
 
-import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Causes.ShipsCause;
-import MoseShipsBukkit.Causes.Failed.MovementResult;
-import MoseShipsBukkit.Causes.Failed.MovementResult.CauseKeys;
+import MoseShipsBukkit.Causes.Failed.FailedMovement;
 import MoseShipsBukkit.Configs.Files.ShipsConfig;
 import MoseShipsBukkit.Ships.Movement.StoredMovement;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
@@ -31,18 +29,15 @@ public class AutoPilotTask implements ShipsTask {
 			data.setMovesDone(data.getMovesDone() + 1);
 
 			StoredMovement movement = data.getMovements().get(data.getMovesDone());
-			Optional<MovementResult> move = ship2.teleport(movement, new ShipsCause(data, movement));
+			Optional<FailedMovement> move = ship2.teleport(movement, new ShipsCause(data, movement));
 			if (move.isPresent()) {
-				MovementResult result = move.get();
-				if (result.getFailedCause().isPresent()) {
-					if (data.getTargetPlayer().isPresent()) {
-						if (data.getTargetPlayer().get().isOnline()) {
-							TwoStore<CauseKeys<Object>, Object> fail = result.getFailedCause().get();
-							fail.getFirst().sendMessage(ship, data.getTargetPlayer().get().getPlayer(), fail.getSecond());
-						}
+				FailedMovement result = move.get();
+				if (data.getTargetPlayer().isPresent()) {
+					if (data.getTargetPlayer().get().isOnline()) {
+						result.process(data.getTargetPlayer().get().getPlayer());
 					}
-					ship2.setAutoPilotData(null);
 				}
+				ship2.setAutoPilotData(null);
 			}
 		}
 	}

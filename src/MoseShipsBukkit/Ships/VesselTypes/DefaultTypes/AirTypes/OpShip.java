@@ -10,12 +10,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.Failed.MovementResult;
+import MoseShipsBukkit.Causes.Failed.FailedMovement;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Ships.AbstractShipsData;
 import MoseShipsBukkit.Ships.Movement.AutoPilot.AutoPilot;
 import MoseShipsBukkit.Ships.Movement.MovingBlock.MovingBlock;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.LiveShip;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Ships.VesselTypes.DataTypes.Live.LiveFallable;
@@ -52,7 +51,7 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 	}
 
 	@Override
-	public Optional<MovementResult> hasRequirements(List<MovingBlock> blocks) {
+	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
 		return Optional.empty();
 	}
 
@@ -133,12 +132,12 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 
 		@Override
 		public Optional<LiveShip> createVessel(String name, Block sign) {
-			return Optional.of((LoadableShip) new OpShip(name, sign, sign.getLocation()));
+			return Optional.of((LiveShip) new OpShip(name, sign, sign.getLocation()));
 		}
 
 		@Override
 		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
-			return Optional.of((LoadableShip) new OpShip(data));
+			return Optional.of((LiveShip) new OpShip(data));
 		}
 
 	}
