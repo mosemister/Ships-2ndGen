@@ -1,9 +1,9 @@
 name: Ships
-version: 6.0.0.0|PreAlpha 5.2
+version: 6.0.0.0|PreAlpha 6
 description: This plugin allows players to move structures easily within a single click
 author: mosemister
 website: http://dev.bukkit.org/bukkit-plugins/ships
-main: MoseShipsBukkit.ShipsMain
+main: MoseShipsBukkit.Plugin.ShipsMain
 commands:
   ships:
     description: All commands relating to the Ships plugin

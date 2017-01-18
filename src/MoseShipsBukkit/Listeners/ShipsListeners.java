@@ -13,12 +13,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import MoseShipsBukkit.ShipsMain;
-import MoseShipsBukkit.Causes.ShipsCause;
-import MoseShipsBukkit.Ships.VesselTypes.LoadableShip;
-import MoseShipsBukkit.Signs.ShipSign;
-import MoseShipsBukkit.Signs.ShipSignUtil;
-import MoseShipsBukkit.Utils.LocationUtils;
+import MoseShipsBukkit.Events.ShipsCause;
+import MoseShipsBukkit.Plugin.ShipsMain;
+import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
+import MoseShipsBukkit.Utils.LocationUtil;
+import MoseShipsBukkit.Utils.ShipSignUtil;
+import MoseShipsBukkit.Vessel.Data.LoadableShip;
 
 public class ShipsListeners implements Listener {
 
@@ -33,7 +33,7 @@ public class ShipsListeners implements Listener {
 				opSign.get().onRemove(player, sign);
 			}
 		}
-		for (Sign sign : LocationUtils.getAttachedSigns(block)) {
+		for (Sign sign : LocationUtil.getAttachedSigns(block)) {
 			Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
 			if(opSign.isPresent()){
 				opSign.get().onRemove(player, sign);
