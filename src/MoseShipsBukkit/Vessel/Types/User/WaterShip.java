@@ -88,21 +88,22 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
 		int waterLevel = getWaterLevel();
 		switch (waterLevel) {
-			case -1:
-				return Optional.of(new FailedMovement(this, MovementResult.NOT_IN_WATER_ERROR, true));
-			default:
-				int blockCount = 0;
-				for (MovingBlock block : blocks) {
-					if (BlockState.contains(block.getOrigin().getBlock(), g_materials)) {
-						blockCount++;
-					}
+		case -1:
+			return Optional.of(new FailedMovement(this, MovementResult.NOT_IN_WATER_ERROR, true));
+		default:
+			int blockCount = 0;
+			for (MovingBlock block : blocks) {
+				if (BlockState.contains(block.getOrigin().getBlock(), g_materials)) {
+					blockCount++;
 				}
-				float percent = (blockCount * 100) / blocks.size();
-				if (percent >= g_block_percent) {
-					return Optional.empty();
-				} else {
-					return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(g_materials[0], (g_block_percent - percent))));
-				}
+			}
+			float percent = (blockCount * 100) / blocks.size();
+			if (percent >= g_block_percent) {
+				return Optional.empty();
+			} else {
+				return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT,
+						new TwoStore<BlockState, Float>(g_materials[0], (g_block_percent - percent))));
+			}
 
 		}
 	}
@@ -165,7 +166,8 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 				config.setOverride(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
 				config.setOverride(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
 				config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
-				config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte) -1).toNoString()), StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+				config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte) -1).toNoString()),
+						StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
 				config.setOverride(40, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
 				config.save();
 			}
@@ -198,9 +200,9 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 		public boolean autoPilot() {
 			return false;
 		}
-		
+
 		@Override
-		public ShipsMain getPlugin(){
+		public ShipsMain getPlugin() {
 			return ShipsMain.getPlugin();
 		}
 

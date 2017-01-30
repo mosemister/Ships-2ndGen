@@ -22,9 +22,8 @@ public class BlockListCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPla
 	@Override
 	public String[] getAliases() {
 		String[] args = {
-			"blockList",
-			"materials"
-		};
+				"blockList",
+				"materials" };
 		return args;
 	}
 
@@ -54,7 +53,8 @@ public class BlockListCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPla
 			sender.sendMessage(ShipsMain.formatCMDHelp("-m = materials list"));
 			sender.sendMessage(ShipsMain.formatCMDHelp("-r = ram list"));
 			sender.sendMessage(ShipsMain.formatCMDHelp("-n = none list"));
-			sender.sendMessage(ShipsMain.formatCMDHelp("/ships blockList set <-m/-r/-n> <block number> [data value] : adds the block into the specified list"));
+			sender.sendMessage(ShipsMain.formatCMDHelp(
+					"/ships blockList set <-m/-r/-n> <block number> [data value] : adds the block into the specified list"));
 			sender.sendMessage(ShipsMain.formatCMDHelp("/ships blockList list <-m/-r/-n>"));
 		} else if (args[1].equalsIgnoreCase("set")) {
 			if (args.length >= 4) {

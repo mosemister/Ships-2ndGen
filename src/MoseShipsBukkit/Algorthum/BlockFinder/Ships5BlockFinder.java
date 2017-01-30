@@ -22,13 +22,12 @@ public class Ships5BlockFinder implements BasicBlockFinder {
 		BLOCKS = new ArrayList<Block>();
 		COUNT = 0;
 		BlockFace[] faces = {
-			BlockFace.DOWN,
-			BlockFace.EAST,
-			BlockFace.NORTH,
-			BlockFace.SOUTH,
-			BlockFace.UP,
-			BlockFace.WEST
-		};
+				BlockFace.DOWN,
+				BlockFace.EAST,
+				BlockFace.NORTH,
+				BlockFace.SOUTH,
+				BlockFace.UP,
+				BlockFace.WEST };
 		getNextBlock(limit, loc, faces);
 		return BLOCKS;
 	}

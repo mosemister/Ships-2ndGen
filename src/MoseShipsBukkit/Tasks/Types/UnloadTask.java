@@ -9,7 +9,9 @@ public class UnloadTask implements ShipsTask {
 	@Override
 	public void onRun(LiveShip ship) {
 		if (ship.willRemoveNextCycle()) {
-			ship.unload(new ShipsCause(this, ship));
+			if(!ship.isMoving()){
+				ship.unload(new ShipsCause(this, ship));
+			}
 		} else {
 			ship.setRemoveNextCycle(true);
 		}

@@ -30,7 +30,6 @@ import MoseShipsBukkit.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Tasks.ShipsTask;
 import MoseShipsBukkit.Tasks.ShipsTaskRunner;
-import MoseShipsBukkit.Tasks.Types.StructureCheckingTask;
 import MoseShipsBukkit.Utils.LocationUtil;
 import MoseShipsBukkit.Vessel.Loader.ShipLoader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
@@ -52,7 +51,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	protected int g_min_blocks = 200;
 	protected boolean g_remove = false;
 	ShipsTaskRunner g_task_runner = new ShipsTaskRunner(this);
-	Map<UUID, ShipVector> g_player_leave_spawns = new HashMap<UUID, ShipVector>(); 
+	Map<UUID, ShipVector> g_player_leave_spawns = new HashMap<UUID, ShipVector>();
 
 	static List<LoadableShip> SHIPS = new ArrayList<LoadableShip>();
 
@@ -63,12 +62,12 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	public LoadableShip(AbstractShipsData data) {
 		super(data);
 	}
-	
+
 	@Override
 	public Map<UUID, ShipVector> getPlayerVectorSpawns() {
 		return g_player_leave_spawns;
 	}
-	
+
 	@Override
 	public ShipsTaskRunner getTaskRunner() {
 		return g_task_runner;
@@ -77,10 +76,10 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	@Override
 	public Optional<FailedMovement> rotate(Rotate type, ShipsCause cause) {
 		switch (type) {
-			case LEFT:
-				return rotateLeft(cause);
-			case RIGHT:
-				return rotateRight(cause);
+		case LEFT:
+			return rotateLeft(cause);
+		case RIGHT:
+			return rotateRight(cause);
 		}
 		return null;
 	}
@@ -113,7 +112,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 		}
 		ShipLoadEvent event = new ShipLoadEvent(cause, this);
 		Bukkit.getPluginManager().callEvent(event);
-		if(!event.isCancelled()){
+		if (!event.isCancelled()) {
 			SHIPS.add(this);
 		}
 		return this;
@@ -170,7 +169,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 		SHIPS.remove(this);
 		onRemove(player);
 		List<ShipsTask> tasks = new ArrayList<ShipsTask>(getTaskRunner().getTasks());
-		for (ShipsTask task : tasks){
+		for (ShipsTask task : tasks) {
 			getTaskRunner().unregister(task);
 		}
 		getLocalDatabase().getFile().delete();
@@ -183,34 +182,22 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 
 	@Override
 	public List<Block> updateBasicStructure() {
-		StructureCheckingTask checking = g_task_runner.getTasks(StructureCheckingTask.class).iterator().next();
-		if (checking.canUpdateStructure()) {
-			List<Block> structure = super.updateBasicStructure();
-			getLocalDatabase().saveBasicShip(this);
-			checking.setUpdateStructure(false);
-			return structure;
-		}
-		return new ArrayList<Block>();
+		List<Block> structure = super.updateBasicStructure();
+		getLocalDatabase().saveBasicShip(this);
+		return structure;
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
-		StructureCheckingTask checking = g_task_runner.getTasks(StructureCheckingTask.class).iterator().next();
-		if (checking.canUpdateStructure()) {
 		List<Block> structure = super.setBasicStructure(locs, licence);
 		getLocalDatabase().saveBasicShip(this);
-		checking.setUpdateStructure(false);
 		return structure;
-		}
-		return new ArrayList<Block>();
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		List<Block> structure = super.setBasicStructure(locs, licence, teleport);
 		getLocalDatabase().saveBasicShip(this);
-		StructureCheckingTask checking = g_task_runner.getTasks(StructureCheckingTask.class).iterator().next();
-		checking.setUpdateStructure(false);
 		return structure;
 	}
 
@@ -226,6 +213,23 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 		super.setOwner(user);
 		getLocalDatabase().saveBasicShip(this);
 		return this;
+	}
+
+	public static Optional<LoadableShip> getShip(UUID uuid) {
+		for (LoadableShip ship : getShips()) {
+			if ((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(uuid))) {
+				return Optional.of(ship);
+			}
+			for (OfflinePlayer player : ship.getSubPilots()) {
+				if (player.getUniqueId().equals(uuid)) {
+					return Optional.of(ship);
+				}
+			}
+			if (ship.getPlayerVectorSpawns().containsKey(uuid)) {
+				return Optional.of(ship);
+			}
+		}
+		return Optional.empty();
 	}
 
 	public static Optional<LoadableShip> getShip(String name) {

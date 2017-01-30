@@ -22,8 +22,7 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 	@Override
 	public String[] getAliases() {
 		String[] args = {
-			"debug"
-		};
+				"debug" };
 		return args;
 	}
 
@@ -93,8 +92,10 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 				source.sendMessage("|----[Ships]----|");
 				source.sendMessage("[Ship name] | [Ship Type] | [X] | [Y] | [Z] | [world] | [loaded]");
 				for (LoadableShip ship : LoadableShip.getShips()) {
-					source.sendMessage(ship.getName() + " | " + ship.getStatic().getName() + " | " + ship.getLocation().getBlockX() + " | " + ship.getLocation().getBlockY() + " | " + ship
-							.getLocation().getBlockZ() + " | " + ship.getWorld().getName() + " | " + ship.isLoaded());
+					source.sendMessage(
+							ship.getName() + " | " + ship.getStatic().getName() + " | " + ship.getLocation().getBlockX()
+									+ " | " + ship.getLocation().getBlockY() + " | " + ship.getLocation().getBlockZ()
+									+ " | " + ship.getWorld().getName() + " | " + ship.isLoaded());
 				}
 				return true;
 			}

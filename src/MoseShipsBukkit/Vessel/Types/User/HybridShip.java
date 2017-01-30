@@ -22,7 +22,7 @@ import MoseShipsBukkit.Vessel.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Types.AbstractWaterType;
 import MoseShipsBukkit.Vessel.Types.AirType;
 
-public class HybridShip extends AbstractWaterType implements AirType{
+public class HybridShip extends AbstractWaterType implements AirType {
 
 	public HybridShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
@@ -54,13 +54,13 @@ public class HybridShip extends AbstractWaterType implements AirType{
 	public StaticShipType getStatic() {
 		return StaticShipTypeUtil.getType(StaticHybridShip.class).get();
 	}
-	
-	public static class StaticHybridShip implements StaticShipType{
 
-		public StaticHybridShip(){
+	public static class StaticHybridShip implements StaticShipType {
+
+		public StaticHybridShip() {
 			StaticShipTypeUtil.inject(this);
 		}
-		
+
 		@Override
 		public String getName() {
 			return "HybridShip";
@@ -85,23 +85,23 @@ public class HybridShip extends AbstractWaterType implements AirType{
 		public boolean autoPilot() {
 			return false;
 		}
-		
+
 		@Override
-		public ShipsMain getPlugin(){
+		public ShipsMain getPlugin() {
 			return ShipsMain.getPlugin();
 		}
 
 		@Override
 		public Optional<LiveShip> createVessel(String name, Block licence) {
 			LoadableShip ship = new HybridShip(name, licence, licence.getLocation());
-			return Optional.of((LiveShip)ship);
+			return Optional.of((LiveShip) ship);
 		}
 
 		@Override
 		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			LoadableShip ship = new HybridShip(data);
-			return Optional.of((LiveShip)ship);
+			return Optional.of((LiveShip) ship);
 		}
-		
+
 	}
 }

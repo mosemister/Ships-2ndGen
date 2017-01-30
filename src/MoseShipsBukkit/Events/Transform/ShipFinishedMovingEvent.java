@@ -9,13 +9,13 @@ import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Type.MovementType;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 
-public class ShipFinishedMovingEvent extends ShipTransformEvent{
+public class ShipFinishedMovingEvent extends ShipTransformEvent {
 
 	public ShipFinishedMovingEvent(ShipsCause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks) {
 		super(cause, ship, type, blocks);
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return g_handlers;
 	}
 

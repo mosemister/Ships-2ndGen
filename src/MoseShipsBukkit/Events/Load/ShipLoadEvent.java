@@ -8,24 +8,24 @@ import MoseShipsBukkit.Events.ShipEvent;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 
-
 /**
  * implemented
+ * 
  * @author Mose
  *
  */
-public class ShipLoadEvent extends Event implements ShipEvent, Cancellable{
+public class ShipLoadEvent extends Event implements ShipEvent, Cancellable {
 
 	LiveShip g_ship;
 	boolean g_cancelled;
 	ShipsCause g_cause;
 	static HandlerList g_handlers = new HandlerList();
-	
-	public ShipLoadEvent(ShipsCause cause, LiveShip ship){
+
+	public ShipLoadEvent(ShipsCause cause, LiveShip ship) {
 		g_ship = ship;
 		g_cause = cause;
 	}
-	
+
 	@Override
 	public boolean isCancelled() {
 		return g_cancelled;
@@ -45,13 +45,13 @@ public class ShipLoadEvent extends Event implements ShipEvent, Cancellable{
 	public HandlerList getHandlers() {
 		return g_handlers;
 	}
-	
+
 	@Override
 	public ShipsCause getCause() {
 		return g_cause;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return g_handlers;
 	}
 

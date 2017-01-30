@@ -10,10 +10,10 @@ import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Type.MovementType;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 
-public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancellable{
+public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancellable {
 
 	boolean g_cancelled;
-	
+
 	public ShipAboutToMoveEvent(ShipsCause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks) {
 		super(cause, ship, type, blocks);
 	}
@@ -27,8 +27,8 @@ public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancella
 	public void setCancelled(boolean arg0) {
 		g_cancelled = arg0;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return g_handlers;
 	}
 

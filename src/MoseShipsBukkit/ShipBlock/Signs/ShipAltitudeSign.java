@@ -32,50 +32,52 @@ public class ShipAltitudeSign implements ShipSign {
 	public void onShiftRightClick(Player player, Sign sign, LiveShip ship) {
 		int speed = Integer.parseInt(sign.getLine(2));
 		StaticShipType staticShip = ship.getStatic();
-		if(staticShip.getAltitudeSpeed() < speed){
+		if (staticShip.getAltitudeSpeed() < speed) {
 			sign.setLine(2, (speed + 1) + "");
 			sign.update();
-		}else{
+		} else {
 			sign.setLine(2, "1");
 			sign.update();
 		}
-		
+
 	}
 
 	@Override
 	public void onRightClick(Player player, Sign sign, LiveShip ship) {
-		try{
-		int speed = Integer.parseInt(sign.getLine(2));
-		if (ship instanceof LiveLockedAltitude) {
-			return;
-		}
-		Optional<FailedMovement> causeMove = ship.move(0, speed,
-				0, new ShipsCause(player, sign, "Up"));
-		if (causeMove.isPresent()) {
-			causeMove.get().process(player);
-		}
-		}catch(NumberFormatException e){
+		try {
+			int speed = Integer.parseInt(sign.getLine(2));
+			if (ship instanceof LiveLockedAltitude) {
+				return;
+			}
+			Optional<FailedMovement> causeMove = ship.move(0, speed, 0, new ShipsCause(player, sign, "Up"));
+			if (causeMove.isPresent()) {
+				causeMove.get().process(player);
+			}
+		} catch (NumberFormatException e) {
 			player.sendMessage("[Warning] old Ships sign, please change this to Ships 6 '[altitude]' sign");
 		}
 	}
 
 	@Override
 	public void onLeftClick(Player player, Sign sign, LiveShip ship) {
-		int speed = Integer.parseInt(sign.getLine(2));
-		if (ship instanceof LiveLockedAltitude) {
-			return;
-		}
-		Optional<FailedMovement> causeMove = ship.move(0, -speed,
-				0, new ShipsCause(player, sign, "Down"));
-		if (causeMove.isPresent()) {
-			causeMove.get().process(player);
+		try {
+			int speed = Integer.parseInt(sign.getLine(2));
+			if (ship instanceof LiveLockedAltitude) {
+				return;
+			}
+			Optional<FailedMovement> causeMove = ship.move(0, -speed, 0, new ShipsCause(player, sign, "Down"));
+			if (causeMove.isPresent()) {
+				causeMove.get().process(player);
+			}
+		} catch (NumberFormatException e) {
+			player.sendMessage("[Warning] old Ships sign, please change this to Ships 6 '[altitude]' sign");
 		}
 	}
 
 	@Override
 	public void onRemove(Player player, Sign sign) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -85,7 +87,7 @@ public class ShipAltitudeSign implements ShipSign {
 
 	@Override
 	public boolean isSign(Sign sign) {
-		if(sign.getLine(0).equalsIgnoreCase(ChatColor.YELLOW + "[Altitude]")){
+		if (sign.getLine(0).equalsIgnoreCase(ChatColor.YELLOW + "[Altitude]")) {
 			return true;
 		}
 		return false;
@@ -94,8 +96,8 @@ public class ShipAltitudeSign implements ShipSign {
 	@Override
 	public Optional<LiveShip> getAttachedShip(Sign sign) {
 		Optional<LoadableShip> opShip = LoadableShip.getShip(this, sign, false);
-		if(opShip.isPresent()){
-			return Optional.of((LiveShip)opShip.get());
+		if (opShip.isPresent()) {
+			return Optional.of((LiveShip) opShip.get());
 		}
 		return Optional.empty();
 	}

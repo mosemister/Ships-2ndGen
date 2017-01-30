@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Events.ShipsCause;
+import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Utils.WorldUtil;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 import MoseShipsBukkit.Vessel.Data.LoadableShip;
@@ -64,7 +65,10 @@ public class ShipEngineSign implements ShipSign {
 	public void onRightClick(Player player, Sign sign, LiveShip ship) {
 		int speed = Integer.parseInt(sign.getLine(2));
 		BlockFace direction = ((org.bukkit.material.Sign) sign.getData()).getFacing().getOppositeFace();
-		ship.move(direction, speed, new ShipsCause(sign, player));
+		Optional<FailedMovement> result = ship.move(direction, speed, new ShipsCause(sign, player));
+		if (result.isPresent()) {
+			result.get().process(player);
+		}
 	}
 
 	@Override

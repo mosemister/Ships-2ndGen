@@ -24,7 +24,7 @@ public abstract class AbstractAirType extends LoadableShip implements AirType {
 	public AbstractAirType(AbstractShipsData data) {
 		super(data);
 	}
-	
+
 	@Override
 	public Optional<FailedMovement> move(int X, int Y, int Z, ShipsCause cause) {
 		return Movement.move(cause, this, X, Y, Z, new BlockState(Material.AIR));

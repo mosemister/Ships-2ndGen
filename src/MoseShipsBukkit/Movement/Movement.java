@@ -26,11 +26,15 @@ import MoseShipsBukkit.Vessel.Types.WaterType;
 
 public class Movement {
 
-	public static Optional<FailedMovement> move(ShipsCause cause2, LiveShip ship, int X, int Y, int Z, BlockState... movingTo) {
+	public static Optional<FailedMovement> move(ShipsCause cause2, LiveShip ship, int X, int Y, int Z,
+			BlockState... movingTo) {
+		if((X == 0) && (Y == 0) && (Z == 0)){
+			return Optional.of(new FailedMovement(ship, MovementResult.NO_SPEED_SET, 0));
+		}
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
-		if(structure.isEmpty()){
+		if (structure.isEmpty()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
 		}
 		waterTypeFix(ship, structure);
@@ -56,7 +60,7 @@ public class Movement {
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
 		List<Block> structure = ship.getBasicStructure();
-		if(structure.isEmpty()){
+		if (structure.isEmpty()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
 		}
 		waterTypeFix(ship, structure);
@@ -81,7 +85,7 @@ public class Movement {
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location centre = ship.getLocation();
 		List<Block> structure = ship.getBasicStructure();
-		if(structure.isEmpty()){
+		if (structure.isEmpty()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
 		}
 		waterTypeFix(ship, structure);
@@ -101,21 +105,23 @@ public class Movement {
 		return move(ship, MovementType.ROTATE_LEFT, blocks, cause3);
 	}
 
-	public static Optional<FailedMovement> rotate(ShipsCause cause, LoadableShip ship, Rotate rotate, BlockState... movingTo) {
+	public static Optional<FailedMovement> rotate(ShipsCause cause, LoadableShip ship, Rotate rotate,
+			BlockState... movingTo) {
 		switch (rotate) {
-			case LEFT:
-				return rotateLeft(cause, ship, movingTo);
-			case RIGHT:
-				return rotateRight(cause, ship, movingTo);
+		case LEFT:
+			return rotateLeft(cause, ship, movingTo);
+		case RIGHT:
+			return rotateRight(cause, ship, movingTo);
 		}
 		return Optional.of(new FailedMovement(ship, MovementResult.PLUGIN_CANCELLED, true));
 	}
 
-	public static Optional<FailedMovement> teleport(ShipsCause cause2, LoadableShip ship, Location tel, BlockState... movingTo) {
+	public static Optional<FailedMovement> teleport(ShipsCause cause2, LoadableShip ship, Location tel,
+			BlockState... movingTo) {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
-		if(structure.isEmpty()){
+		if (structure.isEmpty()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
 		}
 		waterTypeFix(ship, structure);
@@ -135,12 +141,13 @@ public class Movement {
 		return move(ship, MovementType.TELEPORT, blocks, new ShipsCause(cause2, structure));
 	}
 
-	public static Optional<FailedMovement> teleport(ShipsCause cause2, LoadableShip ship, Location tel, int X, int Y, int Z, BlockState... movingTo) {
+	public static Optional<FailedMovement> teleport(ShipsCause cause2, LoadableShip ship, Location tel, int X, int Y,
+			int Z, BlockState... movingTo) {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		Location loc2 = tel.add(X, Y, Z);
 		List<Block> structure = ship.getBasicStructure();
-		if(structure.isEmpty()){
+		if (structure.isEmpty()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
 		}
 		waterTypeFix(ship, structure);
@@ -159,12 +166,13 @@ public class Movement {
 		ship.load(cause3);
 		return move(ship, MovementType.TELEPORT, blocks, cause3);
 	}
-	
-	public static Optional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, StoredMovement movement, BlockState... movingTo) {
+
+	public static Optional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, StoredMovement movement,
+			BlockState... movingTo) {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
-		if(structure.isEmpty()){
+		if (structure.isEmpty()) {
 			ship.updateBasicStructure();
 		}
 		waterTypeFix(ship, structure);
@@ -186,10 +194,12 @@ public class Movement {
 		return move(ship, MovementType.TELEPORT, blocks, cause3);
 	}
 
-	private static Optional<FailedMovement> move(LiveShip ship, MovementType type, List<MovingBlock> blocks, ShipsCause cause) {
+	private static Optional<FailedMovement> move(LiveShip ship, MovementType type, List<MovingBlock> blocks,
+			ShipsCause cause) {
+		ship.setRemoveNextCycle(false);
 		ShipAboutToMoveEvent event = new ShipAboutToMoveEvent(cause, ship, type, blocks);
 		Bukkit.getPluginManager().callEvent(event);
-		if(event.isCancelled()){
+		if (event.isCancelled()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.PLUGIN_CANCELLED, false));
 		}
 		Optional<FailedMovement> opFail = ship.hasRequirements(blocks);
@@ -214,11 +224,12 @@ public class Movement {
 				eTo.setYaw(eLoc.getYaw());
 				entity.teleport(eTo);
 			}
+			return Optional.empty();
 		}
 		return Optional.empty();
 	}
-	
-	private static void waterTypeFix(LiveShip ship, List<Block> structure){
+
+	private static void waterTypeFix(LiveShip ship, List<Block> structure) {
 		if (ship instanceof WaterType) {
 			final int D = structure.size();
 			for (int B = 0; B < D; B++) {
@@ -236,7 +247,8 @@ public class Movement {
 							int def = large.getZ() - small.getZ();
 
 							for (int A = 0; A < def; A++) {
-								Location loc = new Location(block.getWorld(), small.getX(), small.getY(), small.getZ() + A);
+								Location loc = new Location(block.getWorld(), small.getX(), small.getY(),
+										small.getZ() + A);
 								if (loc.getBlock().getType().equals(Material.AIR)) {
 									structure.add(loc.getBlock());
 								}
@@ -250,7 +262,8 @@ public class Movement {
 							}
 							int def = large.getX() - small.getX();
 							for (int A = 0; A < def; A++) {
-								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(), small.getZ());
+								Location loc = new Location(block.getWorld(), small.getX() + A, small.getY(),
+										small.getZ());
 								if (loc.getBlock().getType().equals(Material.AIR)) {
 									structure.add(loc.getBlock());
 								}

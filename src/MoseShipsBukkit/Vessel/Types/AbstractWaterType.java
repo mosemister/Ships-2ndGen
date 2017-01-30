@@ -24,10 +24,11 @@ public abstract class AbstractWaterType extends LoadableShip implements WaterTyp
 	public AbstractWaterType(AbstractShipsData data) {
 		super(data);
 	}
-	
+
 	@Override
 	public Optional<FailedMovement> move(int X, int Y, int Z, ShipsCause cause) {
-		return Movement.move(cause, this, X, Y, Z, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
+		return Movement.move(cause, this, X, Y, Z, new BlockState(Material.AIR), new BlockState(Material.WATER),
+				new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override
@@ -38,43 +39,48 @@ public abstract class AbstractWaterType extends LoadableShip implements WaterTyp
 
 	@Override
 	public Optional<FailedMovement> rotateLeft(ShipsCause cause) {
-		return Movement.rotateLeft(cause, this, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
+		return Movement.rotateLeft(cause, this, new BlockState(Material.AIR), new BlockState(Material.WATER),
+				new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override
 	public Optional<FailedMovement> rotateRight(ShipsCause cause) {
-		return Movement.rotateRight(cause, this, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
+		return Movement.rotateRight(cause, this, new BlockState(Material.AIR), new BlockState(Material.WATER),
+				new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override
 	public Optional<FailedMovement> teleport(StoredMovement move, ShipsCause cause) {
-		return Movement.teleport(cause, this, move, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
+		return Movement.teleport(cause, this, move, new BlockState(Material.AIR), new BlockState(Material.WATER),
+				new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override
 	public Optional<FailedMovement> teleport(Location loc, ShipsCause cause) {
-		return Movement.teleport(cause, this, loc, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
+		return Movement.teleport(cause, this, loc, new BlockState(Material.AIR), new BlockState(Material.WATER),
+				new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override
 	public Optional<FailedMovement> teleport(Location loc, int X, int Y, int Z, ShipsCause cause) {
-		return Movement.teleport(cause, this, loc, X, Y, Z, new BlockState(Material.AIR), new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
+		return Movement.teleport(cause, this, loc, X, Y, Z, new BlockState(Material.AIR),
+				new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override
 	public int getWaterLevel() {
 		BlockFace[] faces = {
-			BlockFace.EAST,
-			BlockFace.NORTH,
-			BlockFace.SOUTH,
-			BlockFace.WEST
-		};
+				BlockFace.EAST,
+				BlockFace.NORTH,
+				BlockFace.SOUTH,
+				BlockFace.WEST };
 		int height = -1;
 		for (Block block : getBasicStructure()) {
 			if (block.getY() > height) {
 				for (BlockFace face : faces) {
 					Block block2 = block.getRelative(face);
-					if (block2.getType().equals(Material.STATIONARY_WATER) || (block2.getType().equals(Material.WATER))) {
+					if (block2.getType().equals(Material.STATIONARY_WATER)
+							|| (block2.getType().equals(Material.WATER))) {
 						height = block2.getY();
 						break;
 					}

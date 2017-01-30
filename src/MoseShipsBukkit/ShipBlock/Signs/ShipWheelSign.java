@@ -8,10 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Events.ShipsCause;
+import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 import MoseShipsBukkit.Vessel.Data.LoadableShip;
 
-public class ShipWheelSign implements ShipSign{
+public class ShipWheelSign implements ShipSign {
 
 	@Override
 	public void onCreation(SignChangeEvent event) {
@@ -19,30 +20,36 @@ public class ShipWheelSign implements ShipSign{
 		event.setLine(1, ChatColor.RED + "\\\\||//");
 		event.setLine(2, ChatColor.RED + "==||==");
 		event.setLine(3, ChatColor.RED + "//||\\\\");
-		
+
 	}
 
 	@Override
 	public void onShiftRightClick(Player player, Sign sign, LiveShip ship) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onRightClick(Player player, Sign sign, LiveShip ship) {
-		ship.rotateRight(new ShipsCause(player, sign));
-		
+		Optional<FailedMovement> result = ship.rotateRight(new ShipsCause(player, sign));
+		if (result.isPresent()) {
+			result.get().process(player);
+		}
+
 	}
 
 	@Override
 	public void onLeftClick(Player player, Sign sign, LiveShip ship) {
-		ship.rotateLeft(new ShipsCause(player, sign));
+		Optional<FailedMovement> result = ship.rotateLeft(new ShipsCause(player, sign));
+		if (result.isPresent()) {
+			result.get().process(player);
+		}
 	}
 
 	@Override
 	public void onRemove(Player player, Sign sign) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -52,7 +59,7 @@ public class ShipWheelSign implements ShipSign{
 
 	@Override
 	public boolean isSign(Sign sign) {
-		if(sign.getLine(0).equals(ChatColor.YELLOW + "[Wheel]")){
+		if (sign.getLine(0).equals(ChatColor.YELLOW + "[Wheel]")) {
 			return true;
 		}
 		return false;
@@ -61,8 +68,8 @@ public class ShipWheelSign implements ShipSign{
 	@Override
 	public Optional<LiveShip> getAttachedShip(Sign sign) {
 		Optional<LoadableShip> opShip = LoadableShip.getShip(this, sign, false);
-		if(opShip.isPresent()){
-			return Optional.of((LiveShip)opShip.get());
+		if (opShip.isPresent()) {
+			return Optional.of((LiveShip) opShip.get());
 		}
 		return Optional.empty();
 	}

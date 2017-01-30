@@ -17,23 +17,23 @@ public class TrapSnapshot extends BlockSnapshot implements AttachableSnapshot, R
 	public byte getRotateLeft() {
 		byte data = getData().getData();
 		switch (data) {
-			case 1:
-				return 4;
-			case 2:
-				return 3;
-			case 3:
-				return 2;
-			case 4:
-				return 1;
+		case 1:
+			return 4;
+		case 2:
+			return 3;
+		case 3:
+			return 2;
+		case 4:
+			return 1;
 
-			case 5:
-				return 8;
-			case 6:
-				return 7;
-			case 7:
-				return 6;
-			case 8:
-				return 7;
+		case 5:
+			return 8;
+		case 6:
+			return 7;
+		case 7:
+			return 6;
+		case 8:
+			return 7;
 		}
 		return data;
 	}

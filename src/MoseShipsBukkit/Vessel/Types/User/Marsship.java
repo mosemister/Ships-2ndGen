@@ -35,7 +35,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 
 	int g_req_percent;
 	BlockState[] g_req_p_blocks;
-	
+
 	public Marsship(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
@@ -53,10 +53,11 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 			return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_BLOCKS, blocks.size()));
 		}
 		int percent = getAmountOfPercentBlocks();
-		if(percent > g_req_percent){
+		if (percent > g_req_percent) {
 			return Optional.empty();
 		}
-		return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float)percent)));
+		return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT,
+				new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) percent)));
 	}
 
 	@Override
@@ -67,7 +68,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 	@Override
 	public void onSave(ShipsLocalDatabase database) {
 		List<String> reqBlocks = new ArrayList<String>();
-		for(BlockState state : g_req_p_blocks){
+		for (BlockState state : g_req_p_blocks) {
 			reqBlocks.add(state.toNoString());
 		}
 		database.set(reqBlocks, LiveRequiredPercent.REQUIRED_BLOCKS);
@@ -75,7 +76,8 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 	}
 
 	@Override
-	public void onRemove(Player player) {}
+	public void onRemove(Player player) {
+	}
 
 	@Override
 	public StaticShipType getStatic() {
@@ -107,25 +109,28 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 	public BlockState[] getPercentBlocks() {
 		return g_req_p_blocks;
 	}
-	
-	public static class StaticMarsship implements StaticShipType, StaticRequiredPercent{
 
-		public StaticMarsship(){
+	public static class StaticMarsship implements StaticShipType, StaticRequiredPercent {
+
+		public StaticMarsship() {
 			StaticShipTypeUtil.inject(this);
 			File file = new File(StaticShipTypeUtil.DEFAULT_SHIP_TYPE_LOCATION, "Marsship.yml");
-			if(!file.exists()){
+			if (!file.exists()) {
 				StaticShipConfig config = new StaticShipConfig(file);
 				config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
 				config.setOverride(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
 				config.setOverride(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
 				config.setOverride(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
 				config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
-				config.setOverride(Arrays.asList(new BlockState(Material.DAYLIGHT_DETECTOR).toNoString(), new BlockState(Material.DAYLIGHT_DETECTOR_INVERTED).toNoString()), StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+				config.setOverride(
+						Arrays.asList(new BlockState(Material.DAYLIGHT_DETECTOR).toNoString(),
+								new BlockState(Material.DAYLIGHT_DETECTOR_INVERTED).toNoString()),
+						StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
 				config.setOverride(20, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
 				config.save();
 			}
 		}
-		
+
 		@Override
 		public String getName() {
 			return "Marsship";
@@ -170,7 +175,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 			Marsship ship = new Marsship(name, licence, licence.getLocation());
 			ship.g_req_p_blocks = getDefaultPercentBlocks();
 			ship.g_req_percent = getDefaultRequiredPercent();
-			return Optional.of((LiveShip)ship);
+			return Optional.of((LiveShip) ship);
 		}
 
 		@Override
@@ -179,10 +184,10 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 			List<String> sStates = config.getList(String.class, LiveRequiredPercent.REQUIRED_BLOCKS);
 			BlockState[] states = BlockState.getStates(sStates);
 			int percent = config.get(Integer.class, LiveRequiredPercent.REQUIRED_PERCENT);
-			
+
 			ship.g_req_p_blocks = states;
 			ship.g_req_percent = percent;
-			return Optional.of((LiveShip)ship);
+			return Optional.of((LiveShip) ship);
 		}
 
 		@Override
@@ -200,7 +205,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 			List<String> sStates = config.getList(String.class, StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
 			return BlockState.getStates(sStates);
 		}
-		
+
 	}
 
 }

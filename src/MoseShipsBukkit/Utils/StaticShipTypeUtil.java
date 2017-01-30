@@ -10,7 +10,7 @@ import MoseShipsBukkit.Vessel.Static.StaticShipType;
 public class StaticShipTypeUtil {
 
 	public static File DEFAULT_SHIP_TYPE_LOCATION = new File("plugins/Ships/Configuration/ShipTypes/");
-	
+
 	public static void inject(StaticShipType type) {
 		StaticShipType.TYPES.add(type);
 	}

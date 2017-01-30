@@ -9,23 +9,25 @@ import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 
 /**
  * implemented
+ * 
  * @author Mose
  *
  */
-public class ShipCreateFailedFromMissingType extends ShipCreateFailedEvent{
+public class ShipCreateFailedFromMissingType extends ShipCreateFailedEvent {
 
 	String g_type;
-	
+
 	public ShipCreateFailedFromMissingType(ShipsCause cause, AbstractShipsData data, Player player, String type) {
-		super(cause, data, player, ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE));
+		super(cause, data, player,
+				ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE));
 		g_type = type;
 	}
-	
-	public String getAttemptedType(){
+
+	public String getAttemptedType() {
 		return g_type;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return g_handlers;
 	}
 

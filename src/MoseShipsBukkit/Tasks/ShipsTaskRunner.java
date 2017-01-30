@@ -13,55 +13,53 @@ import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.Configs.ShipsConfig;
 import MoseShipsBukkit.Plugin.ShipsMain;
-import MoseShipsBukkit.Tasks.Types.StructureCheckingTask;
 import MoseShipsBukkit.Tasks.Types.UnloadTask;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 
 public class ShipsTaskRunner {
-	
+
 	protected int g_sche_id = -1;
 	protected int g_time_repeated = 0;
 	protected Map<ShipsTask, Plugin> g_tasks = new HashMap<ShipsTask, Plugin>();
 	protected LiveShip g_ship;
-	
-	public ShipsTaskRunner(LiveShip ship){
+
+	public ShipsTaskRunner(LiveShip ship) {
 		g_ship = ship;
 		g_tasks.put(new UnloadTask(), ShipsMain.getPlugin());
-		g_tasks.put(new StructureCheckingTask(), ShipsMain.getPlugin());
 		startScheduler();
 	}
-	
-	public LiveShip getAttachedShip(){
+
+	public LiveShip getAttachedShip() {
 		return g_ship;
 	}
-	
+
 	public int getSchedulerRepeatedCount() {
 		return g_time_repeated;
 	}
-	
-	public Set<ShipsTask> getTasks(){
+
+	public Set<ShipsTask> getTasks() {
 		return g_tasks.keySet();
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T extends ShipsTask> Set<T> getTasks(Class<T> type){
+	public <T extends ShipsTask> Set<T> getTasks(Class<T> type) {
 		List<T> list = new ArrayList<T>();
-		for(ShipsTask task : getTasks()){
-			if(type.isInstance(task)){
-				list.add((T)task);
+		for (ShipsTask task : getTasks()) {
+			if (type.isInstance(task)) {
+				list.add((T) task);
 			}
 		}
 		return new HashSet<T>(list);
 	}
-	
-	public void register(Plugin plugin, ShipsTask task){
+
+	public void register(Plugin plugin, ShipsTask task) {
 		g_tasks.put(task, plugin);
 	}
-	
-	public void unregister(ShipsTask task){
+
+	public void unregister(ShipsTask task) {
 		g_tasks.remove(task);
 	}
-	
+
 	public ShipsTaskRunner pauseScheduler() {
 		Bukkit.getScheduler().cancelTask(g_sche_id);
 		return this;
@@ -79,8 +77,8 @@ public class ShipsTaskRunner {
 
 				@Override
 				public void run() {
-					for(Entry<ShipsTask, Plugin> task : g_tasks.entrySet()){
-						if(g_time_repeated % task.getKey().getDelay() == 0){
+					for (Entry<ShipsTask, Plugin> task : g_tasks.entrySet()) {
+						if (g_time_repeated % task.getKey().getDelay() == 0) {
 							task.getKey().onRun(getAttachedShip());
 						}
 					}

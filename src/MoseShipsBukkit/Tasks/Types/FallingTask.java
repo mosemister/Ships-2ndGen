@@ -10,8 +10,8 @@ public class FallingTask implements ShipsTask {
 
 	@Override
 	public void onRun(LiveShip ship) {
-		LiveFallable ship2 = (LiveFallable)ship;
-		if (ship2.shouldFall()){
+		LiveFallable ship2 = (LiveFallable) ship;
+		if (ship2.shouldFall()) {
 			ship2.move(0, 2, 0, new ShipsCause(ship2));
 		}
 	}

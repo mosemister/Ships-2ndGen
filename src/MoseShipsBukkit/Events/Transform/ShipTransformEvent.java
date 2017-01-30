@@ -11,31 +11,31 @@ import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Type.MovementType;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 
-public class ShipTransformEvent extends Event implements ShipEvent{
-	
+public class ShipTransformEvent extends Event implements ShipEvent {
+
 	List<MovingBlock> g_blocks;
 	MovementType g_type;
 	LiveShip g_ship;
 	ShipsCause g_cause;
 	static HandlerList g_handlers = new HandlerList();
-	
-	public ShipTransformEvent(ShipsCause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks){
+
+	public ShipTransformEvent(ShipsCause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks) {
 		g_ship = ship;
 		g_blocks = blocks;
 		g_type = type;
 		g_cause = cause;
 	}
-	
+
 	@Override
-	public ShipsCause getCause(){
+	public ShipsCause getCause() {
 		return g_cause;
 	}
-	
-	public MovementType getMovementType(){
+
+	public MovementType getMovementType() {
 		return g_type;
 	}
-	
-	public List<MovingBlock> getMovingBlocks(){
+
+	public List<MovingBlock> getMovingBlocks() {
 		return g_blocks;
 	}
 
@@ -48,8 +48,8 @@ public class ShipTransformEvent extends Event implements ShipEvent{
 	public HandlerList getHandlers() {
 		return g_handlers;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return g_handlers;
 	}
 

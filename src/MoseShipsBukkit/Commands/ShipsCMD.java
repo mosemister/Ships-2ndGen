@@ -125,7 +125,9 @@ public interface ShipsCMD {
 					List<String> ret = new ArrayList<String>();
 					for (ShipsCMD sCmd : SHIPS_COMMANDS) {
 						if (sCmd instanceof ShipsPlayerCMD) {
-							if (((sCmd.getPermission() != null) && (((Player) sender).hasPermission(sCmd.getPermission()))) || (sCmd.getPermission() == null)) {
+							if (((sCmd.getPermission() != null)
+									&& (((Player) sender).hasPermission(sCmd.getPermission())))
+									|| (sCmd.getPermission() == null)) {
 								for (String ali : sCmd.getAliases()) {
 									if (ali.toLowerCase().startsWith(target.toLowerCase())) {
 										ret.add(ali);

@@ -33,15 +33,16 @@ public class ShipsMain extends JavaPlugin {
 	public static String NAME;
 	public static String VERSION;
 	public static final String[] TESTED_MC = {
-		"1.11.0",
-		"1.10.2",
-		"1.10.0",
-		"1.9.4"
-	};
+			"1.11.2",
+			"1.11.1",
+			"1.11.0",
+			"1.10.2",
+			"1.10.0",
+			"1.9.4" };
 
 	static ShipsMain PLUGIN;
 
-	private void registerSigns(){
+	private void registerSigns() {
 		ShipSign.SHIP_SIGNS.add(new ShipLicenceSign());
 		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
 		ShipSign.SHIP_SIGNS.add(new ShipEngineSign());
@@ -49,7 +50,7 @@ public class ShipsMain extends JavaPlugin {
 		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
 		ShipSign.SHIP_SIGNS.add(new ShipEOTSign());
 	}
-	
+
 	private void registerCMDs() {
 		new InfoCMD();
 		new DebugCMD();
@@ -205,13 +206,16 @@ public class ShipsMain extends JavaPlugin {
 							}
 						}
 						if (badFiles != null) {
-							Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "The following " + type.getName()
-									+ " have issues loading. Use '/Ships info <ship name>' if you want more detail on the failed load \n " + badFiles);
+							Bukkit.getServer().getConsoleSender()
+									.sendMessage(ChatColor.RED + "The following " + type.getName()
+											+ " have issues loading. Use '/Ships info <ship name>' if you want more detail on the failed load \n "
+											+ badFiles);
 						}
 					}
 				}
 				if (goodFiles != null) {
-					Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "The following ships are loading without issue \n" + goodFiles);
+					Bukkit.getServer().getConsoleSender().sendMessage(
+							ChatColor.AQUA + "The following ships are loading without issue \n" + goodFiles);
 				}
 			}
 
@@ -221,8 +225,8 @@ public class ShipsMain extends JavaPlugin {
 	private void displayVersionChecking() {
 		VersionCheckingUtil.VersionOutcome previous = null;
 		for (String tested : TESTED_MC) {
-			VersionCheckingUtil.VersionOutcome outcome = VersionCheckingUtil.isGreater(VersionCheckingUtil.MINECRAFT_VERSION,
-					VersionCheckingUtil.convert(tested));
+			VersionCheckingUtil.VersionOutcome outcome = VersionCheckingUtil
+					.isGreater(VersionCheckingUtil.MINECRAFT_VERSION, VersionCheckingUtil.convert(tested));
 			if (outcome.equals(VersionCheckingUtil.VersionOutcome.EQUAL)) {
 				previous = outcome;
 				break;
@@ -236,17 +240,17 @@ public class ShipsMain extends JavaPlugin {
 		if (previous != null) {
 			ConsoleCommandSender console = getServer().getConsoleSender();
 			switch (previous) {
-				case EQUAL:
-					console.sendMessage(ChatColor.GREEN + "Your MC version has been tested with Ships");
-					break;
-				case GREATER:
-					console.sendMessage(ChatColor.YELLOW
-							+ "Your MC version is greater then the tested versions. Ships should be uneffected however please be keep in mind that you should look for updates as your MC version is unsupported");
-					break;
-				case LOWER:
-					console.sendMessage(ChatColor.RED
-							+ "Your MC version is lower then the tested versions. Ships is not supported at all, Please note that Ships may still work");
-					break;
+			case EQUAL:
+				console.sendMessage(ChatColor.GREEN + "Your MC version has been tested with Ships");
+				break;
+			case GREATER:
+				console.sendMessage(ChatColor.YELLOW
+						+ "Your MC version is greater then the tested versions. Ships should be uneffected however please be keep in mind that you should look for updates as your MC version is unsupported");
+				break;
+			case LOWER:
+				console.sendMessage(ChatColor.RED
+						+ "Your MC version is lower then the tested versions. Ships is not supported at all, Please note that Ships may still work");
+				break;
 			}
 		} else {
 			ConsoleCommandSender console = getServer().getConsoleSender();

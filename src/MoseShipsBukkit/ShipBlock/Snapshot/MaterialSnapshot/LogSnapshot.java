@@ -16,10 +16,10 @@ public class LogSnapshot extends BlockSnapshot implements RotatableSnapshot {
 	public byte getRotateLeft() {
 		byte data = getData().getData();
 		switch (data) {
-			case 4:
-				return 8;
-			case 5:
-				return 9;
+		case 4:
+			return 8;
+		case 5:
+			return 9;
 
 		}
 		return 0;

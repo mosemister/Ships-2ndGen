@@ -12,9 +12,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Plugin.ShipsMain;
+import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.LocationUtil;
 import MoseShipsBukkit.Utils.ShipSignUtil;
@@ -29,13 +33,13 @@ public class ShipsListeners implements Listener {
 		if (block.getState() instanceof Sign) {
 			Sign sign = (Sign) block.getState();
 			Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
-			if(opSign.isPresent()){
+			if (opSign.isPresent()) {
 				opSign.get().onRemove(player, sign);
 			}
 		}
 		for (Sign sign : LocationUtil.getAttachedSigns(block)) {
 			Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
-			if(opSign.isPresent()){
+			if (opSign.isPresent()) {
 				opSign.get().onRemove(player, sign);
 			}
 		}
@@ -44,8 +48,42 @@ public class ShipsListeners implements Listener {
 	@EventHandler
 	public void signCreate(SignChangeEvent event) {
 		Optional<ShipSign> opSign = ShipSignUtil.getSign(event.getLine(0));
-		if(opSign.isPresent()){
+		if (opSign.isPresent()) {
 			opSign.get().onCreation(event);
+		}
+	}
+
+	@EventHandler
+	public void playerQuitEvent(PlayerQuitEvent event) {
+		playerLeaveEvent(event.getPlayer());
+	}
+
+	@EventHandler
+	public void playerKickEvent(PlayerKickEvent event) {
+		playerLeaveEvent(event.getPlayer());
+	}
+
+	private void playerLeaveEvent(Player player) {
+		Block block = player.getLocation().getBlock().getRelative(0, -1, 0);
+		Optional<LoadableShip> opShip = LoadableShip.getShip(block, false);
+		if (opShip.isPresent()) {
+			LoadableShip ship = opShip.get();
+			ShipVector vector = ship.getStructure().createVector(ship, block);
+			ship.getPlayerVectorSpawns().put(player.getUniqueId(), vector);
+		}
+	}
+
+	@EventHandler
+	public void playerSpawnEvent(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		Optional<LoadableShip> opShip = LoadableShip.getShip(player.getUniqueId());
+		if (opShip.isPresent()) {
+			LoadableShip ship = opShip.get();
+			ShipVector vector = ship.getPlayerVectorSpawns().get(player.getUniqueId());
+			if (vector != null) {
+				Block block = ship.getStructure().getBlock(ship, vector);
+				player.teleport(block.getRelative(0, 1, 0).getLocation());
+			}
 		}
 	}
 
@@ -66,13 +104,13 @@ public class ShipsListeners implements Listener {
 						ShipsCause cause2 = new ShipsCause(event, player, direction, sign, opSignType.get(), ship);
 						ship.load(cause2);
 						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-							if(player.isSneaking()){
+							if (player.isSneaking()) {
 								opSignType.get().onShiftRightClick(player, sign, ship);
-							}else{
+							} else {
 								opSignType.get().onRightClick(player, sign, ship);
 							}
 						}
-					}else{
+					} else {
 						player.sendMessage(ShipsMain.format("Can not find the connected ship", true));
 					}
 				}

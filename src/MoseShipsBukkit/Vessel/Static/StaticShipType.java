@@ -24,7 +24,7 @@ public interface StaticShipType {
 	public int getAltitudeSpeed();
 
 	public boolean autoPilot();
-	
+
 	public Plugin getPlugin();
 
 	public Optional<LiveShip> createVessel(String name, Block licence);

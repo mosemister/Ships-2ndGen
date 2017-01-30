@@ -96,7 +96,7 @@ public class ShipLoader {
 				int Xtel = Integer.parseInt(sTel[0]);
 				int Ytel = Integer.parseInt(sTel[1]);
 				int Ztel = Integer.parseInt(sTel[2]);
-				lic = new Location(world, Xtel, Ytel, Ztel);
+				tel = new Location(world, Xtel, Ytel, Ztel);
 			} catch (NumberFormatException e) {
 				tel = lic;
 			}
@@ -126,15 +126,15 @@ public class ShipLoader {
 							try {
 								int pos = Integer.parseInt(value);
 								switch (target) {
-									case 0:
-										posX = pos;
-										break;
-									case 1:
-										posY = pos;
-										break;
-									case 2:
-										structure.add(new Location(world, posX, posY, pos).getBlock());
-										break;
+								case 0:
+									posX = pos;
+									break;
+								case 1:
+									posY = pos;
+									break;
+								case 2:
+									structure.add(new Location(world, posX, posY, pos).getBlock());
+									break;
 								}
 							} catch (NumberFormatException e) {
 								break;
@@ -154,7 +154,8 @@ public class ShipLoader {
 
 				Optional<LiveShip> opShip = type.loadVessel(data, config);
 				if (opShip.isPresent()) {
-					return new TwoStore<LoadableShip, ShipLoadingError>((LoadableShip)opShip.get(), ShipLoadingError.NOT_CURRUPT);
+					return new TwoStore<LoadableShip, ShipLoadingError>((LoadableShip) opShip.get(),
+							ShipLoadingError.NOT_CURRUPT);
 				} else {
 					return new TwoStore<LoadableShip, ShipLoadingError>(null, ShipLoadingError.LOADER_ISSUE);
 				}

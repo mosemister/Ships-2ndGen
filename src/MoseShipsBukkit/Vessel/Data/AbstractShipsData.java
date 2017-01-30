@@ -32,7 +32,7 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 	protected String g_name;
 	protected OfflinePlayer g_user;
 	protected List<OfflinePlayer> g_sub_pilots = new ArrayList<OfflinePlayer>();
-	protected ShipStructure g_structure = new ShipStructure(this);
+	protected ShipStructure g_structure = new ShipStructure();
 	protected Block g_main;
 	protected Location g_teleport;
 
@@ -49,7 +49,7 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 	public AbstractShipsData(ShipsData data) {
 		g_name = data.getName();
 		Optional<OfflinePlayer> opOwner = data.getOwner();
-		if(opOwner.isPresent()){
+		if (opOwner.isPresent()) {
 			g_user = opOwner.get();
 		}
 		g_sub_pilots = data.getSubPilots();
@@ -96,9 +96,11 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 	public Map<String, String> getBasicData() {
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("Name: ", g_name);
-		map.put("Licence: ", g_main.getX() + ", " + g_main.getY() + ", " + g_main.getZ() + ", " + g_main.getWorld().getName());
-		map.put("Teleport: ", g_teleport.getX() + ", " + g_teleport.getY() + ", " + g_teleport.getZ() + ", " + g_teleport.getWorld().getName());
-		map.put("Structure size:", g_structure.getRaw().size() + "");
+		map.put("Licence: ",
+				g_main.getX() + ", " + g_main.getY() + ", " + g_main.getZ() + ", " + g_main.getWorld().getName());
+		map.put("Teleport: ", g_teleport.getX() + ", " + g_teleport.getY() + ", " + g_teleport.getZ() + ", "
+				+ g_teleport.getWorld().getName());
+		map.put("Structure size: ", g_structure.getRaw().size() + "");
 		return map;
 	}
 
@@ -134,15 +136,13 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 
 	@Override
 	public List<Block> updateBasicStructure() {
-		g_structure.updateStructure();
+		g_structure.updateStructure(this);
 		return g_structure.getRaw();
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
-		List<Block> list = g_structure.getRaw();
-		list.clear();
-		list.addAll(locs);
+		g_structure.setStructure(locs);
 		g_main = licence;
 		return locs;
 	}

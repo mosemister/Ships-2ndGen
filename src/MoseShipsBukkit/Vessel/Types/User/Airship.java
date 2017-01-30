@@ -41,7 +41,8 @@ import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticRequiredPercent;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Types.AbstractAirType;
 
-public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveFallable, LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
+public class Airship extends AbstractAirType
+		implements LiveAutoPilotable, LiveFallable, LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
 
 	int g_req_percent;
 	int g_cons_amount;
@@ -77,14 +78,14 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		g_cons_amount = A;
 		return this;
 	}
-	
+
 	@Override
 	public Optional<AutoPilot> getAutoPilotData() {
 		return Optional.ofNullable(g_auto_pilot);
 	}
-	
+
 	@Override
-	public Airship setAutoPilotData(AutoPilot pilot){
+	public Airship setAutoPilotData(AutoPilot pilot) {
 		g_auto_pilot = pilot;
 		return this;
 	}
@@ -97,15 +98,15 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 	@Override
 	public int getAmountOfPercentBlocks() {
 		List<Block> structure = getBasicStructure();
-		if(!structure.isEmpty()){
-		List<Block> blocks = new ArrayList<Block>();
-		for (Block block : structure) {
-			if (BlockState.contains(block, getPercentBlocks())) {
-				blocks.add(block);
+		if (!structure.isEmpty()) {
+			List<Block> blocks = new ArrayList<Block>();
+			for (Block block : structure) {
+				if (BlockState.contains(block, getPercentBlocks())) {
+					blocks.add(block);
+				}
 			}
-		}
-		int percent = (int) (blocks.size() * 100.0f) / structure.size();
-		return percent;
+			int percent = (int) (blocks.size() * 100.0f) / structure.size();
+			return percent;
 		}
 		return 0;
 	}
@@ -118,8 +119,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 	@Override
 	public BlockState[] getRequiredBlocks() {
 		BlockState[] req = {
-			new BlockState(Material.FIRE)
-		};
+				new BlockState(Material.FIRE) };
 		return req;
 	}
 
@@ -229,10 +229,12 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		int hasPercent = getAmountOfPercentBlocks();
 		int percent = getRequiredPercent();
 		if (!hasRequiredBlock()) {
-			return Optional.of(new FailedMovement(this, MovementResult.MISSING_REQUIRED_BLOCK, new BlockState(Material.FIRE)));
+			return Optional
+					.of(new FailedMovement(this, MovementResult.MISSING_REQUIRED_BLOCK, new BlockState(Material.FIRE)));
 		}
 		if (hasPercent < percent) {
-			return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT, new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) (percent - hasPercent))));
+			return Optional.of(new FailedMovement(this, MovementResult.NOT_ENOUGH_PERCENT,
+					new TwoStore<BlockState, Float>(getPercentBlocks()[0], (float) (percent - hasPercent))));
 		}
 		if (getFuel() >= getConsumptionAmount()) {
 			if (removeFuel(getConsumptionAmount())) {
@@ -247,7 +249,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 
 	@Override
 	public boolean shouldFall() {
-		if(getFuel() == 0){
+		if (getFuel() == 0) {
 			return true;
 		}
 		return false;
@@ -295,7 +297,8 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 				config.setOverride(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
 				config.setOverride(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
 				config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
-				config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte) -1).toNoString()), StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+				config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte) -1).toNoString()),
+						StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
 				config.setOverride(60, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
 				config.setOverride(1, StaticFuel.DEFAULT_FUEL_CONSUMPTION);
 				config.setOverride(Arrays.asList(new BlockState(Material.COAL).toNoString()), StaticFuel.DEFAULT_FUEL);
@@ -327,9 +330,9 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		public boolean autoPilot() {
 			return false;
 		}
-		
+
 		@Override
-		public ShipsMain getPlugin(){
+		public ShipsMain getPlugin() {
 			return ShipsMain.getPlugin();
 		}
 
@@ -340,7 +343,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 			ship.setPercentBlocks(getDefaultPercentBlocks());
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
-			return Optional.of((LiveShip)ship);
+			return Optional.of((LiveShip) ship);
 		}
 
 		@Override
@@ -351,7 +354,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 			ship.setFuelConsumption(getDefaultConsumptionAmount());
 			ship.setFuels(getDefaultFuelMaterial());
 
-			return Optional.of((LiveShip)ship);
+			return Optional.of((LiveShip) ship);
 		}
 
 		@Override
@@ -371,8 +374,7 @@ public class Airship extends AbstractAirType implements LiveAutoPilotable, LiveF
 		@Override
 		public BlockState[] getDefaultFuelMaterial() {
 			BlockState[] ret = {
-				new BlockState(Material.COAL)
-			};
+					new BlockState(Material.COAL) };
 			return ret;
 		}
 

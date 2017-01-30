@@ -27,8 +27,7 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 	@Override
 	public String[] getAliases() {
 		String[] args = {
-			"info"
-		};
+				"info" };
 		return args;
 	}
 
@@ -88,7 +87,7 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 				tMCVersion = tMCVersion + ". " + mc;
 			}
 		}
-		
+
 		source.sendMessage(ShipsMain.formatCMDHelp("|----[Ships info]----|"));
 		source.sendMessage(ShipsMain.formatCMDHelp("Ships Version: " + shipsVersion[0]));
 		source.sendMessage(ShipsMain.formatCMDHelp("Ships Version Name: " + shipsVersion[1]));
@@ -99,8 +98,10 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 			source.sendMessage(ShipsMain.formatCMDHelp("recommended MC version: (") + ChatColor.RED + MCVersion
 					+ ShipsMain.formatCMDHelp(") " + tMCVersion));
 		}
-		source.sendMessage(ShipsMain.formatCMDHelp("BlockFinder Algorithm: " + BlockFinderUtil.getConfigSelected().getName()));
-		source.sendMessage(ShipsMain.formatCMDHelp("Movement Algorithm: " + MovementAlgorithmUtil.getConfig().getName()));
+		source.sendMessage(
+				ShipsMain.formatCMDHelp("BlockFinder Algorithm: " + BlockFinderUtil.getConfigSelected().getName()));
+		source.sendMessage(
+				ShipsMain.formatCMDHelp("Movement Algorithm: " + MovementAlgorithmUtil.getConfig().getName()));
 	}
 
 	private void shipInfo(CommandSender source, LoadableShip ship) {

@@ -32,8 +32,8 @@ public class MovingBlock {
 		MOVING_TO = original.getRelative(X, Y, Z).getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
 	}
-	
-	public MovingBlock(Block original, Block block){
+
+	public MovingBlock(Block original, Block block) {
 		MOVING_TO = block.getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
 	}
@@ -130,10 +130,10 @@ public class MovingBlock {
 
 	public MovingBlock rotate(Rotate rotate, Block centre) {
 		switch (rotate) {
-			case LEFT:
-				return rotateLeft(centre);
-			case RIGHT:
-				return rotateRight(centre);
+		case LEFT:
+			return rotateLeft(centre);
+		case RIGHT:
+			return rotateRight(centre);
 		}
 		return this;
 	}
@@ -181,18 +181,18 @@ public class MovingBlock {
 		List<MovingBlock> priList = new ArrayList<MovingBlock>();
 		for (MovingBlock block : blocks) {
 			switch (block.getPriority()) {
-				case NORMAL:
-					normalList.add(block);
-					break;
-				case PRIORITY:
-					priList.add(block);
-					break;
-				case AIR:
-					airList.add(block);
-					break;
-				case SPECIAL:
-					specList.add(block);
-					break;
+			case NORMAL:
+				normalList.add(block);
+				break;
+			case PRIORITY:
+				priList.add(block);
+				break;
+			case AIR:
+				airList.add(block);
+				break;
+			case SPECIAL:
+				specList.add(block);
+				break;
 			}
 		}
 		List<MovingBlock> retList = new ArrayList<MovingBlock>();
@@ -204,10 +204,7 @@ public class MovingBlock {
 	}
 
 	public enum Priority {
-		NORMAL,
-		PRIORITY,
-		SPECIAL,
-		AIR;
+		NORMAL, PRIORITY, SPECIAL, AIR;
 	}
 
 }

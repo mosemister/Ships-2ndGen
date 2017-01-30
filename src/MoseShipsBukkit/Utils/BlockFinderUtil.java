@@ -58,10 +58,10 @@ public class BlockFinderUtil {
 		}
 		return Optional.empty();
 	}
-	
-	public static BasicBlockFinder getFinder(Class<? extends BasicBlockFinder> finderType){
-		for(BasicBlockFinder finder: getFinders()){
-			if(finderType.isInstance(finder)){
+
+	public static BasicBlockFinder getFinder(Class<? extends BasicBlockFinder> finderType) {
+		for (BasicBlockFinder finder : getFinders()) {
+			if (finderType.isInstance(finder)) {
 				return finder;
 			}
 		}

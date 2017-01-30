@@ -23,7 +23,7 @@ public class Ships6Movement implements MovementAlgorithm {
 
 	@Override
 	public boolean move(final LiveShip vessel, final List<MovingBlock> blocksUn, final List<Entity> onBoard) {
-		if(blocksUn.isEmpty()){
+		if (blocksUn.isEmpty()) {
 			return false;
 		}
 		final Map<Entity, Location> map = new HashMap<Entity, Location>();
@@ -34,9 +34,9 @@ public class Ships6Movement implements MovementAlgorithm {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		ShipsConfig config = ShipsConfig.CONFIG;
 		long repeate = 1;
-		if(config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE) != null){
+		if (config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE) != null) {
 			repeate = config.get(Integer.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE).intValue();
-		}else{
+		} else {
 			Double ret = config.get(Double.class, ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE);
 			repeate = ret.longValue();
 		}
@@ -110,11 +110,11 @@ public class Ships6Movement implements MovementAlgorithm {
 			@Override
 			public void run() {
 				Location loc = blocksUn.get(0).getMovingTo().clone().subtract(blocksUn.get(0).getOrigin());
-				MovingBlock tBlock = new MovingBlock(vessel.getTeleportToLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
-						loc.getBlockZ());
+				MovingBlock tBlock = new MovingBlock(vessel.getTeleportToLocation().getBlock(), loc.getBlockX(),
+						loc.getBlockY(), loc.getBlockZ());
 				if (oneLic.getFirst() == null) {
-					MovingBlock lBlock = new MovingBlock(vessel.getLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
-							loc.getBlockZ());
+					MovingBlock lBlock = new MovingBlock(vessel.getLocation().getBlock(), loc.getBlockX(),
+							loc.getBlockY(), loc.getBlockZ());
 					vessel.setBasicStructure(newStructure, lBlock.getMovingTo().getBlock(), tBlock.getMovingTo());
 				} else {
 					vessel.setBasicStructure(newStructure, oneLic.getFirst(), tBlock.getMovingTo());

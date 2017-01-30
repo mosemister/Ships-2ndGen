@@ -43,14 +43,14 @@ public class TeleportSnapshot extends BlockSnapshot implements SpecialSnapshot, 
 	public byte getRotateLeft() {
 		byte data = this.getData().getData();
 		switch (data) {
-			case 2:
-				return 4;
-			case 3:
-				return 5;
-			case 4:
-				return 3;
-			case 5:
-				return 2;
+		case 2:
+			return 4;
+		case 3:
+			return 5;
+		case 4:
+			return 3;
+		case 5:
+			return 2;
 		}
 		return data;
 	}
@@ -60,14 +60,14 @@ public class TeleportSnapshot extends BlockSnapshot implements SpecialSnapshot, 
 	public byte getRotateRight() {
 		byte data = this.getData().getData();
 		switch (data) {
-			case 2:
-				return 5;
-			case 3:
-				return 4;
-			case 4:
-				return 2;
-			case 5:
-				return 3;
+		case 2:
+			return 5;
+		case 3:
+			return 4;
+		case 4:
+			return 2;
+		case 5:
+			return 3;
 		}
 		return data;
 	}

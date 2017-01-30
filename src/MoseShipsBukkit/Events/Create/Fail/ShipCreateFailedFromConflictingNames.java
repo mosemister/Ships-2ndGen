@@ -10,28 +10,31 @@ import MoseShipsBukkit.Vessel.Data.LiveShip;
 
 /**
  * implemented
+ * 
  * @author Mose
  *
  */
 public class ShipCreateFailedFromConflictingNames extends ShipCreateFailedEvent {
 
 	LiveShip g_conflict;
-	
-	public ShipCreateFailedFromConflictingNames(ShipsCause cause, AbstractShipsData data, Player player, LiveShip ship) {
-		super(cause, data, player, ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_NAME));
+
+	public ShipCreateFailedFromConflictingNames(ShipsCause cause, AbstractShipsData data, Player player,
+			LiveShip ship) {
+		super(cause, data, player,
+				ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_NAME));
 		g_conflict = ship;
 	}
-	
-	public LiveShip getConflict(){
+
+	public LiveShip getConflict() {
 		return g_conflict;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return g_conflict.getName();
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return g_handlers;
 	}
-	
+
 }

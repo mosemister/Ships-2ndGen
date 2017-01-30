@@ -16,8 +16,7 @@ public class HelpCMD implements ShipsCMD.ShipsPlayerCMD, ShipsCMD.ShipsConsoleCM
 	@Override
 	public String[] getAliases() {
 		String[] args = {
-			"help"
-		};
+				"help" };
 		return args;
 	}
 

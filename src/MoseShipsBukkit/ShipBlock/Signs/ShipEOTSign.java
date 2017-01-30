@@ -13,7 +13,7 @@ import MoseShipsBukkit.Vessel.Data.LiveShip;
 import MoseShipsBukkit.Vessel.Data.LoadableShip;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 
-public class ShipEOTSign implements ShipSign{
+public class ShipEOTSign implements ShipSign {
 
 	@Override
 	public void onCreation(SignChangeEvent event) {
@@ -26,41 +26,41 @@ public class ShipEOTSign implements ShipSign{
 			int speed = ship.getStatic().getDefaultSpeed();
 			event.setLine(2, speed + "");
 		}
-		
+
 	}
 
 	@Override
 	public void onShiftRightClick(Player player, Sign sign, LiveShip ship) {
 		int speed = Integer.parseInt(sign.getLine(2));
 		StaticShipType staticShip = ship.getStatic();
-		if(staticShip.getDefaultSpeed() < speed){
+		if (staticShip.getDefaultSpeed() < speed) {
 			sign.setLine(2, (speed + 1) + "");
 			sign.update();
-		}else{
+		} else {
 			sign.setLine(2, "1");
 			sign.update();
 		}
-		
+
 	}
 
 	@Override
 	public void onRightClick(Player player, Sign sign, LiveShip ship) {
 		String aheadLine = "{" + ChatColor.GREEN + "Ahead" + ChatColor.BLACK + "} Stop";
 		String stopLine = ChatColor.GREEN + "Ahead" + ChatColor.BLACK + " {Stop}";
-		
+
 		String line = sign.getLine(1);
-		if(line.equals(aheadLine)){
+		if (line.equals(aheadLine)) {
 			sign.setLine(1, stopLine);
 			sign.update();
-			for (EOTTask task : ship.getTaskRunner().getTasks(EOTTask.class)){
+			for (EOTTask task : ship.getTaskRunner().getTasks(EOTTask.class)) {
 				ship.getTaskRunner().unregister(task);
 			}
-		}else{
+		} else {
 			sign.setLine(1, aheadLine);
 			sign.update();
 			ship.getTaskRunner().register(ShipsMain.getPlugin(), new EOTTask(player, sign));
 		}
-		
+
 	}
 
 	@Override
@@ -71,13 +71,13 @@ public class ShipEOTSign implements ShipSign{
 	@Override
 	public void onRemove(Player player, Sign sign) {
 		Optional<LiveShip> opShip = getAttachedShip(sign);
-		if(opShip.isPresent()){
+		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
-			for (EOTTask task: ship.getTaskRunner().getTasks(EOTTask.class)){
+			for (EOTTask task : ship.getTaskRunner().getTasks(EOTTask.class)) {
 				ship.getTaskRunner().unregister(task);
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public class ShipEOTSign implements ShipSign{
 
 	@Override
 	public boolean isSign(Sign sign) {
-		if(sign.getLine(0).equalsIgnoreCase(ChatColor.YELLOW + "[E.O.T]")){
+		if (sign.getLine(0).equalsIgnoreCase(ChatColor.YELLOW + "[E.O.T]")) {
 			return true;
 		}
 		return false;
@@ -96,8 +96,8 @@ public class ShipEOTSign implements ShipSign{
 	@Override
 	public Optional<LiveShip> getAttachedShip(Sign sign) {
 		Optional<LoadableShip> opShip = LoadableShip.getShip(this, sign, false);
-		if(opShip.isPresent()){
-			return Optional.of((LiveShip)opShip.get());
+		if (opShip.isPresent()) {
+			return Optional.of((LiveShip) opShip.get());
 		}
 		return Optional.empty();
 	}

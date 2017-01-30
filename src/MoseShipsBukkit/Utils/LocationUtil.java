@@ -11,7 +11,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.material.Attachable;
 
 public class LocationUtil {
-	
+
 	public static boolean blocksEqual(Location loc1, Location loc2) {
 		if ((loc1.getBlockX() == loc2.getBlockX()) && (loc1.getBlockY() == loc2.getBlockY())
 				&& (loc1.getBlockZ() == loc2.getBlockZ())) {
@@ -19,10 +19,9 @@ public class LocationUtil {
 		}
 		return false;
 	}
-	
+
 	public static boolean blocksEqual(Block block1, Block block2) {
-		if ((block1.getX() == block2.getX()) && (block1.getY() == block2.getY())
-				&& (block1.getZ() == block2.getZ())) {
+		if ((block1.getX() == block2.getX()) && (block1.getY() == block2.getY()) && (block1.getZ() == block2.getZ())) {
 			return true;
 		}
 		return false;
@@ -36,8 +35,8 @@ public class LocationUtil {
 		}
 		return false;
 	}
-	
-	public static boolean blockContains(Collection<Block> list, Block block){
+
+	public static boolean blockContains(Collection<Block> list, Block block) {
 		for (Block block2 : list) {
 			if (blocksEqual(block, block2)) {
 				return true;
@@ -49,11 +48,10 @@ public class LocationUtil {
 	public static List<Sign> getAttachedSigns(Block block) {
 		List<Sign> list = new ArrayList<Sign>();
 		BlockFace[] faces = {
-			BlockFace.EAST,
-			BlockFace.NORTH,
-			BlockFace.SOUTH,
-			BlockFace.WEST
-		};
+				BlockFace.EAST,
+				BlockFace.NORTH,
+				BlockFace.SOUTH,
+				BlockFace.WEST };
 		for (BlockFace face : faces) {
 			Block block2 = block.getRelative(face);
 			if (block2.getState() instanceof Sign) {

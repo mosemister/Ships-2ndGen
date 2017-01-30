@@ -26,7 +26,7 @@ import MoseShipsBukkit.Vessel.Types.AbstractAirType;
 public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFallable {
 
 	AutoPilot g_auto_pilot;
-	
+
 	public OpShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
@@ -34,14 +34,14 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 	public OpShip(AbstractShipsData ship) {
 		super(ship);
 	}
-	
+
 	@Override
 	public Optional<AutoPilot> getAutoPilotData() {
 		return Optional.ofNullable(g_auto_pilot);
 	}
-	
+
 	@Override
-	public OpShip setAutoPilotData(AutoPilot pilot){
+	public OpShip setAutoPilotData(AutoPilot pilot) {
 		g_auto_pilot = pilot;
 		return this;
 	}
@@ -124,9 +124,9 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 		public boolean autoPilot() {
 			return true;
 		}
-		
+
 		@Override
-		public ShipsMain getPlugin(){
+		public ShipsMain getPlugin() {
 			return ShipsMain.getPlugin();
 		}
 

@@ -202,7 +202,8 @@ public class BlockList extends BasicConfig {
 		list.add(new BlockState(Material.JUNGLE_DOOR));
 		list.add(new BlockState(Material.DARK_OAK_FENCE));
 		list.add(new BlockState(Material.ACACIA_FENCE));
-		if(!VersionCheckingUtil.isGreater(VersionCheckingUtil.MINECRAFT_VERSION, 1, 11, 0).equals(VersionCheckingUtil.VersionOutcome.LOWER)){
+		if (!VersionCheckingUtil.isGreater(VersionCheckingUtil.MINECRAFT_VERSION, 1, 11, 0)
+				.equals(VersionCheckingUtil.VersionOutcome.LOWER)) {
 			list.add(new BlockState(Material.OBSERVER));
 			list.add(new BlockState(Material.BLACK_SHULKER_BOX));
 			list.add(new BlockState(Material.WHITE_SHULKER_BOX));
@@ -316,9 +317,7 @@ public class BlockList extends BasicConfig {
 	}
 
 	public static enum ListType {
-		MATERIALS("-m", "m"),
-		RAM("-r", "r"),
-		NONE("-n", "n");
+		MATERIALS("-m", "m"), RAM("-r", "r"), NONE("-n", "n");
 
 		String[] g_ali;
 

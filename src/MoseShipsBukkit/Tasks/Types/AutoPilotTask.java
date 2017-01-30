@@ -15,7 +15,7 @@ public class AutoPilotTask implements ShipsTask {
 
 	@Override
 	public void onRun(LiveShip ship) {
-		LiveAutoPilotable ship2 = (LiveAutoPilotable)ship;
+		LiveAutoPilotable ship2 = (LiveAutoPilotable) ship;
 		Optional<AutoPilot> opData = ship2.getAutoPilotData();
 		if (opData.isPresent()) {
 			AutoPilot data = opData.get();

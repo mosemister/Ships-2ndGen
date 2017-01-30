@@ -47,22 +47,22 @@ public class BannerSnapshot extends BlockSnapshot implements RotatableSnapshot, 
 	public byte getRotateLeft() {
 		byte data = getData().getData();
 		switch (data) {
-			case 0:
-				return 4;
-			case 4:
-				return 8;
-			case 8:
-				return 12;
-			case 12:
-				return 0;
-			case 14:
-				return 2;
-			case 10:
-				return 14;
-			case 6:
-				return 10;
-			case 2:
-				return 6;
+		case 0:
+			return 4;
+		case 4:
+			return 8;
+		case 8:
+			return 12;
+		case 12:
+			return 0;
+		case 14:
+			return 2;
+		case 10:
+			return 14;
+		case 6:
+			return 10;
+		case 2:
+			return 6;
 		}
 		return 0;
 	}
@@ -72,22 +72,22 @@ public class BannerSnapshot extends BlockSnapshot implements RotatableSnapshot, 
 	public byte getRotateRight() {
 		byte data = getData().getData();
 		switch (data) {
-			case 4:
-				return 0;
-			case 8:
-				return 4;
-			case 12:
-				return 8;
-			case 0:
-				return 12;
-			case 2:
-				return 14;
-			case 14:
-				return 10;
-			case 10:
-				return 6;
-			case 6:
-				return 2;
+		case 4:
+			return 0;
+		case 8:
+			return 4;
+		case 12:
+			return 8;
+		case 0:
+			return 12;
+		case 2:
+			return 14;
+		case 14:
+			return 10;
+		case 10:
+			return 6;
+		case 6:
+			return 2;
 		}
 		return 0;
 	}

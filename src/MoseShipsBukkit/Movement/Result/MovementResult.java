@@ -5,6 +5,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
@@ -15,8 +16,8 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
 
-public abstract class MovementResult <T extends Object> {
-	
+public abstract class MovementResult<T extends Object> {
+
 	public static final MovementResult<Boolean> FUEL_REMOVE_ERROR = new FuelRemoveErrorMovementResult();
 	public static final MovementResult<Boolean> NOT_IN_WATER_ERROR = new NotInWaterErrorMovementResult();
 	public static final MovementResult<AutoPilot> AUTO_PILOT_OUT_OF_MOVES = new AutoPilotOutOfMovesErrorMovementResult();
@@ -28,119 +29,147 @@ public abstract class MovementResult <T extends Object> {
 	public static final MovementResult<TwoStore<BlockState, Float>> NOT_ENOUGH_PERCENT = new NotEnoughPercentageErrorMovementResult();
 	public static final MovementResult<Boolean> PLUGIN_CANCELLED = new PluginCancelledErrorMovementResult();
 	public static final MovementResult<List<MovingBlock>> COLLIDE_WITH = new CollideWithErrorMovementResult();
+	public static final MovementResult<Boolean> UNKNOWN_ERROR = new UnknownErrorMovementResult();
+	public static final MovementResult<Integer> NO_SPEED_SET = new NoSpeedSetMovementResult();
+
+	public abstract void sendMessage(LiveShip ship, CommandSender player, T value);
+
+	public static class NoSpeedSetMovementResult extends MovementResult<Integer> {
+
+		@Override
+		public void sendMessage(LiveShip ship, CommandSender player, Integer value) {
+			player.sendMessage("No Speed was set");
+		}
+		
+	}
 	
-	public abstract void sendMessage(LiveShip ship, Player player, T value);
+	public static class UnknownErrorMovementResult extends MovementResult<Boolean> {
+
+		@Override
+		public void sendMessage(LiveShip ship, CommandSender player, Boolean value) {
+			player.sendMessage("A unknown error occured");
+			System.out.println("A Unknown Error Occured: Error code 'Move failed by running all the way through'");
+		}
+
+	}
 
 	public static class FuelRemoveErrorMovementResult extends MovementResult<Boolean> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, Boolean value) {
+		public void sendMessage(LiveShip ship, CommandSender player, Boolean value) {
 			player.sendMessage("Ships failed to collect fuel to remove");
 		}
-		
+
 	}
-	
+
 	public static class NotInWaterErrorMovementResult extends MovementResult<Boolean> {
-		
+
 		@Override
-		public void sendMessage(LiveShip ship, final Player player, Boolean value) {
+		public void sendMessage(LiveShip ship, final CommandSender player, Boolean value) {
 			player.sendMessage(ShipsMain.format("Ship is not in water", true));
 		}
-		
+
 	}
-	
-	public static class AutoPilotOutOfMovesErrorMovementResult extends MovementResult<AutoPilot>{
+
+	public static class AutoPilotOutOfMovesErrorMovementResult extends MovementResult<AutoPilot> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, AutoPilot value) {
+		public void sendMessage(LiveShip ship, CommandSender player, AutoPilot value) {
 			player.sendMessage(ShipsMain.format("AutoPilot ran out of moves", true));
 		}
-		
+
 	}
-	
-	public static class OutOfFuelErrorMovementResult extends MovementResult<Boolean>{
+
+	public static class OutOfFuelErrorMovementResult extends MovementResult<Boolean> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, Boolean value) {
+		public void sendMessage(LiveShip ship, CommandSender player, Boolean value) {
 			player.sendMessage(ShipsMain.format("Out of fuel", true));
 		}
-		
+
 	}
-	
-	public static class MissingRequiredBlockErrorMovementResult extends MovementResult<BlockState>{
+
+	public static class MissingRequiredBlockErrorMovementResult extends MovementResult<BlockState> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, BlockState state) {
+		public void sendMessage(LiveShip ship, CommandSender player, BlockState state) {
 			if (state.getMaterial().equals(Material.FIRE)) {
 				player.sendMessage("You are missing a burner from your ship");
 			} else {
 				player.sendMessage(ShipsMain.format(
-						"You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship",
-						true));
+						"You are missing " + state.getMaterial() + ":" + state.getData() + " from your ship", true));
 			}
 		}
-		
+
 	}
-	
-	public static class NoBlocksErrorMovementResult extends MovementResult<Boolean>{
+
+	public static class NoBlocksErrorMovementResult extends MovementResult<Boolean> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, Boolean value) {
+		public void sendMessage(LiveShip ship, CommandSender player, Boolean value) {
 			String message = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIZE_NONE);
-			if(message.contains("%Ship%")){
+			if (message == null) {
+				message = "No size of ship found";
+			}
+			if (message.contains("%Ship%")) {
 				message = message.replace("%Ship%", ship.getName());
 			}
 			player.sendMessage(message);
 		}
-		
+
 	}
-	
-	public static class NotEnoughBlocksErrorMovementResult extends MovementResult<Integer>{
+
+	public static class NotEnoughBlocksErrorMovementResult extends MovementResult<Integer> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, Integer blocks) {
+		public void sendMessage(LiveShip ship, CommandSender player, Integer blocks) {
 			player.sendMessage(ShipsMain.format("You need " + blocks + " more blocks", true));
-			
+
 		}
-		
+
 	}
-	
-	public static class TooManyBlocksErrorMovementResult extends MovementResult<Integer>{
+
+	public static class TooManyBlocksErrorMovementResult extends MovementResult<Integer> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, Integer blocks) {
+		public void sendMessage(LiveShip ship, CommandSender player, Integer blocks) {
 			player.sendMessage(ShipsMain.format("You need " + blocks + " less blocks", true));
 		}
-		
+
 	}
-	
-	public static class NotEnoughPercentageErrorMovementResult extends MovementResult<TwoStore<BlockState, Float>>{
+
+	public static class NotEnoughPercentageErrorMovementResult extends MovementResult<TwoStore<BlockState, Float>> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, TwoStore<BlockState, Float> value) {
+		public void sendMessage(LiveShip ship, CommandSender player, TwoStore<BlockState, Float> value) {
 			player.sendMessage(ShipsMain.format("You need " + value.getSecond() + " more blocks of "
 					+ value.getFirst().getMaterial() + ":" + value.getFirst().getData(), true));
-			
+
 		}
-		
+
 	}
-	
-	public static class PluginCancelledErrorMovementResult extends MovementResult<Boolean>{
+
+	public static class PluginCancelledErrorMovementResult extends MovementResult<Boolean> {
 
 		@Override
-		public void sendMessage(LiveShip ship, Player player, Boolean value) {
-			if(value){
+		public void sendMessage(LiveShip ship, CommandSender player, Boolean value) {
+			if (value) {
 				player.sendMessage("A plugin cancelled the event");
 			}
 		}
-		
+
 	}
-	
+
 	public static class CollideWithErrorMovementResult extends MovementResult<List<MovingBlock>> {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public void sendMessage(LiveShip ship, final Player player, final List<MovingBlock> list) {
+		public void sendMessage(LiveShip ship, final CommandSender sender, final List<MovingBlock> list) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ShipsMain.format("Detection ahead", true));
+				return;
+			}
+			final Player player = (Player) sender;
 			player.sendMessage(ShipsMain.format("Detection ahead. They are bedrock for 3 seconds", true));
 			for (MovingBlock block : list) {
 				player.sendBlockChange(block.getMovingTo(), Material.BEDROCK, (byte) 0);
@@ -157,7 +186,7 @@ public abstract class MovementResult <T extends Object> {
 				}
 
 			}, (3 * 20));
-			
+
 		}
 	}
 

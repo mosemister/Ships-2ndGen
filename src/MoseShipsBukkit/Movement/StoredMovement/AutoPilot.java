@@ -32,7 +32,8 @@ public class AutoPilot {
 		USER = user;
 	}
 
-	public AutoPilot(LiveAutoPilotable type, List<StoredMovement> movements, boolean repeate, @Nullable OfflinePlayer user) {
+	public AutoPilot(LiveAutoPilotable type, List<StoredMovement> movements, boolean repeate,
+			@Nullable OfflinePlayer user) {
 		MOVEMENTS = movements;
 		SHIP = type;
 		SHOULD_REPEATE = repeate;
@@ -111,12 +112,12 @@ public class AutoPilot {
 		SHOULD_REPEATE = false;
 		USER = user;
 	}
-	
-	public int getMovesDone(){
+
+	public int getMovesDone() {
 		return PROCESSED;
 	}
-	
-	public void setMovesDone(int A){
+
+	public void setMovesDone(int A) {
 		PROCESSED = A;
 	}
 
@@ -150,7 +151,8 @@ public class AutoPilot {
 	}
 
 	private List<Location> getBetween(Location loc1, Location loc2, int spacing) {
-		System.out.println("\n X = " + loc1.getX() + " Y = " + loc1.getY() + " Z = " + loc1.getZ() + "\n X = " + loc2.getX() + " Y = " + loc2.getY() + " Z = " + loc2.getZ());
+		System.out.println("\n X = " + loc1.getX() + " Y = " + loc1.getY() + " Z = " + loc1.getZ() + "\n X = "
+				+ loc2.getX() + " Y = " + loc2.getY() + " Z = " + loc2.getZ());
 		List<Location> blocks = new ArrayList<Location>();
 		World world = loc1.getWorld();
 		if (loc1.getBlockX() == loc2.getBlockX()) {
