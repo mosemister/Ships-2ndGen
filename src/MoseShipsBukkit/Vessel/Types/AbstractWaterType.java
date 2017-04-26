@@ -12,8 +12,8 @@ import MoseShipsBukkit.Movement.Movement;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.ShipsData;
 
 public abstract class AbstractWaterType extends LoadableShip implements WaterType {
 
@@ -21,7 +21,7 @@ public abstract class AbstractWaterType extends LoadableShip implements WaterTyp
 		super(name, sign, teleport);
 	}
 
-	public AbstractWaterType(AbstractShipsData data) {
+	public AbstractWaterType(ShipsData data) {
 		super(data);
 	}
 

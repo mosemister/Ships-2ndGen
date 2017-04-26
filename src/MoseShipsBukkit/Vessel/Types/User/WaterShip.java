@@ -15,7 +15,6 @@ import org.bukkit.entity.Player;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Configs.ShipsLocalDatabase;
 import MoseShipsBukkit.Configs.StaticShipConfig;
 import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
@@ -25,9 +24,14 @@ import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.ShipsData;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticRequiredPercent;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenLoader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Types.AbstractWaterType;
 
@@ -36,7 +40,7 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 	int g_block_percent = getStatic().getDefaultRequiredPercent();
 	BlockState[] g_materials = getStatic().getDefaultPercentBlocks();
 
-	public WaterShip(AbstractShipsData data) {
+	public WaterShip(ShipsData data) {
 		super(data);
 	}
 
@@ -106,16 +110,6 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 			}
 
 		}
-	}
-
-	@Override
-	public void onSave(ShipsLocalDatabase database) {
-		List<String> list = new ArrayList<String>();
-		for (BlockState state : g_materials) {
-			list.add(state.toNoString());
-		}
-		database.setOverride(g_block_percent, LiveRequiredPercent.REQUIRED_PERCENT);
-		database.setOverride(list, LiveRequiredPercent.REQUIRED_BLOCKS);
 	}
 
 	@Override
@@ -236,6 +230,58 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 			List<String> list = config.getList(String.class, StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
 			BlockState[] states = BlockState.getStates(list);
 			return states;
+		}
+		
+		@Override
+		public OpenRAWLoader[] getLoaders() {
+			OpenLoader ship6Loader = new OpenLoader(){
+
+				@Override
+				public String getLoaderName() {
+					return "Ships 6 - WaterShip";
+				}
+
+				@Override
+				public int[] getLoaderVersion() {
+					int[] values = {0, 0, 0, 1};
+					return values;
+				}
+
+				@Override
+				public boolean willLoad(File file) {
+					BasicConfig config = new BasicConfig(file);
+					String type = config.get(String.class, Loader.OPEN_LOADER_NAME);
+					if(type == null){
+						return false;
+					}
+					if(type.equals(getLoaderName())){
+						return true;
+					}
+					return false;
+				}
+
+				@Override
+				public Optional<LiveShip> load(ShipsData data) {
+					LoadableShip ship = new WaterShip(data);
+					return Optional.of((LiveShip) ship);
+				}
+
+				@Override
+				public OpenLoader save(LiveShip ship, BasicConfig config) {
+					WaterShip ship2 = (WaterShip)ship;
+					List<String> list = new ArrayList<String>();
+					for (BlockState state : ship2.g_materials) {
+						list.add(state.toNoString());
+					}
+					config.setOverride(ship2.g_block_percent, LiveRequiredPercent.REQUIRED_PERCENT);
+					config.setOverride(list, LiveRequiredPercent.REQUIRED_BLOCKS);
+					return this;
+				}
+				
+			};
+			
+			OpenRAWLoader[] loaders = {ship6Loader};
+			return loaders;
 		}
 
 	}

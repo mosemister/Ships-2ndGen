@@ -14,9 +14,8 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.BlockFinderUtil;
 import MoseShipsBukkit.Utils.MovementAlgorithmUtil;
 import MoseShipsBukkit.Utils.VersionCheckingUtil;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Loader.ShipLoader;
-import MoseShipsBukkit.Vessel.Loader.ShipLoadingError;
+import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 
 public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCMD {
 
@@ -65,13 +64,12 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 		if (type.equalsIgnoreCase("Basic")) {
 			basicInfo(source);
 		} else {
-			Optional<LoadableShip> opShip = ShipLoader.loadShip(type);
+			Optional<LiveShip> opShip = Loader.loadDirectlyFromName(type);
 			if (opShip.isPresent()) {
 				shipInfo(source, opShip.get());
 			} else {
-				ShipLoadingError error = ShipLoader.getError(type);
 				source.sendMessage(ShipsMain.format(
-						"Ships failed to gain the information for that Ship. Error name of " + error.name(), true));
+						"error when getting the ship. Type '/ships debug load <ship name>' to get the exact error", true));
 			}
 		}
 	}
@@ -104,7 +102,7 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 				ShipsMain.formatCMDHelp("Movement Algorithm: " + MovementAlgorithmUtil.getConfig().getName()));
 	}
 
-	private void shipInfo(CommandSender source, LoadableShip ship) {
+	private void shipInfo(CommandSender source, LiveShip ship) {
 		for (Entry<String, Object> entry : ship.getInfo().entrySet()) {
 			String text = entry.getKey() + ShipsMain.formatCMDHelp(entry.getValue().toString());
 			source.sendMessage(text);

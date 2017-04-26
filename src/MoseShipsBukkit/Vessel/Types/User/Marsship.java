@@ -16,7 +16,6 @@ import org.bukkit.plugin.Plugin;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Configs.ShipsLocalDatabase;
 import MoseShipsBukkit.Configs.StaticShipConfig;
 import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
@@ -26,8 +25,14 @@ import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.ShipsData;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticRequiredPercent;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenLoader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.OpenLoader.Ships5Loader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Types.AbstractAirType;
 
@@ -40,7 +45,7 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 		super(name, sign, teleport);
 	}
 
-	public Marsship(AbstractShipsData data) {
+	public Marsship(ShipsData data) {
 		super(data);
 	}
 
@@ -63,16 +68,6 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 	@Override
 	public Map<String, Object> getInfo() {
 		return new HashMap<String, Object>();
-	}
-
-	@Override
-	public void onSave(ShipsLocalDatabase database) {
-		List<String> reqBlocks = new ArrayList<String>();
-		for (BlockState state : g_req_p_blocks) {
-			reqBlocks.add(state.toNoString());
-		}
-		database.set(reqBlocks, LiveRequiredPercent.REQUIRED_BLOCKS);
-		database.set(g_req_percent, LiveRequiredPercent.REQUIRED_PERCENT);
 	}
 
 	@Override
@@ -204,6 +199,94 @@ public class Marsship extends AbstractAirType implements LiveRequiredPercent {
 			StaticShipConfig config = new StaticShipConfig(file);
 			List<String> sStates = config.getList(String.class, StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
 			return BlockState.getStates(sStates);
+		}
+
+		@Override
+		public OpenRAWLoader[] getLoaders() {
+			OpenLoader ship6Loader = new OpenLoader(){
+
+				@Override
+				public String getLoaderName() {
+					return "Ships 6 - Marsship";
+				}
+
+				@Override
+				public int[] getLoaderVersion() {
+					int[] values = {0, 0, 0, 1};
+					return values;
+				}
+
+				@Override
+				public boolean willLoad(File file) {
+					BasicConfig config = new BasicConfig(file);
+					String type = config.get(String.class, Loader.OPEN_LOADER_NAME);
+					if(type == null){
+						return false;
+					}
+					if(type.equals(getLoaderName())){
+						return true;
+					}
+					return false;
+				}
+
+				@Override
+				public Optional<LiveShip> load(ShipsData data) {
+					LoadableShip ship = new Marsship(data);
+					return Optional.of((LiveShip) ship);
+				}
+
+				@Override
+				public OpenLoader save(LiveShip ship, BasicConfig config) {
+					Marsship ship2 = (Marsship)ship;
+					List<String> reqBlocks = new ArrayList<String>();
+					for (BlockState state : ship2.g_req_p_blocks) {
+						reqBlocks.add(state.toNoString());
+					}
+					config.set(reqBlocks, LiveRequiredPercent.REQUIRED_BLOCKS);
+					config.set(ship2.g_req_percent, LiveRequiredPercent.REQUIRED_PERCENT);
+					return this;
+				}
+				
+			};
+			Ships5Loader ship5Loader = new Ships5Loader(){
+
+				@Override
+				public String getLoaderName() {
+					return "Ships 5 Parser - Marsship";
+				}
+
+				@Override
+				public int[] getLoaderVersion() {
+					int[] version = {0, 0, 0, 1};
+					return version;
+				}
+
+				@Override
+				public boolean willLoad(File file) {
+					BasicConfig config = new BasicConfig(file);
+					String type = config.get(String.class, "ShipsData.Type");
+					if((type != null) && (type.equals(getName()))){
+						return true;
+					}
+					return false;
+				}
+				
+				@Override
+				public Optional<LiveShip> RAWLoad(File file) {
+					BasicConfig config = new BasicConfig(file);
+					Optional<LiveShip> opShip = super.RAWLoad(file);
+					if(!opShip.isPresent()){
+						return opShip;
+					}
+					Marsship ship = (Marsship)opShip.get();
+					int percent = config.get(Integer.class, "ShipsData.Config.Block.Percent");
+					ship.g_req_percent = percent;
+					return opShip;
+				}
+				
+			};
+			OpenRAWLoader[] loaders = {ship6Loader, ship5Loader};
+			return loaders;
 		}
 
 	}

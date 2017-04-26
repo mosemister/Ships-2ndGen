@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Configs.ShipsLocalDatabase;
 import MoseShipsBukkit.Configs.StaticShipConfig;
 import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
@@ -31,6 +30,7 @@ import MoseShipsBukkit.Tasks.Types.FallingTask;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Data.ShipsData;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFallable;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFuel;
@@ -38,6 +38,9 @@ import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveRequiredBlock;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticFuel;
 import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticRequiredPercent;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenLoader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Types.AbstractAirType;
 
@@ -55,7 +58,7 @@ public class Airship extends AbstractAirType
 		getTaskRunner().register(ShipsMain.getPlugin(), new FallingTask());
 	}
 
-	public Airship(AbstractShipsData data) {
+	public Airship(ShipsData data) {
 		super(data);
 	}
 
@@ -261,22 +264,6 @@ public class Airship extends AbstractAirType
 	}
 
 	@Override
-	public void onSave(ShipsLocalDatabase database) {
-		List<String> blocks = new ArrayList<String>();
-		for (BlockState state : g_req_p_blocks) {
-			blocks.add(state.toNoString());
-		}
-		List<String> fuels = new ArrayList<String>();
-		for (BlockState state : g_req_fuel) {
-			fuels.add(state.toNoString());
-		}
-		database.set(g_req_percent, LiveRequiredPercent.REQUIRED_PERCENT);
-		database.set(blocks, LiveRequiredPercent.REQUIRED_BLOCKS);
-		database.set(fuels, LiveFuel.FUEL_MATERIALS);
-		database.set(g_cons_amount, LiveFuel.FUEL_CONSUMPTION);
-	}
-
-	@Override
 	public void onRemove(Player player) {
 	}
 
@@ -381,6 +368,69 @@ public class Airship extends AbstractAirType
 		@Override
 		public int getDefaultConsumptionAmount() {
 			return 1;
+		}
+
+		@Override
+		public OpenRAWLoader[] getLoaders() {
+			OpenLoader ship6Loader = new OpenLoader(){
+
+				@Override
+				public String getLoaderName() {
+					return "Ships 6 - Airship";
+				}
+
+				@Override
+				public int[] getLoaderVersion() {
+					int[] values = {0, 0, 0, 1};
+					return values;
+				}
+
+				@Override
+				public boolean willLoad(File file) {
+					BasicConfig config = new BasicConfig(file);
+					String type = config.get(String.class, Loader.OPEN_LOADER_NAME);
+					if(type == null){
+						return false;
+					}
+					if(type.equals(getLoaderName())){
+						return true;
+					}
+					return false;
+				}
+
+				@Override
+				public Optional<LiveShip> load(ShipsData data) {
+					Airship ship = new Airship(data);
+					ship.setRequiredPercent(getDefaultRequiredPercent());
+					ship.setPercentBlocks(getDefaultPercentBlocks());
+					ship.setFuelConsumption(getDefaultConsumptionAmount());
+					ship.setFuels(getDefaultFuelMaterial());
+
+					return Optional.of((LiveShip) ship);
+				}
+
+				@Override
+				public OpenLoader save(LiveShip ship, BasicConfig config) {
+					Airship ship2 = (Airship)ship;
+					List<String> blocks = new ArrayList<String>();
+					for (BlockState state : ship2.g_req_p_blocks) {
+						blocks.add(state.toNoString());
+					}
+					List<String> fuels = new ArrayList<String>();
+					for (BlockState state : ship2.g_req_fuel) {
+						fuels.add(state.toNoString());
+					}
+					config.set(ship2.g_req_percent, LiveRequiredPercent.REQUIRED_PERCENT);
+					config.set(blocks, LiveRequiredPercent.REQUIRED_BLOCKS);
+					config.set(fuels, LiveFuel.FUEL_MATERIALS);
+					config.set(ship2.g_cons_amount, LiveFuel.FUEL_CONSUMPTION);
+					return this;
+				}
+				
+			};
+			
+			OpenRAWLoader[] loaders = {ship6Loader};
+			return loaders;
 		}
 
 	}

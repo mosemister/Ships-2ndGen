@@ -1,5 +1,6 @@
 package MoseShipsBukkit.Vessel.Types.User;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Configs.ShipsLocalDatabase;
 import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
@@ -18,8 +18,13 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.ShipsData;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFallable;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenLoader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Types.AbstractAirType;
 
@@ -31,7 +36,7 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 		super(name, sign, teleport);
 	}
 
-	public OpShip(AbstractShipsData ship) {
+	public OpShip(ShipsData ship) {
 		super(ship);
 	}
 
@@ -63,10 +68,6 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 	@Override
 	public int getMaxBlocks() {
 		return 300;
-	}
-
-	@Override
-	public void onSave(ShipsLocalDatabase database) {
 	}
 
 	@Override
@@ -138,6 +139,52 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 		@Override
 		public Optional<LiveShip> loadVessel(AbstractShipsData data, BasicConfig config) {
 			return Optional.of((LiveShip) new OpShip(data));
+		}
+
+		@Override
+		public OpenRAWLoader[] getLoaders() {
+			OpenLoader ship6Loader = new OpenLoader(){
+
+				@Override
+				public String getLoaderName() {
+					return "Ships 6 - OPShip";
+				}
+
+				@Override
+				public int[] getLoaderVersion() {
+					int[] values = {0, 0, 0, 1};
+					return values;
+				}
+
+				@Override
+				public boolean willLoad(File file) {
+					BasicConfig config = new BasicConfig(file);
+					String type = config.get(String.class, Loader.OPEN_LOADER_NAME);
+					if(type == null){
+						return false;
+					}
+					if(type.equals(getLoaderName())){
+						return true;
+					}
+					return false;
+				}
+
+				@Override
+				public Optional<LiveShip> load(ShipsData data) {
+					LoadableShip ship = new OpShip(data);
+					return Optional.of((LiveShip) ship);
+				}
+
+				@Override
+				public OpenLoader save(LiveShip ship, BasicConfig config) {
+					Loader.saveLoader(config, this);
+					return this;
+				}
+				
+			};
+			
+			OpenRAWLoader[] loaders = {ship6Loader};
+			return loaders;
 		}
 
 	}

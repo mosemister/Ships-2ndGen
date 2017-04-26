@@ -9,11 +9,19 @@ import org.bukkit.block.BlockFace;
 import MoseShipsBukkit.Configs.BlockList;
 import MoseShipsBukkit.Configs.BlockList.ListType;
 
+/**
+ * This is the algorthum for block finding that was used within 
+ * the Ships 5. This was reconstructed from the original Ships but
+ * then modified to suit the calls of Ships 5 and then again Ships 6
+ *
+ */
 public class Ships5BlockFinder implements BasicBlockFinder {
 
+	
 	int COUNT;
 	List<Block> BLOCKS;
 
+	//this sets up the algorithm before it starts
 	@Override
 	public List<Block> getConnectedBlocks(int limit, Block loc) {
 		if (loc == null) {
@@ -32,6 +40,11 @@ public class Ships5BlockFinder implements BasicBlockFinder {
 		return BLOCKS;
 	}
 
+	/* 
+	 * this is the actual algorithm, this calls itself from inside, that
+	 * was the original problem on why large ships did not work in the
+	 * original versions of Ships.
+	 */
 	@SuppressWarnings("deprecation")
 	void getNextBlock(int limit, Block loc, BlockFace... directions) {
 		if (COUNT == limit) {

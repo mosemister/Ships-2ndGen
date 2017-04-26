@@ -8,8 +8,9 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
 import MoseShipsBukkit.Plugin.ShipsMain;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.LiveShip;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 
 public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD {
 
@@ -43,13 +44,13 @@ public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD {
 			player.sendMessage(ShipsMain.formatCMDHelp(
 					"/ships autopilot a <ship name> <x> <y> <z> : Moves the targeted ship to its co-ords + the co-ords specified"));
 		} else {
-			Optional<LoadableShip> opShip = LoadableShip.getShip(args[2]);
+			Optional<LiveShip> opShip = Loader.getShip(args[2]);
 			if (!opShip.isPresent()) {
 				player.sendMessage(ShipsMain.format(args[2] + " does not exsist", true));
 				return true;
 			}
 
-			LoadableShip ship = opShip.get();
+			LiveShip ship = opShip.get();
 			if (player.hasPermission("ships.cmd.autopilot.other")) {
 				if (ship.getOwner().isPresent()) {
 					OfflinePlayer owner = ship.getOwner().get();

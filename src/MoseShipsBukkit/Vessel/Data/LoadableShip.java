@@ -11,14 +11,11 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 
-import MoseShipsBukkit.Configs.ShipsLocalDatabase;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Events.Load.ShipLoadEvent;
 import MoseShipsBukkit.Events.Load.ShipUnloadEvent;
@@ -26,12 +23,10 @@ import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.Type.MovementType.Rotate;
 import MoseShipsBukkit.ShipBlock.ShipVector;
-import MoseShipsBukkit.ShipBlock.Signs.ShipLicenceSign;
-import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Tasks.ShipsTask;
 import MoseShipsBukkit.Tasks.ShipsTaskRunner;
-import MoseShipsBukkit.Utils.LocationUtil;
-import MoseShipsBukkit.Vessel.Loader.ShipLoader;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 
 public abstract class LoadableShip extends AbstractShipsData implements LiveShip {
@@ -40,27 +35,64 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 
 	public abstract Map<String, Object> getInfo();
 
-	public abstract void onSave(ShipsLocalDatabase database);
-
 	public abstract void onRemove(@Nullable Player player);
 
 	public abstract StaticShipType getStatic();
 
 	protected boolean g_moving = false;
+	protected int g_speed_engine = 2;
+	protected int g_speed_boost = 3;
+	protected int g_speed_altitude = 2;
 	protected int g_max_blocks = 4000;
 	protected int g_min_blocks = 200;
 	protected boolean g_remove = false;
 	ShipsTaskRunner g_task_runner = new ShipsTaskRunner(this);
 	Map<UUID, ShipVector> g_player_leave_spawns = new HashMap<UUID, ShipVector>();
 
-	static List<LoadableShip> SHIPS = new ArrayList<LoadableShip>();
 
 	public LoadableShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
 
-	public LoadableShip(AbstractShipsData data) {
+	public LoadableShip(ShipsData data) {
 		super(data);
+	}
+	
+	public File getFile() {
+		return new File("plugins/Ships/VesselData/" + getStatic().getName() + "/" + g_name + ".yml");
+	}
+	
+	@Override
+	public int getAltitudeSpeed() {
+		return g_speed_altitude;
+	}
+	
+	@Override
+	public int getBoostSpeed() {
+		return g_speed_boost;
+	}
+	
+	@Override
+	public int getEngineSpeed() {
+		return g_speed_engine;
+	}
+	
+	@Override
+	public LiveShip setAltitudeSpeed(int A) {
+		g_speed_altitude = A;
+		return this;
+	}
+	
+	@Override
+	public LiveShip setBoostSpeed(int A) {
+		g_speed_boost = A;
+		return this;
+	}
+	
+	@Override
+	public LiveShip setEngineSpeed(int A) {
+		g_speed_engine = A;
+		return this;
 	}
 
 	@Override
@@ -97,7 +129,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 
 	@Override
 	public boolean isLoaded() {
-		for (LoadableShip ship : SHIPS) {
+		for (LiveShip ship : Loader.getShips()) {
 			if (ship.getName().equals(getName())) {
 				return true;
 			}
@@ -113,7 +145,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 		ShipLoadEvent event = new ShipLoadEvent(cause, this);
 		Bukkit.getPluginManager().callEvent(event);
 		if (!event.isCancelled()) {
-			SHIPS.add(this);
+			Loader.LOADED_SHIPS.add(this);
 		}
 		return this;
 	}
@@ -122,7 +154,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	public LoadableShip unload(ShipsCause cause) {
 		ShipUnloadEvent event = new ShipUnloadEvent(cause, this);
 		Bukkit.getPluginManager().callEvent(event);
-		SHIPS.remove(this);
+		Loader.LOADED_SHIPS.remove(this);
 		g_task_runner.pauseScheduler();
 		return this;
 	}
@@ -166,172 +198,55 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 
 	@Override
 	public void remove(Player player) {
-		SHIPS.remove(this);
+		Loader.LOADED_SHIPS.remove(this);
 		onRemove(player);
 		List<ShipsTask> tasks = new ArrayList<ShipsTask>(getTaskRunner().getTasks());
 		for (ShipsTask task : tasks) {
 			getTaskRunner().unregister(task);
 		}
-		getLocalDatabase().getFile().delete();
-	}
-
-	@Override
-	public ShipsLocalDatabase getLocalDatabase() {
-		return new ShipsLocalDatabase(this);
+		getFile().delete();
 	}
 
 	@Override
 	public List<Block> updateBasicStructure() {
 		List<Block> structure = super.updateBasicStructure();
-		getLocalDatabase().saveBasicShip(this);
+		save();
 		return structure;
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence) {
 		List<Block> structure = super.setBasicStructure(locs, licence);
-		getLocalDatabase().saveBasicShip(this);
+		save();
 		return structure;
 	}
 
 	@Override
 	public List<Block> setBasicStructure(List<Block> locs, Block licence, Location teleport) {
 		List<Block> structure = super.setBasicStructure(locs, licence, teleport);
-		getLocalDatabase().saveBasicShip(this);
+		save();
 		return structure;
 	}
 
 	@Override
 	public LoadableShip setTeleportToLocation(Location loc) {
 		super.setTeleportToLocation(loc);
-		getLocalDatabase().saveBasicShip(this);
+		save();
 		return this;
 	}
 
 	@Override
 	public LoadableShip setOwner(OfflinePlayer user) {
 		super.setOwner(user);
-		getLocalDatabase().saveBasicShip(this);
+		save();
 		return this;
 	}
-
-	public static Optional<LoadableShip> getShip(UUID uuid) {
-		for (LoadableShip ship : getShips()) {
-			if ((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(uuid))) {
-				return Optional.of(ship);
-			}
-			for (OfflinePlayer player : ship.getSubPilots()) {
-				if (player.getUniqueId().equals(uuid)) {
-					return Optional.of(ship);
-				}
-			}
-			if (ship.getPlayerVectorSpawns().containsKey(uuid)) {
-				return Optional.of(ship);
-			}
-		}
-		return Optional.empty();
-	}
-
-	public static Optional<LoadableShip> getShip(String name) {
-		for (LoadableShip ship : getShips()) {
-			if (ship.getName().equalsIgnoreCase(name)) {
-				return Optional.of(ship);
-			}
-		}
-		return ShipLoader.loadShip(name);
-	}
-
-	public static Optional<LoadableShip> getShip(ShipSign type, Sign sign, boolean refresh) {
-		if (type instanceof ShipLicenceSign) {
-			String text = sign.getLine(2);
-			return getShip(ChatColor.stripColor(text));
-		} else {
-			return getShip(sign.getBlock(), refresh);
-		}
-	}
-
-	public static Optional<LoadableShip> getShip(Block loc, boolean updateStructure) {
-		for (LoadableShip ship : SHIPS) {
-			if (updateStructure) {
-				ship.updateBasicStructure();
-			}
-			if (LocationUtil.blockContains(ship.getBasicStructure(), loc)) {
-				return Optional.of(ship);
-			}
-		}
-		for (LoadableShip ship : getShips()) {
-			if (updateStructure) {
-				ship.updateBasicStructure();
-			}
-			if (LocationUtil.blockContains(ship.getBasicStructure(), loc)) {
-				return Optional.of(ship);
-			}
-		}
-		return Optional.empty();
-	}
-
-	public static List<LoadableShip> getReasentlyUsedShips() {
-		return SHIPS;
-	}
-
-	public static List<LoadableShip> getShips() {
-		List<LoadableShip> ships = new ArrayList<LoadableShip>();
-		ships.addAll(SHIPS);
-		for (StaticShipType type : StaticShipType.TYPES) {
-			File[] files = new File("plugins/Ships/VesselData/" + type.getName()).listFiles();
-			if (files != null) {
-				for (File file : files) {
-					String name = file.getName().replace(".yml", "");
-					boolean check = false;
-					for (LoadableShip ship : ships) {
-						if (ship.equals(name)) {
-							check = true;
-						}
-					}
-					if (!check) {
-						Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
-						if (opShip.isPresent()) {
-							ships.add(opShip.get());
-						}
-					}
-				}
-			}
-		}
-		return ships;
-	}
-
-	public static <T extends StaticShipType> List<LoadableShip> getShips(StaticShipType type) {
-		List<LoadableShip> ships = new ArrayList<LoadableShip>();
-		for (LoadableShip ship : ships) {
-			if (type.equals(ship.getStatic())) {
-				ships.add(ship);
-			}
-		}
-		File[] files = new File("plugins/Ships/VesselData/" + type.getName()).listFiles();
-		if (files != null) {
-			for (File file : files) {
-				String name = file.getName().replace(".yml", "");
-				for (LoadableShip ship : ships) {
-					if (!ship.getName().equals(name)) {
-						Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
-						if (opShip.isPresent()) {
-							ships.add(opShip.get());
-						}
-					}
-				}
-			}
-		}
-		return ships;
-	}
-
-	public static List<LoadableShip> getShipsByRequirements(Class<? extends LiveShip> type) {
-		List<LoadableShip> ships = new ArrayList<LoadableShip>();
-		for (LoadableShip ship : getShips()) {
-			if (type.isInstance(ship)) {
-				ships.add(ship);
-			}
-		}
-		return ships;
+	
+	@Override
+	public boolean save() {
+		OpenRAWLoader loader = getStatic().getLoaders()[0];
+		loader.RAWSave(this, getFile());
+		return false;
 	}
 
 }

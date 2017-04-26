@@ -12,7 +12,7 @@ import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Utils.WorldUtil;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 
 public class ShipEngineSign implements ShipSign {
@@ -22,9 +22,9 @@ public class ShipEngineSign implements ShipSign {
 		event.setLine(0, ChatColor.YELLOW + "[Engine]");
 		event.setLine(2, "0");
 
-		Optional<LoadableShip> opShip = LoadableShip.getShip(event.getBlock(), true);
+		Optional<LiveShip> opShip = Loader.getShip(event.getBlock(), true);
 		if (opShip.isPresent()) {
-			LoadableShip ship = opShip.get();
+			LiveShip ship = opShip.get();
 			int speed = ship.getStatic().getDefaultSpeed();
 			event.setLine(2, speed + "");
 			event.setLine(1, (speed - 1) + "");
@@ -98,7 +98,7 @@ public class ShipEngineSign implements ShipSign {
 
 	@Override
 	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LoadableShip> opShip = LoadableShip.getShip(this, sign, false);
+		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
 		if (opShip.isPresent()) {
 			return Optional.of((LiveShip) opShip.get());
 		}

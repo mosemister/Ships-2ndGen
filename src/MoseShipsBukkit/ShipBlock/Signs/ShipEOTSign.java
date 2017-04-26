@@ -10,7 +10,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Tasks.Types.EOTTask;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 
 public class ShipEOTSign implements ShipSign {
@@ -20,9 +20,9 @@ public class ShipEOTSign implements ShipSign {
 		event.setLine(0, ChatColor.YELLOW + "[E.O.T]");
 		event.setLine(1, ChatColor.GREEN + "Ahead" + ChatColor.BLACK + " {Stop}");
 		event.setLine(2, "0");
-		Optional<LoadableShip> opShip = LoadableShip.getShip(event.getBlock(), true);
+		Optional<LiveShip> opShip = Loader.getShip(event.getBlock(), true);
 		if (opShip.isPresent()) {
-			LoadableShip ship = opShip.get();
+			LiveShip ship = opShip.get();
 			int speed = ship.getStatic().getDefaultSpeed();
 			event.setLine(2, speed + "");
 		}
@@ -95,9 +95,9 @@ public class ShipEOTSign implements ShipSign {
 
 	@Override
 	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LoadableShip> opShip = LoadableShip.getShip(this, sign, false);
+		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
 		if (opShip.isPresent()) {
-			return Optional.of((LiveShip) opShip.get());
+			return Optional.of(opShip.get());
 		}
 		return Optional.empty();
 	}

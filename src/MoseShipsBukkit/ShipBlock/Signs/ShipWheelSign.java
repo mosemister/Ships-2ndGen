@@ -10,7 +10,7 @@ import org.bukkit.event.block.SignChangeEvent;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 
 public class ShipWheelSign implements ShipSign {
 
@@ -67,7 +67,7 @@ public class ShipWheelSign implements ShipSign {
 
 	@Override
 	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LoadableShip> opShip = LoadableShip.getShip(this, sign, false);
+		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
 		if (opShip.isPresent()) {
 			return Optional.of((LiveShip) opShip.get());
 		}

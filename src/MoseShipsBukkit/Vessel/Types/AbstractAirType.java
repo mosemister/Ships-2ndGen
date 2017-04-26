@@ -12,8 +12,8 @@ import MoseShipsBukkit.Movement.Movement;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.ShipsData;
 
 public abstract class AbstractAirType extends LoadableShip implements AirType {
 
@@ -21,7 +21,7 @@ public abstract class AbstractAirType extends LoadableShip implements AirType {
 		super(name, sign, teleport);
 	}
 
-	public AbstractAirType(AbstractShipsData data) {
+	public AbstractAirType(ShipsData data) {
 		super(data);
 	}
 

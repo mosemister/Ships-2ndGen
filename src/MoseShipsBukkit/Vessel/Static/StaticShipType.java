@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
 
 public interface StaticShipType {
 
@@ -26,6 +27,8 @@ public interface StaticShipType {
 	public boolean autoPilot();
 
 	public Plugin getPlugin();
+	
+	public OpenRAWLoader[] getLoaders();
 
 	public Optional<LiveShip> createVessel(String name, Block licence);
 

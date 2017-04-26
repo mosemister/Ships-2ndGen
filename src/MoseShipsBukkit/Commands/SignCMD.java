@@ -16,7 +16,8 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.ShipSignUtil;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 
 public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 
@@ -72,9 +73,9 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 			Sign sign = (Sign) loc.getState();
 			Optional<ShipSign> sSign = ShipSignUtil.getSign(sign);
 			if (sSign.isPresent()) {
-				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
+				Optional<LiveShip> opShip = Loader.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {
-					LoadableShip ship = opShip.get();
+					LiveShip ship = opShip.get();
 					ShipsCause cause = new ShipsCause(player, sign, sSign.get(), ship);
 					final ShipTrackEvent event = new ShipTrackEvent(cause, ship);
 					Bukkit.getServer().getPluginManager().callEvent(event);
@@ -116,9 +117,9 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 			Sign sign = (Sign) loc.getState();
 			Optional<ShipSign> sSign = ShipSignUtil.getSign(sign);
 			if (sSign.isPresent()) {
-				Optional<LoadableShip> opShip = LoadableShip.getShip(sSign.get(), sign, false);
+				Optional<LiveShip> opShip = Loader.getShip(sSign.get(), sign, false);
 				if (opShip.isPresent()) {
-					LoadableShip ship = opShip.get();
+					LiveShip ship = opShip.get();
 					ShipsCause cause = new ShipsCause(player, sec, sign, sSign.get(), ship);
 					final ShipTrackEvent event = new ShipTrackEvent(cause, ship);
 					Bukkit.getServer().getPluginManager().callEvent(event);

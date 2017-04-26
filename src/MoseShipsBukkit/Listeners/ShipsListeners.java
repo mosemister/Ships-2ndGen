@@ -22,7 +22,8 @@ import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.LocationUtil;
 import MoseShipsBukkit.Utils.ShipSignUtil;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 
 public class ShipsListeners implements Listener {
 
@@ -65,9 +66,9 @@ public class ShipsListeners implements Listener {
 
 	private void playerLeaveEvent(Player player) {
 		Block block = player.getLocation().getBlock().getRelative(0, -1, 0);
-		Optional<LoadableShip> opShip = LoadableShip.getShip(block, false);
+		Optional<LiveShip> opShip = Loader.getShip(block, false);
 		if (opShip.isPresent()) {
-			LoadableShip ship = opShip.get();
+			LiveShip ship = opShip.get();
 			ShipVector vector = ship.getStructure().createVector(ship, block);
 			ship.getPlayerVectorSpawns().put(player.getUniqueId(), vector);
 		}
@@ -76,9 +77,9 @@ public class ShipsListeners implements Listener {
 	@EventHandler
 	public void playerSpawnEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		Optional<LoadableShip> opShip = LoadableShip.getShip(player.getUniqueId());
+		Optional<LiveShip> opShip = Loader.getShip(player.getUniqueId());
 		if (opShip.isPresent()) {
-			LoadableShip ship = opShip.get();
+			LiveShip ship = opShip.get();
 			ShipVector vector = ship.getPlayerVectorSpawns().get(player.getUniqueId());
 			if (vector != null) {
 				Block block = ship.getStructure().getBlock(ship, vector);
@@ -98,9 +99,9 @@ public class ShipsListeners implements Listener {
 				Sign sign = (Sign) block.getState();
 				Optional<ShipSign> opSignType = ShipSignUtil.getSign(sign);
 				if (opSignType.isPresent()) {
-					Optional<LoadableShip> opType = LoadableShip.getShip(opSignType.get(), sign, true);
+					Optional<LiveShip> opType = Loader.getShip(opSignType.get(), sign, true);
 					if (opType.isPresent()) {
-						LoadableShip ship = opType.get();
+						LiveShip ship = opType.get();
 						ShipsCause cause2 = new ShipsCause(event, player, direction, sign, opSignType.get(), ship);
 						ship.load(cause2);
 						if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {

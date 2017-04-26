@@ -23,8 +23,8 @@ import MoseShipsBukkit.ShipBlock.Snapshot.BlockSnapshot;
 import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.*;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.VersionCheckingUtil;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Loader.ShipLoader;
+import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Types.User.*;
 
@@ -80,6 +80,8 @@ public class ShipsMain extends JavaPlugin {
 		// furnace
 		BlockSnapshot.VALUE_TYPES.put(Material.FURNACE, FurnaceSnapshot.class);
 		BlockSnapshot.VALUE_TYPES.put(Material.BURNING_FURNACE, FurnaceSnapshot.class);
+		// observer
+		BlockSnapshot.VALUE_TYPES.put(Material.OBSERVER, ObserverSnapshot.class);
 		// hopper
 		BlockSnapshot.VALUE_TYPES.put(Material.HOPPER, HopperSnapshot.class);
 		// jukebox
@@ -190,7 +192,8 @@ public class ShipsMain extends JavaPlugin {
 					File[] files = folder.listFiles();
 					if (files != null) {
 						for (File file : files) {
-							Optional<LoadableShip> opShip = ShipLoader.loadShip(file);
+							System.out.println("Attempting to load " + file.getAbsolutePath());
+							Optional<LiveShip> opShip = Loader.loadDirectlyFromFile(file);
 							if (!opShip.isPresent()) {
 								if (badFiles == null) {
 									badFiles = file.getName().replace(".yml", "");
@@ -216,6 +219,8 @@ public class ShipsMain extends JavaPlugin {
 				if (goodFiles != null) {
 					Bukkit.getServer().getConsoleSender().sendMessage(
 							ChatColor.AQUA + "The following ships are loading without issue \n" + goodFiles);
+				}else{
+					Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Issue loading Ships data. Is this your first time using Ships?");
 				}
 			}
 

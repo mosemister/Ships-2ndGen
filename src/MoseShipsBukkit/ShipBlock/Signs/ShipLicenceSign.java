@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Configs.ShipsConfig;
-import MoseShipsBukkit.Configs.ShipsLocalDatabase;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Events.Create.ShipCreateEvent;
 import MoseShipsBukkit.Events.Create.ShipSignCreateEvent;
@@ -25,7 +24,7 @@ import MoseShipsBukkit.Utils.PermissionsUtil;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
+import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Static.StaticShipType;
 
 public class ShipLicenceSign implements ShipSign {
@@ -61,7 +60,7 @@ public class ShipLicenceSign implements ShipSign {
 			return;
 		}
 
-		Optional<LoadableShip> opConflict = LoadableShip.getShip(event.getLine(2));
+		Optional<LiveShip> opConflict = Loader.getShip(event.getLine(2));
 		if (opConflict.isPresent()) {
 			ShipsCause cause = new ShipsCause(event, this, player, type);
 			ShipCreateFailedFromConflictingNames conflictName = new ShipCreateFailedFromConflictingNames(cause,
@@ -92,8 +91,7 @@ public class ShipLicenceSign implements ShipSign {
 				event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
 				event.setLine(2, ChatColor.GREEN + ship.getName());
 				event.setLine(3, ChatColor.GREEN + event.getLine(3));
-				ShipsLocalDatabase database = ship.getLocalDatabase();
-				database.saveBasicShip(ship);
+				ship.save();
 			}
 		}
 		return;
@@ -116,7 +114,7 @@ public class ShipLicenceSign implements ShipSign {
 	public void onShiftRightClick(Player player, Sign sign, LiveShip ship) {
 		List<Block> structure = ship.updateBasicStructure();
 		ship.setBasicStructure(structure, sign.getBlock());
-		ship.getLocalDatabase().saveBasicShip(ship);
+		ship.save();
 		player.sendMessage(ShipsMain.format("Ship updated it's structure", false));
 
 	}
@@ -178,7 +176,7 @@ public class ShipLicenceSign implements ShipSign {
 
 	@Override
 	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LoadableShip> opShip = LoadableShip.getShip(this, sign, false);
+		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
 		if (opShip.isPresent()) {
 			return Optional.of((LiveShip) opShip.get());
 		}

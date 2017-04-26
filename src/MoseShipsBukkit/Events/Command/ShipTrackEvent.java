@@ -12,7 +12,7 @@ import org.bukkit.event.HandlerList;
 import MoseShipsBukkit.Events.ShipEvent;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Data.ShipsData;
 
 /**
  * Implemented
@@ -22,13 +22,13 @@ import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
  */
 public class ShipTrackEvent extends Event implements ShipEvent {
 
-	private AbstractShipsData g_data;
+	private ShipsData g_data;
 	private Map<Location, BlockState> g_structure;
 	private ShipsCause g_cause;
 
 	private static final HandlerList g_handlers = new HandlerList();
 
-	public ShipTrackEvent(ShipsCause cause, AbstractShipsData data) {
+	public ShipTrackEvent(ShipsCause cause, ShipsData data) {
 		g_data = data;
 		g_cause = cause;
 		g_structure = new HashMap<Location, BlockState>();
@@ -37,7 +37,7 @@ public class ShipTrackEvent extends Event implements ShipEvent {
 		}
 	}
 
-	public ShipTrackEvent(AbstractShipsData data, Map<Location, BlockState> map) {
+	public ShipTrackEvent(ShipsData data, Map<Location, BlockState> map) {
 		g_data = data;
 		g_structure = map;
 	}
@@ -47,7 +47,7 @@ public class ShipTrackEvent extends Event implements ShipEvent {
 	}
 
 	@Override
-	public AbstractShipsData getShip() {
+	public ShipsData getShip() {
 		return g_data;
 	}
 
