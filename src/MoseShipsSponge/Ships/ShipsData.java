@@ -15,9 +15,8 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShips.CustomDataHolder.DataHolder;
-
-import MoseShipsSponge.BlockFinder.BasicBlockFinder;
-import MoseShipsSponge.Configs.Files.ShipsConfig;
+import MoseShipsSponge.Algorthum.BlockFinder.BasicBlockFinder;
+import MoseShipsSponge.Configs.ShipsConfig;
 
 public class ShipsData extends DataHolder {
 

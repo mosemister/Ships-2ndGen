@@ -14,10 +14,9 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 
 import MoseShips.Stores.TwoStore;
-
-import MoseShipsSponge.ShipsMain;
-import MoseShipsSponge.Configs.Files.ShipsConfig;
-import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
+import MoseShipsSponge.Configs.ShipsConfig;
+import MoseShipsSponge.Movement.MovingBlock;
+import MoseShipsSponge.Plugin.ShipsMain;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public class MovementResult {

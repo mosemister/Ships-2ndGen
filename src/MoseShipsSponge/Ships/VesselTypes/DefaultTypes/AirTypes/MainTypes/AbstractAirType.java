@@ -9,9 +9,9 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Causes.MovementResult;
+import MoseShipsSponge.Movement.Movement;
+import MoseShipsSponge.Movement.StoredMovement.StoredMovement;
 import MoseShipsSponge.Ships.ShipsData;
-import MoseShipsSponge.Ships.Movement.Movement;
-import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 
 public abstract class AbstractAirType extends LoadableShip implements AirType{

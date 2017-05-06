@@ -14,9 +14,9 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Causes.MovementResult;
+import MoseShipsSponge.Movement.StoredMovement.StoredMovement;
+import MoseShipsSponge.Movement.Type.RotateType;
 import MoseShipsSponge.Ships.ShipsData;
-import MoseShipsSponge.Ships.Movement.Movement.Rotate;
-import MoseShipsSponge.Ships.Movement.StoredMovement;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipsLocalDatabase;
 import MoseShipsSponge.Ships.VesselTypes.Running.ShipsTaskRunner;
@@ -65,7 +65,7 @@ public interface LiveData {
 	public Optional<MovementResult> move(int X, int Y, int Z, Cause cause);
 	public Optional<MovementResult> rotateLeft(Cause cause);
 	public Optional<MovementResult> rotateRight(Cause cause);
-	public Optional<MovementResult> rotate(Rotate type, Cause cause);
+	public Optional<MovementResult> rotate(RotateType type, Cause cause);
 	public Optional<MovementResult> teleport(StoredMovement move, Cause cause);
 	public Optional<MovementResult> teleport(Location<World> loc, Cause cause);
 	public Optional<MovementResult> teleport(Location<World> loc, int X, int Y, int Z, Cause cause);

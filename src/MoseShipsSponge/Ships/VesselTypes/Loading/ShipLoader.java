@@ -13,8 +13,8 @@ import org.spongepowered.api.world.World;
 
 import MoseShips.Stores.OneStore;
 import MoseShips.Stores.TwoStore;
-import MoseShipsSponge.ShipsMain;
 import MoseShipsSponge.Configs.BasicConfig;
+import MoseShipsSponge.Plugin.ShipsMain;
 import MoseShipsSponge.Ships.ShipsData;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;

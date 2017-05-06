@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.spongepowered.api.MinecraftVersion;
 import org.spongepowered.api.Sponge;
 
+import MoseShipsSponge.Plugin.ShipsMain;
+
 public class VersionChecking {
 	
 	public static final int[] MINECRAFT_VERSION = convert(getMinecraftVersion());

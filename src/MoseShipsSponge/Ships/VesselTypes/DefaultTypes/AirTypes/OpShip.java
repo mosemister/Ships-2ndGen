@@ -13,8 +13,8 @@ import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Causes.MovementResult;
 import MoseShipsSponge.Configs.BasicConfig;
+import MoseShipsSponge.Movement.MovingBlock;
 import MoseShipsSponge.Ships.ShipsData;
-import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.MainTypes.AbstractAirType;

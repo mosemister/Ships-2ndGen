@@ -1,6 +1,6 @@
 package MoseShipsSponge.Ships.VesselTypes.Running.Tasks;
 
-import MoseShipsSponge.Configs.Files.ShipsConfig;
+import MoseShipsSponge.Configs.ShipsConfig;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsSponge.Ships.VesselTypes.Running.ShipsTask;
 

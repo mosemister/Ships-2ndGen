@@ -10,8 +10,8 @@ import java.util.Set;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Task;
 
-import MoseShipsSponge.ShipsMain;
-import MoseShipsSponge.Configs.Files.ShipsConfig;
+import MoseShipsSponge.Configs.ShipsConfig;
+import MoseShipsSponge.Plugin.ShipsMain;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsSponge.Ships.VesselTypes.Running.Tasks.StructureCheckingTask;
 import MoseShipsSponge.Ships.VesselTypes.Running.Tasks.UnloadTask;

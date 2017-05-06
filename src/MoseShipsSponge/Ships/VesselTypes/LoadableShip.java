@@ -21,12 +21,11 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
 import MoseShips.Bypasses.FinalBypass;
-
-import MoseShipsSponge.BlockFinder.BasicBlockFinder;
+import MoseShipsSponge.Algorthum.BlockFinder.BasicBlockFinder;
 import MoseShipsSponge.Causes.MovementResult;
+import MoseShipsSponge.Movement.MovingBlock;
+import MoseShipsSponge.Movement.Type.RotateType;
 import MoseShipsSponge.Ships.ShipsData;
-import MoseShipsSponge.Ships.Movement.Movement.Rotate;
-import MoseShipsSponge.Ships.Movement.MovingBlock.MovingBlock;
 import MoseShipsSponge.Ships.VesselTypes.DataTypes.LiveData;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoader;
 import MoseShipsSponge.Ships.VesselTypes.Loading.ShipsLocalDatabase;
@@ -66,8 +65,7 @@ public abstract class LoadableShip extends ShipsData implements LiveData {
 		return g_task_runner;
 	}
 	
-	@Override
-	public Optional<MovementResult> rotate(Rotate type, Cause cause){
+	public Optional<MovementResult> rotate(RotateType type, Cause cause){
 		switch(type){
 			case LEFT: return rotateLeft(cause);
 			case RIGHT: return rotateRight(cause);

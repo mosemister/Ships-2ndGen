@@ -7,7 +7,7 @@ import java.util.Map;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.cause.NamedCause;
 
-import MoseShipsSponge.ShipsMain;
+import MoseShipsSponge.Plugin.ShipsMain;
 
 public enum ShipsCause {
 
