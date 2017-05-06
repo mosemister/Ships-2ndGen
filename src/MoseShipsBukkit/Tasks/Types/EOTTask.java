@@ -7,7 +7,7 @@ import org.bukkit.block.Sign;
 
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Tasks.ShipsTask;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class EOTTask implements ShipsTask {
 

@@ -14,7 +14,7 @@ import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.Utils.BlockFinderUtil;
 import MoseShipsBukkit.Utils.ShipSignUtil;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 public class ShipStructure implements Iterable<Block> {
 

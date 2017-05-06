@@ -16,8 +16,8 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.ShipSignUtil;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 

@@ -22,8 +22,8 @@ import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.LocationUtil;
 import MoseShipsBukkit.Utils.ShipSignUtil;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class ShipsListeners implements Listener {
 

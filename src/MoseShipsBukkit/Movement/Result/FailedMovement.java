@@ -2,8 +2,8 @@ package MoseShipsBukkit.Movement.Result;
 
 import org.bukkit.command.CommandSender;
 
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 public class FailedMovement {
 

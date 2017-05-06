@@ -8,7 +8,7 @@ import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.Tasks.ShipsTask;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
 
 public class AutoPilotTask implements ShipsTask {

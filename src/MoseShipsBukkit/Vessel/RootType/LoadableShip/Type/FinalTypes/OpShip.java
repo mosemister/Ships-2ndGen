@@ -1,8 +1,7 @@
-package MoseShipsBukkit.Vessel.Types.User;
+package MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.FinalTypes;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,22 +10,22 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Utils.Lists.MovingBlockList;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenLoader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFallable;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenLoader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
-import MoseShipsBukkit.Vessel.Types.AbstractAirType;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.AbstractAirType;
 
 public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFallable {
 
@@ -56,7 +55,7 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 	}
 
 	@Override
-	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
+	public Optional<FailedMovement> hasRequirements(MovingBlockList blocks) {
 		return Optional.empty();
 	}
 
@@ -143,7 +142,7 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 
 		@Override
 		public OpenRAWLoader[] getLoaders() {
-			OpenLoader ship6Loader = new OpenLoader(){
+			OpenLoader ship6Loader = new OpenLoader() {
 
 				@Override
 				public String getLoaderName() {
@@ -152,7 +151,11 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 
 				@Override
 				public int[] getLoaderVersion() {
-					int[] values = {0, 0, 0, 1};
+					int[] values = {
+							0,
+							0,
+							0,
+							1 };
 					return values;
 				}
 
@@ -160,10 +163,10 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 				public boolean willLoad(File file) {
 					BasicConfig config = new BasicConfig(file);
 					String type = config.get(String.class, Loader.OPEN_LOADER_NAME);
-					if(type == null){
+					if (type == null) {
 						return false;
 					}
-					if(type.equals(getLoaderName())){
+					if (type.equals(getLoaderName())) {
 						return true;
 					}
 					return false;
@@ -180,10 +183,11 @@ public class OpShip extends AbstractAirType implements LiveAutoPilotable, LiveFa
 					Loader.saveLoader(config, this);
 					return this;
 				}
-				
+
 			};
-			
-			OpenRAWLoader[] loaders = {ship6Loader};
+
+			OpenRAWLoader[] loaders = {
+					ship6Loader };
 			return loaders;
 		}
 

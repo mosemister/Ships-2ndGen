@@ -22,10 +22,10 @@ import MoseShipsBukkit.Events.Create.Fail.ShipCreateFailedFromMissingType;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.PermissionsUtil;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
 public class ShipLicenceSign implements ShipSign {
 

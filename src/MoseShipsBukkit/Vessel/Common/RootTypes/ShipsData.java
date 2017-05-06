@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.Data;
+package MoseShipsBukkit.Vessel.Common.RootTypes;
 
 import java.util.List;
 import java.util.Map;

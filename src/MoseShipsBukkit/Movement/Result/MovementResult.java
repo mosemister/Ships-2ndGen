@@ -14,7 +14,7 @@ import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public abstract class MovementResult<T extends Object> {
 
@@ -40,9 +40,9 @@ public abstract class MovementResult<T extends Object> {
 		public void sendMessage(LiveShip ship, CommandSender player, Integer value) {
 			player.sendMessage("No Speed was set");
 		}
-		
+
 	}
-	
+
 	public static class UnknownErrorMovementResult extends MovementResult<Boolean> {
 
 		@Override

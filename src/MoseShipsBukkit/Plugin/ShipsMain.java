@@ -23,10 +23,10 @@ import MoseShipsBukkit.ShipBlock.Snapshot.BlockSnapshot;
 import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.*;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.VersionCheckingUtil;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
-import MoseShipsBukkit.Vessel.Types.User.*;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.FinalTypes.*;
 
 public class ShipsMain extends JavaPlugin {
 
@@ -219,8 +219,9 @@ public class ShipsMain extends JavaPlugin {
 				if (goodFiles != null) {
 					Bukkit.getServer().getConsoleSender().sendMessage(
 							ChatColor.AQUA + "The following ships are loading without issue \n" + goodFiles);
-				}else{
-					Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "Issue loading Ships data. Is this your first time using Ships?");
+				} else {
+					Bukkit.getServer().getConsoleSender().sendMessage(
+							ChatColor.GREEN + "Issue loading Ships data. Is this your first time using Ships?");
 				}
 			}
 

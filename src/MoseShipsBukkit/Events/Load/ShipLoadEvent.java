@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.ShipEvent;
 import MoseShipsBukkit.Events.ShipsCause;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 /**
  * implemented

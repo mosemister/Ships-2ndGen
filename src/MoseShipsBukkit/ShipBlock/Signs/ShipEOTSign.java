@@ -9,9 +9,9 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Tasks.Types.EOTTask;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
 public class ShipEOTSign implements ShipSign {
 

@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.ShipEvent;
 import MoseShipsBukkit.Events.ShipsCause;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 public class ShipStructureChangeEvent extends Event implements ShipEvent, Cancellable {
 
@@ -14,12 +14,12 @@ public class ShipStructureChangeEvent extends Event implements ShipEvent, Cancel
 	ShipsData g_data;
 	ShipsCause g_cause;
 	static HandlerList g_handler_list = new HandlerList();
-	
-	public ShipStructureChangeEvent(ShipsCause cause, ShipsData ship){
+
+	public ShipStructureChangeEvent(ShipsCause cause, ShipsData ship) {
 		g_data = ship;
 		g_cause = cause;
 	}
-	
+
 	@Override
 	public ShipsData getShip() {
 		return g_data;
@@ -44,8 +44,8 @@ public class ShipStructureChangeEvent extends Event implements ShipEvent, Cancel
 	public HandlerList getHandlers() {
 		return g_handler_list;
 	}
-	
-	public static HandlerList getHandlerList(){
+
+	public static HandlerList getHandlerList() {
 		return g_handler_list;
 	}
 

@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.Types;
+package MoseShipsBukkit.Vessel.RootType.LoadableShip.Type;
 
 import java.util.Optional;
 
@@ -12,8 +12,8 @@ import MoseShipsBukkit.Movement.Movement;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
 
 public abstract class AbstractAirType extends LoadableShip implements AirType {
 
@@ -58,7 +58,9 @@ public abstract class AbstractAirType extends LoadableShip implements AirType {
 
 	@Override
 	public Optional<FailedMovement> teleport(Location loc, int X, int Y, int Z, ShipsCause cause) {
-		return Movement.teleport(cause, this, loc, X, Y, Z, new BlockState(Material.AIR));
+		return Movement.teleport(cause, this,
+				new StoredMovement.Builder().setTeleportTo(loc).setX(X).setY(Y).setZ(Z).build(),
+				new BlockState(Material.AIR));
 	}
 
 }

@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.OpenLoader;
+package MoseShipsBukkit.Vessel.Common.OpenLoader;
 
 import java.io.File;
 import java.util.Optional;
@@ -10,10 +10,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
-public abstract class Ships5Loader implements OpenRAWLoader{
+public abstract class Ships5Loader implements OpenRAWLoader {
 
 	@Override
 	public Optional<LiveShip> RAWLoad(File file) {
@@ -21,12 +21,12 @@ public abstract class Ships5Loader implements OpenRAWLoader{
 		String name = file.getName().substring(0, file.getName().length() - 4);
 		String typeVersion = config.get(String.class, "ShipsData.Type");
 		StaticShipType shipType = null;
-		for(StaticShipType type : StaticShipType.TYPES){
-			if(type.getName().equals(typeVersion)){
+		for (StaticShipType type : StaticShipType.TYPES) {
+			if (type.getName().equals(typeVersion)) {
 				shipType = type;
 			}
 		}
-		if(shipType == null){
+		if (shipType == null) {
 			return Optional.empty();
 		}
 		String uuids = config.get(String.class, "ShipsData.Player.Name");
@@ -45,30 +45,30 @@ public abstract class Ships5Loader implements OpenRAWLoader{
 		double telZ = 0;
 		Location sign = new Location(world, signX, signY, signZ);
 		Location teleport = new Location(world, telX, telY, telZ);
-		if(uuids == null){
+		if (uuids == null) {
 			return Optional.empty();
-		}else{
+		} else {
 			player = Bukkit.getOfflinePlayer(UUID.fromString(uuids));
 		}
-		if(signLocation == null){
+		if (signLocation == null) {
 			return Optional.empty();
-		}else{
+		} else {
 			String[] locS = signLocation.split(",");
 			signX = Double.parseDouble(locS[0]);
 			signY = Double.parseDouble(locS[1]);
 			signZ = Double.parseDouble(locS[2]);
 			world = Bukkit.getWorld(locS[3]);
 		}
-		if(teleportLocation == null){
+		if (teleportLocation == null) {
 			return Optional.empty();
-		}else{
+		} else {
 			String[] locS = teleportLocation.split(",");
 			telX = Double.parseDouble(locS[0]);
 			telY = Double.parseDouble(locS[1]);
 			telZ = Double.parseDouble(locS[2]);
 		}
 		Optional<LiveShip> opShip = shipType.createVessel(name, sign.getBlock());
-		if(opShip.isPresent()){
+		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			ship.setOwner(player);
 			ship.setMaxBlocks(max);

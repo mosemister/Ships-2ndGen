@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Type.MovementType;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class ShipFinishedMovingEvent extends ShipTransformEvent {
 

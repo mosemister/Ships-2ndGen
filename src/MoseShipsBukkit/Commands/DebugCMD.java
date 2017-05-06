@@ -12,10 +12,10 @@ import MoseShipsBukkit.Configs.BlockList;
 import MoseShipsBukkit.Configs.ShipsConfig;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
 public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCMD {
 
@@ -59,15 +59,15 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 		} else if (args[1].equalsIgnoreCase("load")) {
 			if (args.length > 2) {
 				Optional<File> opFile = Loader.getFileFromName(args[2]);
-				if(opFile.isPresent()){
+				if (opFile.isPresent()) {
 					List<OpenRAWLoader> loaders = Loader.getLoadersFromFile(opFile.get());
-					for(OpenRAWLoader loader : loaders){
+					for (OpenRAWLoader loader : loaders) {
 						Optional<LiveShip> opShip = loader.RAWLoad(opFile.get());
-						if(opShip.isPresent()){
+						if (opShip.isPresent()) {
 							Loader.LOADED_SHIPS.add(opShip.get());
 							source.sendMessage(ShipsMain.format("Ship is loading fine", false));
 							return true;
-						}else{
+						} else {
 							String error = loader.getError(opFile.get());
 							source.sendMessage(ShipsMain.format("Ship is failing to load, due to " + error, true));
 							return true;

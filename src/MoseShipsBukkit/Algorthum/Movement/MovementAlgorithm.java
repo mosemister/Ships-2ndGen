@@ -6,7 +6,7 @@ import java.util.List;
 import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.Movement.MovingBlock;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public interface MovementAlgorithm {
 

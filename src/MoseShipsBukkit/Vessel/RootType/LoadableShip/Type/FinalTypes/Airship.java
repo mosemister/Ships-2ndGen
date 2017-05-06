@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.Types.User;
+package MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.FinalTypes;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import MoseShips.Stores.TwoStore;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.StaticShipConfig;
-import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.Result.MovementResult;
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
@@ -28,9 +27,14 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Tasks.Types.FallingTask;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Utils.Lists.MovingBlockList;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenLoader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFallable;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFuel;
@@ -38,11 +42,7 @@ import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveRequiredBlock;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticFuel;
 import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticRequiredPercent;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenLoader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
-import MoseShipsBukkit.Vessel.Types.AbstractAirType;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.AbstractAirType;
 
 public class Airship extends AbstractAirType
 		implements LiveAutoPilotable, LiveFallable, LiveFuel, LiveRequiredBlock, LiveRequiredPercent {
@@ -228,7 +228,7 @@ public class Airship extends AbstractAirType
 	}
 
 	@Override
-	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
+	public Optional<FailedMovement> hasRequirements(MovingBlockList blocks) {
 		int hasPercent = getAmountOfPercentBlocks();
 		int percent = getRequiredPercent();
 		if (!hasRequiredBlock()) {
@@ -372,7 +372,7 @@ public class Airship extends AbstractAirType
 
 		@Override
 		public OpenRAWLoader[] getLoaders() {
-			OpenLoader ship6Loader = new OpenLoader(){
+			OpenLoader ship6Loader = new OpenLoader() {
 
 				@Override
 				public String getLoaderName() {
@@ -381,7 +381,11 @@ public class Airship extends AbstractAirType
 
 				@Override
 				public int[] getLoaderVersion() {
-					int[] values = {0, 0, 0, 1};
+					int[] values = {
+							0,
+							0,
+							0,
+							1 };
 					return values;
 				}
 
@@ -389,10 +393,10 @@ public class Airship extends AbstractAirType
 				public boolean willLoad(File file) {
 					BasicConfig config = new BasicConfig(file);
 					String type = config.get(String.class, Loader.OPEN_LOADER_NAME);
-					if(type == null){
+					if (type == null) {
 						return false;
 					}
-					if(type.equals(getLoaderName())){
+					if (type.equals(getLoaderName())) {
 						return true;
 					}
 					return false;
@@ -411,7 +415,7 @@ public class Airship extends AbstractAirType
 
 				@Override
 				public OpenLoader save(LiveShip ship, BasicConfig config) {
-					Airship ship2 = (Airship)ship;
+					Airship ship2 = (Airship) ship;
 					List<String> blocks = new ArrayList<String>();
 					for (BlockState state : ship2.g_req_p_blocks) {
 						blocks.add(state.toNoString());
@@ -426,10 +430,11 @@ public class Airship extends AbstractAirType
 					config.set(ship2.g_cons_amount, LiveFuel.FUEL_CONSUMPTION);
 					return this;
 				}
-				
+
 			};
-			
-			OpenRAWLoader[] loaders = {ship6Loader};
+
+			OpenRAWLoader[] loaders = {
+					ship6Loader };
 			return loaders;
 		}
 

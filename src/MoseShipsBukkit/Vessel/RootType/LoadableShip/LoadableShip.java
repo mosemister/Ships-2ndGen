@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.Data;
+package MoseShipsBukkit.Vessel.RootType.LoadableShip;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,25 +19,20 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Events.Load.ShipLoadEvent;
 import MoseShipsBukkit.Events.Load.ShipUnloadEvent;
-import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.Type.MovementType.Rotate;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.Tasks.ShipsTask;
 import MoseShipsBukkit.Tasks.ShipsTaskRunner;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 public abstract class LoadableShip extends AbstractShipsData implements LiveShip {
 
-	public abstract Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks);
-
-	public abstract Map<String, Object> getInfo();
-
 	public abstract void onRemove(@Nullable Player player);
-
-	public abstract StaticShipType getStatic();
 
 	protected boolean g_moving = false;
 	protected int g_speed_engine = 2;
@@ -49,7 +44,6 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	ShipsTaskRunner g_task_runner = new ShipsTaskRunner(this);
 	Map<UUID, ShipVector> g_player_leave_spawns = new HashMap<UUID, ShipVector>();
 
-
 	public LoadableShip(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
 	}
@@ -57,38 +51,38 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 	public LoadableShip(ShipsData data) {
 		super(data);
 	}
-	
+
 	public File getFile() {
 		return new File("plugins/Ships/VesselData/" + getStatic().getName() + "/" + g_name + ".yml");
 	}
-	
+
 	@Override
 	public int getAltitudeSpeed() {
 		return g_speed_altitude;
 	}
-	
+
 	@Override
 	public int getBoostSpeed() {
 		return g_speed_boost;
 	}
-	
+
 	@Override
 	public int getEngineSpeed() {
 		return g_speed_engine;
 	}
-	
+
 	@Override
 	public LiveShip setAltitudeSpeed(int A) {
 		g_speed_altitude = A;
 		return this;
 	}
-	
+
 	@Override
 	public LiveShip setBoostSpeed(int A) {
 		g_speed_boost = A;
 		return this;
 	}
-	
+
 	@Override
 	public LiveShip setEngineSpeed(int A) {
 		g_speed_engine = A;
@@ -241,7 +235,7 @@ public abstract class LoadableShip extends AbstractShipsData implements LiveShip
 		save();
 		return this;
 	}
-	
+
 	@Override
 	public boolean save() {
 		OpenRAWLoader loader = getStatic().getLoaders()[0];

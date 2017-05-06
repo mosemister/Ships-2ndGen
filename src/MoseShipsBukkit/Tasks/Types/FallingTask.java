@@ -3,7 +3,7 @@ package MoseShipsBukkit.Tasks.Types;
 import MoseShipsBukkit.Configs.ShipsConfig;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Tasks.ShipsTask;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFallable;
 
 public class FallingTask implements ShipsTask {

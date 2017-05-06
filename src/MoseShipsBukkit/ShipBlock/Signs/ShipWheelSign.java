@@ -9,8 +9,8 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class ShipWheelSign implements ShipSign {
 

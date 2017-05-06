@@ -2,7 +2,7 @@ package MoseShipsBukkit.Utils;
 
 import org.bukkit.entity.Player;
 
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
 public class PermissionsUtil {
 

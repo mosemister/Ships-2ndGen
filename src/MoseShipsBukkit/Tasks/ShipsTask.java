@@ -1,6 +1,6 @@
 package MoseShipsBukkit.Tasks;
 
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public interface ShipsTask {
 

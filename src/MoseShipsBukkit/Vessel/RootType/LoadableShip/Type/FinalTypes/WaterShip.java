@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.Types.User;
+package MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.FinalTypes;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,18 +22,19 @@ import MoseShipsBukkit.Movement.Result.MovementResult;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Utils.Lists.MovingBlockList;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenLoader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveLockedAltitude;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveRequiredPercent;
 import MoseShipsBukkit.Vessel.DataProcessors.Static.StaticRequiredPercent;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenLoader;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
-import MoseShipsBukkit.Vessel.Types.AbstractWaterType;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.AbstractWaterType;
 
 public class WaterShip extends AbstractWaterType implements LiveRequiredPercent, LiveLockedAltitude {
 
@@ -89,7 +90,7 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 	}
 
 	@Override
-	public Optional<FailedMovement> hasRequirements(List<MovingBlock> blocks) {
+	public Optional<FailedMovement> hasRequirements(MovingBlockList blocks) {
 		int waterLevel = getWaterLevel();
 		switch (waterLevel) {
 		case -1:
@@ -231,10 +232,10 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 			BlockState[] states = BlockState.getStates(list);
 			return states;
 		}
-		
+
 		@Override
 		public OpenRAWLoader[] getLoaders() {
-			OpenLoader ship6Loader = new OpenLoader(){
+			OpenLoader ship6Loader = new OpenLoader() {
 
 				@Override
 				public String getLoaderName() {
@@ -243,7 +244,11 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 
 				@Override
 				public int[] getLoaderVersion() {
-					int[] values = {0, 0, 0, 1};
+					int[] values = {
+							0,
+							0,
+							0,
+							1 };
 					return values;
 				}
 
@@ -251,10 +256,10 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 				public boolean willLoad(File file) {
 					BasicConfig config = new BasicConfig(file);
 					String type = config.get(String.class, Loader.OPEN_LOADER_NAME);
-					if(type == null){
+					if (type == null) {
 						return false;
 					}
-					if(type.equals(getLoaderName())){
+					if (type.equals(getLoaderName())) {
 						return true;
 					}
 					return false;
@@ -268,7 +273,7 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 
 				@Override
 				public OpenLoader save(LiveShip ship, BasicConfig config) {
-					WaterShip ship2 = (WaterShip)ship;
+					WaterShip ship2 = (WaterShip) ship;
 					List<String> list = new ArrayList<String>();
 					for (BlockState state : ship2.g_materials) {
 						list.add(state.toNoString());
@@ -277,10 +282,11 @@ public class WaterShip extends AbstractWaterType implements LiveRequiredPercent,
 					config.setOverride(list, LiveRequiredPercent.REQUIRED_BLOCKS);
 					return this;
 				}
-				
+
 			};
-			
-			OpenRAWLoader[] loaders = {ship6Loader};
+
+			OpenRAWLoader[] loaders = {
+					ship6Loader };
 			return loaders;
 		}
 

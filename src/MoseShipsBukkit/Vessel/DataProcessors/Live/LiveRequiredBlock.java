@@ -1,7 +1,7 @@
 package MoseShipsBukkit.Vessel.DataProcessors.Live;
 
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public interface LiveRequiredBlock extends LiveShip {
 

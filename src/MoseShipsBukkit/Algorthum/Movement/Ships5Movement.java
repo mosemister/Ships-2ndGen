@@ -9,8 +9,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.Movement.MovingBlock;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Types.WaterType;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.WaterType;
 
 public class Ships5Movement implements MovementAlgorithm {
 
@@ -58,8 +58,9 @@ public class Ships5Movement implements MovementAlgorithm {
 		Location loc = blocks.get(0).getMovingTo().clone().subtract(blocks.get(0).getOrigin());
 		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
 				loc.getBlockZ());
-		if(lic == null){
-			MovingBlock lBlock = new MovingBlock(type.getLocation().getBlock(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+		if (lic == null) {
+			MovingBlock lBlock = new MovingBlock(type.getLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
+					loc.getBlockZ());
 			lic = lBlock.getMovingTo().getBlock();
 		}
 		type.setBasicStructure(newStructure, lic, tBlock.getMovingTo());

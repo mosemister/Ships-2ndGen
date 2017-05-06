@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.Types;
+package MoseShipsBukkit.Vessel.RootType.LoadableShip.Type;
 
 import java.util.Optional;
 
@@ -12,8 +12,8 @@ import MoseShipsBukkit.Movement.Movement;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
 
 public abstract class AbstractWaterType extends LoadableShip implements WaterType {
 
@@ -63,8 +63,10 @@ public abstract class AbstractWaterType extends LoadableShip implements WaterTyp
 
 	@Override
 	public Optional<FailedMovement> teleport(Location loc, int X, int Y, int Z, ShipsCause cause) {
-		return Movement.teleport(cause, this, loc, X, Y, Z, new BlockState(Material.AIR),
-				new BlockState(Material.WATER), new BlockState(Material.STATIONARY_WATER));
+		return Movement.teleport(cause, this,
+				new StoredMovement.Builder().setTeleportTo(loc).setX(X).setY(Y).setZ(Z).build(),
+				new BlockState(Material.AIR), new BlockState(Material.WATER),
+				new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override

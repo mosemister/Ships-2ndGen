@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.Static;
+package MoseShipsBukkit.Vessel.Common.Static;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.Configs.BasicConfig;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public interface StaticShipType {
 
@@ -27,7 +27,7 @@ public interface StaticShipType {
 	public boolean autoPilot();
 
 	public Plugin getPlugin();
-	
+
 	public OpenRAWLoader[] getLoaders();
 
 	public Optional<LiveShip> createVessel(String name, Block licence);

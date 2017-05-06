@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.OpenLoader;
+package MoseShipsBukkit.Vessel.Common.OpenLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,27 +18,28 @@ import MoseShips.CustomDataHolder.DataHolder;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.Utils.SerializedData;
-import MoseShipsBukkit.Vessel.Data.AbstractShipsData;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
 
 public abstract class OpenLoader implements OpenRAWLoader {
 
 	public static final String ERROR_NO_WORLD_READ = "No World Read";
 	public static final String ERROR_NO_WORLD_BY_NAME = "No World By Name";
 	public static final String ERROR_NO_LOCATION_READ = "No Location Read";
-	
+
 	public abstract Optional<LiveShip> load(ShipsData data);
+
 	public abstract OpenLoader save(LiveShip ship, BasicConfig config);
-	
+
 	protected String g_error = null;
-	
+
 	@Override
 	public String getError(File file) {
 		return g_error;
 	}
-	
+
 	@Override
 	public Optional<LiveShip> RAWLoad(File file) {
 		int tempX = 0;
@@ -57,13 +58,13 @@ public abstract class OpenLoader implements OpenRAWLoader {
 		Location tel = null;
 		ShipsData data;
 		OfflinePlayer user = Bukkit.getOfflinePlayer(UUID.fromString(sPilot));
-		
-		if(sWorld == null) {
+
+		if (sWorld == null) {
 			g_error = ERROR_NO_WORLD_READ;
 			return Optional.empty();
 		}
 		world = Bukkit.getServer().getWorld(sWorld);
-		if(world == null) {
+		if (world == null) {
 			g_error = ERROR_NO_WORLD_BY_NAME;
 			return Optional.empty();
 		}
@@ -72,7 +73,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 			tempY = Integer.parseInt(sLic[1]);
 			tempZ = Integer.parseInt(sLic[2]);
 			lic = new Location(world, tempX, tempY, tempZ);
-		}catch (NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			g_error = ERROR_NO_LOCATION_READ;
 			return Optional.empty();
 		}
@@ -85,21 +86,22 @@ public abstract class OpenLoader implements OpenRAWLoader {
 			tel = lic;
 		}
 		data = new AbstractShipsData(name, lic.getBlock(), tel);
-		if(sPilot != null) {
+		if (sPilot != null) {
 			data.setOwner(user);
 		}
-		if(lStructure == null) {
+		if (lStructure == null) {
 			data.updateBasicStructure();
-		}else {
-			for(String values : lStructure) {
+		} else {
+			for (String values : lStructure) {
 				String[] valueArgs = values.split(",");
 				try {
 					tempX = Integer.parseInt(valueArgs[0]);
 					tempY = Integer.parseInt(valueArgs[1]);
 					tempZ = Integer.parseInt(valueArgs[2]);
-					Block block = world.getBlockAt(lic.getBlockX() + tempX, lic.getBlockY() + tempY, lic.getBlockZ() + tempZ);
+					Block block = world.getBlockAt(lic.getBlockX() + tempX, lic.getBlockY() + tempY,
+							lic.getBlockZ() + tempZ);
 					data.getStructure().add(block);
-				}catch(NumberFormatException e) {
+				} catch (NumberFormatException e) {
 					continue;
 				}
 			}
@@ -123,12 +125,14 @@ public abstract class OpenLoader implements OpenRAWLoader {
 		Optional<OfflinePlayer> opUuid = ship.getOwner();
 		List<String> pilots = new ArrayList<String>();
 		List<String> structure = new ArrayList<String>();
-		String block = ship.getLocation().getBlockX() + "," + ship.getLocation().getBlockY() + "," + ship.getLocation().getBlockZ();
-		String teleport = ship.getTeleportToLocation().getBlockX() + "," + ship.getTeleportToLocation().getBlockY() + "," + ship.getTeleportToLocation().getBlockZ();
+		String block = ship.getLocation().getBlockX() + "," + ship.getLocation().getBlockY() + ","
+				+ ship.getLocation().getBlockZ();
+		String teleport = ship.getTeleportToLocation().getBlockX() + "," + ship.getTeleportToLocation().getBlockY()
+				+ "," + ship.getTeleportToLocation().getBlockZ();
 		for (OfflinePlayer player : ship.getSubPilots()) {
 			pilots.add(player.getUniqueId().toString());
 		}
-		for(ShipVector vector : ship.getStructure().getRawVectors(ship)) {
+		for (ShipVector vector : ship.getStructure().getRawVectors(ship)) {
 			structure.add(vector.getX() + "," + vector.getY() + "," + vector.getZ());
 		}
 		config.setOverride(pilots, AbstractShipsData.DATABASE_SUB_PILOTS);
@@ -139,7 +143,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 		config.setOverride(type, AbstractShipsData.DATABASE_TYPE);
 		config.setOverride(world, AbstractShipsData.DATABASE_WORLD);
 		config.setOverride(getLoaderName(), Loader.OPEN_LOADER_NAME);
-		if(opUuid.isPresent()){
+		if (opUuid.isPresent()) {
 			config.setOverride(opUuid.get().getUniqueId().toString(), AbstractShipsData.DATABASE_PILOT);
 		}
 		if (ship instanceof LoadableShip) {

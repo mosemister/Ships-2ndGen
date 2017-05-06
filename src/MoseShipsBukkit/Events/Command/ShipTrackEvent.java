@@ -12,7 +12,7 @@ import org.bukkit.event.HandlerList;
 import MoseShipsBukkit.Events.ShipEvent;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.ShipBlock.BlockState;
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 /**
  * Implemented

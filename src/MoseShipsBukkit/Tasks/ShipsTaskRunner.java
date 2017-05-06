@@ -14,7 +14,7 @@ import org.bukkit.plugin.Plugin;
 import MoseShipsBukkit.Configs.ShipsConfig;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Tasks.Types.UnloadTask;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class ShipsTaskRunner {
 

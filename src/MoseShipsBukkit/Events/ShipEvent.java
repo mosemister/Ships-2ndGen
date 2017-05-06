@@ -1,6 +1,6 @@
 package MoseShipsBukkit.Events;
 
-import MoseShipsBukkit.Vessel.Data.ShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 public interface ShipEvent {
 

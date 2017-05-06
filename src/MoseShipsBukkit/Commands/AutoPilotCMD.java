@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
 import MoseShipsBukkit.Plugin.ShipsMain;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
 
 public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD {
 

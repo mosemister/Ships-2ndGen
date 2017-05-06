@@ -20,89 +20,30 @@ import MoseShipsBukkit.Movement.Type.MovementType;
 import MoseShipsBukkit.Movement.Type.MovementType.Rotate;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Utils.MovementAlgorithmUtil;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Data.LoadableShip;
-import MoseShipsBukkit.Vessel.Types.WaterType;
+import MoseShipsBukkit.Utils.Lists.MovingBlockList;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
+import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.WaterType;
 
-public class Movement {
+public abstract class Movement {
 
 	public static Optional<FailedMovement> move(ShipsCause cause2, LiveShip ship, int X, int Y, int Z,
 			BlockState... movingTo) {
-		if((X == 0) && (Y == 0) && (Z == 0)){
+		if ((X == 0) && (Y == 0) && (Z == 0)) {
 			return Optional.of(new FailedMovement(ship, MovementResult.NO_SPEED_SET, 0));
 		}
-		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		List<Block> structure = ship.getBasicStructure();
-		if (structure.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
-		}
-		waterTypeFix(ship, structure);
-		for (Block loc : structure) {
-			MovingBlock block = new MovingBlock(loc, X, Y, Z);
-			CollideType collideType = block.getCollision(ship.getBasicStructure(), movingTo);
-			if (collideType.equals(CollideType.COLLIDE)) {
-				collide.add(block);
-			} else {
-				blocks.add(block);
-			}
-		}
-		if (!collide.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
-		}
-		ShipsCause cause3 = new ShipsCause(cause2, structure);
-		ship.load(cause3);
-		return move(ship, MovementType.DIRECTIONAL, blocks, cause3);
+		return move(cause2, ship, MovementType.DIRECTIONAL,
+				new StoredMovement.Builder().setX(X).setY(Y).setZ(Z).build(), movingTo);
 	}
 
 	public static Optional<FailedMovement> rotateRight(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
-		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		Location centre = ship.getLocation();
-		List<Block> structure = ship.getBasicStructure();
-		if (structure.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
-		}
-		waterTypeFix(ship, structure);
-		for (Block loc : structure) {
-			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateRight(centre.getBlock());
-			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
-				collide.add(block);
-			} else {
-				blocks.add(block);
-			}
-		}
-		if (!collide.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
-		}
-		ShipsCause cause3 = new ShipsCause(cause2, structure);
-		ship.load(cause3);
-		return move(ship, MovementType.ROTATE_RIGHT, blocks, cause3);
+		return move(cause2, ship, MovementType.ROTATE_RIGHT,
+				new StoredMovement.Builder().setRotation(Rotate.RIGHT).build(), movingTo);
 	}
 
 	public static Optional<FailedMovement> rotateLeft(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
-		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		Location centre = ship.getLocation();
-		List<Block> structure = ship.getBasicStructure();
-		if (structure.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
-		}
-		waterTypeFix(ship, structure);
-		for (Block loc : structure) {
-			MovingBlock block = new MovingBlock(loc, 0, 0, 0).rotateLeft(centre.getBlock());
-			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
-				collide.add(block);
-			} else {
-				blocks.add(block);
-			}
-		}
-		if (!collide.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
-		}
-		ShipsCause cause3 = new ShipsCause(cause2, structure);
-		ship.load(cause3);
-		return move(ship, MovementType.ROTATE_LEFT, blocks, cause3);
+		return move(cause2, ship, MovementType.ROTATE_LEFT,
+				new StoredMovement.Builder().setRotation(Rotate.LEFT).build(), movingTo);
 	}
 
 	public static Optional<FailedMovement> rotate(ShipsCause cause, LoadableShip ship, Rotate rotate,
@@ -118,67 +59,26 @@ public class Movement {
 
 	public static Optional<FailedMovement> teleport(ShipsCause cause2, LoadableShip ship, Location tel,
 			BlockState... movingTo) {
-		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		List<Block> structure = ship.getBasicStructure();
-		if (structure.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
-		}
-		waterTypeFix(ship, structure);
-		for (Block loc2 : structure) {
-			MovingBlock block = new MovingBlock(loc2, tel);
-			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
-				collide.add(block);
-			} else {
-				blocks.add(block);
-			}
-		}
-		if (!collide.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
-		}
-		ShipsCause cause3 = new ShipsCause(cause2, structure);
-		ship.load(cause3);
-		return move(ship, MovementType.TELEPORT, blocks, new ShipsCause(cause2, structure));
-	}
-
-	public static Optional<FailedMovement> teleport(ShipsCause cause2, LoadableShip ship, Location tel, int X, int Y,
-			int Z, BlockState... movingTo) {
-		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		List<MovingBlock> collide = new ArrayList<MovingBlock>();
-		Location loc2 = tel.add(X, Y, Z);
-		List<Block> structure = ship.getBasicStructure();
-		if (structure.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
-		}
-		waterTypeFix(ship, structure);
-		for (Block loc3 : structure) {
-			MovingBlock block = new MovingBlock(loc3, loc2);
-			if (block.getCollision(ship.getBasicStructure(), movingTo).equals(CollideType.COLLIDE)) {
-				collide.add(block);
-			} else {
-				blocks.add(block);
-			}
-		}
-		if (!collide.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
-		}
-		ShipsCause cause3 = new ShipsCause(cause2, structure);
-		ship.load(cause3);
-		return move(ship, MovementType.TELEPORT, blocks, cause3);
+		return move(cause2, ship, MovementType.TELEPORT, new StoredMovement.Builder().setTeleportTo(tel).build(),
+				movingTo);
 	}
 
 	public static Optional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, StoredMovement movement,
 			BlockState... movingTo) {
-		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
+		return move(cause2, ship, MovementType.TELEPORT, movement, movingTo);
+	}
+
+	private static Optional<FailedMovement> move(ShipsCause cause, LiveShip ship, MovementType type,
+			StoredMovement movement, BlockState... movingTo) {
+		MovingBlockList blocks = new MovingBlockList();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
 		if (structure.isEmpty()) {
-			ship.updateBasicStructure();
+			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
 		}
 		waterTypeFix(ship, structure);
 		for (Block loc : structure) {
-			Block result = movement.getEndResult(loc);
-			MovingBlock block = new MovingBlock(loc, result);
+			MovingBlock block = new MovingBlock(loc, movement.getEndResult(loc));
 			CollideType collideType = block.getCollision(ship.getBasicStructure(), movingTo);
 			if (collideType.equals(CollideType.COLLIDE)) {
 				collide.add(block);
@@ -189,12 +89,12 @@ public class Movement {
 		if (!collide.isEmpty()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
 		}
-		ShipsCause cause3 = new ShipsCause(cause2, structure);
+		ShipsCause cause3 = new ShipsCause(cause, structure);
 		ship.load(cause3);
-		return move(ship, MovementType.TELEPORT, blocks, cause3);
+		return move(ship, type, blocks, cause3);
 	}
 
-	private static Optional<FailedMovement> move(LiveShip ship, MovementType type, List<MovingBlock> blocks,
+	private static Optional<FailedMovement> move(LiveShip ship, MovementType type, MovingBlockList blocks,
 			ShipsCause cause) {
 		ship.setRemoveNextCycle(false);
 		ShipAboutToMoveEvent event = new ShipAboutToMoveEvent(cause, ship, type, blocks);

@@ -38,6 +38,11 @@ public class BlockSnapshot {
 		return g_data;
 	}
 
+	@SuppressWarnings("deprecation")
+	public MoseShipsBukkit.ShipBlock.BlockState createState() {
+		return new MoseShipsBukkit.ShipBlock.BlockState(g_material, g_data.getData());
+	}
+
 	public void placeBlock() {
 		placeBlock(g_loc.getBlock());
 	}

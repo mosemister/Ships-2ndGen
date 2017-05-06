@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.OpenLoader;
+package MoseShipsBukkit.Vessel.Common.OpenLoader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,50 +16,50 @@ import MoseShipsBukkit.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.LocationUtil;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
 public class Loader {
 
 	public static final String OPEN_LOADER_NAME = "OpenLoader.Name";
 	public static final String OPEN_LOADER_VERSION = "OpenLoader.Version";
 	public static final String OPEN_LOADER_ERROR = "OpenLoader.Error";
-	
+
 	public static final List<LiveShip> LOADED_SHIPS = new ArrayList<LiveShip>();
-	
-	public static void saveLoader(BasicConfig config, OpenLoader loader){
+
+	public static void saveLoader(BasicConfig config, OpenLoader loader) {
 		config.set(loader.getLoaderName(), OPEN_LOADER_NAME);
 	}
-	
-	public static Optional<LiveShip> loadDirectlyFromFile(File file){
-		for(StaticShipType type : StaticShipTypeUtil.getTypes()){
-			for(OpenRAWLoader loader : type.getLoaders()){
-				if(loader.willLoad(file)){
+
+	public static Optional<LiveShip> loadDirectlyFromFile(File file) {
+		for (StaticShipType type : StaticShipTypeUtil.getTypes()) {
+			for (OpenRAWLoader loader : type.getLoaders()) {
+				if (loader.willLoad(file)) {
 					return loader.RAWLoad(file);
 				}
 			}
 		}
 		return Optional.empty();
 	}
-	
-	public static List<OpenRAWLoader> getLoadersFromFile(File file){
+
+	public static List<OpenRAWLoader> getLoadersFromFile(File file) {
 		List<OpenRAWLoader> list = new ArrayList<OpenRAWLoader>();
-		for(StaticShipType type : StaticShipTypeUtil.getTypes()){
-			for(OpenRAWLoader loader : type.getLoaders()){
+		for (StaticShipType type : StaticShipTypeUtil.getTypes()) {
+			for (OpenRAWLoader loader : type.getLoaders()) {
 				list.add(loader);
 			}
 		}
 		return list;
 	}
-	
-	public static Optional<File> getFileFromName(String name){
+
+	public static Optional<File> getFileFromName(String name) {
 		File file = new File("plugins/Ships/VesselData");
-		for(StaticShipType type : StaticShipTypeUtil.getTypes()){
+		for (StaticShipType type : StaticShipTypeUtil.getTypes()) {
 			File shipFile = new File(file, type.getName());
 			File[] shipFiles = shipFile.listFiles();
-			if(shipFiles != null){
-				for(File shipFile2 : shipFiles){
-					if(shipFile2.exists()){
+			if (shipFiles != null) {
+				for (File shipFile2 : shipFiles) {
+					if (shipFile2.exists()) {
 						return Optional.of(shipFile2);
 					}
 				}
@@ -67,15 +67,15 @@ public class Loader {
 		}
 		return Optional.empty();
 	}
-	
-	public static Optional<LiveShip> loadDirectlyFromName(String name){
+
+	public static Optional<LiveShip> loadDirectlyFromName(String name) {
 		Optional<File> opFile = getFileFromName(name);
-		if(opFile.isPresent()){
+		if (opFile.isPresent()) {
 			return loadDirectlyFromFile(opFile.get());
 		}
 		return Optional.empty();
 	}
-	
+
 	public static Optional<LiveShip> getShip(UUID uuid) {
 		for (LiveShip ship : getShips()) {
 			if ((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(uuid))) {
@@ -194,5 +194,5 @@ public class Loader {
 		}
 		return ships;
 	}
-	
+
 }

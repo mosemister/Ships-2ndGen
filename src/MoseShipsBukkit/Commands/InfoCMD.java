@@ -14,8 +14,8 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.BlockFinderUtil;
 import MoseShipsBukkit.Utils.MovementAlgorithmUtil;
 import MoseShipsBukkit.Utils.VersionCheckingUtil;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCMD {
 
@@ -69,7 +69,8 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 				shipInfo(source, opShip.get());
 			} else {
 				source.sendMessage(ShipsMain.format(
-						"error when getting the ship. Type '/ships debug load <ship name>' to get the exact error", true));
+						"error when getting the ship. Type '/ships debug load <ship name>' to get the exact error",
+						true));
 			}
 		}
 	}

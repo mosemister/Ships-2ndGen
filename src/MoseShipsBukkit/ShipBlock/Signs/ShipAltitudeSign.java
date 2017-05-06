@@ -9,10 +9,10 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveLockedAltitude;
-import MoseShipsBukkit.Vessel.OpenLoader.Loader;
-import MoseShipsBukkit.Vessel.Static.StaticShipType;
 
 public class ShipAltitudeSign implements ShipSign {
 

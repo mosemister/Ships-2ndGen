@@ -3,7 +3,7 @@ package MoseShipsBukkit.Vessel.DataProcessors.Live;
 import java.util.Optional;
 
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
-import MoseShipsBukkit.Vessel.Data.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public interface LiveAutoPilotable extends LiveShip {
 
