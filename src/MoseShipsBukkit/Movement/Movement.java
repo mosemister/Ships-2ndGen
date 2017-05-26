@@ -17,13 +17,12 @@ import MoseShipsBukkit.Movement.Result.MovementResult;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.Movement.Type.CollideType;
 import MoseShipsBukkit.Movement.Type.MovementType;
-import MoseShipsBukkit.Movement.Type.MovementType.Rotate;
+import MoseShipsBukkit.Movement.Type.RotateType;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Utils.MovementAlgorithmUtil;
 import MoseShipsBukkit.Utils.Lists.MovingBlockList;
+import MoseShipsBukkit.Vessel.Common.GeneralTypes.WaterType;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
-import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
-import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.WaterType;
 
 public abstract class Movement {
 
@@ -38,15 +37,15 @@ public abstract class Movement {
 
 	public static Optional<FailedMovement> rotateRight(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
 		return move(cause2, ship, MovementType.ROTATE_RIGHT,
-				new StoredMovement.Builder().setRotation(Rotate.RIGHT).build(), movingTo);
+				new StoredMovement.Builder().setRotation(RotateType.RIGHT).build(), movingTo);
 	}
 
 	public static Optional<FailedMovement> rotateLeft(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
 		return move(cause2, ship, MovementType.ROTATE_LEFT,
-				new StoredMovement.Builder().setRotation(Rotate.LEFT).build(), movingTo);
+				new StoredMovement.Builder().setRotation(RotateType.LEFT).build(), movingTo);
 	}
 
-	public static Optional<FailedMovement> rotate(ShipsCause cause, LoadableShip ship, Rotate rotate,
+	public static Optional<FailedMovement> rotate(ShipsCause cause, LiveShip ship, RotateType rotate,
 			BlockState... movingTo) {
 		switch (rotate) {
 		case LEFT:
@@ -57,7 +56,7 @@ public abstract class Movement {
 		return Optional.of(new FailedMovement(ship, MovementResult.PLUGIN_CANCELLED, true));
 	}
 
-	public static Optional<FailedMovement> teleport(ShipsCause cause2, LoadableShip ship, Location tel,
+	public static Optional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, Location tel,
 			BlockState... movingTo) {
 		return move(cause2, ship, MovementType.TELEPORT, new StoredMovement.Builder().setTeleportTo(tel).build(),
 				movingTo);
@@ -78,7 +77,7 @@ public abstract class Movement {
 		}
 		waterTypeFix(ship, structure);
 		for (Block loc : structure) {
-			MovingBlock block = new MovingBlock(loc, movement.getEndResult(loc));
+			MovingBlock block = new MovingBlock(loc, movement.getEndResult(loc, ship.getLocation().getBlock()));
 			CollideType collideType = block.getCollision(ship.getBasicStructure(), movingTo);
 			if (collideType.equals(CollideType.COLLIDE)) {
 				collide.add(block);

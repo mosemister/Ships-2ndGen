@@ -1,8 +1,10 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Data.Required;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.Result.MovementResult;
 import MoseShipsBukkit.ShipBlock.BlockState;
@@ -14,6 +16,9 @@ public class BlockRequirement implements RequirementData {
 
 	public static final int REQUIRES_ALL = 1;
 	public static final int REQUIRES_ANY = 0;
+	
+	public String LOADER_STATES = "BlockRequirement.Blocks";
+	public String LOADER_MODE = "BlockRequirement.Mode";
 	
 	BlockState[] g_states;
 	int g_mode = REQUIRES_ANY;
@@ -59,11 +64,23 @@ public class BlockRequirement implements RequirementData {
 		}
 		return Optional.empty();
 	}
+	
+	@Override
+	public void applyFromShip(BasicConfig config) {
+		g_states = BlockState.getStates(config.getList(String.class, LOADER_STATES));
+		g_mode = config.get(Integer.class, LOADER_MODE);
+	}
+	
+	@Override
+	public void saveShip(BasicConfig config) {
+		config.set(g_states, LOADER_STATES);
+		config.set(g_mode, LOADER_MODE);
+	}
 
 	@Override
 	public Map<String, Object> getInfo(LiveShip ship) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		return map;
 	}
 
 }

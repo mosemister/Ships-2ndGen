@@ -11,8 +11,8 @@ import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.ShipCommands.ShipCommands;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
-import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveLockedAltitude;
 
 public class ShipAltitudeSign implements ShipSign {
 
@@ -46,7 +46,7 @@ public class ShipAltitudeSign implements ShipSign {
 	public void onRightClick(Player player, Sign sign, LiveShip ship) {
 		try {
 			int speed = Integer.parseInt(sign.getLine(2));
-			if (ship instanceof LiveLockedAltitude) {
+			if (ship.getCommands().contains(ShipCommands.LOCK_ALTITUDE)) {
 				return;
 			}
 			Optional<FailedMovement> causeMove = ship.move(0, speed, 0, new ShipsCause(player, sign, "Up"));
@@ -62,7 +62,7 @@ public class ShipAltitudeSign implements ShipSign {
 	public void onLeftClick(Player player, Sign sign, LiveShip ship) {
 		try {
 			int speed = Integer.parseInt(sign.getLine(2));
-			if (ship instanceof LiveLockedAltitude) {
+			if (ship.getCommands().contains(ShipCommands.LOCK_ALTITUDE)) {
 				return;
 			}
 			Optional<FailedMovement> causeMove = ship.move(0, -speed, 0, new ShipsCause(player, sign, "Down"));
@@ -76,8 +76,6 @@ public class ShipAltitudeSign implements ShipSign {
 
 	@Override
 	public void onRemove(Player player, Sign sign) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

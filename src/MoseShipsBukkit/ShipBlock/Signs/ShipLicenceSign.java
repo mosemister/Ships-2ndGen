@@ -45,7 +45,7 @@ public class ShipLicenceSign implements ShipSign {
 			Bukkit.getServer().getPluginManager().callEvent(conflictType);
 			String message = conflictType.getMessage();
 			if (message.contains("%Type%")) {
-				message.replace("%Type%", event.getLine(1));
+				message = message.replace("%Type%", event.getLine(1));
 			}
 			if (conflictType.shouldMessageDisplay()) {
 				player.sendMessage(ShipsMain.format(message, true));
@@ -69,7 +69,7 @@ public class ShipLicenceSign implements ShipSign {
 			Bukkit.getServer().getPluginManager().callEvent(conflictName);
 			String message = conflictName.getMessage();
 			if (message.contains("%Type%")) {
-				message.replace("%Type%", event.getLine(1));
+				message = message.replace("%Type%", event.getLine(1));
 			}
 			if (conflictName.shouldMessageDisplay()) {
 				player.sendMessage(ShipsMain.format(message, true));

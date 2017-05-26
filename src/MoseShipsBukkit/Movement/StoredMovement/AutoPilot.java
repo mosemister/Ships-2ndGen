@@ -11,19 +11,21 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import MoseShips.CustomDataHolder.DataHandler;
 import MoseShips.Maps.OrderedMap;
-import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
+import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsBukkit.Vessel.Common.RootTypes.Implementations.AutoPilotableShip;
 
-public class AutoPilot {
+public class AutoPilot implements DataHandler{
 
 	List<StoredMovement> MOVEMENTS = new ArrayList<StoredMovement>();
-	LiveAutoPilotable SHIP;
+	AutoPilotableShip SHIP;
 	OfflinePlayer USER;
 	int TARGET;
 	boolean SHOULD_REPEATE;
 	int PROCESSED = 0;
 
-	public AutoPilot(LiveAutoPilotable type, List<StoredMovement> movements, boolean repeate, int start,
+	public AutoPilot(AutoPilotableShip type, List<StoredMovement> movements, boolean repeate, int start,
 			@Nullable OfflinePlayer user) {
 		MOVEMENTS = movements;
 		SHIP = type;
@@ -32,7 +34,7 @@ public class AutoPilot {
 		USER = user;
 	}
 
-	public AutoPilot(LiveAutoPilotable type, List<StoredMovement> movements, boolean repeate,
+	public AutoPilot(AutoPilotableShip type, List<StoredMovement> movements, boolean repeate,
 			@Nullable OfflinePlayer user) {
 		MOVEMENTS = movements;
 		SHIP = type;
@@ -40,7 +42,7 @@ public class AutoPilot {
 		USER = user;
 	}
 
-	public AutoPilot(LiveAutoPilotable type, Block moveTo, int speed, @Nullable OfflinePlayer user) {
+	public AutoPilot(AutoPilotableShip type, Block moveTo, int speed, @Nullable OfflinePlayer user) {
 		int height = 500;
 
 		int toX = moveTo.getX();
@@ -74,7 +76,7 @@ public class AutoPilot {
 		USER = user;
 	}
 
-	public AutoPilot(LiveAutoPilotable type, double X, double Y, double Z, int speed, @Nullable OfflinePlayer user) {
+	public AutoPilot(AutoPilotableShip type, double X, double Y, double Z, int speed, @Nullable OfflinePlayer user) {
 		int height = 150;
 		Location moveTo = type.getLocation().clone().add(X, Y, Z);
 
@@ -125,7 +127,7 @@ public class AutoPilot {
 		return MOVEMENTS;
 	}
 
-	public LiveAutoPilotable getTargetShip() {
+	public LiveShip getTargetShip() {
 		return SHIP;
 	}
 
@@ -143,7 +145,7 @@ public class AutoPilot {
 		Block previousLoc = SHIP.getLocation().getBlock();
 		for (int A = 1; A < MOVEMENTS.size(); A++) {
 			StoredMovement movement = MOVEMENTS.get(A - 1);
-			Block ret = movement.getEndResult(previousLoc);
+			Block ret = movement.getEndResult(previousLoc, SHIP.getLocation().getBlock());
 			map.put(A, ret);
 			previousLoc = ret;
 		}

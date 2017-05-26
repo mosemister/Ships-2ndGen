@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.RootType.LoadableShip.Type;
+package MoseShipsBukkit.Vessel.RootType.DataShip.General;
 
 import java.util.Optional;
 
@@ -12,10 +12,11 @@ import MoseShipsBukkit.Movement.Movement;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.ShipBlock.BlockState;
+import MoseShipsBukkit.Vessel.Common.GeneralTypes.AirType;
 import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
-import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
+import MoseShipsBukkit.Vessel.RootType.DataShip.DataVessel;
 
-public abstract class AbstractAirType extends LoadableShip implements AirType {
+public abstract class AbstractAirType extends DataVessel implements AirType {
 
 	public AbstractAirType(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);

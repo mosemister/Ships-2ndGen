@@ -14,6 +14,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import MoseShips.CustomDataHolder.DataHandler;
 import MoseShips.CustomDataHolder.DataHolder;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.ShipBlock.ShipVector;
@@ -21,7 +22,6 @@ import MoseShipsBukkit.Utils.SerializedData;
 import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
-import MoseShipsBukkit.Vessel.RootType.LoadableShip.LoadableShip;
 
 public abstract class OpenLoader implements OpenRAWLoader {
 
@@ -29,7 +29,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 	public static final String ERROR_NO_WORLD_BY_NAME = "No World By Name";
 	public static final String ERROR_NO_LOCATION_READ = "No Location Read";
 
-	public abstract Optional<LiveShip> load(ShipsData data);
+	public abstract Optional<LiveShip> load(ShipsData data, BasicConfig config);
 
 	public abstract OpenLoader save(LiveShip ship, BasicConfig config);
 
@@ -113,7 +113,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 			}
 			data.getSubPilots().addAll(subPilots);
 		}
-		return load(data);
+		return load(data, config);
 	}
 
 	@Override
@@ -146,9 +146,9 @@ public abstract class OpenLoader implements OpenRAWLoader {
 		if (opUuid.isPresent()) {
 			config.setOverride(opUuid.get().getUniqueId().toString(), AbstractShipsData.DATABASE_PILOT);
 		}
-		if (ship instanceof LoadableShip) {
-			LoadableShip ship2 = (LoadableShip) ship;
-			for (DataHolder d : ship2.getAllData()) {
+		if (ship instanceof DataHolder) {
+			DataHolder ship2 = (DataHolder) ship;
+			for (DataHandler d : ship2.getAllData()) {
 				if (d instanceof SerializedData) {
 					SerializedData serData = (SerializedData) d;
 					Set<Entry<String, Object>> entrySet = serData.getSerializedData().entrySet();

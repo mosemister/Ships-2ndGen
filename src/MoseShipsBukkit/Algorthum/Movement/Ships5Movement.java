@@ -9,8 +9,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.Movement.MovingBlock;
+import MoseShipsBukkit.Vessel.Common.GeneralTypes.WaterType;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
-import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.WaterType;
 
 public class Ships5Movement implements MovementAlgorithm {
 

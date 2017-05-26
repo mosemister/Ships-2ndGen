@@ -1,4 +1,4 @@
-package MoseShipsBukkit.Vessel.DataProcessors.Static;
+package MoseShipsBukkit.Vessel.Common.Static.Types;
 
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;

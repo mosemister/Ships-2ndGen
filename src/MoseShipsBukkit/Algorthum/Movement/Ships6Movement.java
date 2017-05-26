@@ -16,8 +16,8 @@ import MoseShips.Stores.OneStore;
 import MoseShipsBukkit.Configs.ShipsConfig;
 import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Plugin.ShipsMain;
+import MoseShipsBukkit.Vessel.Common.GeneralTypes.WaterType;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
-import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.WaterType;
 
 public class Ships6Movement implements MovementAlgorithm {
 
@@ -103,7 +103,7 @@ public class Ships6Movement implements MovementAlgorithm {
 						}
 					}
 				}
-			}, repe + time);
+			}, (repe + list.size()) + time);
 		}
 		Bukkit.getScheduler().scheduleSyncDelayedTask(ShipsMain.getPlugin(), new Runnable() {
 

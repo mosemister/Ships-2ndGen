@@ -5,22 +5,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
-
 import java.util.Optional;
 import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Events.Load.ShipLoadEvent;
 import MoseShipsBukkit.Events.Load.ShipUnloadEvent;
+import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
-import MoseShipsBukkit.Movement.Type.MovementType.Rotate;
+import MoseShipsBukkit.Movement.Type.RotateType;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.Tasks.ShipsTask;
 import MoseShipsBukkit.Tasks.ShipsTaskRunner;
@@ -30,6 +32,7 @@ import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.Common.ShipCommands.ShipCommands;
 import MoseShipsBukkit.Vessel.RootType.DataShip.Data.RequirementData;
 
 public abstract class DataVessel extends AbstractShipsData implements LiveShip {
@@ -45,6 +48,7 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 	protected boolean g_remove = false;
 	ShipsTaskRunner g_task_runner = new ShipsTaskRunner(this);
 	Map<UUID, ShipVector> g_player_leave_spawns = new HashMap<UUID, ShipVector>();
+	public List<ShipCommands> g_commands = new ArrayList<ShipCommands>();
 
 	public DataVessel(String name, Block sign, Location teleport) {
 		super(name, sign, teleport);
@@ -57,9 +61,23 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 	public List<RequirementData> getRequirementData() {
 		return getData(RequirementData.class);
 	}
+	
+	public MovingBlockList createUnofficalMovingBlocks(BlockFace face, int distance){
+		MovingBlockList list = new MovingBlockList();
+		for (Block block : getBasicStructure()){
+			MovingBlock moving = new MovingBlock(block, face, distance);
+			list.add(moving);
+		}
+		return list;
+	}
 
 	public File getFile() {
 		return new File("plugins/Ships/VesselData/" + getStatic().getName() + "/" + g_name + ".yml");
+	}
+	
+	@Override
+	public List<ShipCommands> getCommands() {
+		return g_commands;
 	}
 
 	@Override
@@ -106,7 +124,7 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 	}
 
 	@Override
-	public Optional<FailedMovement> rotate(Rotate type, ShipsCause cause) {
+	public Optional<FailedMovement> rotate(RotateType type, ShipsCause cause) {
 		switch (type) {
 		case LEFT:
 			return rotateLeft(cause);

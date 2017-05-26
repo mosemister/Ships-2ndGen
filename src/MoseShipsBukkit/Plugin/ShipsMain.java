@@ -26,7 +26,8 @@ import MoseShipsBukkit.Utils.VersionCheckingUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
-import MoseShipsBukkit.Vessel.RootType.LoadableShip.Type.FinalTypes.*;
+import MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static.StaticAirship;
+import MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static.StaticOPShip;
 
 public class ShipsMain extends JavaPlugin {
 
@@ -173,11 +174,11 @@ public class ShipsMain extends JavaPlugin {
 	}
 
 	private void registerShipTypes() {
-		new OpShip.StaticOPShip();
-		new WaterShip.StaticWaterShip();
-		new Airship.StaticAirship();
+		new StaticOPShip();
+		new StaticAirship();
+		/*new WaterShip.StaticWaterShip();
 		new HybridShip.StaticHybridShip();
-		new Marsship.StaticMarsship();
+		new Marsship.StaticMarsship();*/
 	}
 
 	private void loadShips() {

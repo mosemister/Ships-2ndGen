@@ -1,5 +1,6 @@
 package MoseShipsBukkit.Vessel.Common.RootTypes;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,10 +12,11 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
-import MoseShipsBukkit.Movement.Type.MovementType.Rotate;
+import MoseShipsBukkit.Movement.Type.RotateType;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.Tasks.ShipsTaskRunner;
 import MoseShipsBukkit.Utils.Lists.MovingBlockList;
+import MoseShipsBukkit.Vessel.Common.ShipCommands.ShipCommands;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
 public interface LiveShip extends ShipsData {
@@ -63,6 +65,8 @@ public interface LiveShip extends ShipsData {
 	public LiveShip load(ShipsCause cause);
 
 	public LiveShip unload(ShipsCause cause);
+	
+	public List<ShipCommands> getCommands();
 
 	public void remove();
 
@@ -78,7 +82,7 @@ public interface LiveShip extends ShipsData {
 
 	public Optional<FailedMovement> rotateRight(ShipsCause cause);
 
-	public Optional<FailedMovement> rotate(Rotate type, ShipsCause cause);
+	public Optional<FailedMovement> rotate(RotateType type, ShipsCause cause);
 
 	public Optional<FailedMovement> teleport(StoredMovement move, ShipsCause cause);
 

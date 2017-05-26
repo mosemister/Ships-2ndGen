@@ -6,12 +6,13 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.material.MaterialData;
 
 import MoseShipsBukkit.Configs.BlockList;
 import MoseShipsBukkit.Movement.Type.CollideType;
 import MoseShipsBukkit.Movement.Type.MovementType;
-import MoseShipsBukkit.Movement.Type.MovementType.Rotate;
+import MoseShipsBukkit.Movement.Type.RotateType;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.ShipBlock.Snapshot.AttachableSnapshot;
 import MoseShipsBukkit.ShipBlock.Snapshot.BlockSnapshot;
@@ -30,6 +31,11 @@ public class MovingBlock {
 
 	public MovingBlock(Block original, int X, int Y, int Z) {
 		MOVING_TO = original.getRelative(X, Y, Z).getLocation();
+		STATE = BlockSnapshot.createSnapshot(original);
+	}
+	
+	public MovingBlock(Block original, BlockFace direct, int distance){
+		MOVING_TO = original.getRelative(direct, distance).getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
 	}
 
@@ -128,7 +134,7 @@ public class MovingBlock {
 		}
 	}
 
-	public MovingBlock rotate(Rotate rotate, Block centre) {
+	public MovingBlock rotate(RotateType rotate, Block centre) {
 		switch (rotate) {
 		case LEFT:
 			return rotateLeft(centre);

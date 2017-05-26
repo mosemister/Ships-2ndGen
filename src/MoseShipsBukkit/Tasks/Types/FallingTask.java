@@ -4,15 +4,15 @@ import MoseShipsBukkit.Configs.ShipsConfig;
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Tasks.ShipsTask;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
-import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveFallable;
+import MoseShipsBukkit.Vessel.Common.RootTypes.Implementations.FallableShip;
 
 public class FallingTask implements ShipsTask {
 
 	@Override
 	public void onRun(LiveShip ship) {
-		LiveFallable ship2 = (LiveFallable) ship;
+		FallableShip ship2 = (FallableShip)ship;
 		if (ship2.shouldFall()) {
-			ship2.move(0, 2, 0, new ShipsCause(ship2));
+			ship.move(0, 2, 0, new ShipsCause(ship));
 		}
 	}
 

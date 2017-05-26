@@ -10,7 +10,7 @@ import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
-import MoseShipsBukkit.Vessel.DataProcessors.Live.LiveAutoPilotable;
+import MoseShipsBukkit.Vessel.Common.RootTypes.Implementations.AutoPilotableShip;
 
 public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD {
 
@@ -62,12 +62,12 @@ public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD {
 				}
 			}
 
-			if (!(ship instanceof LiveAutoPilotable)) {
+			if (!(ship instanceof AutoPilotableShip)) {
 				player.sendMessage(ShipsMain.format(ship.getName() + " can not be autopiloted", true));
 				return true;
 			}
 
-			LiveAutoPilotable shipA = (LiveAutoPilotable) ship;
+			AutoPilotableShip shipA = (AutoPilotableShip) ship;
 			if (shipA.getAutoPilotData().isPresent()) {
 				AutoPilot ap = shipA.getAutoPilotData().get();
 				player.sendMessage(shipA.getName() + " is currently on a diffrent path. Estimated "
