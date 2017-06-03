@@ -1,9 +1,8 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Loader;
 
 import java.io.File;
-import java.util.Optional;
-
 import MoseShipsBukkit.Configs.BasicConfig;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenLoader;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
@@ -27,8 +26,8 @@ public abstract class DataLoader extends OpenLoader {
 	}
 		
 	@Override
-	public Optional<LiveShip> RAWLoad(File file) {
-		Optional<LiveShip> opShip = super.RAWLoad(file);
+	public SOptional<LiveShip> RAWLoad(File file) {
+		SOptional<LiveShip> opShip = super.RAWLoad(file);
 		if(opShip.isPresent()){
 			DataVessel vessel = (DataVessel)opShip.get();
 			for (RequirementData requirement : vessel.getRequirementData()){
@@ -48,6 +47,7 @@ public abstract class DataLoader extends OpenLoader {
 				requirement.saveShip(config);
 			}
 		}
+		config.save();
 		return this;
 	}
 }

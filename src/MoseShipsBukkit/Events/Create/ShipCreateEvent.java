@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.ShipEvent;
 import MoseShipsBukkit.Events.ShipsCause;
-import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 /**
  * implemented
@@ -17,11 +17,11 @@ import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
 public class ShipCreateEvent extends Event implements ShipEvent, Cancellable {
 
 	boolean g_cancelled = false;
-	AbstractShipsData g_ship;
+	ShipsData g_ship;
 	ShipsCause g_cause;
 	protected static HandlerList g_handlers = new HandlerList();
 
-	public ShipCreateEvent(ShipsCause cause, AbstractShipsData data) {
+	public ShipCreateEvent(ShipsCause cause, ShipsData data) {
 		g_ship = data;
 		g_cause = cause;
 	}
@@ -37,7 +37,7 @@ public class ShipCreateEvent extends Event implements ShipEvent, Cancellable {
 	}
 
 	@Override
-	public AbstractShipsData getShip() {
+	public ShipsData getShip() {
 		return g_ship;
 	}
 

@@ -1,8 +1,8 @@
 package MoseShipsBukkit.Vessel.Common.OpenLoader;
 
 import java.io.File;
-import java.util.Optional;
 
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public interface OpenRAWLoader {
@@ -11,7 +11,7 @@ public interface OpenRAWLoader {
 
 	public int[] getLoaderVersion();
 
-	public Optional<LiveShip> RAWLoad(File file);
+	public SOptional<LiveShip> RAWLoad(File file);
 
 	public boolean willLoad(File file);
 

@@ -3,7 +3,6 @@ package MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,6 +11,7 @@ import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.StaticShipConfig;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.BlockState;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
@@ -81,7 +81,7 @@ public class StaticAirship implements StaticShipType, StaticFuel, StaticRequired
 	}
 
 	@Override
-	public Optional<LiveShip> createVessel(String name, Block licence) {
+	public SOptional<LiveShip> createVessel(String name, Block licence) {
 		Airship ship = new Airship(name, licence, licence.getLocation());
 		FuelRequirement fuelD = ship.getFuelData();
 		BlockRequirement blockD = ship.getBlockData();
@@ -91,16 +91,16 @@ public class StaticAirship implements StaticShipType, StaticFuel, StaticRequired
 		blockD.setState(new BlockState(Material.FIRE));
 		percentD.setPercentage(getDefaultRequiredPercent());
 		percentD.setStates(getDefaultPercentBlocks());
-		return Optional.of((LiveShip) ship);
+		return new SOptional<LiveShip>((LiveShip) ship);
 	}
 
 	@Override
-	public Optional<LiveShip> loadVessel(ShipsData data, BasicConfig config) {
+	public SOptional<LiveShip> loadVessel(ShipsData data, BasicConfig config) {
 		Airship ship = new Airship(data);
 		for(RequirementData reqD : ship.getRequirementData()){
 			reqD.applyFromShip(config);
 		}
-		return Optional.of((LiveShip) ship);
+		return new SOptional<LiveShip>((LiveShip) ship);
 	}
 
 	@Override

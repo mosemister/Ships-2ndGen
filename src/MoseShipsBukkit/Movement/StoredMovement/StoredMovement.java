@@ -1,11 +1,10 @@
 package MoseShipsBukkit.Movement.StoredMovement;
 
-import java.util.Optional;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import MoseShipsBukkit.Movement.Type.RotateType;
+import MoseShipsBukkit.Utils.SOptional;
 
 public class StoredMovement {
 
@@ -21,24 +20,24 @@ public class StoredMovement {
 		ROTATE = rotate;
 	}
 
-	public Optional<Integer> getX() {
-		return Optional.ofNullable(X);
+	public SOptional<Integer> getX() {
+		return new SOptional<Integer>(X);
 	}
 
-	public Optional<Integer> getY() {
-		return Optional.ofNullable(Y);
+	public SOptional<Integer> getY() {
+		return new SOptional<Integer>(Y);
 	}
 
-	public Optional<Integer> getZ() {
-		return Optional.ofNullable(Z);
+	public SOptional<Integer> getZ() {
+		return new SOptional<Integer>(Z);
 	}
 
-	public Optional<Location> getTeleportTo() {
-		return Optional.ofNullable(TELEPORT);
+	public SOptional<Location> getTeleportTo() {
+		return new SOptional<Location>(TELEPORT);
 	}
 
-	public Optional<RotateType> getRotation() {
-		return Optional.ofNullable(ROTATE);
+	public SOptional<RotateType> getRotation() {
+		return new SOptional<RotateType>(ROTATE);
 	}
 
 	public Block getEndResult(Block start, Block centre) {

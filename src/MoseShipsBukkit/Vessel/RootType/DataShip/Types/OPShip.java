@@ -1,12 +1,11 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Types;
 
-import java.util.Optional;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 import MoseShipsBukkit.Vessel.Common.RootTypes.Implementations.AutoPilotableShip;
@@ -31,8 +30,8 @@ public class OPShip extends AbstractAirType implements AutoPilotableShip {
 	}
 
 	@Override
-	public Optional<AutoPilot> getAutoPilotData() {
-		return Optional.ofNullable(g_auto_pilot);
+	public SOptional<AutoPilot> getAutoPilotData() {
+		return new SOptional<AutoPilot>(g_auto_pilot);
 	}
 
 	@Override

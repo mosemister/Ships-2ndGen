@@ -23,25 +23,30 @@ public class MovingBlock {
 
 	Location MOVING_TO;
 	BlockSnapshot STATE;
+	MovementType TYPE;
 
-	public MovingBlock(Block original, Location moving) {
+	public MovingBlock(Block original, Location moving, MovementType type) {
 		MOVING_TO = moving;
 		STATE = BlockSnapshot.createSnapshot(original);
+		TYPE = type;
 	}
 
 	public MovingBlock(Block original, int X, int Y, int Z) {
 		MOVING_TO = original.getRelative(X, Y, Z).getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
+		TYPE = MovementType.DIRECTIONAL;
 	}
 	
 	public MovingBlock(Block original, BlockFace direct, int distance){
 		MOVING_TO = original.getRelative(direct, distance).getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
+		TYPE = MovementType.DIRECTIONAL;
 	}
 
-	public MovingBlock(Block original, Block block) {
+	public MovingBlock(Block original, Block block, MovementType type) {
 		MOVING_TO = block.getLocation();
 		STATE = BlockSnapshot.createSnapshot(original);
+		TYPE = type;
 	}
 
 	public BlockSnapshot getSnapshot() {
@@ -91,7 +96,15 @@ public class MovingBlock {
 	}
 
 	public MovingBlock move() {
-		STATE.placeBlock(MOVING_TO.getBlock());
+		if((TYPE.equals(MovementType.ROTATE_LEFT)) && (STATE instanceof RotatableSnapshot)){
+			RotatableSnapshot rotate = (RotatableSnapshot)STATE;
+			STATE.placeBlock(MOVING_TO.getBlock(), rotate.getRotateLeft());
+		}else if((TYPE.equals(MovementType.ROTATE_RIGHT)) && (STATE instanceof RotatableSnapshot)){
+			RotatableSnapshot rotate = (RotatableSnapshot)STATE;
+			STATE.placeBlock(MOVING_TO.getBlock(), rotate.getRotateRight());
+		}else{
+			STATE.placeBlock(MOVING_TO.getBlock());
+		}
 		return this;
 	}
 

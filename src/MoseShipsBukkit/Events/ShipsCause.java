@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+
+import MoseShipsBukkit.Utils.SOptional;
 
 public class ShipsCause {
 
@@ -31,39 +32,39 @@ public class ShipsCause {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Object> Optional<T> first(Class<T> type) {
+	public <T extends Object> SOptional<T> first(Class<T> type) {
 		for (Object obj : g_causes) {
 			if (type.isInstance(obj)) {
-				return Optional.of((T) obj);
+				return new SOptional<T>((T) obj);
 			}
 		}
-		return Optional.empty();
+		return new SOptional<T>();
 	}
 
-	public Optional<Object> first() {
+	public SOptional<Object> first() {
 		if (g_causes.size() == 0) {
-			return Optional.empty();
+			return new SOptional<Object>();
 		} else {
-			return Optional.of(g_causes.get(0));
+			return new SOptional<Object>(g_causes.get(0));
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Object> Optional<T> last(Class<T> type) {
+	public <T extends Object> SOptional<T> last(Class<T> type) {
 		for (int A = g_causes.size() - 1; A > 0; A--) {
 			Object obj = g_causes.get(A);
 			if (type.isInstance(obj)) {
-				return Optional.of((T) obj);
+				return new SOptional<T>((T) obj);
 			}
 		}
-		return Optional.empty();
+		return new SOptional<T>();
 	}
 
-	public Optional<Object> last() {
+	public SOptional<Object> last() {
 		if (g_causes.size() == 0) {
-			return Optional.empty();
+			return new SOptional<Object>();
 		} else {
-			return Optional.of(g_causes.get(g_causes.size() - 1));
+			return new SOptional<Object>(g_causes.get(g_causes.size() - 1));
 		}
 	}
 

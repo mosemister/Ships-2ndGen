@@ -2,7 +2,6 @@ package MoseShipsBukkit.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -21,7 +20,7 @@ public class BlockFinderUtil {
 
 	public static BasicBlockFinder getConfigSelected() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_BLOCKFINDER);
-		Optional<BasicBlockFinder> opBlock = getFinder(name);
+		SOptional<BasicBlockFinder> opBlock = getFinder(name);
 		if (opBlock.isPresent()) {
 			return opBlock.get();
 		}
@@ -32,7 +31,7 @@ public class BlockFinderUtil {
 		for (Block block : list) {
 			if (block.getState() instanceof Sign) {
 				Sign sign = (Sign) block.getState();
-				Optional<ShipSign> opType = ShipSignUtil.getSign(sign);
+				SOptional<ShipSign> opType = ShipSignUtil.getSign(sign);
 				if (opType.isPresent()) {
 					if (opType.get() instanceof ShipLicenceSign) {
 						return true;
@@ -50,13 +49,13 @@ public class BlockFinderUtil {
 		return finder;
 	}
 
-	public static Optional<BasicBlockFinder> getFinder(String name) {
+	public static SOptional<BasicBlockFinder> getFinder(String name) {
 		for (BasicBlockFinder finder : getFinders()) {
 			if (finder.getName().equalsIgnoreCase(name)) {
-				return Optional.of(finder);
+				return new SOptional<BasicBlockFinder>(finder);
 			}
 		}
-		return Optional.empty();
+		return new SOptional<BasicBlockFinder>();
 	}
 
 	public static BasicBlockFinder getFinder(Class<? extends BasicBlockFinder> finderType) {

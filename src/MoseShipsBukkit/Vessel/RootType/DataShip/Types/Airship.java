@@ -1,7 +1,5 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Types;
 
-import java.util.Optional;
-
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -10,6 +8,7 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.Result.MovementResult;
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 import MoseShipsBukkit.Vessel.Common.RootTypes.Implementations.AutoPilotableShip;
@@ -28,14 +27,16 @@ public class Airship extends AbstractAirType implements AutoPilotableShip, Falla
 	
 	public Airship(ShipsData data) {
 		super(data);
-		addData(new FuelRequirement());
+		addData(new PercentageRequirement());
 		addData(new BlockRequirement());
+		addData(new FuelRequirement());
 	}
 	
 	public Airship(String name, Block lic, Location teleport){
 		super(name, lic, teleport);
-		addData(new FuelRequirement());
+		addData(new PercentageRequirement());
 		addData(new BlockRequirement());
+		addData(new FuelRequirement());
 	}
 	
 	public PercentageRequirement getPercentData(){
@@ -76,7 +77,7 @@ public class Airship extends AbstractAirType implements AutoPilotableShip, Falla
 
 	@Override
 	public boolean shouldFall() {
-		Optional<FailedMovement> requirement = hasRequirements(createUnofficalMovingBlocks(BlockFace.DOWN, 2));
+		SOptional<FailedMovement> requirement = hasRequirements(createUnofficalMovingBlocks(BlockFace.DOWN, 2));
 		if(requirement.isPresent()){
 			FailedMovement failed = requirement.get();
 			if (failed.getResult().equals(MovementResult.OUT_OF_FUEL)){
@@ -87,8 +88,8 @@ public class Airship extends AbstractAirType implements AutoPilotableShip, Falla
 	}
 
 	@Override
-	public Optional<AutoPilot> getAutoPilotData() {
-		return Optional.ofNullable(g_auto_pilot);
+	public SOptional<AutoPilot> getAutoPilotData() {
+		return new SOptional<AutoPilot>(g_auto_pilot);
 	}
 
 	@Override

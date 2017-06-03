@@ -2,7 +2,6 @@ package MoseShipsBukkit.Movement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,32 +19,33 @@ import MoseShipsBukkit.Movement.Type.MovementType;
 import MoseShipsBukkit.Movement.Type.RotateType;
 import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.Utils.MovementAlgorithmUtil;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.Lists.MovingBlockList;
 import MoseShipsBukkit.Vessel.Common.GeneralTypes.WaterType;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public abstract class Movement {
 
-	public static Optional<FailedMovement> move(ShipsCause cause2, LiveShip ship, int X, int Y, int Z,
+	public static SOptional<FailedMovement> move(ShipsCause cause2, LiveShip ship, int X, int Y, int Z,
 			BlockState... movingTo) {
 		if ((X == 0) && (Y == 0) && (Z == 0)) {
-			return Optional.of(new FailedMovement(ship, MovementResult.NO_SPEED_SET, 0));
+			return new SOptional<FailedMovement>(new FailedMovement(ship, MovementResult.NO_SPEED_SET, 0));
 		}
 		return move(cause2, ship, MovementType.DIRECTIONAL,
 				new StoredMovement.Builder().setX(X).setY(Y).setZ(Z).build(), movingTo);
 	}
 
-	public static Optional<FailedMovement> rotateRight(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
+	public static SOptional<FailedMovement> rotateRight(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
 		return move(cause2, ship, MovementType.ROTATE_RIGHT,
 				new StoredMovement.Builder().setRotation(RotateType.RIGHT).build(), movingTo);
 	}
 
-	public static Optional<FailedMovement> rotateLeft(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
+	public static SOptional<FailedMovement> rotateLeft(ShipsCause cause2, LiveShip ship, BlockState... movingTo) {
 		return move(cause2, ship, MovementType.ROTATE_LEFT,
 				new StoredMovement.Builder().setRotation(RotateType.LEFT).build(), movingTo);
 	}
 
-	public static Optional<FailedMovement> rotate(ShipsCause cause, LiveShip ship, RotateType rotate,
+	public static SOptional<FailedMovement> rotate(ShipsCause cause, LiveShip ship, RotateType rotate,
 			BlockState... movingTo) {
 		switch (rotate) {
 		case LEFT:
@@ -53,31 +53,31 @@ public abstract class Movement {
 		case RIGHT:
 			return rotateRight(cause, ship, movingTo);
 		}
-		return Optional.of(new FailedMovement(ship, MovementResult.PLUGIN_CANCELLED, true));
+		return new SOptional<FailedMovement>(new FailedMovement(ship, MovementResult.PLUGIN_CANCELLED, true));
 	}
 
-	public static Optional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, Location tel,
+	public static SOptional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, Location tel,
 			BlockState... movingTo) {
 		return move(cause2, ship, MovementType.TELEPORT, new StoredMovement.Builder().setTeleportTo(tel).build(),
 				movingTo);
 	}
 
-	public static Optional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, StoredMovement movement,
+	public static SOptional<FailedMovement> teleport(ShipsCause cause2, LiveShip ship, StoredMovement movement,
 			BlockState... movingTo) {
 		return move(cause2, ship, MovementType.TELEPORT, movement, movingTo);
 	}
 
-	private static Optional<FailedMovement> move(ShipsCause cause, LiveShip ship, MovementType type,
+	private static SOptional<FailedMovement> move(ShipsCause cause, LiveShip ship, MovementType type,
 			StoredMovement movement, BlockState... movingTo) {
 		MovingBlockList blocks = new MovingBlockList();
 		List<MovingBlock> collide = new ArrayList<MovingBlock>();
 		List<Block> structure = ship.getBasicStructure();
 		if (structure.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
+			return new SOptional<FailedMovement>(new FailedMovement(ship, MovementResult.NO_BLOCKS, true));
 		}
 		waterTypeFix(ship, structure);
 		for (Block loc : structure) {
-			MovingBlock block = new MovingBlock(loc, movement.getEndResult(loc, ship.getLocation().getBlock()));
+			MovingBlock block = new MovingBlock(loc, movement.getEndResult(loc, ship.getLocation().getBlock()), type);
 			CollideType collideType = block.getCollision(ship.getBasicStructure(), movingTo);
 			if (collideType.equals(CollideType.COLLIDE)) {
 				collide.add(block);
@@ -86,22 +86,22 @@ public abstract class Movement {
 			}
 		}
 		if (!collide.isEmpty()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
+			return new SOptional<FailedMovement>(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
 		}
 		ShipsCause cause3 = new ShipsCause(cause, structure);
 		ship.load(cause3);
 		return move(ship, type, blocks, cause3);
 	}
 
-	private static Optional<FailedMovement> move(LiveShip ship, MovementType type, MovingBlockList blocks,
+	private static SOptional<FailedMovement> move(LiveShip ship, MovementType type, MovingBlockList blocks,
 			ShipsCause cause) {
 		ship.setRemoveNextCycle(false);
 		ShipAboutToMoveEvent event = new ShipAboutToMoveEvent(cause, ship, type, blocks);
 		Bukkit.getPluginManager().callEvent(event);
 		if (event.isCancelled()) {
-			return Optional.of(new FailedMovement(ship, MovementResult.PLUGIN_CANCELLED, false));
+			return new SOptional<FailedMovement>(new FailedMovement(ship, MovementResult.PLUGIN_CANCELLED, false));
 		}
-		Optional<FailedMovement> opFail = ship.hasRequirements(blocks);
+		SOptional<FailedMovement> opFail = ship.hasRequirements(blocks);
 		if (opFail.isPresent()) {
 			return opFail;
 		}
@@ -123,9 +123,9 @@ public abstract class Movement {
 				eTo.setYaw(eLoc.getYaw());
 				entity.teleport(eTo);
 			}
-			return Optional.empty();
+			return new SOptional<FailedMovement>();
 		}
-		return Optional.empty();
+		return new SOptional<FailedMovement>();
 	}
 
 	private static void waterTypeFix(LiveShip ship, List<Block> structure) {

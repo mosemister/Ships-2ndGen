@@ -1,7 +1,6 @@
 package MoseShipsBukkit.Plugin;
 
 import java.io.File;
-import java.util.Optional;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,7 +9,13 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import MoseShipsBukkit.Commands.*;
+import MoseShipsBukkit.Commands.AutoPilotCMD;
+import MoseShipsBukkit.Commands.BlockListCMD;
+import MoseShipsBukkit.Commands.DebugCMD;
+import MoseShipsBukkit.Commands.HelpCMD;
+import MoseShipsBukkit.Commands.InfoCMD;
+import MoseShipsBukkit.Commands.ShipsCMD;
+import MoseShipsBukkit.Commands.SignCMD;
 import MoseShipsBukkit.Configs.BlockList;
 import MoseShipsBukkit.Listeners.ShipsListeners;
 import MoseShipsBukkit.ShipBlock.Signs.ShipAltitudeSign;
@@ -20,7 +25,41 @@ import MoseShipsBukkit.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.ShipBlock.Signs.ShipWheelSign;
 import MoseShipsBukkit.ShipBlock.Snapshot.BlockSnapshot;
-import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.*;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.BannerSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.BrewingStandSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.ButtonSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.CarpetSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.ChestSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.CommandBlockSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.DispenserSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.DropperSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.EnderChestSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.FireSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.FurnaceSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.GateSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.HookSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.HopperSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.JukeBoxSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.LadderSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.LeverSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.LogSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.NoteBlockSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.ObserverSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.PistonSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.PotSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.PressurePlateSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.PumpkinSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.RailSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.RedstoneSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.RedstoneSquareSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.SignSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.SkullSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.SpawnerSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.StairsSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.TeleportSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.TorchSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.TrapSnapshot;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Utils.VersionCheckingUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
@@ -193,8 +232,7 @@ public class ShipsMain extends JavaPlugin {
 					File[] files = folder.listFiles();
 					if (files != null) {
 						for (File file : files) {
-							System.out.println("Attempting to load " + file.getAbsolutePath());
-							Optional<LiveShip> opShip = Loader.loadDirectlyFromFile(file);
+							SOptional<LiveShip> opShip = Loader.loadFromFile(file);
 							if (!opShip.isPresent()) {
 								if (badFiles == null) {
 									badFiles = file.getName().replace(".yml", "");

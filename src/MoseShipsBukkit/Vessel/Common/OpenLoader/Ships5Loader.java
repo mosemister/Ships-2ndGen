@@ -1,7 +1,6 @@
 package MoseShipsBukkit.Vessel.Common.OpenLoader;
 
 import java.io.File;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -10,13 +9,14 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import MoseShipsBukkit.Configs.BasicConfig;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 
 public abstract class Ships5Loader implements OpenRAWLoader {
 
 	@Override
-	public Optional<LiveShip> RAWLoad(File file) {
+	public SOptional<LiveShip> RAWLoad(File file) {
 		BasicConfig config = new BasicConfig(file);
 		String name = file.getName().substring(0, file.getName().length() - 4);
 		String typeVersion = config.get(String.class, "ShipsData.Type");
@@ -27,7 +27,7 @@ public abstract class Ships5Loader implements OpenRAWLoader {
 			}
 		}
 		if (shipType == null) {
-			return Optional.empty();
+			return new SOptional<LiveShip>();
 		}
 		String uuids = config.get(String.class, "ShipsData.Player.Name");
 		OfflinePlayer player = null;
@@ -46,12 +46,12 @@ public abstract class Ships5Loader implements OpenRAWLoader {
 		Location sign = new Location(world, signX, signY, signZ);
 		Location teleport = new Location(world, telX, telY, telZ);
 		if (uuids == null) {
-			return Optional.empty();
+			return new SOptional<LiveShip>();
 		} else {
 			player = Bukkit.getOfflinePlayer(UUID.fromString(uuids));
 		}
 		if (signLocation == null) {
-			return Optional.empty();
+			return new SOptional<LiveShip>();
 		} else {
 			String[] locS = signLocation.split(",");
 			signX = Double.parseDouble(locS[0]);
@@ -60,14 +60,14 @@ public abstract class Ships5Loader implements OpenRAWLoader {
 			world = Bukkit.getWorld(locS[3]);
 		}
 		if (teleportLocation == null) {
-			return Optional.empty();
+			return new SOptional<LiveShip>();
 		} else {
 			String[] locS = teleportLocation.split(",");
 			telX = Double.parseDouble(locS[0]);
 			telY = Double.parseDouble(locS[1]);
 			telZ = Double.parseDouble(locS[2]);
 		}
-		Optional<LiveShip> opShip = shipType.createVessel(name, sign.getBlock());
+		SOptional<LiveShip> opShip = shipType.createVessel(name, sign.getBlock());
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			ship.setOwner(player);
@@ -77,7 +77,7 @@ public abstract class Ships5Loader implements OpenRAWLoader {
 			ship.setEngineSpeed(speed);
 			ship.setBoostSpeed(speed + 1);
 		}
-		return Optional.empty();
+		return new SOptional<LiveShip>();
 	}
 
 	@Override

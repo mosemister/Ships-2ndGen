@@ -41,20 +41,6 @@ public class Ships5Movement implements MovementAlgorithm {
 				lic = block.getMovingTo().getBlock();
 			}
 		}
-		/*
-		 * blocks.stream().forEach(block -> {
-		 * newStructure.add(block.getMovingTo());
-		 * block.move(BlockChangeFlag.NONE); MovementType mType =
-		 * block.getMovementType(); Optional<Direction> opConnected =
-		 * block.getMovingTo().get(Keys.DIRECTION); switch (mType) { case
-		 * ROTATE_LEFT: if (opConnected.isPresent()) {
-		 * BlockRotate.getRotation(opConnected.get(), RotateType.LEFT); } break;
-		 * case ROTATE_RIGHT: if (opConnected.isPresent()) {
-		 * BlockRotate.getRotation(opConnected.get(), RotateType.LEFT); } break;
-		 * default: break;
-		 * 
-		 * } });
-		 */
 		Location loc = blocks.get(0).getMovingTo().clone().subtract(blocks.get(0).getOrigin());
 		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation().getBlock(), loc.getBlockX(), loc.getBlockY(),
 				loc.getBlockZ());

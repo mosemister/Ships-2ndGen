@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Optional;
 import org.bukkit.Material;
 import org.bukkit.block.Furnace;
 import org.bukkit.inventory.FurnaceInventory;
@@ -17,6 +16,7 @@ import MoseShipsBukkit.Movement.MovingBlock;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
 import MoseShipsBukkit.Movement.Result.MovementResult;
 import MoseShipsBukkit.ShipBlock.BlockState;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.Lists.MovingBlockList;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.RootType.DataShip.Data.RequirementData;
@@ -54,7 +54,7 @@ public class FuelRequirement implements RequirementData {
 	}
 
 	@Override
-	public Optional<FailedMovement> hasRequirements(LiveShip ship, MovingBlockList blocks) {
+	public SOptional<FailedMovement> hasRequirements(LiveShip ship, MovingBlockList blocks) {
 		MovingBlockList furnaces = getFuelHolders(blocks);
 		Map<MovingBlock, List<ItemStack>> map = getFuel(furnaces);
 		boolean check = true;
@@ -62,19 +62,26 @@ public class FuelRequirement implements RequirementData {
 		Iterator<Entry<MovingBlock, List<ItemStack>>> entrySet = map.entrySet().iterator();
 		while(entrySet.hasNext()){
 			Entry<MovingBlock, List<ItemStack>> entry = entrySet.next();
-			for(ItemStack item : entry.getValue()){
+			for(int A = 0; A < entry.getValue().size(); A++){
+				ItemStack item = entry.getValue().get(A);
 				int countT = count + item.getAmount();
 				if((g_take_amount > countT) && (check)){
+					count = countT;
+				}else if((g_take_amount == countT) && (check)){
 					count = g_take_amount;
-				}else if((g_take_amount <= countT) && (check)){
 					check = false;
+					break;
+				}else if((g_take_amount < countT) && (check)){
+					count = countT;
+					check = false;
+					break;
 				}else{
 					map.remove(entry.getKey(), entry.getValue());
 				}
 			}
 		}
 		if(g_take_amount > count){
-			return Optional.of(new FailedMovement(ship, MovementResult.OUT_OF_FUEL, true));
+			return new SOptional<FailedMovement>(new FailedMovement(ship, MovementResult.OUT_OF_FUEL, true));
 		}
 		count = g_take_amount;
 		for(Entry<MovingBlock, List<ItemStack>> entry : map.entrySet()){
@@ -84,11 +91,11 @@ public class FuelRequirement implements RequirementData {
 					item.setAmount(0);
 				}else{
 					item.setAmount(item.getAmount() - count);
-					return Optional.empty();
+					return new SOptional<FailedMovement>();
 				}
 			}
 		}
-		return Optional.of(new FailedMovement(ship, MovementResult.FUEL_REMOVE_ERROR, true));
+		return new SOptional<FailedMovement>(new FailedMovement(ship, MovementResult.FUEL_REMOVE_ERROR, true));
 	}
 
 	@Override
@@ -99,7 +106,11 @@ public class FuelRequirement implements RequirementData {
 	
 	@Override
 	public void saveShip(BasicConfig config) {
-		config.set(g_state, LOADER_STATES);
+		List<String> list = new ArrayList<String>();
+		for(BlockState state : g_state){
+			list.add(state.toNoString());
+		}
+		config.set(list, LOADER_STATES);
 		config.set(g_take_amount, LOADER_TAKE_AMOUNT);
 	}
 	

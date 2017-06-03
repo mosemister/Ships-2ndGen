@@ -1,8 +1,6 @@
 package MoseShipsBukkit.Commands;
 
 import java.io.File;
-import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -11,6 +9,7 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Configs.BlockList;
 import MoseShipsBukkit.Configs.ShipsConfig;
 import MoseShipsBukkit.Plugin.ShipsMain;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
@@ -58,24 +57,28 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 			return true;
 		} else if (args[1].equalsIgnoreCase("load")) {
 			if (args.length > 2) {
-				Optional<File> opFile = Loader.getFileFromName(args[2]);
+				SOptional<File> opFile = Loader.getShipFile(args[2]);
 				if (opFile.isPresent()) {
-					List<OpenRAWLoader> loaders = Loader.getLoadersFromFile(opFile.get());
-					for (OpenRAWLoader loader : loaders) {
-						Optional<LiveShip> opShip = loader.RAWLoad(opFile.get());
+					SOptional<OpenRAWLoader> opLoader = Loader.getOpenLoader(opFile.get());
+					if(opLoader.isPresent()){
+						SOptional<LiveShip> opShip = opLoader.get().RAWLoad(opFile.get());
 						if (opShip.isPresent()) {
 							Loader.LOADED_SHIPS.add(opShip.get());
 							source.sendMessage(ShipsMain.format("Ship is loading fine", false));
 							return true;
 						} else {
-							String error = loader.getError(opFile.get());
+							String error = opLoader.get().getError(opFile.get());
 							source.sendMessage(ShipsMain.format("Ship is failing to load, due to " + error, true));
 							return true;
 						}
+					}else{
+						source.sendMessage(ShipsMain.format("Ship is failing to load, due to a issue finding the correct loader. Maybe the loader name is misspelled or a missing loader ships addon plugin", true));
+						return true;
 					}
 				}
 			} else {
 				source.sendMessage(ShipsMain.formatCMDHelp("/ships debug load <vessel name>"));
+				return true;
 			}
 		} else if (args[1].equalsIgnoreCase("reload")) {
 			if (args.length > 2) {
@@ -103,7 +106,7 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 			} else if (args[2].equalsIgnoreCase("Ships")) {
 				source.sendMessage("|----[Ships]----|");
 				source.sendMessage("[Ship name] | [Ship Type] | [X] | [Y] | [Z] | [world] | [loaded]");
-				for (LiveShip ship : Loader.getShips()) {
+				for (LiveShip ship : Loader.safeLoadAllShips()) {
 					source.sendMessage(
 							ship.getName() + " | " + ship.getStatic().getName() + " | " + ship.getLocation().getBlockX()
 									+ " | " + ship.getLocation().getBlockY() + " | " + ship.getLocation().getBlockZ()

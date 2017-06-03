@@ -129,7 +129,7 @@ public class Ships6Movement implements MovementAlgorithm {
 
 			}
 
-		}, ((list.size() - 1) * 2) * repeate);
+		}, ((list.size()*repeate)+ time + 1));
 		return false;
 	}
 

@@ -1,8 +1,7 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Loader.Types.Airship;
 
-import java.util.Optional;
-
 import MoseShipsBukkit.Configs.BasicConfig;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenLoader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
@@ -24,7 +23,7 @@ public class Ships6AirshipLoader extends DataLoader{
 	}
 
 	@Override
-	public Optional<LiveShip> load(ShipsData data, BasicConfig config) {
+	public SOptional<LiveShip> load(ShipsData data, BasicConfig config) {
 		return StaticShipTypeUtil.getType(StaticAirship.class).get().loadVessel(data, config);
 	}
 

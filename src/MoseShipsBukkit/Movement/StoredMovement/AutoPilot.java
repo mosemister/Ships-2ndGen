@@ -2,7 +2,6 @@ package MoseShipsBukkit.Movement.StoredMovement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -13,6 +12,7 @@ import org.bukkit.block.Block;
 
 import MoseShips.CustomDataHolder.DataHandler;
 import MoseShips.Maps.OrderedMap;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.RootTypes.Implementations.AutoPilotableShip;
 
@@ -131,8 +131,8 @@ public class AutoPilot implements DataHandler{
 		return SHIP;
 	}
 
-	public Optional<OfflinePlayer> getTargetPlayer() {
-		return Optional.ofNullable(USER);
+	public SOptional<OfflinePlayer> getTargetPlayer() {
+		return new SOptional<OfflinePlayer>(USER);
 	}
 
 	public boolean isRepeating() {

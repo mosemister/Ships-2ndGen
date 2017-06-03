@@ -1,29 +1,29 @@
 package MoseShipsBukkit.Utils;
 
-import java.util.Optional;
-
 import org.bukkit.block.Sign;
 
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 
 public class ShipSignUtil {
 
-	public static Optional<ShipSign> getSign(String line) {
+	public static SOptional<ShipSign> getSign(String line) {
 		for (ShipSign sign : ShipSign.SHIP_SIGNS) {
-			if (sign.getFirstLine().equalsIgnoreCase(line)) {
-				return Optional.of(sign);
+			for(String first : sign.getFirstLine()){
+				if(first.equalsIgnoreCase(line)){
+					return new SOptional<ShipSign>(sign);
+				}
 			}
 		}
-		return Optional.empty();
+		return new SOptional<ShipSign>();
 	}
 
-	public static Optional<ShipSign> getSign(Sign sign2) {
+	public static SOptional<ShipSign> getSign(Sign sign2) {
 		for (ShipSign sign : ShipSign.SHIP_SIGNS) {
 			if (sign.isSign(sign2)) {
-				return Optional.of(sign);
+				return new SOptional<ShipSign>(sign);
 			}
 		}
-		return Optional.empty();
+		return new SOptional<ShipSign>();
 	}
 
 }

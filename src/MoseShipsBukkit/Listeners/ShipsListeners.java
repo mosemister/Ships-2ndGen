@@ -1,7 +1,5 @@
 package MoseShipsBukkit.Listeners;
 
-import java.util.Optional;
-
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -21,6 +19,7 @@ import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.LocationUtil;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.ShipSignUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
@@ -33,13 +32,13 @@ public class ShipsListeners implements Listener {
 		Player player = event.getPlayer();
 		if (block.getState() instanceof Sign) {
 			Sign sign = (Sign) block.getState();
-			Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
+			SOptional<ShipSign> opSign = ShipSignUtil.getSign(sign);
 			if (opSign.isPresent()) {
 				opSign.get().onRemove(player, sign);
 			}
 		}
 		for (Sign sign : LocationUtil.getAttachedSigns(block)) {
-			Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
+			SOptional<ShipSign> opSign = ShipSignUtil.getSign(sign);
 			if (opSign.isPresent()) {
 				opSign.get().onRemove(player, sign);
 			}
@@ -48,7 +47,7 @@ public class ShipsListeners implements Listener {
 
 	@EventHandler
 	public void signCreate(SignChangeEvent event) {
-		Optional<ShipSign> opSign = ShipSignUtil.getSign(event.getLine(0));
+		SOptional<ShipSign> opSign = ShipSignUtil.getSign(event.getLine(0));
 		if (opSign.isPresent()) {
 			opSign.get().onCreation(event);
 		}
@@ -66,7 +65,7 @@ public class ShipsListeners implements Listener {
 
 	private void playerLeaveEvent(Player player) {
 		Block block = player.getLocation().getBlock().getRelative(0, -1, 0);
-		Optional<LiveShip> opShip = Loader.getShip(block, false);
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(block.getLocation(), false);
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			ShipVector vector = ship.getStructure().createVector(ship, block);
@@ -77,7 +76,7 @@ public class ShipsListeners implements Listener {
 	@EventHandler
 	public void playerSpawnEvent(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		Optional<LiveShip> opShip = Loader.getShip(player.getUniqueId());
+		SOptional<LiveShip> opShip = Loader.safeLoadShipByVectorSpawn(player.getUniqueId());
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			ShipVector vector = ship.getPlayerVectorSpawns().get(player.getUniqueId());
@@ -97,9 +96,9 @@ public class ShipsListeners implements Listener {
 				|| (event.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			if (block.getState() instanceof Sign) {
 				Sign sign = (Sign) block.getState();
-				Optional<ShipSign> opSignType = ShipSignUtil.getSign(sign);
+				SOptional<ShipSign> opSignType = ShipSignUtil.getSign(sign);
 				if (opSignType.isPresent()) {
-					Optional<LiveShip> opType = Loader.getShip(opSignType.get(), sign, true);
+					SOptional<LiveShip> opType = Loader.safeLoadShip(opSignType.get(), sign, true);
 					if (opType.isPresent()) {
 						LiveShip ship = opType.get();
 						ShipsCause cause2 = new ShipsCause(event, player, direction, sign, opSignType.get(), ship);

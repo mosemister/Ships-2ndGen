@@ -4,7 +4,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.Events.ShipsCause;
-import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
+import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
 
 /**
  * implemented
@@ -14,7 +14,7 @@ import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
  */
 public class ShipSignCreateEvent extends ShipCreateEvent {
 
-	public ShipSignCreateEvent(ShipsCause cause, AbstractShipsData data) {
+	public ShipSignCreateEvent(ShipsCause cause, ShipsData data) {
 		super(cause, data);
 	}
 

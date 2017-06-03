@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -17,6 +16,7 @@ import org.bukkit.entity.Entity;
 import MoseShips.CustomDataHolder.DataHolder;
 import MoseShipsBukkit.ShipBlock.Structure.ShipStructure;
 import MoseShipsBukkit.Utils.LocationUtil;
+import MoseShipsBukkit.Utils.SOptional;
 
 public class AbstractShipsData extends DataHolder implements ShipsData {
 
@@ -48,7 +48,7 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 
 	public AbstractShipsData(ShipsData data) {
 		g_name = data.getName();
-		Optional<OfflinePlayer> opOwner = data.getOwner();
+		SOptional<OfflinePlayer> opOwner = data.getOwner();
 		if (opOwner.isPresent()) {
 			g_user = opOwner.get();
 		}
@@ -59,11 +59,11 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 	}
 
 	@Override
-	public Optional<Sign> getLicence() {
+	public SOptional<Sign> getLicence() {
 		if (g_main.getState() instanceof Sign) {
-			return Optional.of((Sign) g_main.getState());
+			return new SOptional<Sign>((Sign) g_main.getState());
 		}
-		return Optional.empty();
+		return new SOptional<Sign>();
 	}
 
 	@Override
@@ -72,8 +72,8 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 	}
 
 	@Override
-	public Optional<OfflinePlayer> getOwner() {
-		return Optional.ofNullable(g_user);
+	public SOptional<OfflinePlayer> getOwner() {
+		return new SOptional<OfflinePlayer>(g_user);
 	}
 
 	@Override
@@ -95,12 +95,12 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 	@Override
 	public Map<String, String> getBasicData() {
 		Map<String, String> map = new HashMap<String, String>();
-		map.put("Name: ", g_name);
-		map.put("Licence: ",
+		map.put("Name", g_name);
+		map.put("Licence",
 				g_main.getX() + ", " + g_main.getY() + ", " + g_main.getZ() + ", " + g_main.getWorld().getName());
-		map.put("Teleport: ", g_teleport.getX() + ", " + g_teleport.getY() + ", " + g_teleport.getZ() + ", "
+		map.put("Teleport", g_teleport.getX() + ", " + g_teleport.getY() + ", " + g_teleport.getZ() + ", "
 				+ g_teleport.getWorld().getName());
-		map.put("Structure size: ", g_structure.getRaw().size() + "");
+		map.put("Structure size", g_structure.getRaw().size() + "");
 		return map;
 	}
 

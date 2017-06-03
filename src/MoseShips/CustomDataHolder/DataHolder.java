@@ -19,7 +19,7 @@ public class DataHolder {
 	}
 
 	public DataHolder addData(DataHandler holder) {
-		DATA.remove(holder);
+		DATA.add(holder);
 		return this;
 	}
 

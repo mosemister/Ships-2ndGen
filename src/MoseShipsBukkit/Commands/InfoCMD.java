@@ -2,7 +2,6 @@ package MoseShipsBukkit.Commands;
 
 import java.util.Arrays;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.bukkit.ChatColor;
@@ -13,6 +12,7 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.BlockFinderUtil;
 import MoseShipsBukkit.Utils.MovementAlgorithmUtil;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.VersionCheckingUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
@@ -64,7 +64,7 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 		if (type.equalsIgnoreCase("Basic")) {
 			basicInfo(source);
 		} else {
-			Optional<LiveShip> opShip = Loader.loadDirectlyFromName(type);
+			SOptional<LiveShip> opShip = Loader.safeLoadShip(type);
 			if (opShip.isPresent()) {
 				shipInfo(source, opShip.get());
 			} else {

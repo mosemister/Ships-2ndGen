@@ -1,13 +1,12 @@
 package MoseShipsBukkit.Commands;
 
-import java.util.Optional;
-
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import MoseShipsBukkit.Movement.StoredMovement.AutoPilot;
 import MoseShipsBukkit.Plugin.ShipsMain;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.RootTypes.Implementations.AutoPilotableShip;
@@ -44,7 +43,7 @@ public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD {
 			player.sendMessage(ShipsMain.formatCMDHelp(
 					"/ships autopilot a <ship name> <x> <y> <z> : Moves the targeted ship to its co-ords + the co-ords specified"));
 		} else {
-			Optional<LiveShip> opShip = Loader.getShip(args[2]);
+			SOptional<LiveShip> opShip = Loader.safeLoadShip(args[2]);
 			if (!opShip.isPresent()) {
 				player.sendMessage(ShipsMain.format(args[2] + " does not exsist", true));
 				return true;
@@ -92,6 +91,7 @@ public class AutoPilotCMD implements ShipsCMD.ShipsPlayerCMD {
 					return true;
 				}
 				shipA.setAutoPilotData(ap);
+				//shipA.getTaskRunner().register(ShipsMain.getPlugin(), new AutoPilotTask());
 				player.sendMessage(ShipsMain.format(
 						ship.getName() + " is now in autopilot mode. Estimated " + ap.getMovements().size() + " moves",
 						false));

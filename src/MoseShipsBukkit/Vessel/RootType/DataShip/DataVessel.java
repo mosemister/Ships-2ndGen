@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import javax.annotation.Nullable;
@@ -26,6 +25,7 @@ import MoseShipsBukkit.Movement.Type.RotateType;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.Tasks.ShipsTask;
 import MoseShipsBukkit.Tasks.ShipsTaskRunner;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.Lists.MovingBlockList;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
@@ -124,7 +124,7 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 	}
 
 	@Override
-	public Optional<FailedMovement> rotate(RotateType type, ShipsCause cause) {
+	public SOptional<FailedMovement> rotate(RotateType type, ShipsCause cause) {
 		switch (type) {
 		case LEFT:
 			return rotateLeft(cause);
@@ -147,7 +147,7 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 
 	@Override
 	public boolean isLoaded() {
-		for (LiveShip ship : Loader.getShips()) {
+		for (LiveShip ship : Loader.getLoadedShips()) {
 			if (ship.getName().equals(getName())) {
 				return true;
 			}
@@ -277,8 +277,8 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 	}
 
 	@Override
-	public Optional<FailedMovement> hasRequirements(MovingBlockList blocks) {
-		Optional<FailedMovement> last = Optional.empty();
+	public SOptional<FailedMovement> hasRequirements(MovingBlockList blocks) {
+		SOptional<FailedMovement> last = new SOptional<FailedMovement>();
 		for (RequirementData data : getRequirementData()) {
 			last = data.hasRequirements(this, blocks);
 			if (last.isPresent()) {

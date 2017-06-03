@@ -1,12 +1,11 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static;
 
-import java.util.Optional;
-
 import org.bukkit.block.Block;
 import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Plugin.ShipsMain;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
@@ -53,14 +52,14 @@ public class StaticOPShip implements StaticShipType {
 	}
 
 	@Override
-	public Optional<LiveShip> createVessel(String name, Block licence) {
+	public SOptional<LiveShip> createVessel(String name, Block licence) {
 		OPShip ship = new OPShip(name, licence, licence.getLocation());
-		return Optional.of((LiveShip)ship);
+		return new SOptional<LiveShip>((LiveShip)ship);
 	}
 
 	@Override
-	public Optional<LiveShip> loadVessel(ShipsData data, BasicConfig config) {
+	public SOptional<LiveShip> loadVessel(ShipsData data, BasicConfig config) {
 		OPShip ship = new OPShip(data);
-		return Optional.of((LiveShip)ship);
+		return new SOptional<LiveShip>((LiveShip)ship);
 	}
 }

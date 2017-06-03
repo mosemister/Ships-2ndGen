@@ -1,6 +1,7 @@
 package MoseShipsBukkit.ShipBlock.Signs;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -9,6 +10,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Tasks.Types.EOTTask;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
@@ -16,11 +18,25 @@ import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 public class ShipEOTSign implements ShipSign {
 
 	@Override
+	public void apply(Sign sign) {
+		sign.setLine(0, ChatColor.YELLOW + "[E.O.T]");
+		sign.setLine(1, ChatColor.GREEN + "Ahead" + ChatColor.BLACK + " {Stop}");
+		sign.setLine(2, "0");
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(sign.getLocation(), true);
+		if (opShip.isPresent()) {
+			LiveShip ship = opShip.get();
+			int speed = ship.getStatic().getDefaultSpeed();
+			sign.setLine(2, speed + "");
+		}
+		sign.update();
+	}
+	
+	@Override
 	public void onCreation(SignChangeEvent event) {
 		event.setLine(0, ChatColor.YELLOW + "[E.O.T]");
 		event.setLine(1, ChatColor.GREEN + "Ahead" + ChatColor.BLACK + " {Stop}");
 		event.setLine(2, "0");
-		Optional<LiveShip> opShip = Loader.getShip(event.getBlock(), true);
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(event.getBlock().getLocation(), true);
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			int speed = ship.getStatic().getDefaultSpeed();
@@ -70,7 +86,7 @@ public class ShipEOTSign implements ShipSign {
 
 	@Override
 	public void onRemove(Player player, Sign sign) {
-		Optional<LiveShip> opShip = getAttachedShip(sign);
+		SOptional<LiveShip> opShip = getAttachedShip(sign);
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			for (EOTTask task : ship.getTaskRunner().getTasks(EOTTask.class)) {
@@ -81,8 +97,8 @@ public class ShipEOTSign implements ShipSign {
 	}
 
 	@Override
-	public String getFirstLine() {
-		return "[EOT]";
+	public List<String> getFirstLine() {
+		return Arrays.asList("[eot]");
 	}
 
 	@Override
@@ -94,12 +110,12 @@ public class ShipEOTSign implements ShipSign {
 	}
 
 	@Override
-	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
+	public SOptional<LiveShip> getAttachedShip(Sign sign) {
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(this, sign, false);
 		if (opShip.isPresent()) {
-			return Optional.of(opShip.get());
+			return new SOptional<LiveShip>(opShip.get());
 		}
-		return Optional.empty();
+		return new SOptional<LiveShip>();
 	}
 
 }

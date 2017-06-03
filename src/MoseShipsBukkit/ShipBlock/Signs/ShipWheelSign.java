@@ -1,6 +1,7 @@
 package MoseShipsBukkit.ShipBlock.Signs;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -9,11 +10,21 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
 public class ShipWheelSign implements ShipSign {
 
+	@Override
+	public void apply(Sign sign) {
+		sign.setLine(0, ChatColor.YELLOW + "[Wheel]");
+		sign.setLine(1, ChatColor.RED + "\\\\||//");
+		sign.setLine(2, ChatColor.RED + "==||==");
+		sign.setLine(3, ChatColor.RED + "//||\\\\");
+		sign.update();
+	}
+	
 	@Override
 	public void onCreation(SignChangeEvent event) {
 		event.setLine(0, ChatColor.YELLOW + "[Wheel]");
@@ -31,7 +42,7 @@ public class ShipWheelSign implements ShipSign {
 
 	@Override
 	public void onRightClick(Player player, Sign sign, LiveShip ship) {
-		Optional<FailedMovement> result = ship.rotateRight(new ShipsCause(player, sign));
+		SOptional<FailedMovement> result = ship.rotateRight(new ShipsCause(player, sign));
 		if (result.isPresent()) {
 			result.get().process(player);
 		}
@@ -40,7 +51,7 @@ public class ShipWheelSign implements ShipSign {
 
 	@Override
 	public void onLeftClick(Player player, Sign sign, LiveShip ship) {
-		Optional<FailedMovement> result = ship.rotateLeft(new ShipsCause(player, sign));
+		SOptional<FailedMovement> result = ship.rotateLeft(new ShipsCause(player, sign));
 		if (result.isPresent()) {
 			result.get().process(player);
 		}
@@ -53,8 +64,8 @@ public class ShipWheelSign implements ShipSign {
 	}
 
 	@Override
-	public String getFirstLine() {
-		return "[Wheel]";
+	public List<String> getFirstLine() {
+		return Arrays.asList("[Wheel]");
 	}
 
 	@Override
@@ -66,12 +77,12 @@ public class ShipWheelSign implements ShipSign {
 	}
 
 	@Override
-	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
+	public SOptional<LiveShip> getAttachedShip(Sign sign) {
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(this, sign, false);
 		if (opShip.isPresent()) {
-			return Optional.of((LiveShip) opShip.get());
+			return new SOptional<LiveShip>((LiveShip) opShip.get());
 		}
-		return Optional.empty();
+		return new SOptional<LiveShip>();
 	}
 
 }

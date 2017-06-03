@@ -2,7 +2,6 @@ package MoseShipsBukkit.Vessel.Common.RootTypes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -15,6 +14,7 @@ import MoseShipsBukkit.Movement.StoredMovement.StoredMovement;
 import MoseShipsBukkit.Movement.Type.RotateType;
 import MoseShipsBukkit.ShipBlock.ShipVector;
 import MoseShipsBukkit.Tasks.ShipsTaskRunner;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.Lists.MovingBlockList;
 import MoseShipsBukkit.Vessel.Common.ShipCommands.ShipCommands;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
@@ -60,7 +60,7 @@ public interface LiveShip extends ShipsData {
 
 	public boolean willRemoveNextCycle();
 
-	public abstract Optional<FailedMovement> hasRequirements(MovingBlockList blocks);
+	public abstract SOptional<FailedMovement> hasRequirements(MovingBlockList blocks);
 
 	public LiveShip load(ShipsCause cause);
 
@@ -74,20 +74,20 @@ public interface LiveShip extends ShipsData {
 
 	public boolean save();
 
-	public Optional<FailedMovement> move(BlockFace dir, int speed, ShipsCause cause);
+	public SOptional<FailedMovement> move(BlockFace dir, int speed, ShipsCause cause);
 
-	public Optional<FailedMovement> move(int X, int Y, int Z, ShipsCause cause);
+	public SOptional<FailedMovement> move(int X, int Y, int Z, ShipsCause cause);
 
-	public Optional<FailedMovement> rotateLeft(ShipsCause cause);
+	public SOptional<FailedMovement> rotateLeft(ShipsCause cause);
 
-	public Optional<FailedMovement> rotateRight(ShipsCause cause);
+	public SOptional<FailedMovement> rotateRight(ShipsCause cause);
 
-	public Optional<FailedMovement> rotate(RotateType type, ShipsCause cause);
+	public SOptional<FailedMovement> rotate(RotateType type, ShipsCause cause);
 
-	public Optional<FailedMovement> teleport(StoredMovement move, ShipsCause cause);
+	public SOptional<FailedMovement> teleport(StoredMovement move, ShipsCause cause);
 
-	public Optional<FailedMovement> teleport(Location loc, ShipsCause cause);
+	public SOptional<FailedMovement> teleport(Location loc, ShipsCause cause);
 
-	public Optional<FailedMovement> teleport(Location loc, int X, int Y, int Z, ShipsCause cause);
+	public SOptional<FailedMovement> teleport(Location loc, int X, int Y, int Z, ShipsCause cause);
 
 }

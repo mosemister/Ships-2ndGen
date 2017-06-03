@@ -2,7 +2,6 @@ package MoseShipsBukkit.Vessel.Common.RootTypes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -12,14 +11,15 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 
 import MoseShipsBukkit.ShipBlock.Structure.ShipStructure;
+import MoseShipsBukkit.Utils.SOptional;
 
 public interface ShipsData {
 
-	public Optional<Sign> getLicence();
+	public SOptional<Sign> getLicence();
 
 	public String getName();
 
-	public Optional<OfflinePlayer> getOwner();
+	public SOptional<OfflinePlayer> getOwner();
 
 	public List<OfflinePlayer> getSubPilots();
 

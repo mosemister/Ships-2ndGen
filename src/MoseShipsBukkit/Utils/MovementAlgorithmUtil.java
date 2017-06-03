@@ -2,7 +2,6 @@ package MoseShipsBukkit.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import MoseShipsBukkit.Algorthum.Movement.MovementAlgorithm;
 import MoseShipsBukkit.Configs.ShipsConfig;
@@ -11,7 +10,7 @@ public class MovementAlgorithmUtil {
 
 	public static MovementAlgorithm getConfig() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_MOVEMENT);
-		Optional<MovementAlgorithm> opMove = get(name);
+		SOptional<MovementAlgorithm> opMove = get(name);
 		if (opMove.isPresent()) {
 			return opMove.get();
 		} else {
@@ -27,13 +26,13 @@ public class MovementAlgorithmUtil {
 		return list;
 	}
 
-	public static Optional<MovementAlgorithm> get(String name) {
+	public static SOptional<MovementAlgorithm> get(String name) {
 		for (MovementAlgorithm alg : get()) {
 			if (alg.getName().equalsIgnoreCase(name)) {
-				return Optional.of(alg);
+				return new SOptional<MovementAlgorithm>(alg);
 			}
 		}
-		return Optional.empty();
+		return new SOptional<MovementAlgorithm>();
 	}
 
 }

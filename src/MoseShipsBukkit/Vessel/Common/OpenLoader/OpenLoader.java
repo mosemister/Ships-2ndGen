@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,6 +17,7 @@ import MoseShips.CustomDataHolder.DataHandler;
 import MoseShips.CustomDataHolder.DataHolder;
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.ShipBlock.ShipVector;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.SerializedData;
 import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
@@ -29,7 +29,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 	public static final String ERROR_NO_WORLD_BY_NAME = "No World By Name";
 	public static final String ERROR_NO_LOCATION_READ = "No Location Read";
 
-	public abstract Optional<LiveShip> load(ShipsData data, BasicConfig config);
+	public abstract SOptional<LiveShip> load(ShipsData data, BasicConfig config);
 
 	public abstract OpenLoader save(LiveShip ship, BasicConfig config);
 
@@ -41,7 +41,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 	}
 
 	@Override
-	public Optional<LiveShip> RAWLoad(File file) {
+	public SOptional<LiveShip> RAWLoad(File file) {
 		int tempX = 0;
 		int tempY = 0;
 		int tempZ = 0;
@@ -61,12 +61,12 @@ public abstract class OpenLoader implements OpenRAWLoader {
 
 		if (sWorld == null) {
 			g_error = ERROR_NO_WORLD_READ;
-			return Optional.empty();
+			return new SOptional<LiveShip>();
 		}
 		world = Bukkit.getServer().getWorld(sWorld);
 		if (world == null) {
 			g_error = ERROR_NO_WORLD_BY_NAME;
-			return Optional.empty();
+			return new SOptional<LiveShip>();
 		}
 		try {
 			tempX = Integer.parseInt(sLic[0]);
@@ -75,7 +75,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 			lic = new Location(world, tempX, tempY, tempZ);
 		} catch (NumberFormatException e) {
 			g_error = ERROR_NO_LOCATION_READ;
-			return Optional.empty();
+			return new SOptional<LiveShip>();
 		}
 		try {
 			tempX = Integer.parseInt(sTel[0]);
@@ -122,7 +122,7 @@ public abstract class OpenLoader implements OpenRAWLoader {
 		String name = ship.getName();
 		String type = ship.getStatic().getName();
 		String world = ship.getLocation().getWorld().getName();
-		Optional<OfflinePlayer> opUuid = ship.getOwner();
+		SOptional<OfflinePlayer> opUuid = ship.getOwner();
 		List<String> pilots = new ArrayList<String>();
 		List<String> structure = new ArrayList<String>();
 		String block = ship.getLocation().getBlockX() + "," + ship.getLocation().getBlockY() + ","

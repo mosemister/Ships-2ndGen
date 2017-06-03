@@ -1,8 +1,8 @@
 package MoseShipsBukkit.ShipBlock.Signs;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
@@ -21,6 +21,7 @@ import MoseShipsBukkit.Events.Create.Fail.ShipCreateFailedFromConflictingNames;
 import MoseShipsBukkit.Events.Create.Fail.ShipCreateFailedFromMissingType;
 import MoseShipsBukkit.Plugin.ShipsMain;
 import MoseShipsBukkit.Utils.PermissionsUtil;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.AbstractShipsData;
@@ -35,7 +36,7 @@ public class ShipLicenceSign implements ShipSign {
 			return;
 		}
 		Player player = event.getPlayer();
-		Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
+		SOptional<StaticShipType> opShipType = StaticShipTypeUtil.getType(event.getLine(1));
 
 		if (!opShipType.isPresent()) {
 			ShipsCause cause = new ShipsCause(event, player, this);
@@ -60,7 +61,7 @@ public class ShipLicenceSign implements ShipSign {
 			return;
 		}
 
-		Optional<LiveShip> opConflict = Loader.getShip(event.getLine(2));
+		SOptional<LiveShip> opConflict = Loader.safeLoadShip(event.getLine(2));
 		if (opConflict.isPresent()) {
 			ShipsCause cause = new ShipsCause(event, this, player, type);
 			ShipCreateFailedFromConflictingNames conflictName = new ShipCreateFailedFromConflictingNames(cause,
@@ -68,29 +69,42 @@ public class ShipLicenceSign implements ShipSign {
 					opConflict.get());
 			Bukkit.getServer().getPluginManager().callEvent(conflictName);
 			String message = conflictName.getMessage();
-			if (message.contains("%Type%")) {
-				message = message.replace("%Type%", event.getLine(1));
+			if (message.contains("%Name%")) {
+				message = message.replace("%Name%", event.getLine(2));
+			}
+			if(message.contains("%Owner%")){
+				SOptional<OfflinePlayer> opOwner = opConflict.get().getOwner();
+				if(opOwner.isPresent()){
+					message = message.replace("%Owner%", opOwner.get().getName());
+				}else{
+					message = message.replace("%Owner%", "<Server>");
+				}
 			}
 			if (conflictName.shouldMessageDisplay()) {
 				player.sendMessage(ShipsMain.format(message, true));
 			}
 			return;
 		}
-		Optional<LiveShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
+		SOptional<LiveShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
 		if (opShip.isPresent()) {
 			final LiveShip ship = opShip.get();
 			ship.setOwner(player);
 			ShipsCause cause = new ShipsCause(event, player, this, type, ship);
-			ShipCreateEvent SCEvent = new ShipSignCreateEvent(cause, (AbstractShipsData) ship);
+			ShipCreateEvent SCEvent = new ShipSignCreateEvent(cause, ship);
 			Bukkit.getPluginManager().callEvent(SCEvent);
 			if (!SCEvent.isCancelled()) {
 				// PLAYER
+				ShipsConfig config = ShipsConfig.CONFIG;
 				player.sendMessage(ShipsMain.format("Ship created", false));
 				ship.load(cause);
 				event.setLine(0, ChatColor.YELLOW + "[Ships]");
 				event.setLine(1, ChatColor.BLUE + ship.getStatic().getName());
 				event.setLine(2, ChatColor.GREEN + ship.getName());
-				event.setLine(3, ChatColor.GREEN + event.getLine(3));
+				if(config.get(Boolean.class, ShipsConfig.PATH_SIGN_FORCE_USERNAME)){
+					event.setLine(3, ChatColor.GREEN + player.getName());
+				}else{
+					event.setLine(3, ChatColor.GREEN + event.getLine(3));
+				}
 				ship.save();
 			}
 		}
@@ -98,8 +112,8 @@ public class ShipLicenceSign implements ShipSign {
 	}
 
 	@Override
-	public String getFirstLine() {
-		return "[Ships]";
+	public List<String> getFirstLine() {
+		return Arrays.asList("[Ships]");
 	}
 
 	@Override
@@ -141,7 +155,7 @@ public class ShipLicenceSign implements ShipSign {
 
 	@Override
 	public void onRemove(Player player, Sign sign) {
-		Optional<LiveShip> opShip = getAttachedShip(sign);
+		SOptional<LiveShip> opShip = getAttachedShip(sign);
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			if (((ship.getOwner().isPresent()) && (ship.getOwner().get().getUniqueId().equals(player.getUniqueId())))
@@ -175,12 +189,16 @@ public class ShipLicenceSign implements ShipSign {
 	}
 
 	@Override
-	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
+	public SOptional<LiveShip> getAttachedShip(Sign sign) {
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(this, sign, false);
 		if (opShip.isPresent()) {
-			return Optional.of((LiveShip) opShip.get());
+			return new SOptional<LiveShip>((LiveShip) opShip.get());
 		}
-		return Optional.empty();
+		return new SOptional<LiveShip>();
+	}
+
+	@Override
+	public void apply(Sign sign) {		
 	}
 
 }

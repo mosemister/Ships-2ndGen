@@ -1,6 +1,7 @@
 package MoseShipsBukkit.ShipBlock.Signs;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -9,6 +10,7 @@ import org.bukkit.event.block.SignChangeEvent;
 
 import MoseShipsBukkit.Events.ShipsCause;
 import MoseShipsBukkit.Movement.Result.FailedMovement;
+import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.ShipCommands.ShipCommands;
@@ -17,10 +19,23 @@ import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 public class ShipAltitudeSign implements ShipSign {
 
 	@Override
+	public void apply(Sign sign) {
+		sign.setLine(0, ChatColor.YELLOW + "[Altitude]");
+		sign.setLine(2, "0");
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(sign.getLocation(), true);
+		if (opShip.isPresent()) {
+			LiveShip ship = opShip.get();
+			int speed = ship.getStatic().getAltitudeSpeed();
+			sign.setLine(2, speed + "");
+		}
+		sign.update();
+	}
+	
+	@Override
 	public void onCreation(SignChangeEvent event) {
 		event.setLine(0, ChatColor.YELLOW + "[Altitude]");
 		event.setLine(2, "0");
-		Optional<LiveShip> opShip = Loader.getShip(event.getBlock(), true);
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(event.getBlock().getLocation(), true);
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			int speed = ship.getStatic().getAltitudeSpeed();
@@ -30,6 +45,7 @@ public class ShipAltitudeSign implements ShipSign {
 
 	@Override
 	public void onShiftRightClick(Player player, Sign sign, LiveShip ship) {
+		try{
 		int speed = Integer.parseInt(sign.getLine(2));
 		StaticShipType staticShip = ship.getStatic();
 		if (staticShip.getAltitudeSpeed() < speed) {
@@ -38,6 +54,9 @@ public class ShipAltitudeSign implements ShipSign {
 		} else {
 			sign.setLine(2, "1");
 			sign.update();
+		}
+		}catch(NumberFormatException e){
+			apply(sign);
 		}
 
 	}
@@ -49,12 +68,12 @@ public class ShipAltitudeSign implements ShipSign {
 			if (ship.getCommands().contains(ShipCommands.LOCK_ALTITUDE)) {
 				return;
 			}
-			Optional<FailedMovement> causeMove = ship.move(0, speed, 0, new ShipsCause(player, sign, "Up"));
+			SOptional<FailedMovement> causeMove = ship.move(0, speed, 0, new ShipsCause(player, sign, "Up"));
 			if (causeMove.isPresent()) {
 				causeMove.get().process(player);
 			}
 		} catch (NumberFormatException e) {
-			player.sendMessage("[Warning] old Ships sign, please change this to Ships 6 '[altitude]' sign");
+			apply(sign);
 		}
 	}
 
@@ -65,12 +84,12 @@ public class ShipAltitudeSign implements ShipSign {
 			if (ship.getCommands().contains(ShipCommands.LOCK_ALTITUDE)) {
 				return;
 			}
-			Optional<FailedMovement> causeMove = ship.move(0, -speed, 0, new ShipsCause(player, sign, "Down"));
+			SOptional<FailedMovement> causeMove = ship.move(0, -speed, 0, new ShipsCause(player, sign, "Down"));
 			if (causeMove.isPresent()) {
 				causeMove.get().process(player);
 			}
 		} catch (NumberFormatException e) {
-			player.sendMessage("[Warning] old Ships sign, please change this to Ships 6 '[altitude]' sign");
+			apply(sign);
 		}
 	}
 
@@ -79,8 +98,8 @@ public class ShipAltitudeSign implements ShipSign {
 	}
 
 	@Override
-	public String getFirstLine() {
-		return "[Altitude]";
+	public List<String> getFirstLine() {
+		return Arrays.asList("[altitude]");
 	}
 
 	@Override
@@ -92,12 +111,12 @@ public class ShipAltitudeSign implements ShipSign {
 	}
 
 	@Override
-	public Optional<LiveShip> getAttachedShip(Sign sign) {
-		Optional<LiveShip> opShip = Loader.getShip(this, sign, false);
+	public SOptional<LiveShip> getAttachedShip(Sign sign) {
+		SOptional<LiveShip> opShip = Loader.safeLoadShip(this, sign, false);
 		if (opShip.isPresent()) {
-			return Optional.of(opShip.get());
+			return new SOptional<LiveShip>(opShip.get());
 		}
-		return Optional.empty();
+		return new SOptional<LiveShip>();
 	}
 
 }
