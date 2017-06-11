@@ -3,18 +3,18 @@ package MoseShipsSponge.Event;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.impl.AbstractEvent;
 
-import MoseShipsSponge.Ships.ShipsData;
+import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 
-public abstract class ShipsEvent<T extends ShipsData> extends AbstractEvent {
+public abstract class ShipsEvent extends AbstractEvent {
 
-	T SHIP;
+	ShipsData SHIP;
 	Cause CAUSE;
 
-	public ShipsEvent(T ship, Cause cause) {
+	public ShipsEvent(ShipsData ship, Cause cause) {
 		SHIP = ship;
 	}
 
-	public T getShip() {
+	public ShipsData getShip() {
 		return SHIP;
 	}
 

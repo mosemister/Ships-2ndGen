@@ -12,6 +12,10 @@ public class FailedMovement {
 		g_movement = new ContainedFailedMovement<E>(ship, result, value);
 	}
 	
+	public MovementResult<? extends Object> getResult(){
+		return g_movement.getResult();
+	}
+	
 	public Object getValue(){
 		return g_movement.getValue();
 	}

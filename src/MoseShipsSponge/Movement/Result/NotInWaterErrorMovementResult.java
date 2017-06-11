@@ -5,7 +5,7 @@ import org.spongepowered.api.text.Text;
 
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public class NotInWaterErrorMovementResult extends MovementResult<Boolean>{
+public class NotInWaterErrorMovementResult implements MovementResult<Boolean>{
 
 	@Override
 	public void sendMessage(LiveShip ship, CommandSource source, Boolean value) {

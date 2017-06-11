@@ -10,7 +10,7 @@ import MoseShipsSponge.Movement.Type.RotateType;
 
 public class StoredMovement {
 
-	int X, Y, Z;
+	Integer X, Y, Z;
 	Location<World> TELEPORT;
 	RotateType ROTATE;
 	Cause CAUSE;
@@ -24,16 +24,16 @@ public class StoredMovement {
 		CAUSE = cause;
 	}
 
-	public int getX() {
-		return X;
+	public Optional<Integer> getX() {
+		return Optional.ofNullable(X);
 	}
 
-	public int getY() {
-		return Y;
+	public Optional<Integer> getY() {
+		return Optional.ofNullable(Y);
 	}
 
-	public int getZ() {
-		return Z;
+	public Optional<Integer> getZ() {
+		return Optional.ofNullable(Z);
 	}
 
 	public Optional<Location<World>> getTeleportTo() {
@@ -44,14 +44,40 @@ public class StoredMovement {
 		return Optional.ofNullable(ROTATE);
 	}
 
-	public Location<World> getEndResult(Location<World> start) {
+	public Location<World> getEndResult(Location<World> start, Location<World> centre) {
 		if (TELEPORT != null) {
 			Location<World> ret = TELEPORT.add(X, Y, Z);
 			return ret;
-		} else {
-			Location<World> ret = start.add(X, Y, Z);
-			return ret;
 		}
+		if(ROTATE != null){
+			if(ROTATE.equals(RotateType.LEFT)){
+				int shift = centre.getBlockX() - centre.getBlockZ();
+				double symmetry = centre.getX();
+
+				double X = start.getX() - (start.getX() - symmetry) * 2.0D - shift;
+				double Y = start.getY();
+				double Z = start.getZ() + shift;
+				start = new Location<>(start.getExtent(), Z, Y, X);
+			}else if (ROTATE.equals(RotateType.RIGHT)){
+				int shift = centre.getBlockX() - centre.getBlockZ();
+				double symmetry = centre.getZ();
+
+				double X = start.getX() - shift;
+				double Y = start.getY();
+				double Z = start.getZ() - (start.getZ() - symmetry) * 2.0 + shift;
+				start = new Location<>(start.getExtent(), Z, Y, X);
+			}
+		}
+		if(X != null){
+			start = start.add(X, 0, 0);
+		}
+		if(Y != null){
+			start = start.add(0, Y, 0);
+		}
+		if(Z != null){
+			start = start.add(0, 0, Z);
+		}
+		return start;
 	}
 
 	public Cause getCause() {

@@ -23,36 +23,41 @@ import org.spongepowered.api.world.World;
 import com.flowpowered.math.vector.Vector3d;
 import com.flowpowered.math.vector.Vector3i;
 
-import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Movement.Type.CollideType;
 import MoseShipsSponge.Movement.Type.MovementType;
 import MoseShipsSponge.Movement.Type.RotateType;
+import MoseShipsSponge.Plugin.ShipsMain;
+import MoseShipsSponge.Utils.BlockRotateUtil;
 
 public class MovingBlock {
 
 	Location<World> ORIGIN;
 	Location<World> MOVING_TO;
 	BlockSnapshot STATE;
+	MovementType TYPE;
 
 	TileEntityInventory<TileEntityCarrier> INVENTORY;
 
-	public MovingBlock(Location<World> original, Location<World> moving) {
+	public MovingBlock(Location<World> original, Location<World> moving, MovementType type) {
 		ORIGIN = original;
 		MOVING_TO = moving;
 		STATE = original.createSnapshot();
+		TYPE = type;
 	}
 
 	public MovingBlock(Location<World> original, int X, int Y, int Z) {
 		ORIGIN = original;
 		MOVING_TO = original.add(X, Y, Z);
 		STATE = original.createSnapshot();
+		TYPE = MovementType.DIRECTIONAL;
 	}
 
 	public MovingBlock(Location<World> original, Vector3i vector) {
 		ORIGIN = original;
 		MOVING_TO = original.add(vector.toDouble());
 		STATE = original.createSnapshot();
+		TYPE = MovementType.DIRECTIONAL;
 	}
 
 	public Location<World> getOrigin() {
@@ -92,11 +97,43 @@ public class MovingBlock {
 	}
 
 	public MovingBlock move(BlockChangeFlag flag) {
-		MOVING_TO.restoreSnapshot(STATE, true, flag, ShipsCause.BLOCK_MOVING.buildCause());
+		if(TYPE.equals(MovementType.ROTATE_LEFT)){
+			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
+			if(opDirection.isPresent()){
+				Direction blockD = opDirection.get();
+				blockD = BlockRotateUtil.rotateLeft(blockD);
+				STATE.with(Keys.DIRECTION, blockD);
+			}
+		}
+		if(TYPE.equals(MovementType.ROTATE_RIGHT)){
+			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
+			if(opDirection.isPresent()){
+				Direction blockD = opDirection.get();
+				blockD = BlockRotateUtil.rotateRight(blockD);
+				STATE.with(Keys.DIRECTION, blockD);
+			}
+		}
+		MOVING_TO.restoreSnapshot(STATE, true, flag, Cause.source(ShipsMain.getPlugin()).build());
 		return this;
 	}
 
 	public MovingBlock move(BlockChangeFlag flag, Cause cause) {
+		if(TYPE.equals(MovementType.ROTATE_LEFT)){
+			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
+			if(opDirection.isPresent()){
+				Direction blockD = opDirection.get();
+				blockD = BlockRotateUtil.rotateLeft(blockD);
+				STATE.with(Keys.DIRECTION, blockD);
+			}
+		}
+		if(TYPE.equals(MovementType.ROTATE_RIGHT)){
+			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
+			if(opDirection.isPresent()){
+				Direction blockD = opDirection.get();
+				blockD = BlockRotateUtil.rotateRight(blockD);
+				STATE.with(Keys.DIRECTION, blockD);
+			}
+		}
 		MOVING_TO.restoreSnapshot(STATE, true, flag, cause);
 		return this;
 	}
@@ -112,7 +149,7 @@ public class MovingBlock {
 	}
 
 	public Priority getPriority() {
-		return Priority.getType(STATE.getState().getType());
+		return Priority.getType(STATE.getState());
 	}
 
 	public CollideType getCollision(List<Location<World>> ignore, BlockState... ignore2) {
@@ -235,38 +272,11 @@ public class MovingBlock {
 	public enum Priority {
 		NORMAL,
 		PRIORITY,
+		SPECIAL,
 		AIR;
 
-		public static Priority getType(BlockType type) {
-			if ((type.equals(BlockTypes.TORCH)) ||
-					(type.equals(BlockTypes.FIRE)) ||
-					(type.equals(BlockTypes.REDSTONE_WIRE)) ||
-					(type.equals(BlockTypes.ACACIA_DOOR)) ||
-					(type.equals(BlockTypes.BIRCH_DOOR)) ||
-					(type.equals(BlockTypes.DARK_OAK_DOOR)) ||
-					(type.equals(BlockTypes.IRON_DOOR)) ||
-					(type.equals(BlockTypes.JUNGLE_DOOR)) ||
-					(type.equals(BlockTypes.SPRUCE_DOOR)) ||
-					(type.equals(BlockTypes.WOODEN_DOOR)) ||
-					(type.equals(BlockTypes.LADDER)) ||
-					(type.equals(BlockTypes.WALL_SIGN)) ||
-					(type.equals(BlockTypes.LEVER)) ||
-					(type.equals(BlockTypes.STONE_PRESSURE_PLATE)) ||
-					(type.equals(BlockTypes.WOODEN_PRESSURE_PLATE)) ||
-					(type.equals(BlockTypes.HEAVY_WEIGHTED_PRESSURE_PLATE)) ||
-					(type.equals(BlockTypes.LIGHT_WEIGHTED_PRESSURE_PLATE)) ||
-					(type.equals(BlockTypes.UNPOWERED_REPEATER)) ||
-					(type.equals(BlockTypes.POWERED_REPEATER)) ||
-					(type.equals(BlockTypes.UNPOWERED_COMPARATOR)) ||
-					(type.equals(BlockTypes.POWERED_COMPARATOR)) ||
-					(type.equals(BlockTypes.UNLIT_REDSTONE_TORCH)) ||
-					(type.equals(BlockTypes.REDSTONE_TORCH)) ||
-					(type.equals(BlockTypes.STONE_BUTTON)) ||
-					(type.equals(BlockTypes.TRAPDOOR)) ||
-					(type.equals(BlockTypes.TRIPWIRE_HOOK)) ||
-					(type.equals(BlockTypes.TRIPWIRE)) ||
-					(type.equals(BlockTypes.IRON_TRAPDOOR)) ||
-					(type.equals(BlockTypes.WALL_BANNER))) {
+		public static Priority getType(BlockState type) {
+			if (type.get(Keys.ATTACHED).isPresent()){
 				return PRIORITY;
 			} else if (type.equals(BlockTypes.AIR)) {
 				return AIR;

@@ -8,6 +8,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
@@ -26,16 +27,18 @@ import MoseShipsSponge.Commands.ShipsCMD;
 import MoseShipsSponge.Commands.SignCMD;
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Listeners.ShipsListeners;
-import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip;
+import MoseShipsSponge.ShipBlock.Signs.ShipAltitudeSign;
+import MoseShipsSponge.ShipBlock.Signs.ShipSign;
+import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip.StaticOPShip;
 
 @Plugin(id = ShipsMain.ID, name = ShipsMain.NAME, version = ShipsMain.VERSION)
 public class ShipsMain {
 
 	public static final String ID = "ships";
 	public static final String NAME = "Ships";
-	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge-5,0,2";
-	public static final String TESTED_API = "5.0.1.0";
-	public static final String[] TESTED_MC = { "1.10.2" };
+	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,0,1)";
+	public static final String TESTED_API = "6.0.0.0";
+	public static final String[] TESTED_MC = { "1.11.2" };
 
 	static ShipsMain PLUGIN;
 
@@ -44,15 +47,27 @@ public class ShipsMain {
 
 	@Inject
 	PluginContainer CONTAINER;
+	
+	private void registerSigns(){
+		ShipSign.SHIP_SIGNS.add(new ShipLicenceSign());
+		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
+		ShipSign.SHIP_SIGNS.add(new ShipEngineSign());
+		ShipSign.SHIP_SIGNS.add(new ShipWheelSign());
+		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
+		ShipSign.SHIP_SIGNS.add(new ShipEOTSign());
+	}
 
 	private void registerCMDs() {
 		new InfoCMD();
 		new DebugCMD();
 		new SignCMD();
+		new HelpCMD();
+		new BlockListCMD();
+		new AutoPilotCMD();
 	}
 
 	private void registerShipTypes() {
-		new OpShip.StaticOPShip();
+		new StaticOPShip();
 	}
 
 	private void displayVersionChecking() {
@@ -112,6 +127,11 @@ public class ShipsMain {
 		registerShipTypes();
 		registerCMDs();
 		displayVersionChecking();
+	}
+	
+	@Listener
+	public void onLoad(GameStartedServerEvent event){
+		//load the ship
 	}
 
 	@Listener

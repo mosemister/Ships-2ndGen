@@ -6,7 +6,7 @@ import org.spongepowered.api.text.Text;
 import MoseShipsSponge.Configs.ShipsConfig;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public class NoBlocksErrorMovementResult extends MovementResult<Boolean>{
+public class NoBlocksErrorMovementResult implements MovementResult<Boolean>{
 
 	@Override
 	public void sendMessage(LiveShip ship, CommandSource source, Boolean value) {

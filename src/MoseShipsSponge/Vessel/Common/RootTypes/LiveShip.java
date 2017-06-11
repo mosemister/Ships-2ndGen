@@ -1,13 +1,23 @@
 package MoseShipsSponge.Vessel.Common.RootTypes;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.util.Direction;
 
+import com.flowpowered.math.vector.Vector3i;
+
+import MoseShipsSponge.Movement.Result.FailedMovement;
+import MoseShipsSponge.Movement.StoredMovement.StoredMovement;
+import MoseShipsSponge.Movement.Type.RotateType;
 import MoseShipsSponge.Ships.VesselTypes.StaticShipType;
 import MoseShipsSponge.Ships.VesselTypes.Running.ShipsTaskRunner;
+import MoseShipsSponge.Utils.Lists.MovingBlockList;
+import MoseShipsSponge.Vessel.Common.ShipCommands.ShipCommands;
 
 public interface LiveShip extends ShipsData {
 	
@@ -19,7 +29,7 @@ public interface LiveShip extends ShipsData {
 	public ShipsTaskRunner getTaskRunner();
 	public StaticShipType getStatic();
 	public Map<String, Object> getInfo();
-	public Map<UUID, ShipVector> getPlayerVectorSpawns();
+	public Map<UUID, Vector3i> getPlayerVectorSpawns();
 	public boolean isMoving();
 	public boolean isLoading();
 	public LiveShip setRemoveNextCycle(boolean remove);
@@ -30,11 +40,47 @@ public interface LiveShip extends ShipsData {
 	public LiveShip setAltitudeSpeed(int speed);
 	public boolean willRemoveNextCycle();
 	public Optional<FailedMovement> hasRequirements(MovingBlockList blocks);
-	public LiveShip load(ShipsCause cause);
-	public LiveShip unload(ShipsCause cause);
-	public void remove();
+	public LiveShip load(Cause cause);
+	public LiveShip unload(Cause cause);
+	public List<ShipCommands> getCommands();
 	public void remove(Player player);
 	public boolean save();
+	
+	public Optional<FailedMovement> teleport(StoredMovement move);
+	
+	public default Optional<FailedMovement> move(Direction dir, int speed, Cause cause){
+		Vector3i off = dir.asBlockOffset().mul(speed);
+		StoredMovement sm = new StoredMovement.Builder().setX(off.getX()).setY(off.getY()).setZ(off.getZ()).setCause(cause).build();
+		return teleport(sm);
+	}
+	
+	public default Optional<FailedMovement> move(int X, int Y, int Z, Cause cause){
+		StoredMovement sm = new StoredMovement.Builder().setX(X).setY(Y).setZ(Z).setCause(cause).build();
+		return teleport(sm);
+	}
+	
+	public default Optional<FailedMovement> rotateLeft(Cause cause){
+		StoredMovement sm = new StoredMovement.Builder().setRotation(RotateType.LEFT).setCause(cause).build();
+		return teleport(sm);
+	}
+	
+	public default Optional<FailedMovement> rotateRight(Cause cause){
+		StoredMovement sm = new StoredMovement.Builder().setRotation(RotateType.RIGHT).setCause(cause).build();
+		return teleport(sm);
+	}
+	
+	public default Optional<FailedMovement> rotate(RotateType type, Cause cause){
+		StoredMovement sm = new StoredMovement.Builder().setRotation(type).setCause(cause).build();
+		return teleport(sm);
+	}
+	
+	public default void move(Vector3i vector, Cause cause){
+		move(vector.getX(), vector.getY(), vector.getZ(), cause);
+	}
+	
+	public default void remove(){
+		remove(null);
+	}
 	
 
 }

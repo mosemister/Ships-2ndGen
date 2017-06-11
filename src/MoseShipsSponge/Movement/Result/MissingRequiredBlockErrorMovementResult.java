@@ -7,7 +7,7 @@ import org.spongepowered.api.text.Text;
 
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public class MissingRequiredBlockErrorMovementResult extends MovementResult<BlockState> {
+public class MissingRequiredBlockErrorMovementResult implements MovementResult<BlockState> {
 
 	@Override
 	public void sendMessage(LiveShip ship, CommandSource source, BlockState value) {

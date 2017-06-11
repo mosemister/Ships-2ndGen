@@ -1,15 +1,15 @@
 package MoseShipsSponge.Movement.Result;
 
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.text.Text;
 
+import MoseShipsSponge.Plugin.ShipsMain;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public class NotEnoughBlocksErrorMovementResult implements MovementResult<Integer> {
+public class TooManyBlocksErrorMovementResult implements MovementResult<Integer>{
 
 	@Override
 	public void sendMessage(LiveShip ship, CommandSource source, Integer value) {
-		source.sendMessage(Text.of("You need " + value + " more blocks"));
+		source.sendMessage(ShipsMain.format("You need " + value + " less blocks", true));
 	}
 
 }

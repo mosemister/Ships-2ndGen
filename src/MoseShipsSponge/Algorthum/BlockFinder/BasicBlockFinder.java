@@ -9,8 +9,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Configs.ShipsConfig;
-import MoseShipsSponge.Signs.ShipsSigns;
-import MoseShipsSponge.Signs.ShipsSigns.SignType;
 
 public interface BasicBlockFinder {
 

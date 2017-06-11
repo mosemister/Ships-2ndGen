@@ -1,7 +1,12 @@
 package MoseShipsSponge.Utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
+import org.spongepowered.api.block.tileentity.Sign;
+import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Chunk;
 import org.spongepowered.api.world.Location;
@@ -55,6 +60,22 @@ public class LocationUtils {
 				return new Vector3i(0, 0, 0);
 		}
 		return new Vector3i(0, 0, 0);
+	}
+	
+	public static List<Sign> getAttachedSigns(Location<? extends Extent> loc){
+		List<Sign> list = new ArrayList<>();
+		Direction[] directions = {Direction.EAST, Direction.NORTH, Direction.WEST, Direction.SOUTH};
+		for(Direction direction : directions){
+			Location<? extends Extent> loc2 = loc.copy().getRelative(direction);
+			Optional<TileEntity> opTile = loc2.getTileEntity();
+			if(opTile.isPresent()){
+				TileEntity entity = opTile.get();
+				if(entity instanceof Sign){
+					list.add((Sign)entity);
+				}
+			}
+		}
+		return list;
 	}
 
 }

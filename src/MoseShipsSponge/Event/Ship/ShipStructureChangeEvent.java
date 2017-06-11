@@ -1,4 +1,4 @@
-package MoseShipsSponge.Event.Create;
+package MoseShipsSponge.Event.Ship;
 
 import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.event.cause.Cause;
@@ -6,11 +6,11 @@ import org.spongepowered.api.event.cause.Cause;
 import MoseShipsSponge.Event.ShipsEvent;
 import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 
-public class ShipsCreateEvent extends ShipsEvent implements Cancellable {
+public class ShipStructureChangeEvent extends ShipsEvent implements Cancellable{
 
 	boolean g_cancelled;
-
-	public ShipsCreateEvent(ShipsData ship, Cause cause) {
+	
+	public ShipStructureChangeEvent(ShipsData ship, Cause cause) {
 		super(ship, cause);
 	}
 
@@ -20,8 +20,8 @@ public class ShipsCreateEvent extends ShipsEvent implements Cancellable {
 	}
 
 	@Override
-	public void setCancelled(boolean arg0) {
-		g_cancelled = arg0;
+	public void setCancelled(boolean cancel) {
+		g_cancelled = cancel;
 	}
 
 }
