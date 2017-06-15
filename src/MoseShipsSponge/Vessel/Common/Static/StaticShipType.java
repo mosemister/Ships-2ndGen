@@ -15,15 +15,21 @@ import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 public interface StaticShipType {
 
 	public static final List<StaticShipType> TYPES = new ArrayList<>();
-	
+
 	public String getName();
+
 	public int getDefaultSpeed();
+
 	public int getBoostSpeed();
+
 	public int getAltitudeSpeed();
+
 	public Object getPlugin();
+
 	public OpenRAWLoader[] getLoaders();
+
 	public Optional<LiveShip> createVessel(String name, Location<World> licence);
+
 	public Optional<LiveShip> loadVessel(ShipsData data, BasicConfig config);
-	
-	
+
 }

@@ -2,72 +2,57 @@ package MoseShipsSponge.Algorthum.Movement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.BlockChangeFlag;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
-import com.flowpowered.math.vector.Vector3i;
-
-import MoseShipsSponge.Causes.ShipsCause;
 import MoseShipsSponge.Movement.MovingBlock;
-import MoseShipsSponge.Movement.Type.BlockRotate;
-import MoseShipsSponge.Movement.Type.MovementType;
-import MoseShipsSponge.Movement.Type.RotateType;
-import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
-import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.WaterType;
+import MoseShipsSponge.Plugin.ShipsMain;
+import MoseShipsSponge.Utils.LocationUtils;
+import MoseShipsSponge.Vessel.Common.GeneralTypes.WaterType;
+import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
 public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
-	public boolean move(LoadableShip type, List<MovingBlock> blocksUn, List<Entity> onBoard) {
+	public boolean move(LiveShip type, List<MovingBlock> blocksUn, List<Entity> onBoard) {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		int waterLevel = 63;
-		if(type instanceof WaterType){
-			WaterType type2 = (WaterType)type;
+		if (type instanceof WaterType) {
+			WaterType type2 = (WaterType) type;
 			waterLevel = type2.getWaterLevel();
 		}
 		final int waterLevelFinal = waterLevel;
-		blocks.stream().forEach(block -> {
-			if (block.getOrigin().getBlockY() > waterLevelFinal) {
-				block.clearOriginalBlock(BlockChangeFlag.NONE, ShipsCause.BLOCK_MOVING.buildCause());
+		blocks.stream().forEach(b -> {
+			Cause cause = Cause.source(ShipsMain.getPlugin()).named("moving", b).build();
+			if (b.getOrigin().getBlockY() > waterLevelFinal) {
+				b.clearOriginalBlock(BlockChangeFlag.NONE, cause);
 			} else {
-				block.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlag.NONE, ShipsCause.BLOCK_MOVING.buildCause());
+				b.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlag.ALL, cause);
 			}
 		});
 		List<Location<World>> newStructure = new ArrayList<>();
-		// place all blocks
-		blocks.stream().forEach(block -> {
+		Location<World> lic = null;
+		for (int A = (blocks.size() - 1); A >= 0; A--) {
+			MovingBlock block = blocks.get(A);
 			newStructure.add(block.getMovingTo());
 			block.move(BlockChangeFlag.NONE);
-			MovementType mType = block.getMovementType();
-			Optional<Direction> opConnected = block.getMovingTo().get(Keys.DIRECTION);
-			switch (mType) {
-				case ROTATE_LEFT:
-					if (opConnected.isPresent()) {
-						BlockRotate.getRotation(opConnected.get(), RotateType.LEFT);
-					}
-					break;
-				case ROTATE_RIGHT:
-					if (opConnected.isPresent()) {
-						BlockRotate.getRotation(opConnected.get(), RotateType.LEFT);
-					}
-					break;
-				default:
-					break;
-
+			if (LocationUtils.blocksEqual(type.getLocation(), block.getOrigin())) {
+				lic = block.getMovingTo();
 			}
-		});
-		Vector3i vec = blocks.get(0).getMovingTo().getBlockPosition().sub(blocks.get(0).getOrigin().getBlockPosition());
-		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation(), vec.getX(), vec.getY(), vec.getZ());
-		MovingBlock lBlock = new MovingBlock(type.getLocation(), vec.getX(), vec.getY(), vec.getZ());
-		type.setBasicStructure(newStructure, lBlock.getMovingTo(), tBlock.getMovingTo());
-		// moveEntitys(move);
+		}
+		Location<World> loc = blocks.get(0).getMovingTo().copy().sub(blocks.get(0).getOrigin().getBlockPosition());
+		MovingBlock tBlock = new MovingBlock(type.getTeleportToLocation(), loc.getBlockX(), loc.getBlockY(),
+				loc.getBlockZ());
+		if (lic == null) {
+			MovingBlock lBlock = new MovingBlock(type.getLocation(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+			lic = lBlock.getMovingTo();
+		}
+		type.setBasicStructure(newStructure, lic, tBlock.getMovingTo());
 		return true;
 	}
 

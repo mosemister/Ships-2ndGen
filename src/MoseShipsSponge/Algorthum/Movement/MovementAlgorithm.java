@@ -8,16 +8,16 @@ import org.spongepowered.api.entity.Entity;
 
 import MoseShipsSponge.Configs.ShipsConfig;
 import MoseShipsSponge.Movement.MovingBlock;
-import MoseShipsSponge.Ships.VesselTypes.LoadableShip;
+import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
 public interface MovementAlgorithm {
 
 	static List<MovementAlgorithm> MOVEMENT_ALGORITHMS = new ArrayList<>();
 
 	public static Ships5Movement SHIPS5 = new Ships5Movement();
-	public static MovementAlgorithm SHIPS6 = new Ships6Movement();
+	public static MovementAlgorithm SHIPS6 = null;
 
-	public boolean move(LoadableShip vessel, List<MovingBlock> blocks, final List<Entity> onBoard);
+	public boolean move(LiveShip vessel, List<MovingBlock> blocks, final List<Entity> onBoard);
 
 	public String getName();
 

@@ -9,6 +9,9 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Configs.ShipsConfig;
+import MoseShipsSponge.ShipBlock.Signs.ShipLicenceSign;
+import MoseShipsSponge.ShipBlock.Signs.ShipSign;
+import MoseShipsSponge.Utils.ShipSignUtil;
 
 public interface BasicBlockFinder {
 
@@ -22,7 +25,7 @@ public interface BasicBlockFinder {
 
 	public static BasicBlockFinder getConfigSelected() {
 		String name = ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_ALGORITHMS_BLOCKFINDER);
-		if(name == null){
+		if (name == null) {
 			return SHIPS5;
 		}
 		Optional<BasicBlockFinder> opBlock = getFinder(name);
@@ -37,9 +40,10 @@ public interface BasicBlockFinder {
 			if (l.getTileEntity().isPresent()) {
 				if (l.getTileEntity().get() instanceof Sign) {
 					Sign sign = (Sign) l.getTileEntity().get();
-					Optional<SignType> opType = ShipsSigns.getSignType(sign);
-					if (opType.isPresent()) {
-						if (opType.get().equals(SignType.LICENCE)) {
+					Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
+					if (opSign.isPresent()) {
+						ShipSign sign2 = opSign.get();
+						if (sign2 instanceof ShipLicenceSign) {
 							return true;
 						}
 					}

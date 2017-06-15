@@ -10,8 +10,8 @@ public class ShipSignCreateEvent extends ShipsCreateEvent {
 	public ShipSignCreateEvent(ShipsData ship, Cause cause) {
 		super(ship, cause);
 	}
-	
-	public Sign getSign(){
+
+	public Sign getSign() {
 		return getShip().getLicence().get();
 	}
 

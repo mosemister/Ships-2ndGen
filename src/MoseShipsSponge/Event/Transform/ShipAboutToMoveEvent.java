@@ -12,8 +12,8 @@ import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancellable {
 
 	boolean g_cancelled;
-	
-	public ShipAboutToMoveEvent(Cause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks){
+
+	public ShipAboutToMoveEvent(Cause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks) {
 		super(cause, ship, type, blocks);
 	}
 
@@ -26,7 +26,5 @@ public class ShipAboutToMoveEvent extends ShipTransformEvent implements Cancella
 	public void setCancelled(boolean cancel) {
 		g_cancelled = cancel;
 	}
-	
-	
-	
+
 }

@@ -1,6 +1,6 @@
 package MoseShips.Stores;
 
-public class TwoStore<A extends Object, B extends Object> extends OneStore<A>{
+public class TwoStore<A extends Object, B extends Object> extends OneStore<A> {
 
 	B TWO_STORE;
 

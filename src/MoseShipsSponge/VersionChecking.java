@@ -10,10 +10,10 @@ import org.spongepowered.api.Sponge;
 import MoseShipsSponge.Plugin.ShipsMain;
 
 public class VersionChecking {
-	
+
 	public static final int[] MINECRAFT_VERSION = convert(getMinecraftVersion());
 	public static final int[] SHIPS_VERSION = convert(ShipsMain.VERSION);
-	
+
 	public static int[] convert(String version) {
 		String[] args = version.split(Pattern.quote("."));
 		int[] version2 = new int[args.length];
@@ -22,8 +22,8 @@ public class VersionChecking {
 			version2[A] = Integer.parseInt(part1);
 		}
 		return version2;
-}
-	
+	}
+
 	public static String toString(int... value) {
 		String ret = null;
 		for (int A : value) {
@@ -34,8 +34,8 @@ public class VersionChecking {
 			}
 		}
 		return ret;
-}
-	
+	}
+
 	public static VersionOutcome isGreater(int[] origin, int... compare) {
 		List<Integer> origin2 = new ArrayList<Integer>();
 		for (int A : origin) {
@@ -69,20 +69,17 @@ public class VersionChecking {
 			}
 		}
 		return VersionOutcome.EQUAL;
-}
-	
+	}
+
 	private static String getMinecraftVersion() {
-		
+
 		MinecraftVersion version = Sponge.getPlatform().getMinecraftVersion();
 		String versionS = version.getName();
 		return versionS;
 	}
 
 	public enum VersionOutcome {
-		GREATER,
-		LOWER,
-		EQUAL;
+		GREATER, LOWER, EQUAL;
 	}
-
 
 }

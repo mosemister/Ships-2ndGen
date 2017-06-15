@@ -5,7 +5,7 @@ import org.spongepowered.api.command.CommandSource;
 import MoseShipsSponge.Plugin.ShipsMain;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public class TooManyBlocksErrorMovementResult implements MovementResult<Integer>{
+public class TooManyBlocksErrorMovementResult implements MovementResult<Integer> {
 
 	@Override
 	public void sendMessage(LiveShip ship, CommandSource source, Integer value) {

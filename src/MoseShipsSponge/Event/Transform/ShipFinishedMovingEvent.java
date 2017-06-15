@@ -8,7 +8,7 @@ import MoseShipsSponge.Movement.MovingBlock;
 import MoseShipsSponge.Movement.Type.MovementType;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public class ShipFinishedMovingEvent extends ShipTransformEvent{
+public class ShipFinishedMovingEvent extends ShipTransformEvent {
 
 	public ShipFinishedMovingEvent(Cause cause, LiveShip ship, MovementType type, List<MovingBlock> blocks) {
 		super(cause, ship, type, blocks);

@@ -10,14 +10,15 @@ import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 public class ShipCreateFailedFromMissingType extends ShipCreateFailedEvent {
 
 	String g_type;
-	
+
 	public ShipCreateFailedFromMissingType(ShipsData ship, Player player, String missingType, Cause cause) {
-		super(ship, player, Text.of(ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE)), cause);
+		super(ship, player,
+				Text.of(ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE)), cause);
 		g_type = missingType;
 	}
-	
-	public String getAttemptedType(){
+
+	public String getAttemptedType() {
 		return g_type;
 	}
-	
+
 }

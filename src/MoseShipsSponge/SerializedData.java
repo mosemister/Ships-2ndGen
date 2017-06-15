@@ -6,6 +6,6 @@ import MoseShips.CustomDataHolder.DataHandler;
 
 public interface SerializedData extends DataHandler {
 
-	public Map<String[], Object> getSerializedData();
+	public Map<Object[], Object> getSerializedData();
 
 }

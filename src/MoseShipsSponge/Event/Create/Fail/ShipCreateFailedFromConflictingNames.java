@@ -6,24 +6,24 @@ import org.spongepowered.api.text.Text;
 
 import MoseShipsSponge.Configs.ShipsConfig;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 
-public class ShipCreateFailedFromConflictingNames extends ShipCreateFailedEvent{
+public class ShipCreateFailedFromConflictingNames extends ShipCreateFailedEvent {
 
 	LiveShip g_conflict;
-	
-	public ShipCreateFailedFromConflictingNames(LiveShip ship, Player player, LiveShip conflict, Cause cause) {
-		super(ship, player, Text.of(ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_NAME)), cause);
+
+	public ShipCreateFailedFromConflictingNames(ShipsData ship, Player player, LiveShip conflict, Cause cause) {
+		super(ship, player,
+				Text.of(ShipsConfig.CONFIG.get(String.class, ShipsConfig.PATH_MESSAGE_SIGN_CREATE_FAILED_NAME)), cause);
 		g_conflict = conflict;
 	}
-	
-	public LiveShip getConflict(){
+
+	public LiveShip getConflict() {
 		return g_conflict;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return g_conflict.getName();
 	}
-	
-	
 
 }

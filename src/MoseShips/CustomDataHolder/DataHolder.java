@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DataHolder {
 
-	protected List<DataHolder> DATA = new ArrayList<>();
+	protected List<DataHandler> DATA = new ArrayList<>();
 
 	@SuppressWarnings("unchecked")
 	public <T extends DataHandler> List<T> getData(Class<T> type) {
@@ -24,7 +24,7 @@ public class DataHolder {
 		return this;
 	}
 
-	public List<DataHolder> getAllData() {
+	public List<DataHandler> getAllData() {
 		return DATA;
 	}
 

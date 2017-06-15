@@ -9,14 +9,14 @@ import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 public class ShipLoadEvent extends ShipsEvent implements Cancellable {
 
 	boolean g_cancelled;
-	
+
 	public ShipLoadEvent(LiveShip ship, Cause cause) {
 		super(ship, cause);
 	}
-	
+
 	@Override
 	public LiveShip getShip() {
-		return (LiveShip)super.getShip();
+		return (LiveShip) super.getShip();
 	}
 
 	@Override

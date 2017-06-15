@@ -8,15 +8,15 @@ import org.spongepowered.api.block.BlockState;
 
 import MoseShipsSponge.Movement.MovingBlock;
 
-public class MovingBlockList extends ArrayList<MovingBlock>{
+public class MovingBlockList extends ArrayList<MovingBlock> {
 
 	private static final long serialVersionUID = 1L;
-	
-	public MovingBlockList filterBlocks(BlockState... states){
+
+	public MovingBlockList filterBlocks(BlockState... states) {
 		return filterBlocks(Arrays.asList(states));
 	}
-	
-	public MovingBlockList filterBlocks(List<BlockState> states){
+
+	public MovingBlockList filterBlocks(List<BlockState> states) {
 		MovingBlockList list = new MovingBlockList();
 		stream().filter(mb -> states.stream().anyMatch(b -> b.equals(mb.getState()))).forEach(mb -> list.add(mb));
 		return list;

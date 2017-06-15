@@ -60,6 +60,10 @@ public class MovingBlock {
 		TYPE = MovementType.DIRECTIONAL;
 	}
 
+	public MovingBlock(Location<World> original, Direction direction, int speed) {
+		this(original, direction.asBlockOffset().mul(speed));
+	}
+
 	public Location<World> getOrigin() {
 		return ORIGIN;
 	}
@@ -67,12 +71,12 @@ public class MovingBlock {
 	public Location<World> getMovingTo() {
 		return MOVING_TO;
 	}
-	
-	public BlockType getType(){
+
+	public BlockType getType() {
 		return STATE.getState().getType();
 	}
-	
-	public BlockState getState(){
+
+	public BlockState getState() {
 		return STATE.getState();
 	}
 
@@ -97,17 +101,17 @@ public class MovingBlock {
 	}
 
 	public MovingBlock move(BlockChangeFlag flag) {
-		if(TYPE.equals(MovementType.ROTATE_LEFT)){
+		if (TYPE.equals(MovementType.ROTATE_LEFT)) {
 			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
-			if(opDirection.isPresent()){
+			if (opDirection.isPresent()) {
 				Direction blockD = opDirection.get();
 				blockD = BlockRotateUtil.rotateLeft(blockD);
 				STATE.with(Keys.DIRECTION, blockD);
 			}
 		}
-		if(TYPE.equals(MovementType.ROTATE_RIGHT)){
+		if (TYPE.equals(MovementType.ROTATE_RIGHT)) {
 			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
-			if(opDirection.isPresent()){
+			if (opDirection.isPresent()) {
 				Direction blockD = opDirection.get();
 				blockD = BlockRotateUtil.rotateRight(blockD);
 				STATE.with(Keys.DIRECTION, blockD);
@@ -118,17 +122,17 @@ public class MovingBlock {
 	}
 
 	public MovingBlock move(BlockChangeFlag flag, Cause cause) {
-		if(TYPE.equals(MovementType.ROTATE_LEFT)){
+		if (TYPE.equals(MovementType.ROTATE_LEFT)) {
 			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
-			if(opDirection.isPresent()){
+			if (opDirection.isPresent()) {
 				Direction blockD = opDirection.get();
 				blockD = BlockRotateUtil.rotateLeft(blockD);
 				STATE.with(Keys.DIRECTION, blockD);
 			}
 		}
-		if(TYPE.equals(MovementType.ROTATE_RIGHT)){
+		if (TYPE.equals(MovementType.ROTATE_RIGHT)) {
 			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
-			if(opDirection.isPresent()){
+			if (opDirection.isPresent()) {
 				Direction blockD = opDirection.get();
 				blockD = BlockRotateUtil.rotateRight(blockD);
 				STATE.with(Keys.DIRECTION, blockD);
@@ -157,23 +161,21 @@ public class MovingBlock {
 			return CollideType.COLLIDE_WITH_SELF;
 		} else if (Arrays.asList(ignore2).contains(MOVING_TO.getBlock())) {
 			return CollideType.COLLIDE_WITH_IGNORED_TYPE;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(),
-				BlockList.ListType.MATERIALS)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.MATERIALS)) {
 			return CollideType.COLLIDE_WITH_MATERIAL;
-		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(),
-				BlockList.ListType.RAM)) {
+		} else if (BlockList.BLOCK_LIST.contains(MOVING_TO.getBlock(), BlockList.ListType.RAM)) {
 			return CollideType.RAM;
 		} else {
 			return CollideType.COLLIDE;
-}
+		}
 	}
 
 	public MovingBlock rotate(RotateType rotate, Location<World> centre) {
 		switch (rotate) {
-			case LEFT:
-				return rotateLeft(centre);
-			case RIGHT:
-				return rotateRight(centre);
+		case LEFT:
+			return rotateLeft(centre);
+		case RIGHT:
+			return rotateRight(centre);
 		}
 		return this;
 	}
@@ -220,48 +222,51 @@ public class MovingBlock {
 		if (opDir.isPresent()) {
 			Direction dir = opDir.get();
 			switch (dir) {
-				case EAST:
-					if (left) {
-						STATE.with(Keys.DIRECTION, Direction.NORTH);
-						return;
-					} else {
-						STATE.with(Keys.DIRECTION, Direction.SOUTH);
-						return;
-					}
-				case NORTH:
-					if (left) {
-						STATE.with(Keys.DIRECTION, Direction.WEST);
-						return;
-					} else {
-						STATE.with(Keys.DIRECTION, Direction.EAST);
-						return;
-					}
-				case SOUTH:
-					if (left) {
-						STATE.with(Keys.DIRECTION, Direction.EAST);
-						return;
-					} else {
-						STATE.with(Keys.DIRECTION, Direction.WEST);
-						return;
-					}
-				case WEST:
-					if (left) {
-						STATE.with(Keys.DIRECTION, Direction.SOUTH);
-						return;
-					} else {
-						STATE.with(Keys.DIRECTION, Direction.NORTH);
-						return;
-					}
-				default:
+			case EAST:
+				if (left) {
+					STATE.with(Keys.DIRECTION, Direction.NORTH);
 					return;
+				} else {
+					STATE.with(Keys.DIRECTION, Direction.SOUTH);
+					return;
+				}
+			case NORTH:
+				if (left) {
+					STATE.with(Keys.DIRECTION, Direction.WEST);
+					return;
+				} else {
+					STATE.with(Keys.DIRECTION, Direction.EAST);
+					return;
+				}
+			case SOUTH:
+				if (left) {
+					STATE.with(Keys.DIRECTION, Direction.EAST);
+					return;
+				} else {
+					STATE.with(Keys.DIRECTION, Direction.WEST);
+					return;
+				}
+			case WEST:
+				if (left) {
+					STATE.with(Keys.DIRECTION, Direction.SOUTH);
+					return;
+				} else {
+					STATE.with(Keys.DIRECTION, Direction.NORTH);
+					return;
+				}
+			default:
+				return;
 			}
 		}
 	}
 
 	public static List<MovingBlock> setPriorityOrder(List<MovingBlock> blocks) {
-		List<MovingBlock> normalList = blocks.stream().filter(b -> b.getPriority().equals(Priority.NORMAL)).collect(Collectors.toList());
-		List<MovingBlock> airList = blocks.stream().filter(b -> b.getPriority().equals(Priority.AIR)).collect(Collectors.toList());
-		List<MovingBlock> priList = blocks.stream().filter(b -> b.getPriority().equals(Priority.PRIORITY)).collect(Collectors.toList());
+		List<MovingBlock> normalList = blocks.stream().filter(b -> b.getPriority().equals(Priority.NORMAL))
+				.collect(Collectors.toList());
+		List<MovingBlock> airList = blocks.stream().filter(b -> b.getPriority().equals(Priority.AIR))
+				.collect(Collectors.toList());
+		List<MovingBlock> priList = blocks.stream().filter(b -> b.getPriority().equals(Priority.PRIORITY))
+				.collect(Collectors.toList());
 		List<MovingBlock> retList = new ArrayList<>();
 		retList.addAll(normalList);
 		retList.addAll(airList);
@@ -270,13 +275,10 @@ public class MovingBlock {
 	}
 
 	public enum Priority {
-		NORMAL,
-		PRIORITY,
-		SPECIAL,
-		AIR;
+		NORMAL, PRIORITY, SPECIAL, AIR;
 
 		public static Priority getType(BlockState type) {
-			if (type.get(Keys.ATTACHED).isPresent()){
+			if (type.get(Keys.ATTACHED).isPresent()) {
 				return PRIORITY;
 			} else if (type.equals(BlockTypes.AIR)) {
 				return AIR;

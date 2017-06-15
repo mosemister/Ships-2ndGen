@@ -18,7 +18,8 @@ import com.flowpowered.math.vector.Vector3i;
 public class LocationUtils {
 
 	public static boolean blocksEqual(Location<? extends Extent> loc1, Location<? extends Extent> loc2) {
-		if ((loc1.getBlockX() == loc2.getBlockX()) && (loc1.getBlockY() == loc2.getBlockY()) && (loc1.getBlockZ() == loc2.getBlockZ())) {
+		if ((loc1.getBlockX() == loc2.getBlockX()) && (loc1.getBlockY() == loc2.getBlockY())
+				&& (loc1.getBlockZ() == loc2.getBlockZ())) {
 			return true;
 		}
 		return false;
@@ -31,47 +32,51 @@ public class LocationUtils {
 	public static boolean blockChunkContains(Collection<Location<Chunk>> list, Location<? extends Extent> loc) {
 		return list.stream().anyMatch(l -> blocksEqual(l, loc));
 	}
-	
+
 	public static Vector3i getReletive(Direction direction, int speed) {
 		switch (direction) {
-			case DOWN:
-				return new Vector3i(0, -speed, 0);
-			case EAST:
-				return new Vector3i(speed, 0, 0);
-			case NONE:
-				return new Vector3i(0, 0, 0);
-			case NORTH:
-				return new Vector3i(0, 0, -speed);
-			case NORTHEAST:
-				break;
-			case NORTHWEST:
-				break;
-			case SOUTH:
-				return new Vector3i(0, 0, speed);
-			case SOUTHEAST:
-				break;
-			case SOUTHWEST:
-				break;
-			case UP:
-				return new Vector3i(0, speed, 0);
-			case WEST:
-				return new Vector3i(-speed, 0, 0);
-			default:
-				return new Vector3i(0, 0, 0);
+		case DOWN:
+			return new Vector3i(0, -speed, 0);
+		case EAST:
+			return new Vector3i(speed, 0, 0);
+		case NONE:
+			return new Vector3i(0, 0, 0);
+		case NORTH:
+			return new Vector3i(0, 0, -speed);
+		case NORTHEAST:
+			break;
+		case NORTHWEST:
+			break;
+		case SOUTH:
+			return new Vector3i(0, 0, speed);
+		case SOUTHEAST:
+			break;
+		case SOUTHWEST:
+			break;
+		case UP:
+			return new Vector3i(0, speed, 0);
+		case WEST:
+			return new Vector3i(-speed, 0, 0);
+		default:
+			return new Vector3i(0, 0, 0);
 		}
 		return new Vector3i(0, 0, 0);
 	}
-	
-	public static List<Sign> getAttachedSigns(Location<? extends Extent> loc){
+
+	public static List<Sign> getAttachedSigns(Location<? extends Extent> loc) {
 		List<Sign> list = new ArrayList<>();
-		Direction[] directions = {Direction.EAST, Direction.NORTH, Direction.WEST, Direction.SOUTH};
-		for(Direction direction : directions){
+		Direction[] directions = {
+				Direction.EAST,
+				Direction.NORTH,
+				Direction.WEST,
+				Direction.SOUTH };
+		for (Direction direction : directions) {
 			Location<? extends Extent> loc2 = loc.copy().getRelative(direction);
 			Optional<TileEntity> opTile = loc2.getTileEntity();
-			if(opTile.isPresent()){
+			if (opTile.isPresent()) {
 				TileEntity entity = opTile.get();
-				if(entity instanceof Sign){
-					list.add((Sign)entity);
+				if (entity instanceof Sign) {
+					list.add((Sign) entity);
 				}
 			}
 		}

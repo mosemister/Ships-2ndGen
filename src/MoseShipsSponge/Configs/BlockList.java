@@ -18,7 +18,7 @@ import MoseShipsSponge.Plugin.ShipsMain;
 public class BlockList extends BasicConfig {
 
 	Map<BlockState, ListType> BLOCKS = new HashMap<BlockState, ListType>();
-	
+
 	public static final BlockList BLOCK_LIST = new BlockList();
 
 	public BlockList() {
@@ -28,35 +28,36 @@ public class BlockList extends BasicConfig {
 		BLOCKS.put(BlockTypes.WALL_SIGN.getDefaultState(), ListType.MATERIALS);
 		BLOCKS.put(BlockTypes.PLANKS.getDefaultState(), ListType.MATERIALS);
 	}
-	
-	public void reload(){
+
+	public void reload() {
 		BLOCKS = new HashMap<BlockState, ListType>();
 		List<BlockState> list = new ArrayList<>();
 		getAllPossibleStates().stream().forEach(s -> {
 			String value = get(String.class, s.getId());
-			if(value != null){
+			if (value != null) {
 				ListType type = ListType.valueFrom(value);
-				if(type == null){
+				if (type == null) {
 					list.add(s);
-				}else{
+				} else {
 					BLOCKS.put(s, type);
 				}
 			}
 		});
-		if(list.size() != 0){
-			//Sponge.getServer().getConsole().sendMessage(Text.of("The following failed to load \n" + list));
+		if (list.size() != 0) {
+			// Sponge.getServer().getConsole().sendMessage(Text.of("The
+			// following failed to load \n" + list));
 		}
 	}
-	
-	public BlockList applyMissing(){
+
+	public BlockList applyMissing() {
 		getAllPossibleStates().stream().forEach(b -> {
 			set(false, b.getId(), "enabled");
 		});
 		save();
 		return this;
 	}
-	
-	public ListType resetMaterial(BlockState state, ListType type){
+
+	public ListType resetMaterial(BlockState state, ListType type) {
 		return BLOCKS.replace(state, type);
 	}
 
@@ -71,16 +72,16 @@ public class BlockList extends BasicConfig {
 	}
 
 	public ListType getDefaultValue(BlockType type) {
-		if(getDefaultMaterialList().stream().anyMatch(b -> b.equals(type))) {
-				return ListType.MATERIALS;
+		if (getDefaultMaterialList().stream().anyMatch(b -> b.equals(type))) {
+			return ListType.MATERIALS;
 		}
-		if(getDefaultRamList().stream().anyMatch(b -> b.equals(type))){
+		if (getDefaultRamList().stream().anyMatch(b -> b.equals(type))) {
 			return ListType.RAM;
 		}
 		return ListType.NONE;
 	}
-	
-	public List<BlockState> getDefaultMaterialList(){
+
+	public List<BlockState> getDefaultMaterialList() {
 		List<BlockState> list = new ArrayList<>();
 		list.addAll(getAllPossibleStates(BlockTypes.LOG));
 		list.addAll(getAllPossibleStates(BlockTypes.LOG2));
@@ -195,7 +196,7 @@ public class BlockList extends BasicConfig {
 		list.addAll(getAllPossibleStates(BlockTypes.ACACIA_FENCE));
 		return list;
 	}
-	
+
 	public List<BlockState> getDefaultRamList() {
 		List<BlockState> list = new ArrayList<>();
 		list.addAll(getAllPossibleStates(BlockTypes.SAPLING));
@@ -218,14 +219,14 @@ public class BlockList extends BasicConfig {
 		return list;
 	}
 
-	public List<BlockState> getList(ListType type){
+	public List<BlockState> getList(ListType type) {
 		List<BlockState> list = new ArrayList<>();
 		BLOCKS.entrySet().stream().filter(e -> e.getValue().equals(type)).forEach(e -> list.add(e.getKey()));
 		return list;
 	}
-	
+
 	public boolean contains(BlockState state, ListType type) {
-		if (BLOCKS.entrySet().stream().anyMatch(b -> b.getKey().equals(state))){
+		if (BLOCKS.entrySet().stream().anyMatch(b -> b.getKey().equals(state))) {
 			return true;
 		}
 		return false;
@@ -233,7 +234,8 @@ public class BlockList extends BasicConfig {
 
 	public List<BlockState> getContains(BlockType block, ListType type) {
 		List<BlockState> list = new ArrayList<>();
-		BLOCKS.entrySet().stream().filter(e -> e.getKey().getType().equals(block)).filter(e -> e.getValue().equals(type)).forEach(e -> list.add(e.getKey()));
+		BLOCKS.entrySet().stream().filter(e -> e.getKey().getType().equals(block))
+				.filter(e -> e.getValue().equals(type)).forEach(e -> list.add(e.getKey()));
 		return list;
 	}
 
@@ -260,9 +262,7 @@ public class BlockList extends BasicConfig {
 	}
 
 	public static enum ListType {
-		MATERIALS("-m", "m"),
-		RAM("-r", "r"),
-		NONE("-n", "n");
+		MATERIALS("-m", "m"), RAM("-r", "r"), NONE("-n", "n");
 
 		String[] g_ali;
 

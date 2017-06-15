@@ -19,7 +19,8 @@ public class Ships5BlockFinder implements BasicBlockFinder {
 	@Override
 	public List<Location<World>> getConnectedBlocks(int limit, Location<World> loc) {
 		BLOCKS = new ArrayList<>();
-		getNextBlock(limit, Arrays.asList(Direction.DOWN, Direction.EAST, Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.WEST), loc);
+		getNextBlock(limit, Arrays.asList(Direction.DOWN, Direction.EAST, Direction.NORTH, Direction.SOUTH,
+				Direction.UP, Direction.WEST), loc);
 		return BLOCKS;
 	}
 

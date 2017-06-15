@@ -1,5 +1,6 @@
 package MoseShipsSponge.Plugin;
 
+import java.io.File;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,8 +29,9 @@ import MoseShipsSponge.Commands.SignCMD;
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Listeners.ShipsListeners;
 import MoseShipsSponge.ShipBlock.Signs.ShipAltitudeSign;
+import MoseShipsSponge.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipSign;
-import MoseShipsSponge.Ships.VesselTypes.DefaultTypes.AirTypes.OpShip.StaticOPShip;
+import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticOPShip;
 
 @Plugin(id = ShipsMain.ID, name = ShipsMain.NAME, version = ShipsMain.VERSION)
 public class ShipsMain {
@@ -38,7 +40,10 @@ public class ShipsMain {
 	public static final String NAME = "Ships";
 	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,0,1)";
 	public static final String TESTED_API = "6.0.0.0";
-	public static final String[] TESTED_MC = { "1.11.2" };
+	public static final String[] TESTED_MC = {
+			"1.11.2" };
+
+	public static final File CONFIGURATION_ROOT = new File("Configuration/Ships/");
 
 	static ShipsMain PLUGIN;
 
@@ -47,23 +52,22 @@ public class ShipsMain {
 
 	@Inject
 	PluginContainer CONTAINER;
-	
-	private void registerSigns(){
+
+	private void registerSigns() {
 		ShipSign.SHIP_SIGNS.add(new ShipLicenceSign());
 		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
-		ShipSign.SHIP_SIGNS.add(new ShipEngineSign());
-		ShipSign.SHIP_SIGNS.add(new ShipWheelSign());
-		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
-		ShipSign.SHIP_SIGNS.add(new ShipEOTSign());
+		//ShipSign.SHIP_SIGNS.add(new ShipEngineSign());
+		//ShipSign.SHIP_SIGNS.add(new ShipWheelSign());
+		//ShipSign.SHIP_SIGNS.add(new ShipEOTSign());
 	}
 
 	private void registerCMDs() {
 		new InfoCMD();
 		new DebugCMD();
 		new SignCMD();
-		new HelpCMD();
-		new BlockListCMD();
-		new AutoPilotCMD();
+		//new HelpCMD();
+		//new BlockListCMD();
+		//new AutoPilotCMD();
 	}
 
 	private void registerShipTypes() {
@@ -74,8 +78,7 @@ public class ShipsMain {
 		VersionChecking.VersionOutcome previous = null;
 		for (String tested : TESTED_MC) {
 			int[] test = VersionChecking.convert(tested);
-			VersionChecking.VersionOutcome outcome = VersionChecking.isGreater(VersionChecking.MINECRAFT_VERSION,
-					test);
+			VersionChecking.VersionOutcome outcome = VersionChecking.isGreater(VersionChecking.MINECRAFT_VERSION, test);
 			if (outcome.equals(VersionChecking.VersionOutcome.EQUAL)) {
 				previous = outcome;
 				break;
@@ -89,25 +92,24 @@ public class ShipsMain {
 		ConsoleSource console = Sponge.getServer().getConsole();
 		if (previous != null) {
 			switch (previous) {
-				case EQUAL:
-					Text text = Text.builder("Your MC version has been tested with Ships").color(TextColors.GREEN)
-							.build();
-					console.sendMessage(text);
-					break;
-				case GREATER:
-					Text text2 = Text
-							.builder(
-									"Your MC version is greater then the tested versions. Ships should be uneffected however please be keep in mind that you should look for updates as your MC version is unsupported")
-							.color(TextColors.YELLOW).build();
-					console.sendMessage(text2);
-					break;
-				case LOWER:
-					Text text3 = Text
-							.builder(
-									"Your MC version is lower then the tested versions. Ships is not supported at all, Please note that Ships may still work")
-							.color(TextColors.RED).build();
-					console.sendMessage(text3);
-					break;
+			case EQUAL:
+				Text text = Text.builder("Your MC version has been tested with Ships").color(TextColors.GREEN).build();
+				console.sendMessage(text);
+				break;
+			case GREATER:
+				Text text2 = Text
+						.builder(
+								"Your MC version is greater then the tested versions. Ships should be uneffected however please be keep in mind that you should look for updates as your MC version is unsupported")
+						.color(TextColors.YELLOW).build();
+				console.sendMessage(text2);
+				break;
+			case LOWER:
+				Text text3 = Text
+						.builder(
+								"Your MC version is lower then the tested versions. Ships is not supported at all, Please note that Ships may still work")
+						.color(TextColors.RED).build();
+				console.sendMessage(text3);
+				break;
 			}
 		} else {
 			Text text = Text
@@ -125,13 +127,14 @@ public class ShipsMain {
 		GAME.getCommandManager().register(this, new ShipsCMD.Executer(), "Ships", "Vessels");
 		BlockList.BLOCK_LIST.reload();
 		registerShipTypes();
+		registerSigns();
 		registerCMDs();
 		displayVersionChecking();
 	}
-	
+
 	@Listener
-	public void onLoad(GameStartedServerEvent event){
-		//load the ship
+	public void onLoad(GameStartedServerEvent event) {
+		// load the ship
 	}
 
 	@Listener

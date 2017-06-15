@@ -88,6 +88,18 @@ public class BasicConfig {
 		return null;
 	}
 
+	public <T extends Object> T get(TypeToken<T> token, Object... path) {
+		if (path != null) {
+			ConfigurationNode key = root.getNode(path);
+			try {
+				return key.getValue(token);
+			} catch (ObjectMappingException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+
 	public boolean has(Object... path) {
 		if (path != null) {
 			ConfigurationNode key = root.getNode(path);
@@ -103,8 +115,8 @@ public class BasicConfig {
 		return false;
 	}
 
-	public <T extends Object> List<T> getList(Function<? super ConfigurationNode, T> type, Object... path) {
-		return (List<T>) root.getNode(path).getChildrenList().stream().map(type).collect(Collectors.toList());
+	public <R extends Object> List<R> getList(Function<? super ConfigurationNode, ? extends R> type, Object... path) {
+		return root.getNode(path).getChildrenList().stream().map(type).collect(Collectors.toList());
 	}
 
 	public BasicConfig save() {

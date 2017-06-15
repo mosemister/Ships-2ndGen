@@ -6,10 +6,10 @@ import org.spongepowered.api.event.cause.Cause;
 import MoseShipsSponge.Event.ShipsEvent;
 import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 
-public class ShipStructureChangeEvent extends ShipsEvent implements Cancellable{
+public class ShipStructureChangeEvent extends ShipsEvent implements Cancellable {
 
 	boolean g_cancelled;
-	
+
 	public ShipStructureChangeEvent(ShipsData ship, Cause cause) {
 		super(ship, cause);
 	}

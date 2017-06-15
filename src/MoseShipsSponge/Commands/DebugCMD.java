@@ -10,18 +10,17 @@ import org.spongepowered.api.text.Text;
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Configs.ShipsConfig;
 import MoseShipsSponge.Plugin.ShipsMain;
-import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoader;
-import MoseShipsSponge.Ships.VesselTypes.Loading.ShipLoadingError;
 
 public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCMD {
 
-	public DebugCMD(){
+	public DebugCMD() {
 		ShipsCMD.SHIPS_COMMANDS.add(this);
 	}
-	
+
 	@Override
 	public String[] getAliases() {
-		String[] args = {"debug"};
+		String[] args = {
+				"debug" };
 		return args;
 	}
 
@@ -44,35 +43,35 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 	public CommandResult execute(ConsoleSource console, String... args) throws CommandException {
 		return run(console, args);
 	}
-	
-	private CommandResult run(CommandSource source, String... args){
-		if(args.length == 1){
+
+	private CommandResult run(CommandSource source, String... args) {
+		if (args.length == 1) {
 			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug load <vessel name>"));
 			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug reload <config/materials>"));
 			return CommandResult.success();
-		}else if (args[1].equalsIgnoreCase("load")){
-			if(args.length > 2){
-				ShipLoadingError error = ShipLoader.getError(args[2]);
-				if(error.equals(ShipLoadingError.NOT_CURRUPT)){
+		} else if (args[1].equalsIgnoreCase("load")) {
+			if (args.length > 2) {
+				/*ShipLoadingError error = ShipLoader.getError(args[2]);
+				if (error.equals(ShipLoadingError.NOT_CURRUPT)) {
 					source.sendMessage(ShipsMain.format("Ship is loading fine", false));
 					return CommandResult.success();
-				}else{
+				} else {
 					source.sendMessage(ShipsMain.format("Ship is failing to load, due to " + error.name(), true));
 					return CommandResult.success();
-				}
-			}else{
+				}*/
+			} else {
 				source.sendMessage(ShipsMain.formatCMDHelp("/ships debug load <vessel name>"));
 			}
-		}else if(args[1].equalsIgnoreCase("reload")){
-			if(args.length > 2){
-				if(args[2].equalsIgnoreCase("config")){
+		} else if (args[1].equalsIgnoreCase("reload")) {
+			if (args.length > 2) {
+				if (args[2].equalsIgnoreCase("config")) {
 					System.out.println("t");
 					ShipsConfig.CONFIG.applyMissing();
 					source.sendMessage(ShipsMain.format("Configuration has been refreshed", false));
-				}else if(args[2].equalsIgnoreCase("materials")){
+				} else if (args[2].equalsIgnoreCase("materials")) {
 					BlockList.BLOCK_LIST.applyMissing();
 					source.sendMessage(ShipsMain.format("Block list has been refreshed", false));
-				}else{
+				} else {
 					source.sendMessage(ShipsMain.format("Can not find configuration file", true));
 				}
 			}

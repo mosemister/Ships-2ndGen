@@ -4,83 +4,175 @@ public class ShipsConfig extends BasicConfig {
 
 	// STRUCTURE
 
-	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT = { "Advanced", "Structure",
-			"StructureLimits", "TrackLimits" };
+	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT = {
+			"Advanced",
+			"Structure",
+			"StructureLimits",
+			"TrackLimits" };
 
-	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE = { "Advanced", "Structure",
-			"StructureLimits", "TrackRepeate" };
+	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_TRACKREPEATE = {
+			"Advanced",
+			"Structure",
+			"StructureLimits",
+			"TrackRepeate" };
 
-	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_SECTIONSIZE = { "Advanced", "Structure",
-			"StructureLimits", "SectionSize" };
+	public static final Object[] PATH_STRUCTURE_STRUCTURELIMITS_SECTIONSIZE = {
+			"Advanced",
+			"Structure",
+			"StructureLimits",
+			"SectionSize" };
 
 	// ALGORITHMS
 
-	public static final Object[] PATH_ALGORITHMS_BLOCKFINDER = { "Advanced", "Algorithms", "BlockFinder" };
+	public static final Object[] PATH_ALGORITHMS_BLOCKFINDER = {
+			"Advanced",
+			"Algorithms",
+			"BlockFinder" };
 
-	public static final Object[] PATH_ALGORITHMS_MOVEMENT = { "Advanced", "Algorithms", "Movement" };
+	public static final Object[] PATH_ALGORITHMS_MOVEMENT = {
+			"Advanced",
+			"Algorithms",
+			"Movement" };
 
-	public static final Object[] PATH_ALGORITHMS_CLEARFREQUENCY = { "Advanced", "Algorithms", "ClearFrequency" };
+	public static final Object[] PATH_ALGORITHMS_CLEARFREQUENCY = {
+			"Advanced",
+			"Algorithms",
+			"ClearFrequency" };
 
 	// SCHEDULER
 
-	public static final Object[] PATH_SCHEDULER_REPEATE = { "Advanced", "Scheduler", "Repeate" };
+	public static final Object[] PATH_SCHEDULER_REPEATE = {
+			"Advanced",
+			"Scheduler",
+			"Repeate" };
 
-	public static final Object[] PATH_SCHEDULER_AUTOPILOT = { "Advanced", "Scheduler", "Autopilot" };
+	public static final Object[] PATH_SCHEDULER_AUTOPILOT = {
+			"Advanced",
+			"Scheduler",
+			"Autopilot" };
 
-	public static final Object[] PATH_SCHEDULER_FALL = { "Advanced", "Scheduler", "Fall" };
+	public static final Object[] PATH_SCHEDULER_FALL = {
+			"Advanced",
+			"Scheduler",
+			"Fall" };
 
-	public static final Object[] PATH_SCHEDULER_STRUCTURE = { "Advanced", "Scheduler", "Structure" };
+	public static final Object[] PATH_SCHEDULER_STRUCTURE = {
+			"Advanced",
+			"Scheduler",
+			"Structure" };
 
-	public static final Object[] PATH_ONSNEAK_REMOVE_SHIP = { "Configuration", "OnSneak", "RemoveShipsBlocks" };
+	public static final Object[] PATH_ONSNEAK_REMOVE_SHIP = {
+			"Configuration",
+			"OnSneak",
+			"RemoveShipsBlocks" };
 
 	// COLLIDE
 
-	public static final Object[] PATH_COLLIDE_SHOW_TIME = { "Configuration", "Collide", "DisplayTime" };
+	public static final Object[] PATH_COLLIDE_SHOW_TIME = {
+			"Configuration",
+			"Collide",
+			"DisplayTime" };
 
-	public static final Object[] PATH_COLLIDE_WILL_SHOW = { "Configuration", "Collide", "WillDisplay" };
+	public static final Object[] PATH_COLLIDE_WILL_SHOW = {
+			"Configuration",
+			"Collide",
+			"WillDisplay" };
 
-	public static final Object[] PATH_COLLIDE_TO_SHOW = { "Configuration", "Collide", "ShowMaterial" };
+	public static final Object[] PATH_COLLIDE_TO_SHOW = {
+			"Configuration",
+			"Collide",
+			"ShowMaterial" };
 
 	// SIGN
 
-	public static final Object[] PATH_SIGN_FORCE_USERNAME = { "Configuration", "Sign", "ForceUsername" };
+	public static final Object[] PATH_SIGN_FORCE_USERNAME = {
+			"Configuration",
+			"Sign",
+			"ForceUsername" };
 
 	// MESSAGE
 
-	public static final Object[] PATH_MESSAGE_FUEL_FAILED_COLLECT = { "Configuration", "Messages", "Fuel",
+	public static final Object[] PATH_MESSAGE_FUEL_FAILED_COLLECT = {
+			"Configuration",
+			"Messages",
+			"Fuel",
 			"FailedToCollectFuel" };
 
-	public static final Object[] PATH_MESSAGE_FUEL_OUT = { "Configuration", "Messages", "Fuel", "OutOfFuel" };
+	public static final Object[] PATH_MESSAGE_FUEL_OUT = {
+			"Configuration",
+			"Messages",
+			"Fuel",
+			"OutOfFuel" };
 
-	public static final Object[] PATH_MESSAGE_REQUIRED_BLOCK_MISSING = { "Configuration", "Messages", "RequiredBlock",
+	public static final Object[] PATH_MESSAGE_REQUIRED_BLOCK_MISSING = {
+			"Configuration",
+			"Messages",
+			"RequiredBlock",
 			"MissingBlock" };
 
-	public static final Object[] PATH_MESSAGE_REQUIRED_BLOCK_MISSING_BURNER = { "Configuration", "Messages",
-			"RequiredBlock", "MissingBurner" };
+	public static final Object[] PATH_MESSAGE_REQUIRED_BLOCK_MISSING_BURNER = {
+			"Configuration",
+			"Messages",
+			"RequiredBlock",
+			"MissingBurner" };
 
-	public static final Object[] PATH_MESSAGE_SIZE_NONE = { "Configuration", "Messages", "Size", "None" };
-	
-	public static final Object[] PATH_MESSAGE_SIZE_MAX = { "Configuration", "Messages", "Size", "TooLarge" };
-	
-	public static final Object[] PATH_MESSAGE_SIZE_MIN = { "Configuration", "Messages", "Size", "TooSmall" };
-	
-	public static final Object[] PATH_MESSAGE_PERCENT_NOT_ENOUGH = { "Configuration", "Messages", "Percent",
+	public static final Object[] PATH_MESSAGE_SIZE_NONE = {
+			"Configuration",
+			"Messages",
+			"Size",
+			"None" };
+
+	public static final Object[] PATH_MESSAGE_SIZE_MAX = {
+			"Configuration",
+			"Messages",
+			"Size",
+			"TooLarge" };
+
+	public static final Object[] PATH_MESSAGE_SIZE_MIN = {
+			"Configuration",
+			"Messages",
+			"Size",
+			"TooSmall" };
+
+	public static final Object[] PATH_MESSAGE_PERCENT_NOT_ENOUGH = {
+			"Configuration",
+			"Messages",
+			"Percent",
 			"NotEnoughPercent" };
-	
-	public static final Object[] PATH_MESSAGE_ENVIROMENT_NOT_IN_WATER = { "Configuration", "Messages", "Enviroment",
+
+	public static final Object[] PATH_MESSAGE_ENVIROMENT_NOT_IN_WATER = {
+			"Configuration",
+			"Messages",
+			"Enviroment",
 			"NotInWater" };
-	
-	public static final Object[] PATH_MESSAGE_ENVIROMENT_DETCTION_AHEAD = { "Configuration", "Messages", "Enviroment",
+
+	public static final Object[] PATH_MESSAGE_ENVIROMENT_DETCTION_AHEAD = {
+			"Configuration",
+			"Messages",
+			"Enviroment",
 			"DetectionAhead" };
-	
-	public static final Object[] PATH_MESSAGE_AUTOPILOT_FINISHED = { "Configuration", "Messages", "AutoPilot",
+
+	public static final Object[] PATH_MESSAGE_AUTOPILOT_FINISHED = {
+			"Configuration",
+			"Messages",
+			"AutoPilot",
 			"Finished" };
-	
-	public static final Object[] PATH_MESSAGE_SIGN_CREATE_FAILED_NAME = { "Configuration", "Messages", "Sign", "Create",
-			"Failed", "ByName" };
-	
-	public static final Object[] PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE = { "Configuration", "Messages", "Sign", "Create",
-			"Failed", "ByType" };
+
+	public static final Object[] PATH_MESSAGE_SIGN_CREATE_FAILED_NAME = {
+			"Configuration",
+			"Messages",
+			"Sign",
+			"Create",
+			"Failed",
+			"ByName" };
+
+	public static final Object[] PATH_MESSAGE_SIGN_CREATE_FAILED_TYPE = {
+			"Configuration",
+			"Messages",
+			"Sign",
+			"Create",
+			"Failed",
+			"ByType" };
 
 	public static final ShipsConfig CONFIG = new ShipsConfig();
 

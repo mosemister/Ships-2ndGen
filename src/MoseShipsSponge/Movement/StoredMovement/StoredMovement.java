@@ -49,8 +49,8 @@ public class StoredMovement {
 			Location<World> ret = TELEPORT.add(X, Y, Z);
 			return ret;
 		}
-		if(ROTATE != null){
-			if(ROTATE.equals(RotateType.LEFT)){
+		if (ROTATE != null) {
+			if (ROTATE.equals(RotateType.LEFT)) {
 				int shift = centre.getBlockX() - centre.getBlockZ();
 				double symmetry = centre.getX();
 
@@ -58,7 +58,7 @@ public class StoredMovement {
 				double Y = start.getY();
 				double Z = start.getZ() + shift;
 				start = new Location<>(start.getExtent(), Z, Y, X);
-			}else if (ROTATE.equals(RotateType.RIGHT)){
+			} else if (ROTATE.equals(RotateType.RIGHT)) {
 				int shift = centre.getBlockX() - centre.getBlockZ();
 				double symmetry = centre.getZ();
 
@@ -68,13 +68,13 @@ public class StoredMovement {
 				start = new Location<>(start.getExtent(), Z, Y, X);
 			}
 		}
-		if(X != null){
+		if (X != null) {
 			start = start.add(X, 0, 0);
 		}
-		if(Y != null){
+		if (Y != null) {
 			start = start.add(0, Y, 0);
 		}
-		if(Z != null){
+		if (Z != null) {
 			start = start.add(0, 0, Z);
 		}
 		return start;

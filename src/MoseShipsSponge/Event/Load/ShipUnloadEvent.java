@@ -6,17 +6,17 @@ import org.spongepowered.api.event.cause.Cause;
 import MoseShipsSponge.Event.ShipsEvent;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public class ShipUnloadEvent extends ShipsEvent implements Cancellable{
+public class ShipUnloadEvent extends ShipsEvent implements Cancellable {
 
 	boolean g_cancelled;
-	
+
 	public ShipUnloadEvent(LiveShip ship, Cause cause) {
 		super(ship, cause);
 	}
-	
+
 	@Override
 	public LiveShip getShip() {
-		return (LiveShip)super.getShip();
+		return (LiveShip) super.getShip();
 	}
 
 	@Override
@@ -28,7 +28,5 @@ public class ShipUnloadEvent extends ShipsEvent implements Cancellable{
 	public void setCancelled(boolean cancel) {
 		g_cancelled = cancel;
 	}
-	
-	
 
 }

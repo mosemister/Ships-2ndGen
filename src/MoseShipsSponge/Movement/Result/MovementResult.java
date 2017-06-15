@@ -10,8 +10,8 @@ import MoseShipsSponge.Movement.MovingBlock;
 import MoseShipsSponge.Movement.StoredMovement.AutoPilot;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
-public interface MovementResult <T extends Object> {
-	
+public interface MovementResult<T extends Object> {
+
 	public static final MovementResult<Boolean> FUEL_REMOVE_ERROR = new FuelRemoveErrorMovementResult();
 	public static final MovementResult<Boolean> NOT_IN_WATER_ERROR = new NotInWaterErrorMovementResult();
 	public static final MovementResult<AutoPilot> AUTO_PILOT_OUT_OF_MOVES = new AutoPilotOutOfMovesErrorMovementResult();
@@ -25,7 +25,7 @@ public interface MovementResult <T extends Object> {
 	public static final MovementResult<List<MovingBlock>> COLLIDE_WITH = new CollideWithErrorMovementResult();
 	public static final MovementResult<Boolean> UNKNOWN_ERROR = new UnknownErrorMovementResult();
 	public static final MovementResult<Integer> NO_SPEED_SET = new NoSpeedSetErrorMovementResult();
-	
+
 	public void sendMessage(LiveShip ship, CommandSource source, T value);
 
 }
