@@ -78,7 +78,7 @@ public class ShipsTaskRunner {
 					g_time_repeated++;
 				}
 
-			}).submit(ShipsMain.getPlugin());
+			}).submit(ShipsMain.getPlugin().getContainer());
 			return true;
 		}
 		return false;

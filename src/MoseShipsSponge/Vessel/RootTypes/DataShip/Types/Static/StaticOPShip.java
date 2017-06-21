@@ -2,6 +2,7 @@ package MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static;
 
 import java.util.Optional;
 
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -42,8 +43,8 @@ public class StaticOPShip implements StaticShipType {
 	}
 
 	@Override
-	public Object getPlugin() {
-		return ShipsMain.getPlugin();
+	public PluginContainer getPlugin() {
+		return ShipsMain.getPlugin().getContainer();
 	}
 
 	@Override

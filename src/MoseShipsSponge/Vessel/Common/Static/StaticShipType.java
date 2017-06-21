@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -24,7 +25,7 @@ public interface StaticShipType {
 
 	public int getAltitudeSpeed();
 
-	public Object getPlugin();
+	public PluginContainer getPlugin();
 
 	public OpenRAWLoader[] getLoaders();
 

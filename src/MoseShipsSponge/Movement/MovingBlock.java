@@ -117,7 +117,7 @@ public class MovingBlock {
 				STATE.with(Keys.DIRECTION, blockD);
 			}
 		}
-		MOVING_TO.restoreSnapshot(STATE, true, flag, Cause.source(ShipsMain.getPlugin()).build());
+		MOVING_TO.restoreSnapshot(STATE, true, flag, Cause.source(ShipsMain.getPlugin().getContainer()).build());
 		return this;
 	}
 

@@ -62,7 +62,7 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 	}
 
 	public File getFile() {
-		return new File("configuration/Ships/VesselData/" + getStatic().getName() + "/" + g_name + ".conf");
+		return new File(Loader.LOADER_ROOT, getStatic().getName() + "/" + g_name + ".conf");
 	}
 
 	public MovingBlockList createUnofficalMovingBlocks(Direction direction, int distance) {

@@ -1,8 +1,13 @@
 package MoseShipsSponge.Commands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
+import org.spongepowered.api.Platform.Component;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -12,6 +17,8 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import MoseShipsSponge.Plugin.ShipsMain;
+import MoseShipsSponge.Utils.BlockFinderUtil;
+import MoseShipsSponge.Utils.MovementAlgorithmUtil;
 import MoseShipsSponge.Vessel.Common.OpenLoader.Loader;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
@@ -78,7 +85,11 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 
 	private void basicInfo(CommandSource source) {
 		String MCVersion = ShipsMain.getPlugin().getGame().getPlatform().getMinecraftVersion().getName();
+		int aPIVersion = Integer.parseInt("" + Sponge.getPlatform().getContainer(Component.API).getVersion().get().charAt(0)); 
 		String tMCVersion = null;
+		List<Integer> testedAPI = new ArrayList<>();
+		String tAPIVersion = null;
+		String[] shipsVersion = ShipsMain.VERSION.split(Pattern.quote("|"));
 		for (String mc : ShipsMain.TESTED_MC) {
 			if (tMCVersion == null) {
 				tMCVersion = mc;
@@ -86,9 +97,27 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 				tMCVersion = tMCVersion + ", " + mc;
 			}
 		}
+		for(int api : ShipsMain.TESTED_API){
+			if(tAPIVersion == null){
+				tAPIVersion = api + "";
+				testedAPI.add(api);
+			}else{
+				tAPIVersion = tAPIVersion + ", " + api;
+				testedAPI.add(api);
+			}
+		}
 
 		source.sendMessage(ShipsMain.formatCMDHelp("|----[Ships info]----|"));
-		source.sendMessage(ShipsMain.formatCMDHelp("Ships Version: " + ShipsMain.VERSION));
+		source.sendMessage(ShipsMain.formatCMDHelp("Ships Version: " + shipsVersion[0] + "-Sponge"));
+		source.sendMessage(ShipsMain.formatCMDHelp("Ships Version Name: " + shipsVersion[1]));
+		if(testedAPI.contains(aPIVersion)){
+			source.sendMessage(Text.join(ShipsMain.formatCMDHelp("recommended API version: ("),
+					Text.builder(aPIVersion + "").color(TextColors.GREEN).build(),
+					ShipsMain.formatCMDHelp(") " + tAPIVersion)));
+		} else {
+			source.sendMessage(Text.join(ShipsMain.formatCMDHelp("recommended API version: ("),
+					Text.builder(aPIVersion + "").color(TextColors.RED).build(), ShipsMain.formatCMDHelp(") " + tAPIVersion)));
+		}
 		if (Arrays.asList(ShipsMain.TESTED_MC).contains(MCVersion)) {
 			source.sendMessage(Text.join(ShipsMain.formatCMDHelp("recommended MC version: ("),
 					Text.builder(MCVersion).color(TextColors.GREEN).build(),
@@ -97,6 +126,8 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 			source.sendMessage(Text.join(ShipsMain.formatCMDHelp("recommended MC version: ("),
 					Text.builder(MCVersion).color(TextColors.RED).build(), ShipsMain.formatCMDHelp(") " + tMCVersion)));
 		}
+		source.sendMessage(ShipsMain.formatCMDHelp("BlockFinder Algorithm: " + BlockFinderUtil.getConfigSelected().getName()));
+		source.sendMessage(ShipsMain.formatCMDHelp("Movement Algorithm: " + MovementAlgorithmUtil.getConfig().getName()));
 	}
 
 	private void shipInfo(CommandSource source, LiveShip ship) {

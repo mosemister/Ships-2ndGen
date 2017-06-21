@@ -113,7 +113,7 @@ public class ShipsListeners {
 		Cause cause = Cause.builder().named("event", event).named("player", player).named("direction", direction)
 				.named("sign", sign).named("ship", ship).build();
 		ship.load(cause);
-		if (event instanceof InteractBlockEvent.Primary) {
+		if (event instanceof InteractBlockEvent.Secondary) {
 			if (player.get(Keys.IS_SNEAKING).get()) {
 				sSign.onShiftRightClick(player, sign, ship);
 			} else {

@@ -30,7 +30,12 @@ public class BasicConfig {
 			}
 		}
 		loader = HoconConfigurationLoader.builder().setFile(file).build();
-		root = loader.createEmptyNode();
+		//root = loader.createEmptyNode();
+		try{
+			root = loader.load();
+		}catch(IOException e){
+			root = loader.createEmptyNode();
+		}
 	}
 
 	public BasicConfig(File file) {
@@ -44,7 +49,12 @@ public class BasicConfig {
 			}
 		}
 		loader = HoconConfigurationLoader.builder().setFile(file).build();
-		root = loader.createEmptyNode(ConfigurationOptions.defaults());
+		//root = loader.createEmptyNode(ConfigurationOptions.defaults());
+		try {
+			root = loader.load(ConfigurationOptions.defaults());
+		} catch (IOException e) {
+			root = loader.createEmptyNode(ConfigurationOptions.defaults());
+		}
 	}
 
 	public File getFile() {

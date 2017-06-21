@@ -40,12 +40,10 @@ public class ShipLicenceSign implements ShipSign {
 	@Override
 	public void onCreation(ChangeSignEvent event, Player player) {
 		SignData signD = event.getText();
-		Text line1;
 		Text line2;
 		Text line3;
 		Optional<Text> line4 = signD.get(3);
 		if ((signD.get(0).isPresent()) && (signD.get(1).isPresent()) && (signD.get(2).isPresent())) {
-			line1 = signD.get(0).get();
 			line2 = signD.get(1).get();
 			line3 = signD.get(2).get();
 		} else {
@@ -61,7 +59,7 @@ public class ShipLicenceSign implements ShipSign {
 			Sponge.getEventManager().post(conflictType);
 			Text message = conflictType.getMessage();
 			if (message.toPlain().contains("%Type%")) {
-				message = Text.builder(message.toPlain().replace("%Type%", line1.toPlain())).color(message.getColor())
+				message = Text.builder(message.toPlain().replace("%Type%", line2.toPlain())).color(message.getColor())
 						.style(message.getStyle()).format(message.getFormat()).build();
 			}
 			if (conflictType.shouldMessageDisplay()) {
@@ -75,7 +73,7 @@ public class ShipLicenceSign implements ShipSign {
 			return;
 		}
 
-		Optional<LiveShip> opConflict = Loader.safeLoadShip(line2);
+		Optional<LiveShip> opConflict = Loader.safeLoadShip(line3);
 		if (opConflict.isPresent()) {
 			Cause cause = Cause.builder().named("event", event).named("player", player).named("sign", this).build();
 			ShipCreateFailedFromConflictingNames conflictName = new ShipCreateFailedFromConflictingNames(
@@ -103,7 +101,7 @@ public class ShipLicenceSign implements ShipSign {
 			}
 			return;
 		}
-		Optional<LiveShip> opShip = type.createVessel(line2.toPlain(), event.getTargetTile().getLocation());
+		Optional<LiveShip> opShip = type.createVessel(line3.toPlain(), event.getTargetTile().getLocation());
 		if (opShip.isPresent()) {
 			final LiveShip ship = opShip.get();
 			ship.setOwner(player);
@@ -169,7 +167,6 @@ public class ShipLicenceSign implements ShipSign {
 
 	@Override
 	public boolean isSign(Sign sign) {
-		System.out.println("Checking if licence sign");
 		SignData data = sign.getSignData();
 		Optional<Text> opLine = data.get(0);
 		if (opLine.isPresent()) {

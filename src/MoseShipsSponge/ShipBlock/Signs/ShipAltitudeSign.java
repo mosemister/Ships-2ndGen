@@ -1,12 +1,10 @@
 package MoseShipsSponge.ShipBlock.Signs;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.block.tileentity.Sign;
-import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
@@ -49,11 +47,12 @@ public class ShipAltitudeSign implements ShipSign {
 			if (opSpeedLine.isPresent()) {
 				int speed = Integer.parseInt(opSpeedLine.get().toPlain());
 				StaticShipType staticShip = ship.getStatic();
-				if (staticShip.getAltitudeSpeed() < speed) {
+				if (staticShip.getAltitudeSpeed() > speed) {
 					data.setElement(2, Text.of(speed + 1));
 				} else {
 					data.setElement(2, Text.of(1));
 				}
+				sign.offer(data);
 			}
 		} catch (NumberFormatException e) {
 			apply(sign);
@@ -119,7 +118,7 @@ public class ShipAltitudeSign implements ShipSign {
 		Optional<Text> firstLine = data.get(0);
 		if (firstLine.isPresent()) {
 			Text text = firstLine.get();
-			if ((text.getColor().equals(TextColors.YELLOW) && (text.toPlain().equals("Altitude")))) {
+			if ((text.getColor().equals(TextColors.YELLOW) && (text.toPlain().equals("[Altitude]")))) {
 				return true;
 			}
 		}
@@ -128,19 +127,19 @@ public class ShipAltitudeSign implements ShipSign {
 
 	@Override
 	public void apply(Sign sign) {
-		List<Text> lines = new ArrayList<>();
-		lines.add(Text.builder("[Altitude]").color(TextColors.YELLOW).build());
+		SignData data = sign.getSignData();
+		data.addElement(0, Text.builder("[Altitude]").color(TextColors.YELLOW).build());
 		Optional<LiveShip> opShip = getAttachedShip(sign);
 		if (opShip.isPresent()) {
 			LiveShip ship = opShip.get();
 			int speed = ship.getEngineSpeed();
-			lines.add(Text.of(speed - 1));
-			lines.add(Text.of(speed));
+			data.addElement(1, Text.of(speed - 1));
+			data.addElement(2, Text.of(speed));
 		} else {
-			lines.add(Text.of());
-			lines.add(Text.of(0));
+			
+			data.addElement(2, Text.of(0));
 		}
-		sign.offer(Keys.SIGN_LINES, lines);
+		sign.offer(data);
 	}
 
 }

@@ -15,7 +15,7 @@ public interface MovementAlgorithm {
 	static List<MovementAlgorithm> MOVEMENT_ALGORITHMS = new ArrayList<>();
 
 	public static Ships5Movement SHIPS5 = new Ships5Movement();
-	public static MovementAlgorithm SHIPS6 = null;
+	public static MovementAlgorithm SHIPS6 = new Ships6Movement();
 
 	public boolean move(LiveShip vessel, List<MovingBlock> blocks, final List<Entity> onBoard);
 

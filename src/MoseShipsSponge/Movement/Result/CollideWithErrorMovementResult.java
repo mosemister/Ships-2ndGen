@@ -38,7 +38,7 @@ public class CollideWithErrorMovementResult implements MovementResult<List<Movin
 
 			}
 
-		}).submit(ShipsMain.getPlugin());
+		}).submit(ShipsMain.getPlugin().getContainer());
 	}
 
 }

@@ -21,7 +21,7 @@ public class MovementAlgorithmUtil {
 	public static List<MovementAlgorithm> get() {
 		List<MovementAlgorithm> list = new ArrayList<>(MovementAlgorithm.MOVEMENT_ALGORITHMS);
 		list.add(MovementAlgorithm.SHIPS5);
-		list.add(MovementAlgorithm.SHIPS6);
+		//list.add(MovementAlgorithm.SHIPS6);
 		return list;
 	}
 

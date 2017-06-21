@@ -28,7 +28,7 @@ public class Ships5Movement implements MovementAlgorithm {
 		}
 		final int waterLevelFinal = waterLevel;
 		blocks.stream().forEach(b -> {
-			Cause cause = Cause.source(ShipsMain.getPlugin()).named("moving", b).build();
+			Cause cause = Cause.source(ShipsMain.getPlugin().getContainer()).named("moving", b).build();
 			if (b.getOrigin().getBlockY() > waterLevelFinal) {
 				b.clearOriginalBlock(BlockChangeFlag.NONE, cause);
 			} else {

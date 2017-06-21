@@ -29,6 +29,7 @@ import MoseShipsSponge.Commands.SignCMD;
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Listeners.ShipsListeners;
 import MoseShipsSponge.ShipBlock.Signs.ShipAltitudeSign;
+import MoseShipsSponge.ShipBlock.Signs.ShipEngineSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipSign;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticOPShip;
@@ -39,11 +40,14 @@ public class ShipsMain {
 	public static final String ID = "ships";
 	public static final String NAME = "Ships";
 	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,0,1)";
-	public static final String TESTED_API = "6.0.0.0";
+	public static final int[] TESTED_API = {
+			6
+	};
 	public static final String[] TESTED_MC = {
-			"1.11.2" };
+			"1.11.2" 
+	};
 
-	public static final File CONFIGURATION_ROOT = new File("Configuration/Ships/");
+	public static final File CONFIGURATION_ROOT = new File("config/Ships/");
 
 	static ShipsMain PLUGIN;
 
@@ -56,7 +60,7 @@ public class ShipsMain {
 	private void registerSigns() {
 		ShipSign.SHIP_SIGNS.add(new ShipLicenceSign());
 		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
-		//ShipSign.SHIP_SIGNS.add(new ShipEngineSign());
+		ShipSign.SHIP_SIGNS.add(new ShipEngineSign());
 		//ShipSign.SHIP_SIGNS.add(new ShipWheelSign());
 		//ShipSign.SHIP_SIGNS.add(new ShipEOTSign());
 	}
