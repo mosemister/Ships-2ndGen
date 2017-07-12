@@ -1,6 +1,7 @@
 package MoseShipsSponge.Plugin;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -9,6 +10,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -32,6 +34,8 @@ import MoseShipsSponge.ShipBlock.Signs.ShipAltitudeSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipEngineSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipSign;
+import MoseShipsSponge.Vessel.Common.OpenLoader.Loader;
+import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticOPShip;
 
 @Plugin(id = ShipsMain.ID, name = ShipsMain.NAME, version = ShipsMain.VERSION)
@@ -39,7 +43,7 @@ public class ShipsMain {
 
 	public static final String ID = "ships";
 	public static final String NAME = "Ships";
-	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,0,1)";
+	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,1,0)";
 	public static final int[] TESTED_API = {
 			6
 	};
@@ -139,11 +143,25 @@ public class ShipsMain {
 	@Listener
 	public void onLoad(GameStartedServerEvent event) {
 		// load the ship
+		List<LiveShip> list = Loader.safeLoadAllShips();
+		String out = null;
+		for(LiveShip ship : list) {
+			if(out == null) {
+				out = ship.getName();
+			}else {
+				out = out + ", " + ship.getName(); 
+			}
+		}
+		Sponge.getServer().getConsole().sendMessage(Text.builder("The following ships have been loaded").color(TextColors.GREEN).build());
+		Sponge.getServer().getConsole().sendMessage(Text.builder(out).color(TextColors.AQUA).build());
 	}
 
 	@Listener
 	public void onDisable(GameStoppingServerEvent event) {
-
+		for(int A = 0; A < Loader.getLoadedShips().size(); A++) {
+			LiveShip ship = Loader.getLoadedShips().get(A);
+			ship.unload(Cause.source(getContainer()).named("Cause", "End").build());
+		}
 	}
 
 	public Game getGame() {

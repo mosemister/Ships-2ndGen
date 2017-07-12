@@ -48,13 +48,10 @@ public class ShipsListeners {
 
 	@Listener
 	public void signCreate(ChangeSignEvent event, @Root Player player) {
-		System.out.println("sign change fire");
 		Optional<Text> opText = event.getText().get(0);
 		if (opText.isPresent()) {
-			System.out.println("first line found");
 			Optional<ShipSign> opSign = ShipSignUtil.getSign(opText.get().toPlain());
 			if (opSign.isPresent()) {
-				System.out.println("Sign: " + opSign.get().getFirstLine().get(0));
 				opSign.get().onCreation(event, player);
 			}
 		}

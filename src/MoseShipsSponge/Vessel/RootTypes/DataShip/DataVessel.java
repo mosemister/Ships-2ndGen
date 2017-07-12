@@ -124,8 +124,7 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 
 	@Override
 	public boolean isLoaded() {
-		Loader.getLoadedShips().stream().anyMatch(s -> s.getName().equals(getName()));
-		return false;
+		return Loader.getLoadedShips().stream().anyMatch(s -> s.getName().equals(getName()));
 	}
 
 	@Override
@@ -199,6 +198,7 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 		Sponge.getEventManager().post(event);
 		Loader.LOADED_SHIPS.remove(this);
 		g_task_runner.pauseScheduler();
+		save();
 		return this;
 	}
 

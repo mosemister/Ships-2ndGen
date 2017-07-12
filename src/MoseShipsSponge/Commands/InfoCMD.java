@@ -57,9 +57,7 @@ public class InfoCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerCM
 
 	@Override
 	public CommandResult execute(ConsoleSource console, String... args) throws CommandException {
-		System.out.println("Args size: " + args.length);
 		if (args.length > 1) {
-			System.out.println("display info");
 			displayInfo(console, args[1]);
 		} else {
 			basicInfo(console);

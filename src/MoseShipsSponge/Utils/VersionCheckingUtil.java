@@ -72,7 +72,6 @@ public class VersionCheckingUtil {
 
 	public static String getMinecraftVersion() {
 		String mcVersion = Sponge.getPlatform().getMinecraftVersion().getName();
-		System.out.println("MCVersion \n " + mcVersion);
 		return mcVersion;
 	}
 

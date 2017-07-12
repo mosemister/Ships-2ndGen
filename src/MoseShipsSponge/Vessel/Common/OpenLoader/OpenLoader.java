@@ -103,7 +103,17 @@ public abstract class OpenLoader implements OpenRAWLoader {
 					Location<World> loc = new Location<World>(world, X, Y, Z);
 					data.getStructure().add(loc);
 				} catch (NumberFormatException e) {
+					try {
+						double X = Double.parseDouble(valueArgs[0]);
+						double Y = Double.parseDouble(valueArgs[1]);
+						double Z = Double.parseDouble(valueArgs[2]);
+						Location<World> loc = new Location<World>(world, X, Y, Z);
+						data.getStructure().add(loc);
+					} catch (NumberFormatException er) {
+						er.printStackTrace();
+					}
 				}
+				
 			});
 		}
 		if (sSubPilots != null) {
@@ -130,8 +140,10 @@ public abstract class OpenLoader implements OpenRAWLoader {
 		String teleport = ship.getTeleportToLocation().getBlockX() + "," + ship.getTeleportToLocation().getBlockY()
 				+ "," + ship.getTeleportToLocation().getBlockZ();
 		ship.getSubPilots().stream().forEach(u -> pilots.add(u.getUniqueId().toString()));
-		ship.getStructure().getRawVectors(ship).stream()
-				.forEach(b -> structure.add(b.getX() + "," + b.getY() + "," + b.getZ()));
+		ship.getBasicStructure().stream()
+				.forEach(b -> {
+					structure.add(b.getBlockX() + "," + b.getBlockY() + "," + b.getBlockZ());
+				});
 		config.setOverride(pilots, AbstractShipsData.DATABASE_SUB_PILOTS);
 		config.setOverride(structure, AbstractShipsData.DATABASE_STRUCTURE);
 		config.setOverride(block, AbstractShipsData.DATABASE_BLOCK);

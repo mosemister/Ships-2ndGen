@@ -2,7 +2,10 @@ package MoseShipsSponge.Commands;
 
 import java.io.File;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -56,6 +59,7 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug load <vessel name>"));
 			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug reload <config/materials>"));
 			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug list <type, ship>"));
+			source.sendMessage(ShipsMain.formatCMDHelp("/ships debug showStructure <vessel name>"));
 			return CommandResult.success();
 		} else if (args[1].equalsIgnoreCase("load")) {
 			Optional<File> opFile = Loader.getShipFile(args[2]);
@@ -82,7 +86,6 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 		} else if (args[1].equalsIgnoreCase("reload")) {
 			if (args.length > 2) {
 				if (args[2].equalsIgnoreCase("config")) {
-					System.out.println("t");
 					ShipsConfig.CONFIG.applyMissing();
 					source.sendMessage(ShipsMain.format("Configuration has been refreshed", false));
 				} else if (args[2].equalsIgnoreCase("materials")) {
@@ -102,14 +105,37 @@ public class DebugCMD implements ShipsCMD.ShipsConsoleCMD, ShipsCMD.ShipsPlayerC
 				return CommandResult.success();
 			}else if (args[2].equalsIgnoreCase("Ships")){
 				source.sendMessage(Text.of("|----[Ships]----|"));
-				source.sendMessage(Text.of("[ShipsType name] | [Plugin]"));
+				source.sendMessage(Text.of("[Ship name] | [Ship type] | [Location: X] | [Location: Y] | [Location: Z] | [Location: World] | [Structure size]"));
 				Loader.safeLoadAllShips().stream().forEach(s -> {
 					source.sendMessage(Text.of(
 						s.getName() + " | " + s.getStatic().getName() + " | " + s.getLocation().getBlockX()
 								+ " | " + s.getLocation().getBlockY() + " | " + s.getLocation().getBlockZ()
-								+ " | " + s.getWorld().getName() + " | " + s.isLoaded()));
+								+ " | " + s.getWorld().getName() + " | " + s.getBasicStructure().size()));
 				});
 				return CommandResult.success();
+			}
+		}else if(args[1].equalsIgnoreCase("showStructure")) {
+			if(!(source instanceof Player)) {
+				source.sendMessage(ShipsMain.format("Must be a player", true));
+				return CommandResult.success();
+			}
+			Player player = (Player)source;
+			if(args.length > 2) {
+				Optional<LiveShip> opShip = Loader.safeLoadShip(args[2]);
+				if(!opShip.isPresent()) {
+					source.sendMessage(ShipsMain.format(args[2] + " is not a Ship", true));
+					return CommandResult.success();
+				}
+				LiveShip ship = opShip.get();
+				ship.getBasicStructure().forEach(l -> player.sendBlockChange(l.getBlockPosition(), BlockTypes.BEDROCK.getDefaultState()));
+				Sponge.getScheduler().createTaskBuilder().delay(5, TimeUnit.SECONDS).execute(new Runnable() {
+
+					@Override
+					public void run() {
+						ship.getBasicStructure().forEach(l -> player.resetBlockChange(l.getBlockPosition()));
+					}
+					
+				}).submit(ShipsMain.getPlugin().getContainer());
 			}
 		}
 		return CommandResult.empty();
