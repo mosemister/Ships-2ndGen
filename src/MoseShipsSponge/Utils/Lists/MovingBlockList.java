@@ -2,7 +2,7 @@ package MoseShipsSponge.Utils.Lists;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
 
 import org.spongepowered.api.block.BlockState;
 
@@ -16,7 +16,7 @@ public class MovingBlockList extends ArrayList<MovingBlock> {
 		return filterBlocks(Arrays.asList(states));
 	}
 
-	public MovingBlockList filterBlocks(List<BlockState> states) {
+	public MovingBlockList filterBlocks(Collection<BlockState> states) {
 		MovingBlockList list = new MovingBlockList();
 		stream().filter(mb -> states.stream().anyMatch(b -> b.equals(mb.getState()))).forEach(mb -> list.add(mb));
 		return list;

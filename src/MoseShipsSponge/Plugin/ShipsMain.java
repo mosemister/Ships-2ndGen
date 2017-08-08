@@ -36,6 +36,7 @@ import MoseShipsSponge.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipSign;
 import MoseShipsSponge.Vessel.Common.OpenLoader.Loader;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticAirship;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticOPShip;
 
 @Plugin(id = ShipsMain.ID, name = ShipsMain.NAME, version = ShipsMain.VERSION)
@@ -80,6 +81,7 @@ public class ShipsMain {
 
 	private void registerShipTypes() {
 		new StaticOPShip();
+		new StaticAirship();
 	}
 
 	private void displayVersionChecking() {
@@ -153,7 +155,9 @@ public class ShipsMain {
 			}
 		}
 		Sponge.getServer().getConsole().sendMessage(Text.builder("The following ships have been loaded").color(TextColors.GREEN).build());
-		Sponge.getServer().getConsole().sendMessage(Text.builder(out).color(TextColors.AQUA).build());
+		if(out != null){
+			Sponge.getServer().getConsole().sendMessage(Text.builder(out).color(TextColors.AQUA).build());
+		}
 	}
 
 	@Listener

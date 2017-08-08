@@ -14,8 +14,8 @@ public class DataHolder {
 		return list;
 	}
 
-	public DataHolder addData(DataHolder holder) {
-		DATA.remove(holder);
+	public DataHolder addData(DataHandler holder) {
+		DATA.add(holder);
 		return this;
 	}
 
