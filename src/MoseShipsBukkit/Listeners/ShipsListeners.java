@@ -109,6 +109,10 @@ public class ShipsListeners implements Listener {
 							} else {
 								opSignType.get().onRightClick(player, sign, ship);
 							}
+						}else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+							if (!player.isSneaking()) {
+								opSignType.get().onLeftClick(player, sign, ship);
+							}
 						}
 					} else {
 						player.sendMessage(ShipsMain.format("Can not find the connected ship", true));
