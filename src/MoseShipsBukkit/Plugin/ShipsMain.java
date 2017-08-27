@@ -26,6 +26,7 @@ import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.ShipBlock.Signs.ShipWheelSign;
 import MoseShipsBukkit.ShipBlock.Snapshot.BlockSnapshot;
 import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.BannerSnapshot;
+import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.BedSnapshot;
 import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.BrewingStandSnapshot;
 import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.ButtonSnapshot;
 import MoseShipsBukkit.ShipBlock.Snapshot.MaterialSnapshot.CarpetSnapshot;
@@ -67,6 +68,7 @@ import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static.StaticAirship;
 import MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static.StaticOPShip;
+import MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static.StaticWatership;
 
 public class ShipsMain extends JavaPlugin {
 
@@ -210,11 +212,16 @@ public class ShipsMain extends JavaPlugin {
 		BlockSnapshot.VALUE_TYPES.put(Material.TRIPWIRE_HOOK, HookSnapshot.class);
 		// carpet
 		BlockSnapshot.VALUE_TYPES.put(Material.CARPET, CarpetSnapshot.class);
+		//bed
+		BlockSnapshot.VALUE_TYPES.put(Material.BED_BLOCK, BedSnapshot.class);
+		//end gateway
+		BlockSnapshot.VALUE_TYPES.put(Material.END_GATEWAY, TeleportSnapshot.class);
 	}
 
 	private void registerShipTypes() {
 		new StaticOPShip();
 		new StaticAirship();
+		new StaticWatership();
 		/*new WaterShip.StaticWaterShip();
 		new HybridShip.StaticHybridShip();
 		new Marsship.StaticMarsship();*/

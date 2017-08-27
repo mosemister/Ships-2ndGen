@@ -34,7 +34,8 @@ public abstract class AbstractWaterType extends DataVessel implements WaterType 
 	@Override
 	public SOptional<FailedMovement> move(BlockFace dir, int speed, ShipsCause cause) {
 		Block block = new Location(getWorld(), 0, 0, 0).getBlock().getRelative(dir, speed);
-		return Movement.move(cause, this, block.getX(), block.getY(), block.getZ(), new BlockState(Material.AIR));
+		return Movement.move(cause, this, block.getX(), block.getY(), block.getZ(), new BlockState(Material.AIR), new BlockState(Material.WATER),
+				new BlockState(Material.STATIONARY_WATER));
 	}
 
 	@Override

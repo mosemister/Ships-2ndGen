@@ -17,7 +17,7 @@ public class Ships5Movement implements MovementAlgorithm {
 	@Override
 	public boolean move(LiveShip type, List<MovingBlock> blocksUn, List<Entity> entities) {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
-		int waterLevel = 63;
+		int waterLevel = 0;
 		if (type instanceof WaterType) {
 			WaterType type2 = (WaterType) type;
 			waterLevel = type2.getWaterLevel();

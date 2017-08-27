@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -16,6 +17,8 @@ import MoseShipsBukkit.ShipBlock.BlockState;
 import MoseShipsBukkit.ShipBlock.Signs.ShipSign;
 import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Utils.ShipSignUtil;
+import MoseShipsBukkit.Utils.VersionCheckingUtil;
+import MoseShipsBukkit.Utils.VersionCheckingUtil.VersionOutcome;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.Loader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 
@@ -68,7 +71,12 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 
 	@SuppressWarnings("deprecation")
 	public void individualTrack(final Player player) {
-		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
+		Block loc = null;
+		if(VersionCheckingUtil.isGreater(VersionCheckingUtil.MINECRAFT_VERSION, 1, 12).equals(VersionOutcome.LOWER)) {
+			loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
+		}else {
+			loc = player.getTargetBlock(((HashSet<Material>) null), 5);
+		}
 		if (loc.getState() instanceof Sign) {
 			Sign sign = (Sign) loc.getState();
 			SOptional<ShipSign> sSign = ShipSignUtil.getSign(sign);
@@ -112,7 +120,12 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 
 	@SuppressWarnings("deprecation")
 	public void track(final Player player, int sec) {
-		Block loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
+		Block loc = null;
+		if(VersionCheckingUtil.isGreater(VersionCheckingUtil.MINECRAFT_VERSION, 1, 12).equals(VersionOutcome.LOWER)) {
+			loc = player.getTargetBlock(((HashSet<Byte>) null), 5);
+		}else {
+			loc = player.getTargetBlock(((HashSet<Material>) null), 5);
+		}
 		if (loc.getState() instanceof Sign) {
 			Sign sign = (Sign) loc.getState();
 			SOptional<ShipSign> sSign = ShipSignUtil.getSign(sign);

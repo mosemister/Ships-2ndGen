@@ -53,7 +53,7 @@ public class Ships6Movement implements MovementAlgorithm {
 		}
 		list.add(toAdd);
 		final Location licence = vessel.getLocation();
-		int waterLevel = 63;
+		int waterLevel = 0;
 		if (vessel instanceof WaterType) {
 			WaterType type2 = (WaterType) vessel;
 			waterLevel = type2.getWaterLevel();

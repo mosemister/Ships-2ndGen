@@ -86,6 +86,10 @@ public class ShipLicenceSign implements ShipSign {
 			return;
 		}
 		SOptional<LiveShip> opShip = type.createVessel(event.getLine(2), event.getBlock());
+		if(opShip == null) {
+			new Exception("Error when creating the vessel. Please check that " + type.getClass().getName() + ".createVessel(String name, Block licence) returns a Optional value and not null").printStackTrace();
+			return;
+		}
 		if (opShip.isPresent()) {
 			final LiveShip ship = opShip.get();
 			ship.setOwner(player);
