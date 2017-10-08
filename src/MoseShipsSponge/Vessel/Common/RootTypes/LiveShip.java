@@ -70,6 +70,10 @@ public interface LiveShip extends ShipsData {
 	public boolean save();
 
 	public Optional<FailedMovement> teleport(StoredMovement move);
+	
+	public Optional<FailedMovement> rotateLeft(Cause cause);
+
+	public Optional<FailedMovement> rotateRight(Cause cause);
 
 	public default Optional<FailedMovement> move(Direction dir, int speed, Cause cause) {
 		Vector3i off = dir.asBlockOffset().mul(speed);
@@ -80,16 +84,6 @@ public interface LiveShip extends ShipsData {
 
 	public default Optional<FailedMovement> move(int X, int Y, int Z, Cause cause) {
 		StoredMovement sm = new StoredMovement.Builder().setX(X).setY(Y).setZ(Z).setCause(cause).build();
-		return teleport(sm);
-	}
-
-	public default Optional<FailedMovement> rotateLeft(Cause cause) {
-		StoredMovement sm = new StoredMovement.Builder().setRotation(RotateType.LEFT).setCause(cause).build();
-		return teleport(sm);
-	}
-
-	public default Optional<FailedMovement> rotateRight(Cause cause) {
-		StoredMovement sm = new StoredMovement.Builder().setRotation(RotateType.RIGHT).setCause(cause).build();
 		return teleport(sm);
 	}
 

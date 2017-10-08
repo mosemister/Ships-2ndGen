@@ -101,6 +101,7 @@ public class MovingBlock {
 	}
 
 	public MovingBlock move(BlockChangeFlag flag) {
+		//MOVING_TO.restoreSnapshot(STATE, true, flag, Cause.source(ShipsMain.getPlugin().getContainer()).build());
 		if (TYPE.equals(MovementType.ROTATE_LEFT)) {
 			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
 			if (opDirection.isPresent()) {
@@ -109,14 +110,27 @@ public class MovingBlock {
 				STATE.with(Keys.DIRECTION, blockD);
 			}
 		}
+		/*
+		 * if (TYPE.equals(MovementType.ROTATE_RIGHT)) { Optional<Direction> opDirection
+		 * = STATE.get(Keys.DIRECTION); if (opDirection.isPresent()) { Direction blockD
+		 * = opDirection.get(); System.out.println("\n rotatable (" + blockD + ")");
+		 * blockD = BlockRotateUtil.rotateRight(blockD);
+		 * System.out.println("\n rotated (" + blockD + ")"); STATE.with(Keys.DIRECTION,
+		 * blockD); } }
+		 */
+
 		if (TYPE.equals(MovementType.ROTATE_RIGHT)) {
 			Optional<Direction> opDirection = STATE.get(Keys.DIRECTION);
 			if (opDirection.isPresent()) {
 				Direction blockD = opDirection.get();
 				blockD = BlockRotateUtil.rotateRight(blockD);
-				STATE.with(Keys.DIRECTION, blockD);
+				Optional<BlockSnapshot> opSnapshot = STATE.with(Keys.DIRECTION, blockD);
+				if(opSnapshot.isPresent()) {
+					STATE = opSnapshot.get();
+				}
 			}
 		}
+
 		MOVING_TO.restoreSnapshot(STATE, true, flag, Cause.source(ShipsMain.getPlugin().getContainer()).build());
 		return this;
 	}
@@ -157,7 +171,7 @@ public class MovingBlock {
 	}
 
 	public CollideType getCollision(List<Location<World>> ignore, BlockState... ignore2) {
-		if (ignore.contains(MOVING_TO.getBlock())) {
+		if (ignore.contains(MOVING_TO)) {
 			return CollideType.COLLIDE_WITH_SELF;
 		} else if (Arrays.asList(ignore2).contains(MOVING_TO.getBlock())) {
 			return CollideType.COLLIDE_WITH_IGNORED_TYPE;
@@ -280,7 +294,7 @@ public class MovingBlock {
 		public static Priority getType(BlockState type) {
 			if (type.get(Keys.ATTACHED).isPresent()) {
 				return PRIORITY;
-			} else if (type.equals(BlockTypes.AIR)) {
+			} else if (type.getType().equals(BlockTypes.AIR)) {
 				return AIR;
 			} else {
 				return NORMAL;

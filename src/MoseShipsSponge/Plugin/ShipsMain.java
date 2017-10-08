@@ -34,6 +34,7 @@ import MoseShipsSponge.ShipBlock.Signs.ShipAltitudeSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipEngineSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipSign;
+import MoseShipsSponge.ShipBlock.Signs.ShipWheelSign;
 import MoseShipsSponge.Vessel.Common.OpenLoader.Loader;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticAirship;
@@ -44,7 +45,7 @@ public class ShipsMain {
 
 	public static final String ID = "ships";
 	public static final String NAME = "Ships";
-	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,1,0)";
+	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,2,0)";
 	public static final int[] TESTED_API = {
 			6
 	};
@@ -66,7 +67,7 @@ public class ShipsMain {
 		ShipSign.SHIP_SIGNS.add(new ShipLicenceSign());
 		ShipSign.SHIP_SIGNS.add(new ShipAltitudeSign());
 		ShipSign.SHIP_SIGNS.add(new ShipEngineSign());
-		//ShipSign.SHIP_SIGNS.add(new ShipWheelSign());
+		ShipSign.SHIP_SIGNS.add(new ShipWheelSign());
 		//ShipSign.SHIP_SIGNS.add(new ShipEOTSign());
 	}
 

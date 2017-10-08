@@ -3,6 +3,7 @@ package MoseShipsSponge.Vessel.RootTypes.DataShip.General;
 import java.util.Optional;
 
 import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -28,5 +29,15 @@ public abstract class AbstractAirType extends DataVessel implements AirType {
 	@Override
 	public Optional<FailedMovement> teleport(StoredMovement move) {
 		return Movement.teleport(this, move, BlockTypes.AIR.getDefaultState());
+	}
+	
+	@Override
+	public Optional<FailedMovement> rotateLeft(Cause cause) {
+		return Movement.rotateLeft(this, cause, BlockTypes.AIR.getDefaultState());
+	}
+	
+	@Override
+	public Optional<FailedMovement> rotateRight(Cause cause) {
+		return Movement.rotateRight(this, cause, BlockTypes.AIR.getDefaultState());
 	}
 }

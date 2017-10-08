@@ -2,7 +2,7 @@
 {
     "modid": "ships",
     "name": "Ships",
-    "version": "6.0.0.0 -s PreAlpha 1.1",
+    "version": "6.0.0.0 -s PreAlpha 1.2",
     "mcversion": "1.11.2",
     "description": "Allows you to move huge structures in a single click",
 	"authors": [ "MoseMister" ]

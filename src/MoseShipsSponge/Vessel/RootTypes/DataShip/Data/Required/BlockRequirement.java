@@ -31,7 +31,6 @@ public class BlockRequirement implements RequirementData {
 	
 	@Override
 	public Optional<FailedMovement> hasRequirement(LiveShip ship, MovingBlockList blocks) {
-		System.out.println("Checking block requirements");
 		for(BlockState state : g_states){
 			MovingBlockList list = blocks.filterBlocks(state);
 			if(list.isEmpty()){

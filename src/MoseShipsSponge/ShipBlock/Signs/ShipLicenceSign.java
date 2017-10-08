@@ -69,7 +69,6 @@ public class ShipLicenceSign implements ShipSign {
 		}
 
 		StaticShipType type = opShipType.get();
-		System.out.println("Ship type: " + type.getName());
 		if (!PermissionUtil.hasPermissionToMake(player, type)) {
 			return;
 		}
@@ -105,7 +104,6 @@ public class ShipLicenceSign implements ShipSign {
 		Optional<LiveShip> opShip = type.createVessel(line3.toPlain(), event.getTargetTile().getLocation());
 		if (opShip.isPresent()) {
 			final LiveShip ship = opShip.get();
-			System.out.println("final ship type: " + ship.getStatic().getName());
 			ship.setOwner(player);
 			Cause cause = Cause.builder().named("event", event).named("player", player).named("sign", this)
 					.named("type", type).named("ship", ship).build();

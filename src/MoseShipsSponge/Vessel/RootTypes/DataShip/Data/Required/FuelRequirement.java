@@ -62,9 +62,7 @@ public class FuelRequirement implements RequirementData {
 	@Override
 	public Optional<FailedMovement> hasRequirement(LiveShip ship, MovingBlockList blocks) {
 		MovingBlockList furnaces = getFuelHolders(blocks);
-		System.out.println("Furnaces: " + furnaces.size());
 		Map<MovingBlock, List<ItemStack>> map = getFuel(furnaces);
-		System.out.println("Fuel: " + map.size());
 		boolean check = true;
 		int count = 0;
 		
