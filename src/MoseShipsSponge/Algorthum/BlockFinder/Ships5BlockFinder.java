@@ -17,6 +17,11 @@ public class Ships5BlockFinder implements BasicBlockFinder {
 	List<Location<World>> BLOCKS;
 
 	@Override
+	public List<Location<World>> getConnectedBlocksOvertime(int limit, Location<World> loc) {
+		return getConnectedBlocks(limit, loc);
+	}
+	
+	@Override
 	public List<Location<World>> getConnectedBlocks(int limit, Location<World> loc) {
 		BLOCKS = new ArrayList<>();
 		getNextBlock(limit, Arrays.asList(Direction.DOWN, Direction.EAST, Direction.NORTH, Direction.SOUTH,

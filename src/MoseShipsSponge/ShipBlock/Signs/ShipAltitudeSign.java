@@ -104,7 +104,8 @@ public class ShipAltitudeSign implements ShipSign {
 	}
 
 	@Override
-	public void onRemove(Player player, Sign sign) {
+	public boolean onRemove(Player player, Sign sign) {
+		return true;
 	}
 
 	@Override

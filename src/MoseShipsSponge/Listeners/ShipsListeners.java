@@ -39,7 +39,9 @@ public class ShipsListeners {
 					Sign sign = (Sign) opTile.get();
 					Optional<ShipSign> opSign = ShipSignUtil.getSign(sign);
 					if (opSign.isPresent()) {
-						opSign.get().onRemove(player, sign);
+						if (!opSign.get().onRemove(player, sign)) {
+							event.setCancelled(true);
+						}
 					}
 				}
 			}
@@ -69,15 +71,20 @@ public class ShipsListeners {
 		}
 	}
 
-	/*
-	 * @Listener public void playerSpawnEvent(ClientConnectionEvent.Join event){
-	 * Player player = event.getTargetEntity(); Optional<LiveShip> opShip =
-	 * Loader.safeLoadShipByVectorSpawns(player.getUniqueId());
-	 * if(opShip.isPresent()){ LiveShip ship = opShip.get(); Vector3i vector =
-	 * ship.getPlayerVectorSpawns().get(player.getUniqueId()); if(vector !=
-	 * null){ Location<World> loc = ship.getStructure().getBlock(ship, vector);
-	 * player.setLocationSafely(loc.getBlockRelative(Direction.UP)); } } }
-	 */
+	
+	/*@Listener 
+	public void playerSpawnEvent(ClientConnectionEvent.Join event){
+		Player player = event.getTargetEntity(); 
+		Optional<LiveShip> opShip = Loader.safeLoadShipByVectorSpawns(player.getUniqueId());
+		if(opShip.isPresent()){ 
+			LiveShip ship = opShip.get(); 
+			Vector3i vector = ship.getPlayerVectorSpawns().get(player.getUniqueId()); 
+			if(vector != null){ 
+				Location<World> loc = ship.getStructure().getBlock(ship, vector);
+				player.setLocationSafely(loc.getBlockRelative(Direction.UP));
+			} 
+		} 
+	}*/
 
 	@Listener
 	public void playerInteractEvent(InteractBlockEvent event, @Root Player player) {

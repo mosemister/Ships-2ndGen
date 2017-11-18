@@ -94,9 +94,8 @@ public class ShipEngineSign implements ShipSign {
 	}
 
 	@Override
-	public void onRemove(Player player, Sign sign) {
-		// TODO Auto-generated method stub
-
+	public boolean onRemove(Player player, Sign sign) {
+		return true;
 	}
 
 	@Override

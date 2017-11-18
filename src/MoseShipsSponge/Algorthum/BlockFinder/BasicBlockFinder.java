@@ -20,6 +20,7 @@ public interface BasicBlockFinder {
 	public static final BasicBlockFinder SHIPS5 = new Ships5BlockFinder();
 
 	public List<Location<World>> getConnectedBlocks(int limit, Location<World> loc);
+	public List<Location<World>> getConnectedBlocksOvertime(int limit, Location<World> loc);
 
 	public String getName();
 

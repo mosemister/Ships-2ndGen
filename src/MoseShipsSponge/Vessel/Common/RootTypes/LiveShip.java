@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.util.Direction;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3i;
 
@@ -22,13 +24,10 @@ import MoseShipsSponge.Vessel.Common.Static.StaticShipType;
 public interface LiveShip extends ShipsData {
 
 	public int getMaxBlocks();
-
 	public int getMinBlocks();
 
 	public int getEngineSpeed();
-
 	public int getBoostSpeed();
-
 	public int getAltitudeSpeed();
 
 	public ShipsTaskRunner getTaskRunner();
@@ -46,13 +45,9 @@ public interface LiveShip extends ShipsData {
 	public LiveShip setRemoveNextCycle(boolean remove);
 
 	public LiveShip setMaxBlocks(int max);
-
 	public LiveShip setMinBlocks(int min);
-
 	public LiveShip setEngineSpeed(int speed);
-
 	public LiveShip setBoostSpeed(int speed);
-
 	public LiveShip setAltitudeSpeed(int speed);
 
 	public boolean willRemoveNextCycle();
@@ -60,21 +55,19 @@ public interface LiveShip extends ShipsData {
 	public Optional<FailedMovement> hasRequirements(MovingBlockList blocks);
 
 	public LiveShip load(Cause cause);
-
 	public LiveShip unload(Cause cause);
 
 	public List<ShipCommands> getCommands();
 
 	public void remove(Player player);
-
 	public boolean save();
 
-	public Optional<FailedMovement> teleport(StoredMovement move);
+	public List<Location<World>> updateBasicStructure(boolean overtime);
 	
+	public Optional<FailedMovement> teleport(StoredMovement move);
 	public Optional<FailedMovement> rotateLeft(Cause cause);
-
 	public Optional<FailedMovement> rotateRight(Cause cause);
-
+	
 	public default Optional<FailedMovement> move(Direction dir, int speed, Cause cause) {
 		Vector3i off = dir.asBlockOffset().mul(speed);
 		StoredMovement sm = new StoredMovement.Builder().setX(off.getX()).setY(off.getY()).setZ(off.getZ())

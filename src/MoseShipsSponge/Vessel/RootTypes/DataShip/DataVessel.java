@@ -180,6 +180,15 @@ public abstract class DataVessel extends AbstractShipsData implements LiveShip {
 	}
 
 	@Override
+	public List<Location<World>> updateBasicStructure(boolean overtime) {
+		if(!overtime) {
+			return updateBasicStructure();
+		}
+		
+		return null;
+	}
+	
+	@Override
 	public LiveShip load(Cause cause) {
 		if (isLoaded()) {
 			return this;

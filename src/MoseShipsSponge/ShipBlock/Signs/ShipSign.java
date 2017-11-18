@@ -23,7 +23,7 @@ public interface ShipSign {
 
 	public void onLeftClick(Player player, Sign sign, LiveShip ship);
 
-	public void onRemove(Player player, Sign sign);
+	public boolean onRemove(Player player, Sign sign);
 
 	public List<String> getFirstLine();
 

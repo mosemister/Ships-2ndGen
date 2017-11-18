@@ -128,7 +128,7 @@ public class ShipLicenceSign implements ShipSign {
 
 	@Override
 	public void onShiftRightClick(Player player, Sign sign, LiveShip ship) {
-		List<Location<World>> structure = ship.updateBasicStructure();
+		List<Location<World>> structure = ship.updateBasicStructure(true);
 		ship.setBasicStructure(structure, sign.getLocation());
 		ship.save();
 		player.sendMessage(ShipsMain.format("Ship updated it's structure", false));
@@ -155,9 +155,23 @@ public class ShipLicenceSign implements ShipSign {
 	}
 
 	@Override
-	public void onRemove(Player player, Sign sign) {
-		// TODO Auto-generated method stub
-
+	public boolean onRemove(Player player, Sign sign) {
+		Optional<LiveShip> opShip = getAttachedShip(sign);
+		if(!opShip.isPresent()) {
+			return true;
+		}
+		LiveShip ship = opShip.get();
+		Optional<User> opOwner = ship.getOwner();
+		if(player.hasPermission(PermissionUtil.REMOVE_SHIP_LICENCE)) {
+			ship.remove(player);
+			return true;
+		}
+		if(opOwner.isPresent() && (opOwner.get().equals(player))) {
+			ship.remove(player);
+			return true;
+		}
+		player.sendMessage(ShipsMain.format("You are not the owner of this ship.", true));
+		return false;
 	}
 
 	@Override
