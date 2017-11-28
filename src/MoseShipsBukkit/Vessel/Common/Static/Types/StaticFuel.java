@@ -9,7 +9,9 @@ public interface StaticFuel extends StaticShipType {
 	public static final String DEFAULT_FUEL_CONSUMPTION = "Default.Requirement.Fuel.Consumption";
 
 	public BlockState[] getDefaultFuelMaterial();
+	public void setDefaultFuelMaterial(BlockState... state);
 
 	public int getDefaultConsumptionAmount();
+	public void setDefaultConsumptionAmount(int amount);
 
 }

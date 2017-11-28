@@ -1,6 +1,7 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import MoseShipsBukkit.Utils.SOptional;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.Common.Static.AbstractStaticShipType;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Common.Static.Types.StaticRequiredPercent;
 import MoseShipsBukkit.Vessel.RootType.DataShip.Data.RequirementData;
@@ -23,47 +25,69 @@ import MoseShipsBukkit.Vessel.RootType.DataShip.Data.Required.PercentageRequirem
 import MoseShipsBukkit.Vessel.RootType.DataShip.Loader.Types.WaterShip.Ship6WaterShipLoader;
 import MoseShipsBukkit.Vessel.RootType.DataShip.Types.Watership;
 
-public class StaticWatership implements StaticShipType, StaticRequiredPercent{
+public class StaticWatership extends AbstractStaticShipType implements StaticShipType, StaticRequiredPercent{
 
 	public StaticWatership() {
+		super("Ship", 500, 2000, 2, 3, 1, ShipsMain.getPlugin());
 		StaticShipType.TYPES.add(this);
-		File file = new File("plugins/Ships/Configuration/ShipTypes/Watership.yml");
-		if (!file.exists()) {
-			StaticShipConfig config = new StaticShipConfig(file);
-			config.setOverride(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
-			config.setOverride(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
-			config.setOverride(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
-			config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
-			config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte) -1).toNoString()),
-					StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
-			config.setOverride(20, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
-			config.save();
+		if(!getFile().exists()) {
+			saveDefaults(getFile());
 		}
+		loadDefaults(getFile());
 	}
 	
 	@Override
-	public String getName() {
-		return "Ship";
+	public int getDefaultRequiredPercent() {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		return config.get(Integer.class, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
 	}
 
 	@Override
-	public int getDefaultSpeed() {
-		return 2;
+	public BlockState[] getDefaultPercentBlocks() {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		List<String> sStates = config.getList(String.class, StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+		BlockState[] states = BlockState.getStates(sStates);
+		return states;
+	}
+	
+	@Override
+	public void setDefaultRequiredPercent(int percent) {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		config.setOverride(percent, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
+		config.save();
 	}
 
 	@Override
-	public int getBoostSpeed() {
-		return 3;
+	public void setDefaultPercentBlocks(BlockState... state) {
+		List<String> list = new ArrayList<String>();
+		for(BlockState state2 : state) {
+			list.add(state2.toNoString());
+		}
+		StaticShipConfig config = new StaticShipConfig(getName());
+		config.setOverride(list, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
+		config.save();
 	}
-
+	
 	@Override
-	public int getAltitudeSpeed() {
-		return 1;
+	public void loadDefaults(File file) {
+		StaticShipConfig config = new StaticShipConfig(file);
+		setBoostSpeed(config.getDefaultBoostSpeed());
+		setDefaultSpeed(config.getDefaultSpeed());
+		setMaxSize(config.getDefaultMaxSize());
+		setMinSize(config.getDefaultMinSize());
 	}
-
+	
 	@Override
-	public Plugin getPlugin() {
-		return ShipsMain.getPlugin();
+	public void saveDefaults(File file) {
+		StaticShipConfig config = new StaticShipConfig(file);
+		config.setOverride(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
+		config.setOverride(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
+		config.setOverride(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
+		config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
+		config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte) -1).toNoString()),
+				StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+		config.setOverride(20, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
+		config.save();	
 	}
 
 	@Override
@@ -89,19 +113,18 @@ public class StaticWatership implements StaticShipType, StaticRequiredPercent{
 		}
 		return new SOptional<LiveShip>((LiveShip)ship);
 	}
-
+	
 	@Override
-	public int getDefaultRequiredPercent() {
-		StaticShipConfig config = new StaticShipConfig("Watership");
-		return config.get(Integer.class, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
-	}
-
-	@Override
-	public BlockState[] getDefaultPercentBlocks() {
-		StaticShipConfig config = new StaticShipConfig("Watership");
-		List<String> sStates = config.getList(String.class, StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
-		BlockState[] states = BlockState.getStates(sStates);
-		return states;
+	public StaticWatership copy(String name, Plugin plugin) {
+		StaticWatership ship = new StaticWatership();
+		ship.setAltitudeSpeed(getAltitudeSpeed());
+		ship.setBoostSpeed(getBoostSpeed());
+		ship.setDefaultSpeed(getDefaultSpeed());
+		ship.setMaxSize(getMaxSize());
+		ship.setMinSize(getMinSize());
+		ship.setName(name);
+		ship.setPlugin(plugin);
+		return ship;
 	}
 
 }

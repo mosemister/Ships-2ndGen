@@ -1,11 +1,13 @@
 package MoseShipsBukkit.Vessel.RootType.DataShip.Types.Static;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.plugin.Plugin;
 
 import MoseShipsBukkit.Configs.BasicConfig;
 import MoseShipsBukkit.Configs.StaticShipConfig;
@@ -16,6 +18,7 @@ import MoseShipsBukkit.Utils.StaticShipTypeUtil;
 import MoseShipsBukkit.Vessel.Common.OpenLoader.OpenRAWLoader;
 import MoseShipsBukkit.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsBukkit.Vessel.Common.RootTypes.ShipsData;
+import MoseShipsBukkit.Vessel.Common.Static.AbstractStaticShipType;
 import MoseShipsBukkit.Vessel.Common.Static.StaticShipType;
 import MoseShipsBukkit.Vessel.Common.Static.Types.StaticFuel;
 import MoseShipsBukkit.Vessel.Common.Static.Types.StaticRequiredPercent;
@@ -26,50 +29,132 @@ import MoseShipsBukkit.Vessel.RootType.DataShip.Data.Required.PercentageRequirem
 import MoseShipsBukkit.Vessel.RootType.DataShip.Loader.Types.Airship.Ships6AirshipLoader;
 import MoseShipsBukkit.Vessel.RootType.DataShip.Types.Airship;
 
-public class StaticAirship implements StaticShipType, StaticFuel, StaticRequiredPercent {
-
+public class StaticAirship extends AbstractStaticShipType implements StaticShipType, StaticFuel, StaticRequiredPercent {
+		
 	public StaticAirship() {
+		super("Airship", 200, 4000, 2, 3, 2, ShipsMain.getPlugin());
 		StaticShipTypeUtil.inject(this);
-		File file = new File("plugins/Ships/Configuration/ShipTypes/Airship.yml");
-		if (!file.exists()) {
-			StaticShipConfig config = new StaticShipConfig(file);
-			config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
-			config.setOverride(3, StaticShipConfig.DATABASE_DEFAULT_BOOST);
-			config.setOverride(4000, StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
-			config.setOverride(0, StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
-			config.setOverride(2, StaticShipConfig.DATABASE_DEFAULT_SPEED);
-			config.setOverride(Arrays.asList(new BlockState(Material.WOOL, (byte) -1).toNoString()),
-					StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
-			config.setOverride(60, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
-			config.setOverride(1, StaticFuel.DEFAULT_FUEL_CONSUMPTION);
-			config.setOverride(Arrays.asList(new BlockState(Material.COAL).toNoString()), StaticFuel.DEFAULT_FUEL);
-			config.save();
+		if(!getFile().exists()) {
+			firstSave(getFile());
 		}
+		loadDefaults(getFile());
+	}
+	
+	private void firstSave(File file) {
+		StaticShipConfig config = new StaticShipConfig(file);
+		config.setOverride(getAltitudeSpeed(), StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
+		config.setOverride(getBoostSpeed(), StaticShipConfig.DATABASE_DEFAULT_BOOST);
+		config.setOverride(getMaxSize(), StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
+		config.setOverride(getMinSize(), StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
+		config.setOverride(getDefaultSpeed(), StaticShipConfig.DATABASE_DEFAULT_SPEED);
+		config.setOverride(Arrays.asList(new BlockState(Material.WOOL).toNoString()),
+				StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+		config.setOverride(60, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
+		config.setOverride(1, StaticFuel.DEFAULT_FUEL_CONSUMPTION);
+		config.setOverride(Arrays.asList(new BlockState(Material.COAL).toNoString()), StaticFuel.DEFAULT_FUEL);
+		config.save();
 	}
 	
 	@Override
-	public String getName() {
-		return "Airship";
+	public int getDefaultRequiredPercent() {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		return config.get(Integer.class, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
 	}
 
 	@Override
-	public int getDefaultSpeed() {
-		return 2;
+	public BlockState[] getDefaultPercentBlocks() {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		List<String> sStates = config.getList(String.class, StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+		BlockState[] states = BlockState.getStates(sStates);
+		return states;
 	}
 
 	@Override
-	public int getBoostSpeed() {
-		return 3;
+	public BlockState[] getDefaultFuelMaterial() {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		List<String> sStates = config.getList(String.class, DEFAULT_FUEL);
+		BlockState[] states = BlockState.getStates(sStates);
+		return states;
 	}
 
 	@Override
-	public int getAltitudeSpeed() {
-		return 2;
+	public int getDefaultConsumptionAmount() {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		return config.get(Integer.class, DEFAULT_FUEL_CONSUMPTION);
+	}
+	
+	@Override
+	public void setDefaultRequiredPercent(int percent) {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		config.setOverride(percent, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
+		config.save();
 	}
 
 	@Override
-	public ShipsMain getPlugin() {
-		return ShipsMain.getPlugin();
+	public void setDefaultPercentBlocks(BlockState... state) {
+		List<String> list = new ArrayList<String>();
+		for(BlockState state2 : state) {
+			list.add(state2.toNoString());
+		}
+		StaticShipConfig config = new StaticShipConfig(getName());
+		config.setOverride(list, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
+		config.save();
+	}
+
+	@Override
+	public void setDefaultFuelMaterial(BlockState... state) {
+		List<String> list = new ArrayList<String>();
+		for(BlockState state2 : state) {
+			list.add(state2.toNoString());
+		}
+		StaticShipConfig config = new StaticShipConfig(getName());
+		config.setOverride(list, StaticFuel.DEFAULT_FUEL);
+		config.save();
+	}
+
+	@Override
+	public void setDefaultConsumptionAmount(int amount) {
+		StaticShipConfig config = new StaticShipConfig(getName());
+		config.setOverride(amount, StaticFuel.DEFAULT_FUEL_CONSUMPTION);
+		config.save();
+	}
+	
+	@Override
+	public void loadDefaults(File file) {
+		StaticShipConfig config = new StaticShipConfig(file);
+		setAltitudeSpeed(config.getDefaultAltitudeSpeed());
+		setBoostSpeed(config.getDefaultBoostSpeed());
+		setDefaultSpeed(config.getDefaultSpeed());
+		setMaxSize(config.getDefaultMaxSize());
+		setMinSize(config.getDefaultMinSize());
+		setDefaultConsumptionAmount(config.get(Integer.class, DEFAULT_FUEL_CONSUMPTION));
+		setDefaultFuelMaterial(BlockState.getStates(config.getList(String.class, DEFAULT_FUEL)));
+		setDefaultPercentBlocks(BlockState.getStates(config.getList(String.class, DEFAULT_REQUIRED_BLOCKS)));
+		setDefaultRequiredPercent(config.get(Integer.class, DEFAULT_REQUIRED_PERCENT));
+	}
+	
+	@Override
+	public void saveDefaults(File file) {
+		StaticShipConfig config = new StaticShipConfig(file);
+		List<String> percent = new ArrayList<String>();
+		List<String> fuel = new ArrayList<String>();
+		for(BlockState state : getDefaultPercentBlocks()) {
+			percent.add(state.toNoString());
+		}
+		for(BlockState state : getDefaultFuelMaterial()) {
+			fuel.add(state.toNoString());
+		}
+		config.setOverride(getAltitudeSpeed(), StaticShipConfig.DATABASE_DEFAULT_ALTITUDE);
+		config.setOverride(getBoostSpeed(), StaticShipConfig.DATABASE_DEFAULT_BOOST);
+		config.setOverride(getMaxSize(), StaticShipConfig.DATABASE_DEFAULT_MAX_SIZE);
+		config.setOverride(getMinSize(), StaticShipConfig.DATABASE_DEFAULT_MIN_SIZE);
+		config.setOverride(getDefaultSpeed(), StaticShipConfig.DATABASE_DEFAULT_SPEED);
+		config.setOverride(percent,
+				StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
+		config.setOverride(getDefaultRequiredPercent(), StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
+		config.setOverride(getDefaultConsumptionAmount(), StaticFuel.DEFAULT_FUEL_CONSUMPTION);
+		config.setOverride(fuel, StaticFuel.DEFAULT_FUEL);
+		config.save();
 	}
 
 	@Override
@@ -104,29 +189,20 @@ public class StaticAirship implements StaticShipType, StaticFuel, StaticRequired
 	}
 
 	@Override
-	public int getDefaultRequiredPercent() {
-		StaticShipConfig config = new StaticShipConfig("Airship");
-		return config.get(Integer.class, StaticRequiredPercent.DEFAULT_REQUIRED_PERCENT);
-	}
-
-	@Override
-	public BlockState[] getDefaultPercentBlocks() {
-		StaticShipConfig config = new StaticShipConfig("Airship");
-		List<String> sStates = config.getList(String.class, StaticRequiredPercent.DEFAULT_REQUIRED_BLOCKS);
-		BlockState[] states = BlockState.getStates(sStates);
-		return states;
-	}
-
-	@Override
-	public BlockState[] getDefaultFuelMaterial() {
-		BlockState[] ret = {
-				new BlockState(Material.COAL) };
-		return ret;
-	}
-
-	@Override
-	public int getDefaultConsumptionAmount() {
-		return 1;
+	public StaticAirship copy(String name, Plugin plugin) {
+		StaticAirship airship = new StaticAirship();
+		airship.setAltitudeSpeed(getAltitudeSpeed());
+		airship.setBoostSpeed(getBoostSpeed());
+		airship.setDefaultConsumptionAmount(getDefaultConsumptionAmount());
+		airship.setDefaultFuelMaterial(getDefaultFuelMaterial());
+		airship.setDefaultPercentBlocks(getDefaultPercentBlocks());
+		airship.setDefaultRequiredPercent(getDefaultRequiredPercent());
+		airship.setDefaultSpeed(getDefaultSpeed());
+		airship.setMaxSize(getMaxSize());
+		airship.setMinSize(getMinSize());
+		airship.setName(name);
+		airship.setPlugin(getPlugin());
+		return airship;
 	}
 
 }
