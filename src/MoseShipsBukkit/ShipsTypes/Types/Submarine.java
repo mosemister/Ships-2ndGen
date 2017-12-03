@@ -92,7 +92,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 					}
 					if (Messages.isEnabled()) {
 						player.sendMessage(Ships.runShipsMessage(
-								Messages.getOffBy(util.getOffBy(blocks, getRequiredMaterial(), getRequiredPercent()),
+								Messages.getOffBy(util.getOffByPercent(blocks, getRequiredMaterial(), getRequiredPercent()),
 										"(of either) " + materials.toString()),
 								true));
 					}

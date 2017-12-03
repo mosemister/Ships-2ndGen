@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -227,7 +228,10 @@ public class MaterialsList {
 		List<Material> failedMaterials = new ArrayList<Material>();
 		boolean check = false;
 		for (Material material : Material.values()) {
-			List<MaterialAndData> materials = MaterialAndData.getMaterial(material);
+			if(!material.isBlock()) {
+				continue;
+			}
+			Set<MaterialItem> materials = MaterialAndData.getAllBlocks(material);
 			if (materials != null) {
 				if (materials.size() == 0) {
 					failedMaterials.add(material);
@@ -240,7 +244,7 @@ public class MaterialsList {
 				} else {
 					if (needsUpdating()) {
 						check = true;
-						for (MaterialAndData data : materials) {
+						for (MaterialItem data : materials) {
 							if (contains(material, true)) {
 								if (config
 										.getInt("Materials." + material.name() + ".dataValue_" + data.getData()) == 0) {

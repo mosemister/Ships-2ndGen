@@ -12,6 +12,11 @@ public class MaterialItem {
 		MATERIAL = Material.getMaterial(id);
 		DATA = (byte) data;
 	}
+	
+	public MaterialItem(Material material, byte data) {
+		MATERIAL = material;
+		DATA = data;
+	}
 
 	public Material getMaterial() {
 		return MATERIAL;
@@ -19,5 +24,21 @@ public class MaterialItem {
 
 	public byte getData() {
 		return DATA;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof MaterialItem)) {
+			return false;
+		}
+		MaterialItem item = (MaterialItem)obj;
+		if((item.getMaterial().equals(getMaterial()))) {
+			if((item.getData() == -1) || (getData() == -1)) {
+				return true;
+			}else if(item.getData() == getData()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

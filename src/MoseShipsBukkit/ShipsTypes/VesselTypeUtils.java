@@ -403,7 +403,7 @@ public class VesselTypeUtils {
 	}
 
 	// returns the percent you are off by.
-	public float getOffBy(List<MovingBlock> blocks, List<Material> material, float minPercent) {
+	public float getOffByPercent(List<MovingBlock> blocks, List<Material> material, float minPercent) {
 		if (material != null) {
 			float count = 0;
 			for (MovingBlock block : blocks) {
@@ -411,11 +411,11 @@ public class VesselTypeUtils {
 					count++;
 				}
 			}
-			float percentAmount = (blocks.size() * (minPercent / 100f));
-			if (count >= percentAmount) {
+			float percentAmount = (blocks.size() * (count / 100f));
+			if (percentAmount >= minPercent) {
 				return 0;
 			}
-			return blocks.size() - count;
+			return 100 - percentAmount;
 		}
 		return 0;
 	}

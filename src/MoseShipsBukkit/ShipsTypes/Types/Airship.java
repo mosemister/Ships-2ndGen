@@ -107,7 +107,7 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 				if (player != null) {
 					if (Messages.isEnabled()) {
 						player.sendMessage(Ships.runShipsMessage(
-								Messages.getOffBy(util.getOffBy(blocks, getRequiredBlock(), getPercent()),
+								Messages.getOffBy(util.getOffByPercent(blocks, getRequiredBlock(), getPercent()),
 										"(of either) " + materials.toString()),
 								true));
 					}

@@ -76,7 +76,7 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 						if (player != null) {
 							if (Messages.isEnabled()) {
 								player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(
-										util.getOffBy(blocks, REQUIREDBLOCKS, PERCENT), materials.toString()), true));
+										util.getOffByPercent(blocks, REQUIREDBLOCKS, PERCENT), materials.toString()), true));
 							}
 						}
 						return false;
