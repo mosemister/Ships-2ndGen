@@ -48,6 +48,10 @@ public class Ships extends JavaPlugin {
 	static BlockStack STACK;
 	static int count;
 
+	public static final int COMPARE_FIRST_VALUE_IS_GREATER = 1;
+	public static final int COMPARE_SECOND_VALUE_IS_GREATER = 3;
+	public static final int COMPARE_BOTH_VALUES_ARE_THE_SAME = 2;
+	
 	public void onEnable() {
 		plugin = this;
 		getCommand("Ships").setExecutor(new Commands());
@@ -287,6 +291,7 @@ public class Ships extends JavaPlugin {
 		return part3;
 	}
 
+	@Deprecated
 	public static int getVersion(String version) {
 		String mcVersion = version.replace(".", "");
 		String[] splitMCVersion = version.split(".");
@@ -295,6 +300,38 @@ public class Ships extends JavaPlugin {
 		}
 		int version2 = Integer.parseInt(mcVersion);
 		return version2;
+	}
+	
+	public static int[] convertVersion(String version) {
+		int[] mcVersion = new int[4]; 
+		String[] splitMCVersion = version.split(".");
+		for(int A = 0; A < splitMCVersion.length; A++) {
+			mcVersion[A] = Integer.parseInt(splitMCVersion[A]);
+		}
+		return mcVersion;
+	}
+	
+	public static int compare(int[] version1, int[] version2) {
+		int maxValue = version1.length;
+		if(version2.length > version1.length) {
+			maxValue = version2.length;
+		}
+		for(int A = 0; A < maxValue; A++) {
+			int value1 = 0;
+			int value2 = 0;
+			if(A <= version1.length) {
+				value1 = version1[A];
+			}
+			if(A <= version1.length) {
+				value1 = version2[A];
+			}
+			if(value1 > value2) {
+				return COMPARE_FIRST_VALUE_IS_GREATER;
+			}else if(value1 < value2) {
+				return COMPARE_SECOND_VALUE_IS_GREATER;
+			}
+		}
+		return COMPARE_BOTH_VALUES_ARE_THE_SAME;
 	}
 
 	// This is used by the config files to copy internal files to outside, I put

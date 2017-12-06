@@ -71,7 +71,7 @@ public class Config {
 	}
 
 	public boolean containsIgnoreList(int lastest) {
-		Integer[] list = { 5017 };
+		Integer[] list = { 5017, 5018, 5019, 50110 };
 		for (int A : list) {
 			if (lastest == A) {
 				return true;

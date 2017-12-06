@@ -214,9 +214,9 @@ public class MaterialsList {
 			Config.getConfig().updateCheck();
 			return true;
 		}
-		int knownVersion = Ships.getVersion(mcVersion);
-		int latest = Ships.getVersion(Ships.getMinecraftVersion());
-		if (latest > knownVersion) {
+		int[] knownVersion = Ships.convertVersion(mcVersion);
+		int[] latest = Ships.convertVersion(Ships.getMinecraftVersion());
+		if (Ships.compare(knownVersion, latest) == Ships.COMPARE_SECOND_VALUE_IS_GREATER) {
 			return true;
 		}
 		return false;
