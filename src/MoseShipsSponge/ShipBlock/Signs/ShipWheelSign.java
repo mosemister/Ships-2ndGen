@@ -8,6 +8,8 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -34,7 +36,8 @@ public class ShipWheelSign implements ShipSign{
 		if (!data.get(2).isPresent()) {
 			apply(sign);
 		}
-		ship.rotateRight(Cause.source(this).named("direction", "right").build());
+		EventContext context = EventContext.builder().add(EventContextKeys.PLAYER, player).add(EventContextKeys.BLOCK_HIT, sign.getLocation().createSnapshot()).build();
+		ship.rotateRight(Cause.of(context, sign, ship));
 	}
 
 	@Override
@@ -43,7 +46,8 @@ public class ShipWheelSign implements ShipSign{
 		if (!data.get(2).isPresent()) {
 			apply(sign);
 		}
-		ship.rotateLeft(Cause.source(this).named("direction", "left").build());
+		EventContext context = EventContext.builder().add(EventContextKeys.PLAYER, player).add(EventContextKeys.BLOCK_HIT, sign.getLocation().createSnapshot()).build();
+		ship.rotateLeft(Cause.of(context, sign, ship));
 	}
 
 	@Override

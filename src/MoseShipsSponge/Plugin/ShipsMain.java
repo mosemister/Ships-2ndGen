@@ -11,6 +11,8 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
@@ -165,7 +167,9 @@ public class ShipsMain {
 	public void onDisable(GameStoppingServerEvent event) {
 		for(int A = 0; A < Loader.getLoadedShips().size(); A++) {
 			LiveShip ship = Loader.getLoadedShips().get(A);
-			ship.unload(Cause.source(getContainer()).named("Cause", "End").build());
+			EventContext context = EventContext.builder().add(EventContextKeys.PLUGIN, ShipsMain.getPlugin().getContainer()).build();
+			Cause cause = Cause.of(context, "Disabled Ships Plugin");
+			ship.unload(cause);
 		}
 	}
 

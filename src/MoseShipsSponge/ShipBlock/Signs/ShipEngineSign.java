@@ -10,6 +10,8 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Direction;
@@ -76,9 +78,8 @@ public class ShipEngineSign implements ShipSign {
 		try {
 			int speed = Integer.parseInt(data.get(2).get().toPlain());
 			Direction direction = sign.getLocation().get(Keys.DIRECTION).get().getOpposite();
-			Cause cause = Cause.source(ShipsMain.getPlugin().getContainer()).named("sign", sign).named("player", player)
-					.build();
-			Optional<FailedMovement> result = ship.move(direction, speed, cause);
+			EventContext context = EventContext.builder().add(EventContextKeys.PLAYER, player).add(EventContextKeys.BLOCK_HIT, sign.getLocation().createSnapshot()).build();
+			Optional<FailedMovement> result = ship.move(direction, speed, Cause.of(context, "Right Click", ship));
 			if (result.isPresent()) {
 				result.get().process(player);
 			}

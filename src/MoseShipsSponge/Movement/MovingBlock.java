@@ -27,7 +27,6 @@ import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Movement.Type.CollideType;
 import MoseShipsSponge.Movement.Type.MovementType;
 import MoseShipsSponge.Movement.Type.RotateType;
-import MoseShipsSponge.Plugin.ShipsMain;
 import MoseShipsSponge.Utils.BlockRotateUtil;
 
 public class MovingBlock {
@@ -90,13 +89,13 @@ public class MovingBlock {
 		}
 	}
 
-	public MovingBlock clearOriginalBlock(BlockChangeFlag flag, Cause cause) {
-		clearBlock(ORIGIN, BlockTypes.AIR, flag, cause);
+	public MovingBlock clearOriginalBlock(BlockChangeFlag flag/*, Cause cause*/) {
+		clearBlock(ORIGIN, BlockTypes.AIR, flag/*, cause*/);
 		return this;
 	}
 
-	public MovingBlock clearMovingToBlock(BlockChangeFlag flag, Cause cause) {
-		clearBlock(MOVING_TO, BlockTypes.AIR, flag, cause);
+	public MovingBlock clearMovingToBlock(BlockChangeFlag flag/*, Cause cause*/) {
+		clearBlock(MOVING_TO, BlockTypes.AIR, flag/*, cause*/);
 		return this;
 	}
 
@@ -131,7 +130,7 @@ public class MovingBlock {
 			}
 		}
 
-		MOVING_TO.restoreSnapshot(STATE, true, flag, Cause.source(ShipsMain.getPlugin().getContainer()).build());
+		MOVING_TO.restoreSnapshot(STATE, true, flag/*, Cause.source(ShipsMain.getPlugin().getContainer()).build()*/);
 		return this;
 	}
 
@@ -152,17 +151,17 @@ public class MovingBlock {
 				STATE.with(Keys.DIRECTION, blockD);
 			}
 		}
-		MOVING_TO.restoreSnapshot(STATE, true, flag, cause);
+		MOVING_TO.restoreSnapshot(STATE, true, flag/*, cause*/);
 		return this;
 	}
 
-	public MovingBlock replaceOriginalBlock(BlockType type, BlockChangeFlag flag, Cause cause) {
-		clearBlock(ORIGIN, type, flag, cause);
+	public MovingBlock replaceOriginalBlock(BlockType type, BlockChangeFlag flag/*, Cause cause*/) {
+		clearBlock(ORIGIN, type, flag/*, cause*/);
 		return this;
 	}
 
-	public MovingBlock replaceMovingToBlock(BlockType type, BlockChangeFlag flag, Cause cause) {
-		clearBlock(MOVING_TO, type, flag, cause);
+	public MovingBlock replaceMovingToBlock(BlockType type, BlockChangeFlag flag/*, Cause cause*/) {
+		clearBlock(MOVING_TO, type, flag/*, cause*/);
 		return this;
 	}
 
@@ -218,7 +217,7 @@ public class MovingBlock {
 		return this;
 	}
 
-	private void clearBlock(Location<World> loc, BlockType type, BlockChangeFlag flag, Cause cause) {
+	private void clearBlock(Location<World> loc, BlockType type, BlockChangeFlag flag/*, Cause cause*/) {
 		Optional<TileEntity> opTile = loc.getTileEntity();
 		if (opTile.isPresent()) {
 			TileEntity entity = opTile.get();
@@ -228,7 +227,7 @@ public class MovingBlock {
 				inv.clear();
 			}
 		}
-		loc.setBlockType(type, flag, cause);
+		loc.setBlockType(type, flag/*, cause*/);
 	}
 
 	private void rotate(boolean left) {

@@ -9,6 +9,8 @@ import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
@@ -69,9 +71,10 @@ public class ShipAltitudeSign implements ShipSign {
 				if (ship.getCommands().contains(ShipCommands.LOCK_ALTITUDE)) {
 					return;
 				}
-				Cause cause = Cause.builder().named("Player", player).named("Sign", sign).named("SignCommand", "Up")
-						.build();
-				Optional<FailedMovement> causeMove = ship.move(0, speed, 0, cause);
+				EventContext context = EventContext.builder().add(EventContextKeys.PLAYER, player).add(EventContextKeys.BLOCK_HIT, sign.getLocation().createSnapshot()).build();
+				/*Cause cause = Cause.builder().named("Player", player).named("Sign", sign).named("SignCommand", "Up")
+						.build();*/
+				Optional<FailedMovement> causeMove = ship.move(0, speed, 0, Cause.of(context, "Right Click", ship));
 				if (causeMove.isPresent()) {
 					causeMove.get().process(player);
 				}
@@ -91,9 +94,10 @@ public class ShipAltitudeSign implements ShipSign {
 				if (ship.getCommands().contains(ShipCommands.LOCK_ALTITUDE)) {
 					return;
 				}
-				Cause cause = Cause.builder().named("Player", player).named("Sign", sign).named("SignCommand", "Up")
-						.build();
-				Optional<FailedMovement> causeMove = ship.move(0, -speed, 0, cause);
+				EventContext context = EventContext.builder().add(EventContextKeys.PLAYER, player).add(EventContextKeys.BLOCK_HIT, sign.getLocation().createSnapshot()).build();
+				/*Cause cause = Cause.builder().named("Player", player).named("Sign", sign).named("SignCommand", "Up")
+						.build();*/
+				Optional<FailedMovement> causeMove = ship.move(0, -speed, 0, Cause.of(context, "Left Click", ship));
 				if (causeMove.isPresent()) {
 					causeMove.get().process(player);
 				}

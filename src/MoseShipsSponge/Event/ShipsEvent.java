@@ -7,20 +7,21 @@ import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 
 public abstract class ShipsEvent extends AbstractEvent {
 
-	ShipsData SHIP;
-	Cause CAUSE;
+	ShipsData g_ship;
+	Cause g_cause;
 
 	public ShipsEvent(ShipsData ship, Cause cause) {
-		SHIP = ship;
+		g_ship = ship;
+		g_cause = cause;
 	}
-
+	
 	public ShipsData getShip() {
-		return SHIP;
+		return g_ship;
 	}
 
 	@Override
 	public Cause getCause() {
-		return CAUSE;
+		return g_cause;
 	}
 
 }

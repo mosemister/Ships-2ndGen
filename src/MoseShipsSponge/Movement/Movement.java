@@ -86,7 +86,7 @@ public class Movement {
 		if (!collide.isEmpty()) {
 			return Optional.of(new FailedMovement(ship, MovementResult.COLLIDE_WITH, collide));
 		}
-		cause = Cause.builder().from(cause).named("Structure", structure).build();
+		cause = Cause.builder().from(cause).append(structure).build(cause.getContext());
 		ship.load(cause);
 		return move(ship, type, blocks, cause);
 	}
