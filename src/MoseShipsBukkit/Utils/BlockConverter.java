@@ -35,7 +35,10 @@ public class BlockConverter {
 			byte data2 = torchValues(move, data);
 			return data2;
 		}
-		if ((id == Material.WOOD_STAIRS.getId()) || (id == Material.COBBLESTONE_STAIRS.getId())
+		if ((id == Material.WOOD_STAIRS.getId()) || (id == Material.COBBLESTONE_STAIRS.getId()) 
+				|| (id == Material.JUNGLE_WOOD_STAIRS.getId()) || (id == Material.NETHER_BRICK_STAIRS.getId())
+				|| (id == Material.PURPUR_STAIRS.getId()) || (id == Material.RED_SANDSTONE_STAIRS.getId())
+				|| (id == Material.SMOOTH_STAIRS.getId()) || (id == Material.SPRUCE_WOOD_STAIRS.getId())
 				|| (id == Material.ACACIA_STAIRS.getId()) || (id == Material.SANDSTONE_STAIRS.getId())
 				|| (id == Material.BIRCH_WOOD_STAIRS.getId()) || (id == Material.BRICK_STAIRS.getId())
 				|| (id == Material.DARK_OAK_STAIRS.getId()) || (id == Material.QUARTZ_STAIRS.getId())) {

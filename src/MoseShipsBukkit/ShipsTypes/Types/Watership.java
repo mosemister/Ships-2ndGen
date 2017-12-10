@@ -39,7 +39,18 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	@Override
 	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
 			Player player) {
-		if ((move.equals(MovementMethod.MOVE_DOWN) || (move.equals(MovementMethod.MOVE_UP)))) {
+		int waterLevel = vessel.getWaterLevel(blocks);
+		if(waterLevel == 0) {
+			if(!move.equals(MovementMethod.MOVE_DOWN)) {
+				if(player != null) {
+					if(Messages.isEnabled()) {
+						player.sendMessage(Ships.runShipsMessage("Ship can only move down into water.", true));
+					}
+				}
+				return false;
+			}
+		}
+		if (((move.equals(MovementMethod.MOVE_DOWN) && (waterLevel != 0)) || (move.equals(MovementMethod.MOVE_UP)))) {
 			return false;
 		}
 		VesselTypeUtils util = new VesselTypeUtils();

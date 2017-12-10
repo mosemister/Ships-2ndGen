@@ -199,7 +199,8 @@ public class BukkitListeners implements Listener {
 			if (block.getState() instanceof Sign) {
 				org.bukkit.material.Sign sign = (org.bukkit.material.Sign) block.getState().getData();
 				if (sign.isWallSign()) {
-					if (block.getRelative(sign.getAttachedFace()).equals(block)) {
+					//if (block.getRelative(sign.getAttachedFace()).equals(block)) {
+					if(block.getRelative(sign.getAttachedFace()).equals(event.getBlock())) {
 						signBreakEvent((Sign) block.getState(), event);
 					}
 				}
@@ -240,6 +241,11 @@ public class BukkitListeners implements Listener {
 		// Ships sign
 		Sign sign = (Sign) event.getBlock().getState();
 		if (event.getLine(0).equalsIgnoreCase("[Ships]")) {
+			String name = event.getLine(2);
+			if(name.replace(" ", "").length() == 0) {
+				event.getPlayer().sendMessage(Ships.runShipsMessage("Name must be specified on line 3", true));
+				return;
+			}
 			VesselType type = VesselType.getTypeByName(event.getLine(1));
 			if (type != null) {
 				type = type.clone();
