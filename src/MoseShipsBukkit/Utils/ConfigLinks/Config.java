@@ -132,7 +132,6 @@ public class Config {
 			}
 			if ((curVersion <= 5016) && (latVersion >= 5017)) {
 				config.set("VesselLoading.DeleteFailedLoads", false);
-				config.set("MCVersion", "1.8.0");
 			}
 			// compare version then update
 			config.set("Version", getLatestVersionString());

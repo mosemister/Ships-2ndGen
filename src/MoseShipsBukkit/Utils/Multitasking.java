@@ -3,6 +3,7 @@ package MoseShipsBukkit.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class Multitasking {
 
 	public static int CORE_COUNT = Runtime.getRuntime().availableProcessors();

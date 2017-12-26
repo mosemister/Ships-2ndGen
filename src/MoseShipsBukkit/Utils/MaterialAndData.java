@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.bukkit.Material;
 
+@Deprecated
 public enum MaterialAndData {
 
 		AIR(Material.AIR, -1),
@@ -516,7 +517,7 @@ public enum MaterialAndData {
 		GREEN_SHULKER_BOX(Material.GREEN_SHULKER_BOX, -1),
 		RED_SHULKER_BOX(Material.RED_SHULKER_BOX, -1),
 		BLACK_SHULKER_BOX(Material.BLACK_SHULKER_BOX, -1);
-		
+
 	Material MATERIAL;
 	byte DATA;
 
@@ -532,7 +533,7 @@ public enum MaterialAndData {
 	public byte getData() {
 		return DATA;
 	}
-	
+
 	public static Set<MaterialItem> getAllBlocks() {
 		List<MaterialItem> set = new ArrayList<MaterialItem>();
 		for (Material material : Material.values()) {
@@ -540,12 +541,12 @@ public enum MaterialAndData {
 		}
 		return new HashSet<MaterialItem>(set);
 	}
-	
+
 	public static Set<MaterialItem> getAllBlocks(Material material) {
 		List<MaterialItem> list = new ArrayList<MaterialItem>();
-		for(MaterialAndData data : values()) {
-			if(data.getMaterial().equals(material)) {
-				if(data.getMaterial().isBlock()) {
+		for (MaterialAndData data : values()) {
+			if (data.getMaterial().equals(material)) {
+				if (data.getMaterial().isBlock()) {
 					list.add(new MaterialItem(data.getMaterial(), data.getData()));
 				}
 			}
@@ -555,8 +556,8 @@ public enum MaterialAndData {
 
 	public static Set<MaterialItem> getAllMaterials(Material material) {
 		List<MaterialItem> list = new ArrayList<MaterialItem>();
-		for(MaterialAndData data : values()) {
-			if(data.getMaterial().equals(material)) {
+		for (MaterialAndData data : values()) {
+			if (data.getMaterial().equals(material)) {
 				list.add(new MaterialItem(data.getMaterial(), data.getData()));
 			}
 		}

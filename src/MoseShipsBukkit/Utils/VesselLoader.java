@@ -149,8 +149,9 @@ public class VesselLoader {
 									Location teleport = new Location(Bukkit.getWorld(teleportM[3]),
 											Double.parseDouble(teleportM[0]), Double.parseDouble(teleportM[1]),
 											Double.parseDouble(teleportM[2]));
-									VesselType vesselType = VesselType.getTypeByName(vesselTypeS).clone();
+									VesselType vesselType = VesselType.getTypeByName(vesselTypeS);
 									if (vesselType != null) {
+										vesselType = vesselType.clone();
 										Vessel vessel = new Vessel(sign, name, vesselType, owner, teleport, false);
 										vesselType.setDefaultSpeed(engine);
 										vesselType.setMaxBlocks(max);

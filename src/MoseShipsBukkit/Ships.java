@@ -76,9 +76,6 @@ public class Ships extends JavaPlugin {
 		if (config.getBoolean("Structure.Signs.EOT.enabled")) {
 			ShipsAutoRuns.EOTMove();
 		}
-		if (config.getBoolean("Structure.Sign.Cell.enabled")) {
-			ShipsAutoRuns.SolorCell();
-		}
 		if (config.getBoolean("World.ProtectedVessels.VesselFallOutSky")) {
 			ShipsAutoRuns.fallOutSky();
 		}

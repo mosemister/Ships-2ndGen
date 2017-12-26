@@ -19,6 +19,7 @@ public class ShipsAutoRuns {
 
 	public static HashMap<Vessel, OfflinePlayer> EOTAUTORUN = new HashMap<Vessel, OfflinePlayer>();
 
+	@Deprecated
 	public static void SolorCell() {
 		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("SolarCell active", false));
 		final YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());

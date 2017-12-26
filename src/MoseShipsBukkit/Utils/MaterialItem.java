@@ -2,12 +2,12 @@ package MoseShipsBukkit.Utils;
 
 import org.bukkit.Material;
 
+@Deprecated
 public class MaterialItem {
 
 	Material MATERIAL;
 	byte DATA;
 
-	@SuppressWarnings("deprecation")
 	public MaterialItem(int id, int data) {
 		MATERIAL = Material.getMaterial(id);
 		DATA = (byte) data;
