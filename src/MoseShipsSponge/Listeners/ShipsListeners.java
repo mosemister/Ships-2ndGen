@@ -114,8 +114,7 @@ public class ShipsListeners {
 			return;
 		}
 		LiveShip ship = opShip.get();
-		Cause cause = Cause.builder().named("event", event).named("player", player).named("direction", direction)
-				.named("sign", sign).named("ship", ship).build();
+		Cause cause = Cause.builder().from(event.getCause()).append(sSign).append(ship).append(direction).build(event.getContext());
 		ship.load(cause);
 		if (event instanceof InteractBlockEvent.Secondary) {
 			if (player.get(Keys.IS_SNEAKING).get()) {

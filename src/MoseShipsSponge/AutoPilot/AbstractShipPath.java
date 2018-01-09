@@ -2,7 +2,6 @@ package MoseShipsSponge.AutoPilot;
 
 import java.util.Optional;
 
-import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.util.Direction;
 
 import com.flowpowered.math.vector.Vector3i;
@@ -48,7 +47,7 @@ public class AbstractShipPath extends BasicShipPath {
 			return ret;
 		}
 		g_rotated = true;
-		g_ship.rotate(opRotate.get(), Cause.source(this).build());
+		g_ship.rotate(opRotate.get()/*, Cause.source(this).build()*/);
 		return Optional.empty();
 	}
 

@@ -29,6 +29,7 @@ import MoseShipsSponge.Utils.StaticShipTypeUtil;
 import MoseShipsSponge.Vessel.Common.OpenLoader.Loader;
 import MoseShipsSponge.Vessel.Common.RootTypes.AbstractShipsData;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
+import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 import MoseShipsSponge.Vessel.Common.Static.StaticShipType;
 
 public class ShipLicenceSign implements ShipSign {
@@ -51,11 +52,10 @@ public class ShipLicenceSign implements ShipSign {
 		}
 		Optional<StaticShipType> opShipType = StaticShipTypeUtil.getType(line2.toPlain());
 		if (!opShipType.isPresent()) {
-			Cause cause = Cause.builder().named("event", event).named("player", player).named("sign", this).build();
-			ShipCreateFailedFromMissingType conflictType = new ShipCreateFailedFromMissingType(
-					new AbstractShipsData(line3.toPlain(), event.getTargetTile().getLocation(),
-							player.getLocation().getBlockPosition()),
-					player, line2.toPlain(), cause);
+			Cause cause = Cause.builder().from(event.getCause()).append(this).build(event.getContext());
+			ShipsData data = new AbstractShipsData(line3.toPlain(), event.getTargetTile().getLocation(),
+					player.getLocation().getBlockPosition());
+			ShipCreateFailedFromMissingType conflictType = new ShipCreateFailedFromMissingType(data, player, line2.toPlain(), cause);
 			Sponge.getEventManager().post(conflictType);
 			Text message = conflictType.getMessage();
 			if (message.toPlain().contains("%Type%")) {
@@ -76,11 +76,11 @@ public class ShipLicenceSign implements ShipSign {
 
 		Optional<LiveShip> opConflict = Loader.safeLoadShip(line3);
 		if (opConflict.isPresent()) {
-			Cause cause = Cause.builder().named("event", event).named("player", player).named("sign", this).build();
-			ShipCreateFailedFromConflictingNames conflictName = new ShipCreateFailedFromConflictingNames(
-					new AbstractShipsData(line3.toPlain(), event.getTargetTile().getLocation(),
-							player.getLocation().getBlockPosition()),
-					player, opConflict.get(), cause);
+			Cause cause = Cause.builder().from(event.getCause()).append(this).build(event.getContext());
+			ShipsData data = new AbstractShipsData(line3.toPlain(), event.getTargetTile().getLocation(),
+					player.getLocation().getBlockPosition());
+			//Cause cause = Cause.builder().named("event", event).named("player", player).named("sign", this).build();
+			ShipCreateFailedFromConflictingNames conflictName = new ShipCreateFailedFromConflictingNames(data, player, opConflict.get(), cause);
 			Sponge.getEventManager().post(conflictName);
 			Text message = conflictName.getMessage();
 			if (message.toPlain().contains("%Name%")) {
@@ -106,8 +106,7 @@ public class ShipLicenceSign implements ShipSign {
 		if (opShip.isPresent()) {
 			final LiveShip ship = opShip.get();
 			ship.setOwner(player);
-			Cause cause = Cause.builder().named("event", event).named("player", player).named("sign", this)
-					.named("type", type).named("ship", ship).build();
+			Cause cause = Cause.builder().from(event.getCause()).append(this).build(event.getContext());
 			ShipsCreateEvent SCEvent = new ShipSignCreateEvent(ship, cause);
 			Sponge.getEventManager().post(SCEvent);
 			if (!SCEvent.isCancelled()) {

@@ -76,8 +76,8 @@ public interface LiveShip extends ShipsData {
 		return teleport(sm);
 	}
 
-	public default Optional<FailedMovement> rotate(RotateType type, Cause cause) {
-		StoredMovement sm = new StoredMovement.Builder().setRotation(type).setCause(cause).build();
+	public default Optional<FailedMovement> rotate(RotateType type/*, Cause cause*/) {
+		StoredMovement sm = new StoredMovement.Builder().setRotation(type)/*.setCause(cause)*/.build();
 		return teleport(sm);
 	}
 
