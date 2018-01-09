@@ -9,7 +9,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.world.BlockChangeFlag;
+import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -77,9 +77,9 @@ public class Ships6Movement implements MovementAlgorithm {
 					}
 					blocks.stream().forEach(b -> {
 						if(b.getOrigin().getBlockY() > waterLevelFinal){
-							b.clearOriginalBlock(BlockChangeFlag.NONE/*, Cause.source(ShipsMain.getPlugin().getContainer()).build()*/);
+							b.clearOriginalBlock(BlockChangeFlags.NONE/*, Cause.source(ShipsMain.getPlugin().getContainer()).build()*/);
 						}else{
-							b.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlag.NONE/*, Cause.source(ShipsMain.getPlugin().getContainer()).build()*/);
+							b.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlags.NONE/*, Cause.source(ShipsMain.getPlugin().getContainer()).build()*/);
 						}
 					});
 				}
@@ -97,7 +97,7 @@ public class Ships6Movement implements MovementAlgorithm {
 					for(int A = (blocks.size() - 1); A >= 0; A--){
 						MovingBlock block = blocks.get(A);
 						newStructure.add(block.getMovingTo());
-						block.move(BlockChangeFlag.NONE);
+						block.move(BlockChangeFlags.NONE);
 						if(LocationUtils.blocksEqual(licence, block.getOrigin())){
 							oneLic.setFirst(block.getOrigin());
 						}

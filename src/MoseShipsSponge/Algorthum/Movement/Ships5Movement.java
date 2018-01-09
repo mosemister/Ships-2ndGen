@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.world.BlockChangeFlag;
+import org.spongepowered.api.world.BlockChangeFlags;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -28,9 +28,9 @@ public class Ships5Movement implements MovementAlgorithm {
 		blocks.stream().forEach(b -> {
 			//Cause cause = Cause.source(ShipsMain.getPlugin().getContainer()).named("moving", b).build();
 			if (b.getOrigin().getBlockY() > waterLevelFinal) {
-				b.clearOriginalBlock(BlockChangeFlag.NONE/*, cause*/);
+				b.clearOriginalBlock(BlockChangeFlags.NONE/*, cause*/);
 			} else {
-				b.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlag.ALL/*, cause*/);
+				b.replaceOriginalBlock(BlockTypes.WATER, BlockChangeFlags.ALL/*, cause*/);
 			}
 		});
 		List<Location<World>> newStructure = new ArrayList<>();
@@ -38,7 +38,7 @@ public class Ships5Movement implements MovementAlgorithm {
 		for (int A = (blocks.size() - 1); A >= 0; A--) {
 			MovingBlock block = blocks.get(A);
 			newStructure.add(block.getMovingTo());
-			block.move(BlockChangeFlag.NONE);
+			block.move(BlockChangeFlags.NONE);
 			if (LocationUtils.blocksEqual(type.getLocation(), block.getOrigin())) {
 				lic = block.getMovingTo();
 			}

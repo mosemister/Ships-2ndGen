@@ -53,7 +53,7 @@ public class ShipsMain {
 			6
 	};
 	public static final String[] TESTED_MC = {
-			"1.11.2" 
+			"1.12.2" 
 	};
 
 	public static final File CONFIGURATION_ROOT = new File("config/Ships/");
@@ -139,7 +139,7 @@ public class ShipsMain {
 	public void onEnable(GameStartingServerEvent event) {
 		PLUGIN = this;
 		GAME.getEventManager().registerListeners(this, new ShipsListeners());
-		GAME.getCommandManager().register(this, new ShipsCMD.Executer(), "Ships", "Vessels");
+		GAME.getCommandManager().register(this, new ShipsCMD.Executer(), "ships", "vessels");
 		BlockList.BLOCK_LIST.reload();
 		registerShipTypes();
 		registerSigns();
