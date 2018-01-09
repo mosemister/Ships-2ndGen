@@ -8,8 +8,6 @@ import java.util.UUID;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.util.Direction;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import com.flowpowered.math.vector.Vector3i;
 
@@ -62,8 +60,6 @@ public interface LiveShip extends ShipsData {
 	public void remove(Player player);
 	public boolean save();
 
-	public List<Location<World>> updateBasicStructure(boolean overtime);
-	
 	public Optional<FailedMovement> teleport(StoredMovement move);
 	public Optional<FailedMovement> rotateLeft(Cause cause);
 	public Optional<FailedMovement> rotateRight(Cause cause);

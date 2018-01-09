@@ -39,13 +39,14 @@ import MoseShipsSponge.Vessel.Common.OpenLoader.Loader;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticAirship;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticOPShip;
+import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticWaterShip;
 
 @Plugin(id = ShipsMain.ID, name = ShipsMain.NAME, version = ShipsMain.VERSION)
 public class ShipsMain {
 
 	public static final String ID = "ships";
 	public static final String NAME = "Ships";
-	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,2,0)";
+	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,3,0)";
 	public static final int[] TESTED_API = {
 			6
 	};
@@ -83,6 +84,7 @@ public class ShipsMain {
 	private void registerShipTypes() {
 		new StaticOPShip();
 		new StaticAirship();
+		new StaticWaterShip();
 	}
 
 	private void displayVersionChecking() {

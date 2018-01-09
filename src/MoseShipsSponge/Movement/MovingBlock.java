@@ -29,6 +29,7 @@ import MoseShipsSponge.Movement.Type.MovementType;
 import MoseShipsSponge.Movement.Type.RotateType;
 import MoseShipsSponge.Plugin.ShipsMain;
 import MoseShipsSponge.Utils.BlockRotateUtil;
+import MoseShipsSponge.Utils.LocationUtils;
 
 public class MovingBlock {
 
@@ -171,7 +172,7 @@ public class MovingBlock {
 	}
 
 	public CollideType getCollision(List<Location<World>> ignore, BlockState... ignore2) {
-		if (ignore.contains(MOVING_TO)) {
+		if (LocationUtils.blockWorldContains(ignore, MOVING_TO)) {
 			return CollideType.COLLIDE_WITH_SELF;
 		} else if (Arrays.asList(ignore2).contains(MOVING_TO.getBlock())) {
 			return CollideType.COLLIDE_WITH_IGNORED_TYPE;

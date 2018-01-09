@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.Location;
@@ -21,7 +20,6 @@ import MoseShipsSponge.Movement.Type.MovementType;
 import MoseShipsSponge.Movement.Type.RotateType;
 import MoseShipsSponge.Utils.MovementAlgorithmUtil;
 import MoseShipsSponge.Utils.Lists.MovingBlockList;
-import MoseShipsSponge.Vessel.Common.GeneralTypes.WaterType;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 
 public class Movement {
@@ -121,7 +119,7 @@ public class Movement {
 	}
 
 	private static void waterTypeFix(LiveShip ship, List<Location<World>> structure) {
-		if (ship instanceof WaterType) {
+		/*if (ship instanceof WaterType) {
 			final int D = structure.size();
 			for (int B = 0; B < D; B++) {
 				for (int C = 0; C < D; C++) {
@@ -137,7 +135,8 @@ public class Movement {
 							}
 							int def = large.getBlockZ() - small.getBlockZ();
 							for (int A = 0; A < def; A++) {
-								Location<World> loc = small.copy().add(0, 0, A);
+								//Location<World> loc = small.copy().add(0, 0, A);
+								Location<World> loc = new Location<>(block.getExtent(), small.getX(), small.getY(), small.getZ() + A);
 								if (loc.getBlockType().equals(BlockTypes.AIR)) {
 									structure.add(loc);
 								}
@@ -151,7 +150,8 @@ public class Movement {
 							}
 							int def = large.getBlockX() - small.getBlockX();
 							for (int A = 0; A < def; A++) {
-								Location<World> loc = small.copy().add(A, 0, 0);
+								//Location<World> loc = small.copy().add(A, 0, 0);
+								Location<World> loc = new Location<>(block.getExtent(), small.getX() + A, small.getY(), small.getZ());
 								if (loc.getBlockType().equals(BlockTypes.AIR)) {
 									structure.add(loc);
 								}
@@ -160,6 +160,6 @@ public class Movement {
 					}
 				}
 			}
-		}
+		}*/
 	}
 }

@@ -168,5 +168,10 @@ public class AbstractShipsData extends DataHolder implements ShipsData {
 	public List<Location<World>> updateBasicStructure() {
 		return g_structure.updateStructure(this).getRaw();
 	}
+		
+	@Override
+	public void updateBasicStructureOvertime(Runnable runnable) {
+		g_structure.updateStructure(this, runnable);
+	}
 
 }

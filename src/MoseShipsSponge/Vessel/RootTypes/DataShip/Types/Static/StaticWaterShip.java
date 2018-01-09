@@ -8,13 +8,19 @@ import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Configs.BasicConfig;
 import MoseShipsSponge.Plugin.ShipsMain;
+import MoseShipsSponge.Utils.StaticShipTypeUtil;
 import MoseShipsSponge.Vessel.Common.OpenLoader.OpenRAWLoader;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 import MoseShipsSponge.Vessel.Common.Static.StaticShipType;
+import MoseShipsSponge.Vessel.RootTypes.DataShip.Loader.Types.Watership.Ships6WatershipLoader;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.WaterShip;
 
-public class StaticWaterShip implements StaticShipType {
+public class StaticWaterShip implements StaticShipType{
+	
+	public StaticWaterShip() {
+		StaticShipTypeUtil.inject(this);
+	}
 
 	@Override
 	public String getName() {
@@ -43,8 +49,8 @@ public class StaticWaterShip implements StaticShipType {
 
 	@Override
 	public OpenRAWLoader[] getLoaders() {
-		// TODO Auto-generated method stub
-		return null;
+		OpenRAWLoader[] loaders = {new Ships6WatershipLoader()};
+		return loaders;
 	}
 
 	@Override

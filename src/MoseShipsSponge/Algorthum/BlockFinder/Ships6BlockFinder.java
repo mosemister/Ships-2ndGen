@@ -14,6 +14,7 @@ import MoseShips.Bypasses.FinalBypass;
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Configs.BlockList.ListType;
 import MoseShipsSponge.Plugin.ShipsMain;
+import MoseShipsSponge.ShipBlock.Structure.ShipStructure;
 import MoseShipsSponge.Utils.LocationUtils;
 
 public class Ships6BlockFinder implements BasicBlockFinder {
@@ -21,7 +22,7 @@ public class Ships6BlockFinder implements BasicBlockFinder {
 	Task g_task;
 	
 	@Override
-	public List<Location<World>> getConnectedBlocksOvertime(int limit, Location<World> loc) {
+	public void getConnectedBlocksOvertime(int limit, Location<World> loc, ShipStructure structure, Runnable runnable) {
 		FinalBypass<Integer> count = new FinalBypass<>(0);
 		Direction[] faces = {
 				Direction.NORTH,
@@ -39,9 +40,13 @@ public class Ships6BlockFinder implements BasicBlockFinder {
 			@Override
 			public void run() {
 				if(count.get() == limit) {
+					structure.setStructure(ret);
+					runnable.run();
 					g_task.cancel();
 				}
 				if (process.isEmpty()) {
+					structure.setStructure(ret);
+					runnable.run();
 					g_task.cancel();
 				}
 				for (int A = 0; A < process.size(); A++) {
@@ -63,7 +68,6 @@ public class Ships6BlockFinder implements BasicBlockFinder {
 			}
 			
 		}).submit(ShipsMain.getPlugin());
-		return ret;
 	}
 	
 	@Override

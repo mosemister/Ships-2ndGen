@@ -70,6 +70,7 @@ public class ShipLicenceSign implements ShipSign {
 
 		StaticShipType type = opShipType.get();
 		if (!PermissionUtil.hasPermissionToMake(player, type)) {
+			player.sendMessage(ShipsMain.format("Missing permission", true));
 			return;
 		}
 
@@ -128,10 +129,16 @@ public class ShipLicenceSign implements ShipSign {
 
 	@Override
 	public void onShiftRightClick(Player player, Sign sign, LiveShip ship) {
-		List<Location<World>> structure = ship.updateBasicStructure(true);
-		ship.setBasicStructure(structure, sign.getLocation());
-		ship.save();
-		player.sendMessage(ShipsMain.format("Ship updated it's structure", false));
+		ship.updateBasicStructureOvertime(new Runnable() {
+
+			@Override
+			public void run() {
+				ship.setBasicStructure(ship.getBasicStructure(), sign.getLocation());
+				ship.save();
+				player.sendMessage(ShipsMain.format("Ship updated it's structure", false));
+			}
+			
+		});
 	}
 
 	@Override

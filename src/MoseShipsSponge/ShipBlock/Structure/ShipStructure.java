@@ -1,5 +1,6 @@
 package MoseShipsSponge.ShipBlock.Structure;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -151,12 +152,44 @@ public class ShipStructure implements Iterable<Location<World>> {
 		updateStructure(BlockFinderUtil.getFinder(finderType), data, trackLimit);
 		return this;
 	}
+	
+	public ShipStructure updateStructure(ShipsData data, Runnable runnable) {
+		Integer trackLimit = ShipsConfig.CONFIG.get(Integer.class,
+				ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		if (trackLimit == null) {
+			trackLimit = 5000;
+		}
+		updateStructure(BlockFinderUtil.getConfigSelected(), data, trackLimit, runnable);
+		return this;
+	}
+	
+	public ShipStructure updateStructure(Class<? extends BasicBlockFinder> finderType, ShipsData data, Runnable runnable) {
+		Integer trackLimit = ShipsConfig.CONFIG.get(Integer.class,
+				ShipsConfig.PATH_STRUCTURE_STRUCTURELIMITS_TRACKLIMIT);
+		if (trackLimit == null) {
+			trackLimit = 5000;
+		}
+		return updateStructure(finderType, data, trackLimit, runnable);
+	}
+	
+	public ShipStructure updateStructure(Class<? extends BasicBlockFinder> finderType, ShipsData data, int trackLimit, Runnable runnable) {
+		updateStructure(BlockFinderUtil.getFinder(finderType), data, trackLimit, runnable);
+		return this;
+	}
 
 	private List<Location<World>> updateStructure(BasicBlockFinder finder, ShipsData data, int trackLimit) {
 		return finder.getConnectedBlocks(trackLimit, data.getLocation());
 	}
+	
+	private void updateStructure(BasicBlockFinder finder, ShipsData data, int trackLimit, Runnable runnable) {
+		finder.getConnectedBlocksOvertime(trackLimit, data.getLocation(), this, runnable);
+	}
 
 	public ShipStructure setStructure(List<Location<World>> blocks) {
+		if(blocks == null) {
+			new IOException().printStackTrace();
+			return this;
+		}
 		g_structure = blocks;
 		return this;
 	}

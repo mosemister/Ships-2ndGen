@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -11,6 +13,7 @@ import org.spongepowered.api.world.World;
 import MoseShipsSponge.Configs.ShipsConfig;
 import MoseShipsSponge.ShipBlock.Signs.ShipLicenceSign;
 import MoseShipsSponge.ShipBlock.Signs.ShipSign;
+import MoseShipsSponge.ShipBlock.Structure.ShipStructure;
 import MoseShipsSponge.Utils.ShipSignUtil;
 
 public interface BasicBlockFinder {
@@ -18,9 +21,10 @@ public interface BasicBlockFinder {
 	static final List<BasicBlockFinder> LIST = new ArrayList<>();
 
 	public static final BasicBlockFinder SHIPS5 = new Ships5BlockFinder();
+	public static final BasicBlockFinder SHIPS6 = new Ships5BlockFinder();
 
 	public List<Location<World>> getConnectedBlocks(int limit, Location<World> loc);
-	public List<Location<World>> getConnectedBlocksOvertime(int limit, Location<World> loc);
+	public void getConnectedBlocksOvertime(int limit, Location<World> loc, ShipStructure structure, @Nullable Runnable runnable);
 
 	public String getName();
 
@@ -57,6 +61,7 @@ public interface BasicBlockFinder {
 	public static List<BasicBlockFinder> getFinders() {
 		List<BasicBlockFinder> finder = new ArrayList<>(LIST);
 		finder.add(SHIPS5);
+		finder.add(SHIPS6);
 		return finder;
 	}
 

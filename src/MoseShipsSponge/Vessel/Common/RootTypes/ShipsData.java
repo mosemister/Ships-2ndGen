@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import org.spongepowered.api.block.tileentity.Sign;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.entity.Entity;
@@ -61,5 +63,16 @@ public interface ShipsData {
 	public ShipsData setTeleportToLocation(Location<World> loc);
 
 	public List<Location<World>> updateBasicStructure();
+	
+	public void updateBasicStructureOvertime(@Nullable Runnable runnable);
+	
+	public default void updateBasicStructure(boolean overtime) {
+		if(overtime) {
+			updateBasicStructureOvertime(null);
+			return;
+		}
+		updateBasicStructure();
+		return;
+	}
 
 }

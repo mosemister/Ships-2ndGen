@@ -30,17 +30,17 @@ public abstract class AbstractWaterType extends DataVessel implements WaterType{
 
 	@Override
 	public Optional<FailedMovement> teleport(StoredMovement move) {
-		return Movement.teleport(this, move, BlockTypes.AIR.getDefaultState());
+		return Movement.teleport(this, move, BlockTypes.AIR.getDefaultState(), BlockTypes.WATER.getDefaultState(), BlockTypes.FLOWING_WATER.getDefaultState());
 	}
 	
 	@Override
 	public Optional<FailedMovement> rotateLeft(Cause cause) {
-		return Movement.rotateLeft(this, cause, BlockTypes.AIR.getDefaultState());
+		return Movement.rotateLeft(this, cause, BlockTypes.AIR.getDefaultState(), BlockTypes.WATER.getDefaultState(), BlockTypes.FLOWING_WATER.getDefaultState());
 	}
 	
 	@Override
 	public Optional<FailedMovement> rotateRight(Cause cause) {
-		return Movement.rotateRight(this, cause, BlockTypes.AIR.getDefaultState());
+		return Movement.rotateRight(this, cause, BlockTypes.AIR.getDefaultState(), BlockTypes.WATER.getDefaultState(), BlockTypes.FLOWING_WATER.getDefaultState());
 	}
 
 	@Override

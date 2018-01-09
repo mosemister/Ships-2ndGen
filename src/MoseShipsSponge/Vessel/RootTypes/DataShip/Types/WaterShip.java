@@ -10,7 +10,7 @@ import MoseShipsSponge.Utils.StaticShipTypeUtil;
 import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 import MoseShipsSponge.Vessel.Common.Static.StaticShipType;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.General.AbstractWaterType;
-import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticAirship;
+import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticWaterShip;
 
 public class WaterShip extends AbstractWaterType {
 
@@ -24,7 +24,7 @@ public class WaterShip extends AbstractWaterType {
 
 	@Override
 	public StaticShipType getStatic() {
-		return StaticShipTypeUtil.getType(StaticAirship.class).get();
+		return StaticShipTypeUtil.getType(StaticWaterShip.class).get();
 	}
 
 	@Override

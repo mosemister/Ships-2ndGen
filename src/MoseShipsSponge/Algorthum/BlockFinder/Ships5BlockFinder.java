@@ -10,6 +10,7 @@ import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Configs.BlockList.ListType;
+import MoseShipsSponge.ShipBlock.Structure.ShipStructure;
 
 public class Ships5BlockFinder implements BasicBlockFinder {
 
@@ -17,8 +18,10 @@ public class Ships5BlockFinder implements BasicBlockFinder {
 	List<Location<World>> BLOCKS;
 
 	@Override
-	public List<Location<World>> getConnectedBlocksOvertime(int limit, Location<World> loc) {
-		return getConnectedBlocks(limit, loc);
+	public void getConnectedBlocksOvertime(int limit, Location<World> loc, ShipStructure structure, Runnable runnable) {
+		List<Location<World>> list = getConnectedBlocks(limit, loc);
+		structure.setStructure(list);
+		runnable.run();
 	}
 	
 	@Override
