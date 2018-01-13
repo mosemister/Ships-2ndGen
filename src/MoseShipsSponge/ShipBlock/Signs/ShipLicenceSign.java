@@ -15,8 +15,6 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 import MoseShipsSponge.Configs.ShipsConfig;
 import MoseShipsSponge.Event.Create.ShipSignCreateEvent;

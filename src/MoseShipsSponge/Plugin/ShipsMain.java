@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.Cause;
@@ -26,10 +27,10 @@ import org.spongepowered.api.text.format.TextColors;
 import com.google.inject.Inject;
 
 import MoseShipsSponge.VersionChecking;
-import MoseShipsSponge.Commands.DebugCMD;
-import MoseShipsSponge.Commands.InfoCMD;
-import MoseShipsSponge.Commands.ShipsCMD;
-import MoseShipsSponge.Commands.SignCMD;
+import MoseShipsSponge.Commands.SCommands.ShipsBlockListCommand;
+import MoseShipsSponge.Commands.SCommands.ShipsDebugCommand;
+import MoseShipsSponge.Commands.SCommands.ShipsInfoCommand;
+import MoseShipsSponge.Commands.SCommands.ShipsSignCommand;
 import MoseShipsSponge.Configs.BlockList;
 import MoseShipsSponge.Listeners.ShipsListeners;
 import MoseShipsSponge.ShipBlock.Signs.ShipAltitudeSign;
@@ -48,9 +49,9 @@ public class ShipsMain {
 
 	public static final String ID = "ships";
 	public static final String NAME = "Ships";
-	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,3,0)";
+	public static final String VERSION = "6.0.0.0|PreAlpha-Sponge(Alpha 1,4,0)";
 	public static final int[] TESTED_API = {
-			6
+			7
 	};
 	public static final String[] TESTED_MC = {
 			"1.12.2" 
@@ -75,9 +76,18 @@ public class ShipsMain {
 	}
 
 	private void registerCMDs() {
-		new InfoCMD();
-		new DebugCMD();
-		new SignCMD();
+		CommandSpec cmd = CommandSpec.builder()
+				.child(ShipsBlockListCommand.createCommands(), "blocklist", "list", "bl")
+				.child(ShipsDebugCommand.createCommand(), "debug", "bug")
+				.child(ShipsInfoCommand.createCommands(), "info")
+				.child(ShipsSignCommand.createCommands(), "sign")
+				.build();
+		Sponge.getCommandManager().register(this, cmd, "ships");
+		
+		
+		//new InfoCMD();
+		//new DebugCMD();
+		//new SignCMD();
 		//new HelpCMD();
 		//new BlockListCMD();
 		//new AutoPilotCMD();
@@ -139,7 +149,7 @@ public class ShipsMain {
 	public void onEnable(GameStartingServerEvent event) {
 		PLUGIN = this;
 		GAME.getEventManager().registerListeners(this, new ShipsListeners());
-		GAME.getCommandManager().register(this, new ShipsCMD.Executer(), "ships", "vessels");
+		//GAME.getCommandManager().register(this, new ShipsCMD.Executer(), "ships", "vessels");
 		BlockList.BLOCK_LIST.reload();
 		registerShipTypes();
 		registerSigns();

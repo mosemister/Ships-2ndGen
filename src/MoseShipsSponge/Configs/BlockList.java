@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
@@ -62,6 +63,13 @@ public class BlockList extends BasicConfig {
 
 	public ListType resetMaterial(BlockState state, ListType type) {
 		return BLOCKS.replace(state, type);
+	}
+	
+	public ListType resetMaterial(BlockType type, ListType list) {
+		for(BlockState state : type.getAllBlockStates()) {
+			BLOCKS.replace(state, list);
+		}
+		return list;
 	}
 
 	public List<BlockState> getBlocks(ListType type) {
@@ -231,7 +239,19 @@ public class BlockList extends BasicConfig {
 		list.addAll(BlockTypes.DOUBLE_PLANT.getAllBlockStates());
 		return list;
 	}
+	
+	public ListType getList(BlockType type) {
+		Optional<Entry<BlockState, ListType>> opList = BLOCKS.entrySet().stream().filter(e -> e.getKey().getType().equals(type)).findFirst();
+		if(opList.isPresent()) {
+			return opList.get().getValue();
+		}
+		return ListType.NONE;
+	}
 
+	public ListType getList(BlockState state) {
+		return this.BLOCKS.get(state);
+	}
+	
 	public List<BlockState> getList(ListType type) {
 		List<BlockState> list = new ArrayList<>();
 		BLOCKS.entrySet().stream().filter(e -> e.getValue().equals(type)).forEach(e -> list.add(e.getKey()));

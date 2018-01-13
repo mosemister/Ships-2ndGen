@@ -103,7 +103,7 @@ public class SignCMD implements ShipsCMD.ShipsPlayerCMD {
 			return;
 		}
 		LiveShip ship = opShip.get();
-		if((ship.getOwner().isPresent() && ship.getOwner().get().equals(origin)) || origin.hasPermission(PermissionUtil.CHANGE_SHIP_OWNER)) {
+		if((ship.getOwner().isPresent() && ship.getOwner().get().equals(origin)) || origin.hasPermission(PermissionUtil.CHANGE_USER_CMD)) {
 			ship.setOwner(user);
 			ship.save();
 			origin.sendMessage(Text.builder("Ship transferred ownership to " + user.getName()).color(TextColors.AQUA).build());
