@@ -165,8 +165,8 @@ public class VesselLoader {
 												int X = Integer.parseInt(uuidArgs[1]);
 												int Y = Integer.parseInt(uuidArgs[2]);
 												int Z = Integer.parseInt(uuidArgs[3]);
-												Block block = vessel.getSign().getBlock().getRelative(X, Y, Z);
-												BlockVector vector = new BlockVector(vessel.getSign().getBlock(),
+												Block block = vessel.getLocation().getBlock().getRelative(X, Y, Z);
+												BlockVector vector = new BlockVector(vessel.getLocation().getBlock(),
 														block);
 												locationB.put(player2, vector);
 											}

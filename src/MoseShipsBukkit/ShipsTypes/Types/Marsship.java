@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Sign;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -211,10 +211,10 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 			config.set("ShipsData.Config.Block.Max", getMaxBlocks());
 			config.set("ShipsData.Config.Block.Min", getMinBlocks());
 			config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
-			Sign sign = vessel.getSign();
+			Block block = vessel.getLocation().getBlock();
 			Location loc = vessel.getTeleportLocation();
-			config.set("ShipsData.Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
-					+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+			config.set("ShipsData.Location.Sign", block.getX() + "," + block.getY() + ","
+					+ block.getZ() + "," + block.getWorld().getName());
 			config.set("ShipsData.Location.Teleport",
 					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
 			try {

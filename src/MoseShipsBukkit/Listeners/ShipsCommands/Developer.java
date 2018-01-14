@@ -13,6 +13,7 @@ import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.MaterialItem;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
 
+@SuppressWarnings("deprecation")
 public class Developer extends CommandLauncher {
 
 	public Developer() {
@@ -62,6 +63,7 @@ public class Developer extends CommandLauncher {
 		}
 	}
 
+	@Deprecated
 	public void displayMaterialsList(ConsoleCommandSender sender) {
 		sender.sendMessage("<Name> | <Value>");
 		MaterialsList list = MaterialsList.getMaterialsList();
@@ -71,6 +73,7 @@ public class Developer extends CommandLauncher {
 		sender.sendMessage("Total number of Materials in Materials List: " + list.getMaterials().size());
 	}
 
+	@Deprecated
 	public void displayRAMMaterialsList(ConsoleCommandSender sender) {
 		sender.sendMessage("<Name> | <Value>");
 		MaterialsList list = MaterialsList.getMaterialsList();

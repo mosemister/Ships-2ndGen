@@ -45,6 +45,7 @@ import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
 import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 
+@SuppressWarnings("deprecation")
 public class MovableVessel extends ProtectedVessel {
 
 	MovableVessel(Sign sign, OfflinePlayer owner, Location teleport) throws InvalidSignException {
@@ -105,7 +106,6 @@ public class MovableVessel extends ProtectedVessel {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	private boolean isBlocked(MovingBlock block) {
 		Location loc = block.getMovingTo();
 		Block block2 = loc.getBlock();
@@ -344,7 +344,6 @@ public class MovableVessel extends ProtectedVessel {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private void forceMove(MovementMethod move, List<MovingBlock> blocks) {
 		// remove all blocks (priority first)
 		for (int A = 0; A < blocks.size(); A++) {
@@ -493,7 +492,7 @@ public class MovableVessel extends ProtectedVessel {
 	 */
 
 	public boolean syncSafelyMoveTowardsLocation(Location moveTo, int speed, OfflinePlayer player) {
-		Location loc = this.getSign().getLocation();
+		Location loc = this.getLocation();
 		BlockFace face = this.getFacingDirection();
 		MovementMethod move = MovementMethod.getMovementDirection(face);
 		boolean value = false;

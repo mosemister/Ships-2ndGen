@@ -87,7 +87,7 @@ public class MovingBlock {
 			break;
 
 		case ROTATE_RIGHT: {
-			block2 = vessel.getSign().getBlock();
+			block2 = vessel.getLocation().getBlock();
 			int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
 			double symmetry = block2.getLocation().getBlockZ();
 
@@ -99,7 +99,7 @@ public class MovingBlock {
 			break;
 		}
 		case ROTATE_LEFT:
-			block2 = vessel.getSign().getBlock();
+			block2 = vessel.getLocation().getBlock();
 			int shift = block2.getLocation().getBlockX() - block2.getLocation().getBlockZ();
 			double symmetry = block2.getLocation().getBlockX();
 

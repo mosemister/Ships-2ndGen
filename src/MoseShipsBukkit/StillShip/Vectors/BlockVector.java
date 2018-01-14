@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
@@ -53,7 +52,7 @@ public class BlockVector {
 
 	@SuppressWarnings("deprecation")
 	public BlockVector(int x, int y, int z, BaseVessel vessel) {
-		Block block = vessel.getSign().getBlock();
+		Block block = vessel.getLocation().getBlock();
 		Block block2 = block.getRelative(x, y, z);
 		X = x;
 		Y = y;
@@ -101,9 +100,9 @@ public class BlockVector {
 
 	public static List<BlockVector> convert(BaseVessel vessel) {
 		List<BlockVector> vectors = new ArrayList<BlockVector>();
-		Sign sign = vessel.getSign();
+		Block block2 = vessel.getLocation().getBlock();
 		for (Block block : vessel.getStructure().getAllBlocks()) {
-			BlockVector vector = new BlockVector(sign.getBlock(), block);
+			BlockVector vector = new BlockVector(block2, block);
 			vectors.add(vector);
 		}
 		return vectors;

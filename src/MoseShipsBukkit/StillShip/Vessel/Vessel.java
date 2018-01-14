@@ -110,8 +110,9 @@ public class Vessel extends MovableVessel {
 	}
 
 	public static Vessel getVessel(Sign sign) {
+		Block block = sign.getBlock();
 		for (Vessel vessel : getVessels()) {
-			if (sign.equals(vessel.getSign())) {
+			if (block.equals(vessel.getLocation().getBlock())) {
 				return vessel;
 			}
 		}

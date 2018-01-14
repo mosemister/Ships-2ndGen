@@ -80,7 +80,7 @@ public class ShipsAutoRuns {
 			@Override
 			public void run() {
 				for (Vessel vessel : Vessel.getVessels()) {
-					Location loc = vessel.getSign().getLocation();
+					Location loc = vessel.getLocation();
 					AutoPilotData data = vessel.getAutoPilotData();
 					YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 					if (data != null) {

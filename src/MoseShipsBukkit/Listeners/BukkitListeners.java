@@ -60,8 +60,8 @@ public class BukkitListeners implements Listener {
 		for (Vessel vessel : Vessel.getVessels()) {
 			if (vessel.getEntities().contains(player)) {
 				Block block = player.getLocation().getBlock();
-				Sign sign = vessel.getSign();
-				BlockVector vector = new BlockVector(sign.getBlock(), block);
+				Block loc = vessel.getLocation().getBlock();
+				BlockVector vector = new BlockVector(loc, block);
 				File file = vessel.getFile();
 				YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 				List<String> list = config.getStringList("PlayerLocation");
@@ -89,7 +89,8 @@ public class BukkitListeners implements Listener {
 		for (Vessel vessel : Vessel.getVessels()) {
 			for (Entry<OfflinePlayer, BlockVector> entry : vessel.getBlockLocation().entrySet()) {
 				if (entry.getKey().equals(player)) {
-					Location loc = entry.getValue().getBlock(vessel.getSign().getBlock()).getLocation();
+					
+					Location loc = entry.getValue().getBlock(vessel.getLocation().getBlock()).getLocation();
 					player.teleport(loc);
 				}
 			}
@@ -449,7 +450,7 @@ public class BukkitListeners implements Listener {
 								vessel.syncMoveVessel(MovementMethod.getMovingDirection(vessel, face),
 										vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
 							} else {
-								if (Direction.getDirection(vessel.getSign().getWorld()).getDirection().equals(face)) {
+								if (Direction.getDirection(vessel.getLocation().getWorld()).getDirection().equals(face)) {
 									vessel.syncMoveVessel(MovementMethod.getMovingDirection(vessel, face),
 											vessel.getVesselType().getDefaultBoostSpeed(), event.getPlayer());
 								} else {

@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Sign;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -256,10 +256,10 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 			config.set("Config.Fuel.Fuels", fuels);
 			config.set("Config.Fuel.Consumption", TAKE);
 			config.set("Config.Speed.Engine", getDefaultSpeed());
-			Sign sign = vessel.getSign();
+			Block block = vessel.getLocation().getBlock();
 			Location loc = vessel.getTeleportLocation();
-			config.set("Location.Sign", sign.getLocation().getX() + "," + sign.getLocation().getY() + ","
-					+ sign.getLocation().getZ() + "," + sign.getLocation().getWorld().getName());
+			config.set("Location.Sign", block.getX() + "," + block.getY() + ","
+					+ block.getZ() + "," + block.getWorld().getName());
 			config.set("Location.Teleport",
 					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
 			try {

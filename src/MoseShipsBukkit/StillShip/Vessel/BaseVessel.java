@@ -113,7 +113,7 @@ public class BaseVessel extends CustomDataStore {
 	}
 
 	public Location getLocation() {
-		return getSign().getLocation();
+		return SIGN.getLocation();
 	}
 
 	public File getFile() {
@@ -181,7 +181,7 @@ public class BaseVessel extends CustomDataStore {
 	}
 
 	public void updateStructure() {
-		ShipsStructure structure = new ShipsStructure(Ships.getBaseStructure(getSign().getBlock()));
+		ShipsStructure structure = new ShipsStructure(Ships.getBaseStructure(getLocation().getBlock()));
 		setStructure(structure);
 		org.bukkit.material.Sign sign = (org.bukkit.material.Sign) getSign().getData();
 		BlockFace face;
