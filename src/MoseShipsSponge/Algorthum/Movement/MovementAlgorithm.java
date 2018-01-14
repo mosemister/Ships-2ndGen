@@ -2,6 +2,7 @@ package MoseShipsSponge.Algorthum.Movement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.spongepowered.api.entity.Entity;
@@ -17,7 +18,7 @@ public interface MovementAlgorithm {
 	public static Ships5Movement SHIPS5 = new Ships5Movement();
 	public static Ships6Movement SHIPS6 = new Ships6Movement();
 
-	public boolean move(LiveShip vessel, List<MovingBlock> blocks, final List<Entity> onBoard);
+	public boolean move(LiveShip vessel, List<MovingBlock> blocks, final Map<Entity, MovingBlock> onBoard);
 
 	public String getName();
 

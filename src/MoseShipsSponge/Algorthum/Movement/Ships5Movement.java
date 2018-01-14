@@ -2,6 +2,7 @@ package MoseShipsSponge.Algorthum.Movement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.entity.Entity;
@@ -17,7 +18,7 @@ import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 public class Ships5Movement implements MovementAlgorithm {
 
 	@Override
-	public boolean move(LiveShip type, List<MovingBlock> blocksUn, List<Entity> onBoard) {
+	public boolean move(LiveShip type, List<MovingBlock> blocksUn, Map<Entity, MovingBlock> onBoard) {
 		List<MovingBlock> blocks = MovingBlock.setPriorityOrder(blocksUn);
 		int waterLevel = 63;
 		if (type instanceof WaterType) {

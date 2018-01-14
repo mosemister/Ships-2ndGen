@@ -1,15 +1,20 @@
 package MoseShipsSponge.Movement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.util.Direction;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
+
+import com.flowpowered.math.vector.Vector3d;
 
 import MoseShipsSponge.Event.Transform.ShipAboutToMoveEvent;
 import MoseShipsSponge.Movement.Result.FailedMovement;
@@ -18,6 +23,7 @@ import MoseShipsSponge.Movement.StoredMovement.StoredMovement;
 import MoseShipsSponge.Movement.Type.CollideType;
 import MoseShipsSponge.Movement.Type.MovementType;
 import MoseShipsSponge.Movement.Type.RotateType;
+import MoseShipsSponge.Utils.LocationUtils;
 import MoseShipsSponge.Utils.MovementAlgorithmUtil;
 import MoseShipsSponge.Utils.Lists.MovingBlockList;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
@@ -102,16 +108,33 @@ public class Movement {
 			return opFail;
 		}
 		final List<Entity> entities = ship.getEntities();
-		if (MovementAlgorithmUtil.getConfig().move(ship, blocks, entities)) {
+		Map<Entity, MovingBlock> map = new HashMap<>();
+		entities.stream().forEach(e -> {
+			Location<World> copy = e.getLocation().getRelative(Direction.DOWN);
+			MovingBlock found = null;
+			for(MovingBlock block : blocks) {
+				Location<World> loc = block.getOrigin();
+				if(LocationUtils.blocksEqual(loc, copy)) {
+					found = block;
+					break;
+				}
+			}
+			map.put(e, found);
+		});
+		if (MovementAlgorithmUtil.getConfig().move(ship, blocks, map)) {
 			Location<World> origin = blocks.get(0).getOrigin();
 			Location<World> to = blocks.get(0).getMovingTo();
 			double X = to.getX() - origin.getX();
 			double Y = to.getY() - origin.getY();
-			double Z = to.getZ() - origin.getZ();
+			double Z = to.getZ() - origin.getZ();			
 			for (Entity entity : entities) {
+				Vector3d vec = entity.getRotation();
 				Location<World> eLoc = entity.getLocation().copy().add(X, Y, Z);
-				entity.setLocationAndRotation(eLoc, entity.getRotation());
-
+				double tX = eLoc.getX() + X;
+				double tY = eLoc.getY() + Y;
+				double tZ = eLoc.getZ() + Z;
+				Location<World> eTo = new Location<>(eLoc.getExtent(), tX, tY, tZ);
+				entity.setLocationAndRotation(eTo, vec);
 			}
 			return Optional.empty();
 		}

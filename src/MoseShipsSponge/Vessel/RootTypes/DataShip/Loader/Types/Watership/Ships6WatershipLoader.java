@@ -8,7 +8,6 @@ import MoseShipsSponge.Vessel.Common.OpenLoader.OpenLoader;
 import MoseShipsSponge.Vessel.Common.RootTypes.LiveShip;
 import MoseShipsSponge.Vessel.Common.RootTypes.ShipsData;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Loader.DataLoader;
-import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticAirship;
 import MoseShipsSponge.Vessel.RootTypes.DataShip.Types.Static.StaticWaterShip;
 
 public class Ships6WatershipLoader extends DataLoader {

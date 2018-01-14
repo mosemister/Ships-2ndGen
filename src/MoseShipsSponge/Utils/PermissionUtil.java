@@ -28,6 +28,9 @@ public class PermissionUtil {
 	public static final String LIST_SHIPS_CMD = "ships.cmd.debug.listships";
 	public static final String LOAD_SHIP_CMD = "ships.cmd.debug.loadship";
 	public static final String RELOAD_CMD = "ships.cmd.debug.reload";
+	public static final String TELEPORT_CMD = "ships.cmd.teleport.self";
+	public static final String TELEPORT_CMD_OTHER = "ships.cmd.teleport.other";
+	public static final String SET_TELEPORT_CMD = "ships.cmd.teleport.set";
 	
 
 	public static boolean hasPermissionToMake(Subject player, StaticShipType type) {
