@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -30,7 +28,7 @@ public abstract class VesselType {
 	static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
 
 	public abstract boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
-			@Nullable Player player);
+			 Player player);
 
 	public abstract boolean shouldFall(ProtectedVessel vessel);
 
@@ -111,7 +109,7 @@ public abstract class VesselType {
 	}
 
 	public boolean attemptToMove(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
-			@Nullable OfflinePlayer player) {
+			OfflinePlayer player) {
 		if (blocks.size() <= getMaxBlocks()) {
 			if (blocks.size() >= getMinBlocks()) {
 				return checkRequirements(vessel, move, blocks, player.getPlayer());

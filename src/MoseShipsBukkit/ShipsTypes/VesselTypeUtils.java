@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.StillShip.SpecialBlock;
+import MoseShipsBukkit.StillShip.LegecySpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class VesselTypeUtils {
@@ -77,7 +77,7 @@ public class VesselTypeUtils {
 	public boolean checkFuel(Map<Material, Byte> fuel, BaseVessel vessel, int take) {
 		if (fuel != null) {
 			int count = 0;
-			for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+			for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 				if (block.getBlock().getState() instanceof Furnace) {
 					Furnace bBlock = (Furnace) block.getBlock().getState();
 					FurnaceInventory inv = bBlock.getInventory();
@@ -116,7 +116,7 @@ public class VesselTypeUtils {
 	public int getWholeNumberFromSign(String line1, int lineReadNo, BaseVessel vessel, int take)
 			throws NumberFormatException {
 		int count = 0;
-		for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+		for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 			if (block.getBlock().getState() instanceof Sign) {
 				Sign sign = (Sign) block.getBlock().getState();
 				if (sign.getLine(0).equals(line1)) {
@@ -133,7 +133,7 @@ public class VesselTypeUtils {
 	public double getDoubleNumberFromSign(String line1, int lineReadNo, BaseVessel vessel, int take)
 			throws NumberFormatException {
 		double count = 0;
-		for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+		for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 			if (block.getBlock().getState() instanceof Sign) {
 				Sign sign = (Sign) block.getBlock().getState();
 				if (sign.getLine(0).equals(line1)) {
@@ -151,7 +151,7 @@ public class VesselTypeUtils {
 	public int getTotalAmountOfFuel(Map<Material, Byte> fuel, BaseVessel vessel) {
 		if (fuel != null) {
 			int count = 0;
-			for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+			for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 				if (block.getBlock().getState() instanceof Furnace) {
 					Furnace bBlock = (Furnace) block.getBlock().getState();
 					FurnaceInventory inv = bBlock.getInventory();
@@ -178,7 +178,7 @@ public class VesselTypeUtils {
 
 	public int getTotalAmountWholeOnSign(String line1, int readline, BaseVessel vessel) throws NumberFormatException {
 		int count = 0;
-		for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+		for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 			if (block.getBlock().getState() instanceof Sign) {
 				Sign sign = (Sign) block.getBlock().getState();
 				if (sign.getLine(0).equals(line1)) {
@@ -193,7 +193,7 @@ public class VesselTypeUtils {
 	public double getTotalAmountDoubleOnSign(String line1, int readline, BaseVessel vessel)
 			throws NumberFormatException {
 		double count = 0;
-		for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+		for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 			if (block.getBlock().getState() instanceof Sign) {
 				Sign sign = (Sign) block.getBlock().getState();
 				if (sign.getLine(0).equals(line1)) {
@@ -211,7 +211,7 @@ public class VesselTypeUtils {
 		if (fuel != null) {
 			int count = 0;
 			while (count != take) {
-				for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+				for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 					if (block.getBlock().getState() instanceof Furnace) {
 						Furnace bBlock = (Furnace) block.getBlock().getState();
 						FurnaceInventory inv = bBlock.getInventory();
@@ -267,7 +267,7 @@ public class VesselTypeUtils {
 			throws NumberFormatException {
 		int count = 0;
 		while (count != take) {
-			for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+			for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 				if (block.getBlock().getState() instanceof Sign) {
 					Sign sign = (Sign) block.getBlock().getState();
 					if (sign.getLine(0).equals(line1)) {
@@ -292,7 +292,7 @@ public class VesselTypeUtils {
 			throws NumberFormatException {
 		double count = 0;
 		while (count != take) {
-			for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+			for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 				if (block.getBlock().getState() instanceof Sign) {
 					Sign sign = (Sign) block.getBlock().getState();
 					if (sign.getLine(0).equals(line1)) {
@@ -320,7 +320,7 @@ public class VesselTypeUtils {
 				.sendMessage(Ships.runShipsMessage("Count: " + count + " Add: " + add + " Max: " + max, false));
 		while (count != add) {
 			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("count != " + add, false));
-			for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+			for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 				Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("special block found", false));
 				if (block.getBlock().getState() instanceof Sign) {
 					Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("block instanceof sign", false));
@@ -349,7 +349,7 @@ public class VesselTypeUtils {
 			throws NumberFormatException {
 		double count = 0;
 		while (count != add) {
-			for (SpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
+			for (LegecySpecialBlock block : vessel.getStructure().getSpecialBlocks()) {
 				if (block.getBlock().getState() instanceof Sign) {
 					Sign sign = (Sign) block.getBlock().getState();
 					if (sign.getLine(0).equals(line1)) {

@@ -1,46 +1,64 @@
 package MoseShipsBukkit.MovingShip;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+
+import MoseShipsBukkit.BlockHandler.BlockHandler;
+import MoseShipsBukkit.BlockHandler.BlockPriority;
 import MoseShipsBukkit.StillShip.ShipsStructure;
 
-public class MovingStructure extends ShipsStructure {
+public class MovingStructure implements ShipsStructure {
 
-	List<MovingBlock> PRI_BLOCKS = new ArrayList<MovingBlock>();
-	List<MovingBlock> SPECIAL_BLOCKS = new ArrayList<MovingBlock>();
-	List<MovingBlock> STANDARD_BLOCKS = new ArrayList<MovingBlock>();
-
-	public MovingStructure(List<MovingBlock> blocks) {
-		super(MovingBlock.convertToBlockArray(blocks));
-		for (MovingBlock block : blocks) {
-			if (this.getPriorityBlocks().contains(block.getBlock())) {
-				PRI_BLOCKS.add(block);
-			} else if (this.getStandardBlocks().contains(block.getBlock())) {
-				STANDARD_BLOCKS.add(block);
-			} else if (block.getSpecialBlock() != null) {
-				SPECIAL_BLOCKS.add(block);
-			}
-		}
+	List<MovingBlock> blocks = new ArrayList<>();
+	
+	public MovingStructure(Collection<MovingBlock> blocks) {
+		this.blocks.addAll(blocks);
 	}
 
-	public List<MovingBlock> getPriorityMovingBlocks() {
-		return PRI_BLOCKS;
+	@Override
+	public Set<BlockHandler> getPriorityBlocks() {
+		List<BlockHandler> list = new ArrayList<>();
+		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.ATTACHABLE)).forEach(b -> list.add(b.getHandle()));
+		return new HashSet<>(list);
 	}
 
-	public List<MovingBlock> getSpecialMovingBlocks() {
-		return SPECIAL_BLOCKS;
+	@Override
+	public Set<BlockHandler> getStandardBlocks() {
+		List<BlockHandler> list = new ArrayList<>();
+		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.DEFAULT)).filter(e -> (!e.getBlock().getType().equals(Material.AIR))).forEach(b -> list.add(b.getHandle()));
+		return new HashSet<>(list);
 	}
 
-	public List<MovingBlock> getStandardMovingBlocks() {
-		return STANDARD_BLOCKS;
+	@Override
+	public Set<BlockHandler> getSpecialBlocks() {
+		List<BlockHandler> list = new ArrayList<>();
+		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.SPECIAL)).forEach(b -> list.add(b.getHandle()));
+		return new HashSet<>(list);
 	}
 
-	public List<MovingBlock> getAllMovingBlocks() {
-		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		blocks.addAll(getPriorityMovingBlocks());
-		blocks.addAll(getSpecialMovingBlocks());
-		blocks.addAll(getStandardMovingBlocks());
-		return blocks;
+	@Override
+	public Set<BlockHandler> getAirBlocks() {
+		List<BlockHandler> list = new ArrayList<>();
+		blocks.stream().filter(e -> (!e.getBlock().getType().equals(Material.AIR))).forEach(b -> list.add(b.getHandle()));
+		return new HashSet<>(list);
+	}
+
+	@Override
+	public Set<BlockHandler> getInbetweenAir(Block block) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<BlockHandler> getAllBlocks() {
+		List<BlockHandler> list = new ArrayList<>();
+		blocks.stream().forEach(b -> list.add(b.getHandle()));
+		return new HashSet<>(list);
 	}
 }

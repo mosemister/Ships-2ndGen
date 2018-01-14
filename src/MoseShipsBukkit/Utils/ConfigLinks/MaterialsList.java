@@ -18,11 +18,10 @@ import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.Utils.MaterialAndData;
 import MoseShipsBukkit.Utils.MaterialItem;
 
-@SuppressWarnings("deprecation")
 public class MaterialsList {
 
-	List<MaterialItem> MATERIALIDLIST = new ArrayList<MaterialItem>();
-	List<MaterialItem> RAMIDLIST = new ArrayList<MaterialItem>();
+	List<Material> MATERIALIDLIST = new ArrayList<>();
+	List<Material> RAMIDLIST = new ArrayList<>();
 	static MaterialsList LIST;
 
 	public MaterialsList() {
@@ -300,73 +299,24 @@ public class MaterialsList {
 		}
 	}
 	
-	public boolean contains(Material material, MaterialData data, boolean materials) {
-		List<MaterialItem> list = MATERIALIDLIST;
+	public boolean contains(Material material, boolean materials) {
+		List<Material> list = MATERIALIDLIST;
 		if(!materials) {
 			list = RAMIDLIST;
 		}
-		for(MaterialItem item : list) {
-			if(item.getMaterial().equals(material)) {
-				if(item.getData() == data.getData()) {
-					return true;
-				}
+		for(Material item : list) {
+			if(item.equals(material)) {
+				return true;
 			}
 		}
 		return false;
 	}
 
-	public boolean contains(Material material, boolean materials) {
-		if (materials) {
-			for (MaterialItem item : MATERIALIDLIST) {
-				if (item.getMaterial().equals(material)) {
-					return true;
-				}
-			}
-		} else {
-			for (MaterialItem item : RAMIDLIST) {
-				if (item.getMaterial().equals(material)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	@Deprecated
-	public boolean contains(Material material, byte data, boolean materials) {
-		if (materials) {
-			for (MaterialItem item : MATERIALIDLIST) {
-				if (item.getMaterial().equals(material)) {
-					if (item.getData() != -1) {
-						if (item.getData() == data) {
-							return true;
-						}
-					} else {
-						return true;
-					}
-				}
-			}
-		} else {
-			for (MaterialItem item : RAMIDLIST) {
-				if (item.getMaterial().equals(material)) {
-					if (item.getData() != -1) {
-						if (item.getData() == data) {
-							return true;
-						}
-					} else {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	public List<MaterialItem> getMaterials() {
+	public List<Material> getMaterials() {
 		return MATERIALIDLIST;
 	}
 
-	public List<MaterialItem> getRamMaterials() {
+	public List<Material> getRamMaterials() {
 		return RAMIDLIST;
 	}
 

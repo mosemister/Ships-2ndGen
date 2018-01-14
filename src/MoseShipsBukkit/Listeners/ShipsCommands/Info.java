@@ -112,13 +112,13 @@ public class Info extends CommandLauncher {
 		List<ItemStack> getVesselTypeInfo(VesselType type) {
 			List<ItemStack> items = new ArrayList<ItemStack>();
 
-			ItemStack name = new ItemStack(Material.CAULDRON_ITEM, 1);
+			ItemStack name = new ItemStack(Material.CAULDRON, 1);
 			ItemMeta nameMeta = name.getItemMeta();
 			nameMeta.setDisplayName(type.getName());
 			name.setItemMeta(nameMeta);
 			items.add(name);
 
-			ItemStack speed = new ItemStack(Material.CAULDRON_ITEM, 1);
+			ItemStack speed = new ItemStack(Material.CAULDRON, 1);
 			ItemMeta speedMeta = speed.getItemMeta();
 			speedMeta.setDisplayName("Speeds");
 			speedMeta.setLore(
@@ -126,7 +126,7 @@ public class Info extends CommandLauncher {
 			speed.setItemMeta(speedMeta);
 			items.add(speed);
 
-			ItemStack blockLimits = new ItemStack(Material.CAULDRON_ITEM, 1);
+			ItemStack blockLimits = new ItemStack(Material.CAULDRON, 1);
 			ItemMeta blockLimitsMeta = blockLimits.getItemMeta();
 			blockLimitsMeta.setDisplayName("Block Limits");
 			blockLimitsMeta.setLore(Arrays.asList("Min: " + type.getMinBlocks(), "Max:" + type.getMaxBlocks()));
@@ -135,7 +135,7 @@ public class Info extends CommandLauncher {
 
 			if (type instanceof Fuel) {
 				Fuel type2 = (Fuel) type;
-				ItemStack fuelLimits = new ItemStack(Material.CAULDRON_ITEM, 1);
+				ItemStack fuelLimits = new ItemStack(Material.CAULDRON, 1);
 				ItemMeta fuelMeta = fuelLimits.getItemMeta();
 				fuelMeta.setDisplayName("Block Limits");
 				List<String> fuels = new ArrayList<String>();
@@ -148,7 +148,7 @@ public class Info extends CommandLauncher {
 			}
 			if (type instanceof RequiredMaterial) {
 				RequiredMaterial type2 = (RequiredMaterial) type;
-				ItemStack matLimits = new ItemStack(Material.CAULDRON_ITEM, 1);
+				ItemStack matLimits = new ItemStack(Material.CAULDRON, 1);
 				ItemMeta matMeta = matLimits.getItemMeta();
 				matMeta.setDisplayName("Required Blocks");
 				List<String> fuels = new ArrayList<String>();
@@ -162,7 +162,7 @@ public class Info extends CommandLauncher {
 					items.add(matLimits);
 				}
 
-				ItemStack perLimits = new ItemStack(Material.CAULDRON_ITEM, 1);
+				ItemStack perLimits = new ItemStack(Material.CAULDRON, 1);
 				ItemMeta perMeta = perLimits.getItemMeta();
 				perMeta.setDisplayName("Percent");
 				perMeta.setLore(Arrays.asList("Percent:" + type2.getRequiredPercent()));

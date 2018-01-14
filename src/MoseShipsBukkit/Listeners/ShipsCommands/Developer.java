@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import MoseShipsBukkit.Listeners.CommandLauncher;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.ShipsStructure;
-import MoseShipsBukkit.StillShip.SpecialBlock;
+import MoseShipsBukkit.StillShip.LegecySpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.MaterialItem;
 import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
@@ -117,7 +117,7 @@ public class Developer extends CommandLauncher {
 			if (vessel != null) {
 				ShipsStructure structure = vessel.getStructure();
 				sender.sendMessage("----Special Blocks----");
-				for (SpecialBlock sBlock : structure.getSpecialBlocks()) {
+				for (LegecySpecialBlock sBlock : structure.getSpecialBlocks()) {
 					Block block = sBlock.getBlock();
 					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", "
 							+ block.getZ() + ", " + block.getWorld().getName());

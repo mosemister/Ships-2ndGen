@@ -36,7 +36,7 @@ import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.StillShip.ShipsStructure;
-import MoseShipsBukkit.StillShip.SpecialBlock;
+import MoseShipsBukkit.StillShip.LegecySpecialBlock;
 import MoseShipsBukkit.Utils.BlockConverter;
 import MoseShipsBukkit.Utils.Multitasking;
 import MoseShipsBukkit.Utils.Multitasking.ListToObject;
@@ -68,7 +68,7 @@ public class MovableVessel extends ProtectedVessel {
 		for (Block block : getStructure().getAllBlocks()) {
 			Location loc2 = block.getRelative(x, y, z).getLocation();
 			loc2.setWorld(loc.getWorld());
-			SpecialBlock sBlock = SpecialBlock.getSpecialBlock(block);
+			LegecySpecialBlock sBlock = LegecySpecialBlock.getSpecialBlock(block);
 			if (sBlock == null) {
 				blocks.add(new MovingBlock(block, loc2));
 			} else {
@@ -168,7 +168,7 @@ public class MovableVessel extends ProtectedVessel {
 				blocks.add(block2);
 			}
 		}
-		for (SpecialBlock block : STRUCTURE.getSpecialBlocks()) {
+		for (LegecySpecialBlock block : STRUCTURE.getSpecialBlocks()) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
 				if (player != null) {
@@ -261,7 +261,7 @@ public class MovableVessel extends ProtectedVessel {
 	}
 
 	private void setInventory(MovingBlock block) {
-		SpecialBlock sBlock = block.getSpecialBlock();
+		LegecySpecialBlock sBlock = block.getSpecialBlock();
 		Block nBlock = block.getMovingTo().getBlock();
 		if (nBlock.getState() instanceof Furnace) {
 			Furnace furn = (Furnace) nBlock.getState();
@@ -597,7 +597,7 @@ public class MovableVessel extends ProtectedVessel {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			blocks.add(block2);
 		}
-		for (SpecialBlock block : STRUCTURE.getSpecialBlocks()) {
+		for (LegecySpecialBlock block : STRUCTURE.getSpecialBlocks()) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			blocks.add(block2);
 		}

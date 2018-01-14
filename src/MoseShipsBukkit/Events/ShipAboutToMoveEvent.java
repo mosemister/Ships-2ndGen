@@ -1,7 +1,5 @@
 package MoseShipsBukkit.Events;
 
-import javax.annotation.Nullable;
-
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -26,7 +24,7 @@ public class ShipAboutToMoveEvent extends Event implements Cancellable {
 	static HandlerList LIST = new HandlerList();
 
 	public ShipAboutToMoveEvent(MovementMethod method, int speed, MovableVessel vessel,
-			@Nullable OfflinePlayer player) {
+			OfflinePlayer player) {
 		METHOD = method;
 		SPEED = speed;
 		VESSEL = vessel;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import MoseShipsBukkit.BlockHandler.BlockHandler;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class BlockVector {
@@ -101,8 +102,8 @@ public class BlockVector {
 	public static List<BlockVector> convert(BaseVessel vessel) {
 		List<BlockVector> vectors = new ArrayList<BlockVector>();
 		Block block2 = vessel.getLocation().getBlock();
-		for (Block block : vessel.getStructure().getAllBlocks()) {
-			BlockVector vector = new BlockVector(block2, block);
+		for (BlockHandler block : vessel.getStructure().getAllBlocks()) {
+			BlockVector vector = new BlockVector(block2, block.getBlock());
 			vectors.add(vector);
 		}
 		return vectors;

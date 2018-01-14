@@ -1,7 +1,5 @@
 package MoseShipsBukkit.MovingShip;
 
-import javax.annotation.Nullable;
-
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -15,7 +13,7 @@ public class AutoPilotData {
 	int SPEED;
 	OfflinePlayer PLAYER;
 
-	public AutoPilotData(MovableVessel vessel, Location goTo, int speed, @Nullable OfflinePlayer player) {
+	public AutoPilotData(MovableVessel vessel, Location goTo, int speed, OfflinePlayer player) {
 		VESSEL = vessel;
 		GOTO = goTo;
 		SPEED = speed;

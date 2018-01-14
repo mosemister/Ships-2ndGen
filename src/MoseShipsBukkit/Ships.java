@@ -162,7 +162,6 @@ public class Ships extends JavaPlugin {
 
 	// This gets every block connected, It can be abnormal so the count attempts
 	// to control it. I called it Prototype for a good reason.
-	@SuppressWarnings("deprecation")
 	static void prototype3(Block block, BlockFace[] faces, int limit) {
 		// this /attempts/ to cap the variable scan at 500, I have seen that it
 		// caps the block limit at 500 but the method is still ran afterwards
@@ -175,7 +174,7 @@ public class Ships extends JavaPlugin {
 		// List<String> material = new ArrayList<String>();
 		for (BlockFace face : faces) {
 			Block block2 = block.getRelative(face);
-			if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))) {
+			if ((MaterialsList.getMaterialsList().contains(block2.getType(), true))) {
 				if (!STACK.contains(block2)) {
 					STACK.addBlock(block2);
 					prototype3(block2, faces, limit);
@@ -188,38 +187,6 @@ public class Ships extends JavaPlugin {
 		/*
 		 * if (material.size() != 0){ System.out.println(material); }
 		 */
-	}
-
-	@SuppressWarnings("deprecation")
-	static List<Block> prototype4(Block block, BlockFace[] faces, int limit) {
-		ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-		console.sendMessage("------------[Started]--------------");
-		BlockStack stack = new BlockStack();
-		int count = 0;
-		Block previousBlock = block;
-		Block viewingBlock = block;
-		while (count <= limit) {
-			console.sendMessage("Repeating: " + count);
-			count++;
-			for (BlockFace face : faces) {
-				Block block2 = viewingBlock.getRelative(face);
-				console.sendMessage(
-						"facing: " + face.name() + " | type: " + block2.getType() + " | data: " + block2.getData());
-				if ((MaterialsList.getMaterialsList().contains(block2.getType(), block2.getData(), true))) {
-					console.sendMessage("materials accepted it");
-					if (!stack.contains(block2)) {
-						console.sendMessage("block not contained");
-						stack.addBlock(block2);
-						viewingBlock = block2;
-						previousBlock = block;
-					}
-				}
-			}
-			if (previousBlock.equals(viewingBlock)) {
-				break;
-			}
-		}
-		return stack.getList();
 	}
 
 	// never know when it could be useful ;)

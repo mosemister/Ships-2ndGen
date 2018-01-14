@@ -1,7 +1,5 @@
 package MoseShipsBukkit.Events;
 
-import javax.annotation.Nullable;
-
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -41,7 +39,7 @@ public class ShipsSignCreation extends Event implements Cancellable {
 		return PLUGIN;
 	}
 
-	public @Nullable Player getPlayer() {
+	public Player getPlayer() {
 		return PLAYER;
 	}
 
@@ -49,7 +47,7 @@ public class ShipsSignCreation extends Event implements Cancellable {
 		return SIGNTEXT;
 	}
 
-	public @Nullable String[] getTypedText() {
+	public String[] getTypedText() {
 		return TEXT;
 	}
 

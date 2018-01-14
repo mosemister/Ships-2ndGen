@@ -9,49 +9,29 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.StillShip.SpecialBlock;
+import MoseShipsBukkit.BlockHandler.BlockHandler;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class MovingBlock {
 
-	Block BLOCK;
-	SpecialBlock SPE_BLOCK;
-	int ID;
-	byte DATA;
+	BlockHandler handler;
 	Location MOVETO;
 
-	@SuppressWarnings("deprecation")
 	public MovingBlock(Block block, BaseVessel vessel, MovementMethod move) {
-		BLOCK = block;
-		ID = block.getTypeId();
-		DATA = block.getData();
-		move(block, vessel, move);
+		this(BlockHandler.getBlockHandler(block), vessel, move);
 	}
 
-	@SuppressWarnings("deprecation")
-	public MovingBlock(SpecialBlock sBlock, BaseVessel vessel, MovementMethod move) {
-		Block block = sBlock.getBlock();
-		SPE_BLOCK = sBlock;
-		BLOCK = block;
-		ID = block.getTypeId();
-		DATA = block.getData();
-		move(block, vessel, move);
+	public MovingBlock(BlockHandler sBlock, BaseVessel vessel, MovementMethod move) {
+		handler = sBlock;
+		move(handler.getBlock(), vessel, move);
 	}
 
-	@SuppressWarnings("deprecation")
 	public MovingBlock(Block block, Location moveTo) {
-		BLOCK = block;
-		ID = block.getTypeId();
-		DATA = block.getData();
-		MOVETO = moveTo;
+		this(BlockHandler.getBlockHandler(block), moveTo);
 	}
 
-	@SuppressWarnings("deprecation")
-	public MovingBlock(SpecialBlock sBlock, Location moveTo) {
-		Block block = sBlock.getBlock();
-		BLOCK = block;
-		ID = block.getTypeId();
-		DATA = block.getData();
+	public MovingBlock(BlockHandler sBlock, Location moveTo) {
+		handler = sBlock;
 		MOVETO = moveTo;
 	}
 
@@ -138,16 +118,8 @@ public class MovingBlock {
 		}
 	}
 
-	public SpecialBlock getSpecialBlock() {
-		return SPE_BLOCK;
-	}
-
-	public int getId() {
-		return ID;
-	}
-
-	public byte getData() {
-		return DATA;
+	public BlockHandler getHandle() {
+		return handler;
 	}
 
 	public Location getMovingTo() {
@@ -155,7 +127,7 @@ public class MovingBlock {
 	}
 
 	public Block getBlock() {
-		return BLOCK;
+		return handler.getBlock();
 	}
 
 	public static List<Block> convertToBlockArray(List<MovingBlock> blocks) {
