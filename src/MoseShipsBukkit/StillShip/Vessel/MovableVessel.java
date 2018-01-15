@@ -26,23 +26,23 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.ships.block.structure.MovingStructure;
+import org.ships.block.structure.ShipsStructure;
+import org.ships.configuration.Config;
+import org.ships.configuration.MaterialsList;
+import org.ships.configuration.Messages;
+import org.ships.event.custom.ShipAboutToMoveEvent;
+import org.ships.event.custom.ShipFinishedMovingEvent;
+import org.ships.event.custom.ShipMovingEvent;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.Events.ShipAboutToMoveEvent;
-import MoseShipsBukkit.Events.ShipFinishedMovingEvent;
-import MoseShipsBukkit.Events.ShipMovingEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.ShipsStructure;
 import MoseShipsBukkit.StillShip.LegecySpecialBlock;
 import MoseShipsBukkit.Utils.BlockConverter;
 import MoseShipsBukkit.Utils.Multitasking;
 import MoseShipsBukkit.Utils.Multitasking.ListToObject;
-import MoseShipsBukkit.Utils.ConfigLinks.Config;
-import MoseShipsBukkit.Utils.ConfigLinks.MaterialsList;
-import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 
 @SuppressWarnings("deprecation")

@@ -18,14 +18,14 @@ import org.bukkit.block.Sign;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.ships.block.structure.MovingStructure;
+import org.ships.block.structure.ShipsStructure;
+import org.ships.event.custom.ShipsWriteEvent;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.AutoPilotData;
-import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
-import MoseShipsBukkit.StillShip.ShipsStructure;
 import MoseShipsBukkit.StillShip.Vectors.BlockVector;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 import MoseShipsBukkit.Utils.MoseUtils.CustomDataStore;

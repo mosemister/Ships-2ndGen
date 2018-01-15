@@ -2,113 +2,70 @@ package MoseShipsBukkit.ShipsTypes;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.ships.configuration.Messages;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
-import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public abstract class VesselType {
+public interface VesselType {
+	public static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
 
-	String TYPENAME;
-	int DEFAULTSPEED;
-	int DEFAULTBOOSTSPEED;
-	int MIN_BLOCKS;
-	int MAX_BLOCKS;
-	boolean ISAUTOPILOTALLOWED;
-	List<Material> MOVEIN;
-
-	static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
-
-	public abstract boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
 			 Player player);
 
-	public abstract boolean shouldFall(ProtectedVessel vessel);
+	public boolean shouldFall(ProtectedVessel vessel);
 
-	public abstract File getTypeFile();
+	public File getTypeFile();
+	
+	public void setTypeFile();
 
-	public abstract VesselType clone();
+	public VesselType clone();
 
-	public abstract void loadVesselFromFiveFile(ProtectedVessel vessel, File file);
+	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file);
 
-	public abstract void createConfig();
+	public void createConfig();
 
-	public abstract void loadDefault();
+	public void loadDefault();
 
-	public abstract void save(ProtectedVessel vessel);
+	public void save(ProtectedVessel vessel);
 
-	public VesselType(String name, List<Material> movein, int speed, int boost, boolean isAutoPilot) {
-		TYPENAME = name;
-		DEFAULTSPEED = speed;
-		ISAUTOPILOTALLOWED = isAutoPilot;
-	}
+	public String getName();
+	
+	public String setName();
 
-	public void cloneVesselTypeData(VesselType type) {
-		type.TYPENAME = this.TYPENAME;
-		type.DEFAULTSPEED = this.DEFAULTSPEED;
-		type.DEFAULTBOOSTSPEED = this.DEFAULTBOOSTSPEED;
-		type.MIN_BLOCKS = this.MIN_BLOCKS;
-		type.MAX_BLOCKS = this.MAX_BLOCKS;
-		type.ISAUTOPILOTALLOWED = this.ISAUTOPILOTALLOWED;
-		type.MOVEIN = this.MOVEIN;
-	}
+	public int getDefaultSpeed();
 
-	public String getName() {
-		return TYPENAME;
-	}
+	public Set<Material> getMoveInMaterials();
 
-	public int getDefaultSpeed() {
-		return DEFAULTSPEED;
-	}
+	public void setMoveInMaterials(Collection<Material> material);
 
-	public List<Material> getMoveInMaterials() {
-		return MOVEIN;
-	}
+	public void setDefaultSpeed(int A);
 
-	public void setMoveInMaterials(List<Material> material) {
-		MOVEIN = material;
-	}
+	public void setDefaultBoostSpeed(int A);
 
-	public void setDefaultSpeed(int A) {
-		DEFAULTSPEED = A;
-	}
+	public int getDefaultBoostSpeed();
 
-	public void setDefaultBoostSpeed(int A) {
-		DEFAULTBOOSTSPEED = A;
-	}
+	public boolean isAutoPilotAllowed();
 
-	public int getDefaultBoostSpeed() {
-		return DEFAULTBOOSTSPEED;
-	}
+	public int getMinBlocks();
 
-	public boolean isAutoPilotAllowed() {
-		return ISAUTOPILOTALLOWED;
-	}
+	public int getMaxBlocks();
 
-	public int getMinBlocks() {
-		return MIN_BLOCKS;
-	}
+	public void setMinBlocks(int A);
 
-	public int getMaxBlocks() {
-		return MAX_BLOCKS;
-	}
+	public void setMaxBlocks(int A);
 
-	public void setMinBlocks(int A) {
-		MIN_BLOCKS = A;
-	}
-
-	public void setMaxBlocks(int A) {
-		MAX_BLOCKS = A;
-	}
-
-	public boolean attemptToMove(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+	public default boolean attemptToMove(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
 			OfflinePlayer player) {
 		if (blocks.size() <= getMaxBlocks()) {
 			if (blocks.size() >= getMinBlocks()) {
@@ -138,7 +95,7 @@ public abstract class VesselType {
 	}
 
 	// adds custom vessels to Ships (newer method)
-	public void inject() {
+	public default void inject() {
 		CUSTOMVESSELS.add(this);
 	}
 

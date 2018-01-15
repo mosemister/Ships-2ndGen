@@ -3,23 +3,25 @@ package MoseShipsBukkit.ShipsTypes.Types;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.ships.block.structure.MovingStructure;
+import org.ships.configuration.Messages;
+import org.ships.event.custom.ShipsWriteEvent;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.MovingShip.MovingStructure;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
@@ -28,17 +30,15 @@ import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
-import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
-public class Airship extends VesselType implements Fuel, RequiredMaterial, ClassicVessel {
+public class Airship implements VesselType, Fuel, RequiredMaterial, ClassicVessel {
 
 	int PERCENT;
 	int TAKE;
 	List<Material> REQUIREDBLOCK;
-	Map<Material, Byte> FUEL;
+	List<Material> FUEL;
 
 	public Airship() {
-		super("Airship", new ArrayList<Material>(Arrays.asList(Material.AIR)), 2, 3, true);
 		loadDefault();
 	}
 
@@ -53,20 +53,20 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 	@Override
 	public boolean removeFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		boolean ret = util.takeFuel(FUEL, vessel, TAKE);
+		boolean ret = util.takeFuel(vessel, TAKE, FUEL);
 		return ret;
 	}
 
 	@Override
 	public int getTotalFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		int ret = util.getTotalAmountOfFuel(FUEL, vessel);
+		int ret = util.getTotalAmountOfFuel(vessel, FUEL);
 		return ret;
 	}
 
 	@Override
-	public Map<Material, Byte> getFuel() {
-		return FUEL;
+	public Set<Material> getFuel() {
+		return new HashSet<>(FUEL);
 	}
 
 	@Override
@@ -144,29 +144,6 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Airship) {
-			Airship airship = (Airship) type;
-			List<Integer> fuels = config.getIntegerList("ShipsData.Config.Fuel.Fuels");
-			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
-			int percent = config.getInt("ShipsData.Config.Block.Percent");
-			airship.PERCENT = percent;
-			airship.TAKE = consumption;
-			Map<Material, Byte> fuelsR = new HashMap<Material, Byte>();
-			for (int id : fuels) {
-				@SuppressWarnings("deprecation")
-				Material material = Material.getMaterial(id);
-				fuelsR.put(material, (byte) -1);
-			}
-			airship.FUEL = fuelsR;
-			vessel.setVesselType(airship);
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
-		VesselType type = vessel.getVesselType();
-		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		if (type instanceof Airship) {
 			Airship air = (Airship) type;
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
@@ -187,10 +164,34 @@ public class Airship extends VesselType implements Fuel, RequiredMaterial, Class
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
-	public VesselType clone() {
+	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
+		VesselType type = vessel.getVesselType();
+		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+		if (type instanceof Airship) {
+			Airship air = (Airship) type;
+			int percent = config.getInt("ShipsData.Config.Block.Percent");
+			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
+			List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
+			air.setMaxBlocks(config.getInt("ShipsData.Config.Block.Max"));
+			air.setMinBlocks(config.getInt("ShipsData.Config.Block.Min"));
+			air.PERCENT = percent;
+			air.TAKE = consumption;
+			if (fuelsL.size() != 0) {
+				List<Material> list = new ArrayList<>();
+				for (String fuelS : fuelsL) {
+					list.add(Material.getMaterial(fuelS));
+				}
+				air.FUEL = list;
+			}
+			vessel.setVesselType(air);
+		}
+	}
+
+	@Override
+	public Airship clone() {
 		Airship air = new Airship();
-		cloneVesselTypeData(air);
 		air.FUEL = this.FUEL;
 		air.PERCENT = this.PERCENT;
 		air.REQUIREDBLOCK = this.REQUIREDBLOCK;

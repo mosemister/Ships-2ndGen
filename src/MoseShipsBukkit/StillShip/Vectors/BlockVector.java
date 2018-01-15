@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.ships.block.blockhandler.BlockHandler;
 
-import MoseShipsBukkit.BlockHandler.BlockHandler;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class BlockVector {

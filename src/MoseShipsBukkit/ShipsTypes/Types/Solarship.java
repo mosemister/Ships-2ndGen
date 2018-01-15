@@ -15,9 +15,10 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.ships.configuration.Messages;
+import org.ships.event.custom.ShipsWriteEvent;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.Events.ShipsWriteEvent;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
 import MoseShipsBukkit.ShipsTypes.VesselType;
@@ -26,7 +27,6 @@ import MoseShipsBukkit.ShipsTypes.HookTypes.Cell;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
-import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 
 public class Solarship extends VesselType implements Cell {
 

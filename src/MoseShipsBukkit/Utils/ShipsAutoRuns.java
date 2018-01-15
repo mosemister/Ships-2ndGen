@@ -7,13 +7,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.ships.configuration.Config;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.AutoPilotData;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Cell;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
-import MoseShipsBukkit.Utils.ConfigLinks.Config;
 
 public class ShipsAutoRuns {
 

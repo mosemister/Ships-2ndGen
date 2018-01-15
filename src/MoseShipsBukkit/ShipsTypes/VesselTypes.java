@@ -9,8 +9,11 @@ import MoseShipsBukkit.ShipsTypes.Types.Watership;
 
 public enum VesselTypes {
 
-	AIRSHIP(new Airship()), MARSSHIP(new Marsship()), PLANE(new Plane()), SOLARSHIP(new Solarship()), SUBMARINE(
-			new Submarine()), WATERSHIP(new Watership());
+	AIRSHIP(new Airship()), 
+	MARSSHIP(new Marsship()), 
+	PLANE(new Plane()),
+	SUBMARINE(new Submarine()), 
+	WATERSHIP(new Watership());
 
 	VesselType VESSELTYPE;
 

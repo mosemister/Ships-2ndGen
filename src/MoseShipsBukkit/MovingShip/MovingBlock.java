@@ -7,9 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.ships.block.blockhandler.BlockHandler;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.BlockHandler.BlockHandler;
 import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 
 public class MovingBlock {

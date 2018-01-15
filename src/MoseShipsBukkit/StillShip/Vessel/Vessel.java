@@ -11,10 +11,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.ships.block.structure.ShipsStructure;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.ShipsStructure;
 import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 import MoseShipsBukkit.Utils.MoseUtils.LimitedList;

@@ -17,14 +17,14 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.ships.configuration.Config;
+import org.ships.event.custom.VesselAttemptToLoadEvent;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.Events.VesselAttemptToLoadEvent;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.StillShip.Vectors.BlockVector;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
-import MoseShipsBukkit.Utils.ConfigLinks.Config;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 
 public class VesselLoader {
