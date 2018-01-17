@@ -12,35 +12,11 @@ import org.ships.configuration.Config;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.AutoPilotData;
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.ShipsTypes.HookTypes.Cell;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class ShipsAutoRuns {
 
 	public static HashMap<Vessel, OfflinePlayer> EOTAUTORUN = new HashMap<Vessel, OfflinePlayer>();
-
-	@Deprecated
-	public static void SolorCell() {
-		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("SolarCell active", false));
-		final YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable() {
-
-			@Override
-			public void run() {
-				for (Vessel vessel : Vessel.getVessels()) {
-					Bukkit.getConsoleSender()
-							.sendMessage(Ships.runShipsMessage("vessel found" + vessel.getName(), false));
-					if (vessel.getVesselType() instanceof Cell) {
-						Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Vessel is cell type", false));
-						Cell plates = (Cell) vessel.getVesselType();
-						plates.addCellPower(vessel);
-					}
-				}
-
-			}
-
-		}, 0, config.getInt("Structure.Signs.Cell.repeat"));
-	}
 
 	public static void fallOutSky() {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable() {

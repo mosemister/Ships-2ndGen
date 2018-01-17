@@ -1,19 +1,21 @@
 package org.ships.event.commands.ShipsCommands;
 
+import java.util.Set;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.ships.block.blockhandler.BlockHandler;
+import org.ships.block.configuration.MovementInstruction;
 import org.ships.block.structure.ShipsStructure;
 import org.ships.configuration.MaterialsList;
 import org.ships.event.commands.CommandLauncher;
 
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.LegecySpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
-import MoseShipsBukkit.Utils.MaterialItem;
 
-@SuppressWarnings("deprecation")
 public class Developer extends CommandLauncher {
 
 	public Developer() {
@@ -63,24 +65,24 @@ public class Developer extends CommandLauncher {
 		}
 	}
 
-	@Deprecated
 	public void displayMaterialsList(ConsoleCommandSender sender) {
-		sender.sendMessage("<Name> | <Value>");
+		sender.sendMessage("<Name>");
 		MaterialsList list = MaterialsList.getMaterialsList();
-		for (MaterialItem item : list.getMaterials()) {
-			sender.sendMessage(item.getMaterial().name() + " | " + item.getData());
+		Set<Material> materials = list.getMaterials(MovementInstruction.MATERIAL);
+		for (Material item : materials) {
+			sender.sendMessage(item.name());
 		}
-		sender.sendMessage("Total number of Materials in Materials List: " + list.getMaterials().size());
+		sender.sendMessage("Total number of Materials in Materials List: " + materials.size());
 	}
 
-	@Deprecated
 	public void displayRAMMaterialsList(ConsoleCommandSender sender) {
-		sender.sendMessage("<Name> | <Value>");
+		sender.sendMessage("<Name>");
 		MaterialsList list = MaterialsList.getMaterialsList();
-		for (MaterialItem item : list.getRamMaterials()) {
-			sender.sendMessage(item.getMaterial() + " | " + item.getData());
+		Set<Material> materials = list.getMaterials(MovementInstruction.RAM);
+		for (Material item : materials) {
+			sender.sendMessage(item.name());
 		}
-		sender.sendMessage("Total number of Materials in RAM Materials List: " + list.getMaterials().size());
+		sender.sendMessage("Total number of Materials in RAM Materials List: " + materials.size());
 	}
 
 	public void displayLoadedVessels(ConsoleCommandSender sender) {
@@ -117,20 +119,20 @@ public class Developer extends CommandLauncher {
 			if (vessel != null) {
 				ShipsStructure structure = vessel.getStructure();
 				sender.sendMessage("----Special Blocks----");
-				for (LegecySpecialBlock sBlock : structure.getSpecialBlocks()) {
+				for (BlockHandler sBlock : structure.getSpecialBlocks()) {
 					Block block = sBlock.getBlock();
 					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", "
 							+ block.getZ() + ", " + block.getWorld().getName());
 				}
 				sender.sendMessage("----Priority blocks----");
-				for (Block block : structure.getPriorityBlocks()) {
-					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", "
-							+ block.getZ() + ", " + block.getWorld().getName());
+				for (BlockHandler block : structure.getPriorityBlocks()) {
+					sender.sendMessage(block.getBlock().getType().name() + ", " + block.getBlock().getX() + ", " + block.getBlock().getY() + ", "
+							+ block.getBlock().getZ() + ", " + block.getBlock().getWorld().getName());
 				}
 				sender.sendMessage("----Normal blocks----");
-				for (Block block : structure.getStandardBlocks()) {
-					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", "
-							+ block.getZ() + ", " + block.getWorld().getName());
+				for (BlockHandler block : structure.getStandardBlocks()) {
+					sender.sendMessage(block.getBlock().getType().name() + ", " + block.getBlock().getX() + ", " + block.getBlock().getY() + ", "
+							+ block.getBlock().getZ() + ", " + block.getBlock().getWorld().getName());
 				}
 			}
 		}

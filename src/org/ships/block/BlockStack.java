@@ -10,6 +10,8 @@ import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class BlockStack extends ArrayList<Block>{
 
+	private static final long serialVersionUID = 1L;
+
 	public boolean isVaild() {
 		for (Block block : this) {
 			if (block.getState() instanceof Sign) {

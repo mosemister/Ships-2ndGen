@@ -3,7 +3,6 @@ package MoseShipsBukkit.ShipsTypes;
 import MoseShipsBukkit.ShipsTypes.Types.Airship;
 import MoseShipsBukkit.ShipsTypes.Types.Marsship;
 import MoseShipsBukkit.ShipsTypes.Types.Plane;
-import MoseShipsBukkit.ShipsTypes.Types.Solarship;
 import MoseShipsBukkit.ShipsTypes.Types.Submarine;
 import MoseShipsBukkit.ShipsTypes.Types.Watership;
 

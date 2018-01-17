@@ -1,7 +1,9 @@
 package MoseShipsBukkit.MovingShip;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -128,6 +130,12 @@ public class MovingBlock {
 
 	public Block getBlock() {
 		return handler.getBlock();
+	}
+	
+	public static Set<MovingBlock> convert(BaseVessel vessel, MovementMethod method) {
+		List<MovingBlock> blocks = new ArrayList<>();
+		vessel.getStructure().getAllBlocks().stream().forEach(b -> blocks.add(new MovingBlock(b.getBlock(), vessel, method)));
+		return new HashSet<>(blocks);
 	}
 
 	public static List<Block> convertToBlockArray(List<MovingBlock> blocks) {

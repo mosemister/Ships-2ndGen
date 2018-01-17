@@ -3,11 +3,10 @@ package MoseShipsBukkit.ShipsTypes.Types;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -21,6 +20,7 @@ import org.ships.event.custom.ShipsWriteEvent;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
+import MoseShipsBukkit.ShipsTypes.AbstractShipType;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
@@ -30,50 +30,48 @@ import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
 import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 
-public class Submarine extends VesselType implements Fuel, RequiredMaterial, ClassicVessel {
+public class Submarine extends AbstractShipType implements Fuel, RequiredMaterial, ClassicVessel {
 
-	int PERCENT;
-	int TAKE;
-	List<Material> REQUIREDBLOCK;
-	Map<Material, Byte> FUEL;
+	protected float percent;
+	int takeAmount;
+	List<Material> requiredMaterials = new ArrayList<>();
+	List<Material> fuelTypes = new ArrayList<>();
 
 	public Submarine() {
-		super("Submarine",
-				new ArrayList<Material>(Arrays.asList(Material.WATER, Material.AIR, Material.STATIONARY_WATER)), 2, 3,
-				false);
+		super(new File(""), "Submarine", 200, 1000, 2, 3, false, Material.WATER, Material.AIR, Material.FLOWING_WATER);
 		loadDefault();
 	}
 
 	@Override
 	public boolean removeFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		boolean ret = util.takeFuel(FUEL, vessel, TAKE);
+		boolean ret = util.takeFuel(vessel, getFuelConsumption(), getFuelTypes());
 		return ret;
 	}
 
 	@Override
 	public int getTotalFuel(BaseVessel vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		int ret = util.getTotalAmountOfFuel(FUEL, vessel);
+		int ret = util.getTotalAmountOfFuel(vessel, getFuelTypes());
 		return ret;
 	}
 
 	@Override
-	public Map<Material, Byte> getFuel() {
-		return FUEL;
+	public Set<Material> getFuelTypes() {
+		return new HashSet<>(fuelTypes);
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())) {
-			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())) {
+			if (util.isPercentInMovingFrom(blocks, getRequiredMaterials(), getRequiredPercent())) {
 				if (move.equals(MovementMethod.MOVE_DOWN)) {
 					return true;
 				} else {
-					if (util.checkFuel(getFuel(), vessel, TAKE)) {
-						util.takeFuel(getFuel(), vessel, TAKE);
+					if (util.checkFuel(vessel, getFuelConsumption(), getFuelTypes())) {
+						util.takeFuel(vessel, getFuelConsumption(), getFuelTypes());
 						return true;
 					} else {
 						if (player != null) {
@@ -87,12 +85,12 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 			} else {
 				if (player != null) {
 					List<String> materials = new ArrayList<String>();
-					for (Material material : getRequiredMaterial()) {
+					for (Material material : getRequiredMaterials()) {
 						materials.add(material.name());
 					}
 					if (Messages.isEnabled()) {
 						player.sendMessage(Ships.runShipsMessage(
-								Messages.getOffBy(util.getOffByPercent(blocks, getRequiredMaterial(), getRequiredPercent()),
+								Messages.getOffBy(util.getOffByPercent(blocks, getRequiredMaterials(), getRequiredPercent()),
 										"(of either) " + materials.toString()),
 								true));
 					}
@@ -111,7 +109,7 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public boolean shouldFall(ProtectedVessel vessel) {
+	public boolean shouldFall(MovableVessel vessel) {
 		return false;
 	}
 
@@ -122,13 +120,12 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public VesselType clone() {
+	public VesselType createClone() {
 		Submarine sub = new Submarine();
-		cloneVesselTypeData(sub);
-		sub.FUEL = this.FUEL;
-		sub.PERCENT = this.PERCENT;
-		sub.REQUIREDBLOCK = this.REQUIREDBLOCK;
-		sub.TAKE = this.TAKE;
+		sub.fuelTypes = this.fuelTypes;
+		sub.percent = this.percent;
+		sub.requiredMaterials = this.requiredMaterials;
+		sub.takeAmount = this.takeAmount;
 		return sub;
 	}
 
@@ -137,24 +134,24 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Submarine) {
-			Submarine submarine = (Submarine) type;
-			List<Integer> fuels = config.getIntegerList("ShipsData.Config.Fuel.Fuels");
-			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
+			Submarine sub = (Submarine) type;
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
-			submarine.PERCENT = percent;
-			submarine.TAKE = consumption;
-			HashMap<Material, Byte> fuelsR = new HashMap<Material, Byte>();
-			for (int id : fuels) {
-				@SuppressWarnings("deprecation")
-				Material material = Material.getMaterial(id);
-				fuelsR.put(material, (byte) -1);
-			}
-			submarine.FUEL = fuelsR;
-			vessel.setVesselType(submarine);
+			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
+			//List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
+			sub.setRequiredPercent(percent);
+			sub.setFuelConsumption(consumption);
+			/*if (fuelsL.size() != 0) {
+				Map<Material, Byte> fuels = new HashMap<Material, Byte>();
+				for (String fuelS : fuelsL) {
+					String[] fuelM = fuelS.split(",");
+					fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
+				}
+				sub.FUEL = fuels;
+			}*/
+			vessel.setVesselType(sub);
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
 		VesselType type = vessel.getVesselType();
@@ -164,15 +161,13 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 			int percent = config.getInt("ShipsData.Config.Block.Percent");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
 			List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
-			sub.PERCENT = percent;
-			sub.TAKE = consumption;
+			sub.setRequiredPercent(percent);
+			sub.setFuelConsumption(consumption);
 			if (fuelsL.size() != 0) {
-				Map<Material, Byte> fuels = new HashMap<Material, Byte>();
 				for (String fuelS : fuelsL) {
-					String[] fuelM = fuelS.split(",");
-					fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
+					Material material = Material.getMaterial(fuelS);
+					this.fuelTypes.add(material);
 				}
-				sub.FUEL = fuels;
 			}
 			vessel.setVesselType(sub);
 		}
@@ -202,7 +197,6 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void loadDefault() {
 		File file = getTypeFile();
@@ -212,49 +206,46 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		this.setDefaultSpeed(config.getInt("Speed.Engine"));
 		this.setDefaultBoostSpeed(config.getInt("Speed.Boost"));
-		this.PERCENT = config.getInt("Blocks.requiredPercent");
+		this.setRequiredPercent((float)config.getDouble("Blocks.requiredPercent"));
 		this.setMaxBlocks(config.getInt("Blocks.Max"));
 		this.setMinBlocks(config.getInt("Blocks.Min"));
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for (int id : config.getIntegerList("Blocks.requiredBlocks")) {
+		for (String id : config.getStringList("Blocks.requiredBlocks")) {
 			Material material = Material.getMaterial(id);
 			requiredmaterials.add(material);
 		}
 		int take = config.getInt("Fuel.TakeAmount");
-		String[] fuel = config.getString("Fuel.Fuels").split(",");
-		Material material = Material.getMaterial(Integer.parseInt(fuel[0].replace("[", "")));
-		byte data = Byte.parseByte(fuel[1].replace("]", ""));
-		Map<Material, Byte> fuels = new HashMap<Material, Byte>();
-		fuels.put(material, data);
-		this.FUEL = fuels;
-		this.REQUIREDBLOCK = requiredmaterials;
-		this.TAKE = take;
+		List<String> fuel = config.getStringList("Fuel.Fuels");
+		List<Material> fuels = new ArrayList<>();
+		fuel.stream().forEach(f -> fuels.add(Material.getMaterial(f)));
+		this.setFuelTypes(fuels);
+		this.setRequiredMaterials(requiredmaterials);
+		this.setFuelConsumption(take);
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.WATER);
-		moveIn.add(Material.STATIONARY_WATER);
+		moveIn.add(Material.FLOWING_WATER);
 		this.setMoveInMaterials(moveIn);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		ConfigurationSection config = configuration.createSection("ShipsData");
 		List<String> fuels = new ArrayList<String>();
-		for (Entry<Material, Byte> fuels2 : this.getFuel().entrySet()) {
-			fuels.add(fuels2.getKey().getId() + "," + fuels2.getValue());
+		for (Material fuels2 : this.getFuelTypes()) {
+			fuels.add(fuels2.name());
 		}
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Submarine", getRequiredPercent(), PERCENT, getMaxBlocks(),
-				getMinBlocks(), getDefaultSpeed(), fuels, TAKE);
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Submarine", getRequiredPercent(), getRequiredPercent(), getMaxBlocks(),
+				getMinBlocks(), getDefaultSpeed(), fuels, getFuelConsumption());
 		if (!event.isCancelled()) {
 			config.set("Player.Name", vessel.getOwner().getUniqueId().toString());
 			config.set("Type", "Submarine");
-			config.set("Config.Block.Percent", PERCENT);
+			config.set("Config.Block.Percent", getRequiredPercent());
 			config.set("Config.Block.Max", getMaxBlocks());
 			config.set("Config.Block.Min", getMinBlocks());
 			config.set("Config.Fuel.Fuels", fuels);
-			config.set("Config.Fuel.Consumption", TAKE);
+			config.set("Config.Fuel.Consumption", getFuelConsumption());
 			config.set("Config.Speed.Engine", getDefaultSpeed());
 			Block block = vessel.getLocation().getBlock();
 			Location loc = vessel.getTeleportLocation();
@@ -271,13 +262,40 @@ public class Submarine extends VesselType implements Fuel, RequiredMaterial, Cla
 	}
 
 	@Override
-	public List<Material> getRequiredMaterial() {
-		return REQUIREDBLOCK;
+	public Set<Material> getRequiredMaterials() {
+		return new HashSet<>(requiredMaterials);
 	}
 
 	@Override
-	public int getRequiredPercent() {
-		return PERCENT;
+	public float getRequiredPercent() {
+		return percent;
+	}
+
+	@Override
+	public void setRequiredMaterials(Collection<Material> collection) {
+		requiredMaterials.clear();
+		requiredMaterials.addAll(collection);
+	}
+
+	@Override
+	public void setRequiredPercent(float percent) {
+		this.percent = percent;
+	}
+
+	@Override
+	public int getFuelConsumption() {
+		return this.takeAmount;
+	}
+
+	@Override
+	public void setFuelTypes(Collection<Material> fuels) {
+		this.fuelTypes.clear();
+		this.fuelTypes.addAll(fuels);
+	}
+
+	@Override
+	public void setFuelConsumption(int consumption) {
+		this.takeAmount = consumption;
 	}
 
 }

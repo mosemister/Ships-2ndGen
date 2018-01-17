@@ -3,8 +3,10 @@ package MoseShipsBukkit.ShipsTypes.Types;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,6 +20,7 @@ import org.ships.event.custom.ShipsWriteEvent;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
+import MoseShipsBukkit.ShipsTypes.AbstractShipType;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
@@ -25,19 +28,18 @@ import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
 import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 
-public class Watership extends VesselType implements RequiredMaterial, ClassicVessel {
+public class Watership extends AbstractShipType implements RequiredMaterial, ClassicVessel {
 
-	int PERCENT;
-	List<Material> MATERIALS;
+	protected float percent;
+	protected List<Material> requiredMaterials;
 
 	public Watership() {
-		super("Ship", new ArrayList<Material>(Arrays.asList(Material.WATER, Material.AIR, Material.STATIONARY_WATER)),
-				2, 3, false);
+		super(new File("plugins/Ships/Configuration/VesselTypes/WaterShip.yml"), "Ship", 10, 2600, 2, 3, false, Material.AIR, Material.WATER, Material.FLOWING_WATER);
 		loadDefault();
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			Player player) {
 		int waterLevel = vessel.getWaterLevel(blocks);
 		if(waterLevel == 0) {
@@ -55,13 +57,13 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 		}
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())) {
-			if (util.isPercentInMovingFrom(blocks, getRequiredMaterial(), getRequiredPercent())) {
+			if (util.isPercentInMovingFrom(blocks, getRequiredMaterials(), getRequiredPercent())) {
 				return true;
 			} else {
 				if (player != null) {
 					if (Messages.isEnabled()) {
 						player.sendMessage(
-								Ships.runShipsMessage(Messages.getNeeds(getRequiredMaterial().get(0).name()), true));
+								Ships.runShipsMessage(Messages.getNeeds(requiredMaterials.get(0).name()), true));
 					}
 				}
 				return false;
@@ -77,20 +79,15 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	}
 
 	@Override
-	public boolean shouldFall(ProtectedVessel vessel) {
+	public boolean shouldFall(MovableVessel vessel) {
 		return false;
 	}
 
 	@Override
-	public File getTypeFile() {
-		File file = new File("plugins/Ships/Configuration/VesselTypes/WaterShip.yml");
-		return file;
-	}
-
-	@Override
-	public VesselType clone() {
+	public VesselType createClone() {
 		Watership ship = new Watership();
-
+		ship.percent = this.percent;
+		ship.requiredMaterials = this.requiredMaterials;
 		return ship;
 	}
 
@@ -101,7 +98,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 		if (type instanceof Watership) {
 			Watership ship = (Watership) type;
 			int percent = config.getInt("ShipsData.Block.Percent");
-			ship.PERCENT = percent;
+			ship.percent = percent;
 			vessel.setVesselType(ship);
 		}
 	}
@@ -113,7 +110,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 		if (type instanceof Watership) {
 			Watership ship = (Watership) type;
 			int percent = config.getInt("ShipsData.Block.Percent");
-			ship.PERCENT = percent;
+			ship.percent = percent;
 			vessel.setVesselType(ship);
 		}
 	}
@@ -137,7 +134,6 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void loadDefault() {
 		File file = getTypeFile();
@@ -147,17 +143,17 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		this.setDefaultSpeed(config.getInt("Speed.Engine"));
 		this.setDefaultBoostSpeed(config.getInt("Speed.Boost"));
-		this.PERCENT = config.getInt("Blocks.requiredPercent");
+		this.percent = config.getInt("Blocks.requiredPercent");
 		this.setMaxBlocks(config.getInt("Blocks.Max"));
 		this.setMinBlocks(config.getInt("Blocks.Min"));
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for (int id : config.getIntegerList("Blocks.requiredBlocks")) {
+		for (String id : config.getStringList("Blocks.requiredBlocks")) {
 			Material material = Material.getMaterial(id);
 			requiredmaterials.add(material);
 		}
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.WATER);
-		moveIn.add(Material.STATIONARY_WATER);
+		moveIn.add(Material.FLOWING_WATER);
 		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
 	}
@@ -166,7 +162,7 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Ship", PERCENT, getMaxBlocks(), getMinBlocks(),
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Ship", percent, getMaxBlocks(), getMinBlocks(),
 				getDefaultSpeed());
 		if (!event.isCancelled()) {
 			ConfigurationSection config = configuration.createSection("ShipsData");
@@ -191,13 +187,24 @@ public class Watership extends VesselType implements RequiredMaterial, ClassicVe
 	}
 
 	@Override
-	public List<Material> getRequiredMaterial() {
-		return MATERIALS;
+	public Set<Material> getRequiredMaterials() {
+		return new HashSet<>(requiredMaterials);
 	}
 
 	@Override
-	public int getRequiredPercent() {
-		return PERCENT;
+	public float getRequiredPercent() {
+		return percent;
+	}
+
+	@Override
+	public void setRequiredMaterials(Collection<Material> collection) {
+		requiredMaterials.clear();
+		requiredMaterials.addAll(collection);
+	}
+
+	@Override
+	public void setRequiredPercent(float percent) {
+		this.percent = percent;
 	}
 
 }

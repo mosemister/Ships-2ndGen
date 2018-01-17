@@ -1,6 +1,7 @@
 package MoseShipsBukkit.ShipsTypes.HookTypes;
 
-import java.util.Map;
+import java.util.Collection;
+import java.util.Set;
 
 import org.bukkit.Material;
 
@@ -24,8 +25,24 @@ public interface Fuel {
 	public int getTotalFuel(BaseVessel vessel);
 
 	/**
-	 * gets the fuel type
+	 * gets the fuel consumption
 	 */
-	public Map<Material, Byte> getFuel();
+	public int getFuelConsumption();
+	
+	/**
+	 * gets the accepted fuel types
+	 */
+	public Set<Material> getFuelTypes();
+	
+	
+	/**
+	 * sets the accepted fuel types
+	 */
+	public void setFuelTypes(Collection<Material> fuels);
+	
+	/**
+	 * sets the fuel consumption amount
+	 */
+	public void setFuelConsumption(int consumption);
 
 }

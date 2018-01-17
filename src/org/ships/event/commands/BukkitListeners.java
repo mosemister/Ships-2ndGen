@@ -249,7 +249,7 @@ public class BukkitListeners implements Listener {
 			}
 			VesselType type = VesselType.getTypeByName(event.getLine(1));
 			if (type != null) {
-				type = type.clone();
+				type = type.createClone();
 				if ((event.getPlayer().hasPermission("ships." + type.getName() + ".make"))
 						|| (event.getPlayer().hasPermission("ships.*.make"))
 						|| (event.getPlayer().hasPermission("ships.*"))) {

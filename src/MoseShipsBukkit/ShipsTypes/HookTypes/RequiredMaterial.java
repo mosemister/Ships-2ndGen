@@ -1,6 +1,7 @@
 package MoseShipsBukkit.ShipsTypes.HookTypes;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Set;
 
 import org.bukkit.Material;
 
@@ -10,11 +11,21 @@ public interface RequiredMaterial {
 	 * gets the requiredBlock
 	 */
 
-	public List<Material> getRequiredMaterial();
+	public Set<Material> getRequiredMaterials();
 
 	/**
 	 * gets the required percent needed
 	 */
-	public int getRequiredPercent();
+	public float getRequiredPercent();
+	
+	/**
+	 * sets the required blocks
+	 */
+	public void setRequiredMaterials(Collection<Material> collection);
+	
+	/**
+	 * sets the required percent needed
+	 */
+	public void setRequiredPercent(float percent);
 
 }

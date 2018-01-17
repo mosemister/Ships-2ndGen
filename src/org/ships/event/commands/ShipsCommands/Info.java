@@ -3,7 +3,7 @@ package org.ships.event.commands.ShipsCommands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -139,8 +139,8 @@ public class Info extends CommandLauncher {
 				ItemMeta fuelMeta = fuelLimits.getItemMeta();
 				fuelMeta.setDisplayName("Block Limits");
 				List<String> fuels = new ArrayList<String>();
-				for (Entry<Material, Byte> entry : type2.getFuel().entrySet()) {
-					fuels.add(entry.getKey().name() + " : " + entry.getValue());
+				for (Material material : type2.getFuelTypes()) {
+					fuels.add(material.name().toLowerCase());
 				}
 				fuelMeta.setLore(fuels);
 				fuelLimits.setItemMeta(fuelMeta);
@@ -152,7 +152,7 @@ public class Info extends CommandLauncher {
 				ItemMeta matMeta = matLimits.getItemMeta();
 				matMeta.setDisplayName("Required Blocks");
 				List<String> fuels = new ArrayList<String>();
-				List<Material> materials = type2.getRequiredMaterial();
+				Set<Material> materials = type2.getRequiredMaterials();
 				if (materials != null) {
 					for (Material material : materials) {
 						fuels.add(material.name());

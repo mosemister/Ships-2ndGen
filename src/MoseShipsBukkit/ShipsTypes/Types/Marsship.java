@@ -3,10 +3,10 @@ package MoseShipsBukkit.ShipsTypes.Types;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-
-import javax.annotation.Nullable;
+import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -19,6 +19,7 @@ import org.ships.event.custom.ShipsWriteEvent;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
+import MoseShipsBukkit.ShipsTypes.AbstractShipType;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
@@ -26,33 +27,44 @@ import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
 import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
 import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 
-public class Marsship extends VesselType implements RequiredMaterial, ClassicVessel {
+public class Marsship extends AbstractShipType implements RequiredMaterial, ClassicVessel {
 
-	int PERCENT;
-	List<Material> REQUIREDBLOCKS = new ArrayList<Material>();
+	protected float percent;
+	protected List<Material> requiredMaterials = new ArrayList<Material>();
 
 	public Marsship() {
-		super("Marsship", new ArrayList<Material>(Arrays.asList(Material.AIR)), 2, 3, true);
+		super(new File("plugins/Ships/Configuration/VesselTypes/Marsship.yml"), "Marsship", 2, 3, 100, 2500, true, Material.AIR);
+	}
+	
+	@Override
+	public Set<Material> getRequiredMaterials() {
+		return new HashSet<>(requiredMaterials);
+	}
+	
+	@Override
+	public void setRequiredMaterials(Collection<Material> collection) {
+		this.requiredMaterials.clear();
+		this.requiredMaterials.addAll(collection);
 	}
 
 	@Override
-	public List<Material> getRequiredMaterial() {
-		return REQUIREDBLOCKS;
+	public float getRequiredPercent() {
+		return percent;
+	}
+	
+	@Override
+	public void setRequiredPercent(float percent) {
+		this.percent = percent;
 	}
 
 	@Override
-	public int getRequiredPercent() {
-		return PERCENT;
-	}
-
-	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
-			@Nullable Player player) {
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
+			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (blocks.size() >= getMinBlocks()) {
 			if (blocks.size() <= getMaxBlocks()) {
 				if (util.isMovingInto(blocks, getMoveInMaterials())) {
-					if (util.isPercentInMovingFrom(blocks, REQUIREDBLOCKS, PERCENT)) {
+					if (util.isPercentInMovingFrom(blocks, getRequiredMaterials(), getRequiredPercent())) {
 						if (move.equals(MovementMethod.MOVE_DOWN)) {
 							return true;
 						} else {
@@ -70,13 +82,13 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 						}
 					} else {
 						List<String> materials = new ArrayList<String>();
-						for (Material material : REQUIREDBLOCKS) {
+						for (Material material : getRequiredMaterials()) {
 							materials.add(material.name());
 						}
 						if (player != null) {
 							if (Messages.isEnabled()) {
 								player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(
-										util.getOffByPercent(blocks, REQUIREDBLOCKS, PERCENT), materials.toString()), true));
+										util.getOffByPercent(blocks, getRequiredMaterials(), getRequiredPercent()), materials.toString()), true));
 							}
 						}
 						return false;
@@ -110,23 +122,8 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	}
 
 	@Override
-	public boolean shouldFall(ProtectedVessel vessel) {
+	public boolean shouldFall(MovableVessel vessel) {
 		return false;
-	}
-
-	@Override
-	public File getTypeFile() {
-		File file = new File("plugins/Ships/Configuration/VesselTypes/Marsship.yml");
-		return file;
-	}
-
-	@Override
-	public VesselType clone() {
-		Marsship mars = new Marsship();
-		cloneVesselTypeData(mars);
-		mars.REQUIREDBLOCKS = REQUIREDBLOCKS;
-		mars.PERCENT = PERCENT;
-		return mars;
 	}
 
 	@Override
@@ -135,11 +132,10 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Marsship) {
 			Marsship mars = (Marsship) type;
-			int blockPercent = config.getInt("ShipsData.Config.Block.Percent");
-			mars.PERCENT = blockPercent;
+			float percent = (float)config.getInt("ShipsData.Config.Block.Percent");
+			mars.percent = percent;
 			vessel.setVesselType(mars);
 		}
-
 	}
 
 	@Override
@@ -148,8 +144,8 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Marsship) {
 			Marsship mars = (Marsship) type;
-			int percent = config.getInt("ShipsData.Config.Block.Percent");
-			mars.PERCENT = percent;
+			float percent = (float)config.getDouble("ShipsData.Config.Block.Percent");
+			mars.percent = percent;
 			vessel.setVesselType(mars);
 		}
 	}
@@ -185,14 +181,13 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 		this.setDefaultBoostSpeed(config.getInt("Speed.Boost"));
 		this.setMaxBlocks(config.getInt("Blocks.Max"));
 		this.setMinBlocks(config.getInt("Blocks.Min"));
-		this.PERCENT = config.getInt("Blocks.requiredPercent");
+		this.setRequiredPercent(config.getInt("Blocks.requiredPercent"));
 		List<Material> requiredmaterials = new ArrayList<Material>();
-		for (int id : config.getIntegerList("Blocks.requiredBlocks")) {
-			@SuppressWarnings("deprecation")
-			Material material = Material.getMaterial(id);
+		for (String materialS : config.getStringList("Blocks.requiredBlocks")) {
+			Material material = Material.getMaterial(materialS);
 			requiredmaterials.add(material);
 		}
-		this.REQUIREDBLOCKS = requiredmaterials;
+		this.setRequiredMaterials(requiredmaterials);
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
@@ -202,12 +197,12 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 	public void save(ProtectedVessel vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Marsship", PERCENT, getMaxBlocks(), getMinBlocks(),
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Marsship", getRequiredPercent(), getMaxBlocks(), getMinBlocks(),
 				getDefaultSpeed());
 		if (!event.isCancelled()) {
 			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
 			config.set("ShipsData.Type", "Marsship");
-			config.set("ShipsData.Config.Block.Percent", PERCENT);
+			config.set("ShipsData.Config.Block.Percent", getRequiredPercent());
 			config.set("ShipsData.Config.Block.Max", getMaxBlocks());
 			config.set("ShipsData.Config.Block.Min", getMinBlocks());
 			config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
@@ -224,5 +219,12 @@ public class Marsship extends VesselType implements RequiredMaterial, ClassicVes
 			}
 		}
 	}
-
+	
+	@Override
+	public VesselType createClone() {
+		Marsship mars = new Marsship();
+		mars.requiredMaterials = this.requiredMaterials;
+		mars.percent = this.percent;
+		return mars;
+	}
 }

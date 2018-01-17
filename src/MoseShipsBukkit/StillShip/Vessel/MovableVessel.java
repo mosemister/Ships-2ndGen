@@ -1,6 +1,7 @@
 package MoseShipsBukkit.StillShip.Vessel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -122,7 +123,7 @@ public class MovableVessel extends ProtectedVessel {
 		return true;
 	}
 
-	public int getWaterLevel(List<MovingBlock> blocks) {
+	public int getWaterLevel(Collection<MovingBlock> blocks) {
 		int maxValue = 0;
 		for (MovingBlock block : blocks) {
 			Block block2 = block.getMovingTo().getBlock();

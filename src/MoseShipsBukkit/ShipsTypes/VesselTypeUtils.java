@@ -1,7 +1,6 @@
 package MoseShipsBukkit.ShipsTypes;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -156,7 +155,7 @@ public class VesselTypeUtils {
 
 	// checks vessels current state and checks if the selected material is in
 	// that state
-	public boolean isMaterialInMovingFrom(List<MovingBlock> blocks, Material material) {
+	public boolean isMaterialInMovingFrom(Collection<MovingBlock> blocks, Material material) {
 		return blocks.stream().anyMatch(e -> e.getBlock().getType().equals(material));
 	}
 
@@ -164,7 +163,7 @@ public class VesselTypeUtils {
 	// selected materials, then finds the percentage of those selected blocks
 	// compared to the full list of blocks. returns true if the result is over
 	// the minPercent
-	public boolean isPercentInMovingFrom(List<MovingBlock> blocks, List<Material> checkForBlocks, float minPercent) {
+	public boolean isPercentInMovingFrom(Collection<MovingBlock> blocks, Collection<Material> checkForBlocks, float minPercent) {
 		if (checkForBlocks != null) {
 			float count = 0;
 			for (MovingBlock block : blocks) {
@@ -182,7 +181,7 @@ public class VesselTypeUtils {
 	}
 
 	// returns the percent you are off by.
-	public float getOffByPercent(List<MovingBlock> blocks, List<Material> material, float minPercent) {
+	public float getOffByPercent(Collection<MovingBlock> blocks, Collection<Material> material, float minPercent) {
 		if (material != null) {
 			float count = 0;
 			for (MovingBlock block : blocks) {

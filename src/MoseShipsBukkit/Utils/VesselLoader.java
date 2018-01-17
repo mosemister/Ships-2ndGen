@@ -151,7 +151,7 @@ public class VesselLoader {
 											Double.parseDouble(teleportM[2]));
 									VesselType vesselType = VesselType.getTypeByName(vesselTypeS);
 									if (vesselType != null) {
-										vesselType = vesselType.clone();
+										vesselType = vesselType.createClone();
 										Vessel vessel = new Vessel(sign, name, vesselType, owner, teleport, false);
 										vesselType.setDefaultSpeed(engine);
 										vesselType.setMaxBlocks(max);

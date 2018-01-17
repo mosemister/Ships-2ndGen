@@ -1,11 +1,9 @@
 package org.ships.event.commands.ShipsCommands;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,12 +13,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.ships.block.blockhandler.BlockHandler;
+import org.ships.block.blockhandler.InventoryHandler;
+import org.ships.block.blockhandler.TextHandler;
 import org.ships.event.commands.CommandLauncher;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.StillShip.LegecySpecialBlock;
 import MoseShipsBukkit.StillShip.Vessel.Vessel;
 
 public class SignCommand extends CommandLauncher {
@@ -43,16 +41,19 @@ public class SignCommand extends CommandLauncher {
 				Sign sign = (Sign) block.getState();
 				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
 					List<Block> blocks = Ships.getBaseStructure(block);
-					final Map<MovingBlock, LegecySpecialBlock> backupBlocks = new HashMap<MovingBlock, LegecySpecialBlock>();
+					final List<BlockHandler> backup = new ArrayList<>();
 					Vessel vessel = Vessel.getVessel(sign);
 					if (vessel != null) {
 						for (Block block2 : blocks) {
-							MovingBlock mBlock = new MovingBlock(block2, vessel, MovementMethod.MOVE_FORWARD);
-							LegecySpecialBlock sBlock = LegecySpecialBlock.getSpecialBlock(block2);
-							if (sBlock != null) {
-								sBlock.clearInventory(block2);
+							//MovingBlock mBlock = new MovingBlock(block2, vessel, MovementMethod.MOVE_FORWARD);
+							BlockHandler sBlock = BlockHandler.getBlockHandler(block2);
+							if (sBlock instanceof InventoryHandler) {
+								((InventoryHandler)sBlock).saveInventory();
 							}
-							backupBlocks.put(mBlock, sBlock);
+							if(sBlock instanceof TextHandler) {
+								((TextHandler)sBlock).saveText();
+							}
+							backup.add(sBlock);
 							block2.setType(Material.BEDROCK);
 						}
 						if (args.length == 2) {
@@ -60,12 +61,8 @@ public class SignCommand extends CommandLauncher {
 
 								@Override
 								public void run() {
-									for (Entry<MovingBlock, LegecySpecialBlock> entry : backupBlocks.entrySet()) {
-										entry.getKey().getBlock().setTypeIdAndData(entry.getKey().getId(),
-												entry.getKey().getData(), false);
-										if (entry.getValue() != null) {
-											entry.getValue().setInventory(entry.getKey().getBlock());
-										}
+									for (BlockHandler block : backup) {
+										block.apply();
 									}
 								}
 							}, 20);
@@ -76,12 +73,8 @@ public class SignCommand extends CommandLauncher {
 
 									@Override
 									public void run() {
-										for (Entry<MovingBlock, LegecySpecialBlock> entry : backupBlocks.entrySet()) {
-											entry.getKey().getBlock().setTypeIdAndData(entry.getKey().getId(),
-													entry.getKey().getData(), false);
-											if (entry.getValue() != null) {
-												entry.getValue().setInventory(entry.getKey().getBlock());
-											}
+										for (BlockHandler block : backup) {
+											block.apply();
 										}
 									}
 								}, (A * 20));

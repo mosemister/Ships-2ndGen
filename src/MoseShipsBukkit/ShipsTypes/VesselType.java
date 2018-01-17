@@ -20,16 +20,16 @@ import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
 public interface VesselType {
 	public static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
 
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			 Player player);
 
-	public boolean shouldFall(ProtectedVessel vessel);
+	public boolean shouldFall(MovableVessel vessel);
 
 	public File getTypeFile();
 	
-	public void setTypeFile();
+	public void setTypeFile(File file);
 
-	public VesselType clone();
+	public VesselType createClone();
 
 	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file);
 
@@ -41,7 +41,7 @@ public interface VesselType {
 
 	public String getName();
 	
-	public String setName();
+	public void setName(String name);
 
 	public int getDefaultSpeed();
 
