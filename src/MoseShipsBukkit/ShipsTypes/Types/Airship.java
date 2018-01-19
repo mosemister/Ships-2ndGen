@@ -25,9 +25,7 @@ import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
-import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class Airship extends AbstractShipType implements Fuel, RequiredMaterial, ClassicVessel {
 
@@ -84,21 +82,21 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 	}
 
 	@Override
-	public boolean removeFuel(BaseVessel vessel) {
+	public boolean removeFuel(Ship vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		boolean ret = util.takeFuel(vessel, takeAmount, fuelTypes);
 		return ret;
 	}
 
 	@Override
-	public int getTotalFuel(BaseVessel vessel) {
+	public int getTotalFuel(Ship vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		int ret = util.getTotalAmountOfFuel(vessel, fuelTypes);
 		return ret;
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
+	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMovingInto(blocks, getMoveInMaterials())) {
@@ -153,7 +151,7 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromClassicFile(Ship vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Airship) {
@@ -178,7 +176,7 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 	}
 
 	@Override
-	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromFiveFile(Ship vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Airship) {
@@ -254,7 +252,7 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 	}
 
 	@Override
-	public void save(ProtectedVessel vessel) {
+	public void save(Ship vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		List<String> fuels = new ArrayList<String>();

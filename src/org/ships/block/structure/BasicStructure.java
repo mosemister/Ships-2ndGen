@@ -12,6 +12,10 @@ import org.ships.block.blockhandler.BlockHandler;
 public class BasicStructure implements ShipsStructure {
 
 	List<BlockHandler> handlers = new ArrayList<>();
+		
+	public BasicStructure() {
+		
+	}
 	
 	public BasicStructure(Collection<BlockHandler> collection) {
 		handlers.addAll(collection);

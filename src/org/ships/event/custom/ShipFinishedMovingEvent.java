@@ -3,18 +3,18 @@ package org.ships.event.custom;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class ShipFinishedMovingEvent extends Event {
 
-	MovableVessel VESSEL;
+	Ship VESSEL;
 	static final HandlerList HANDLERS = new HandlerList();
 
-	public ShipFinishedMovingEvent(MovableVessel vessel) {
+	public ShipFinishedMovingEvent(Ship vessel) {
 		VESSEL = vessel;
 	}
 
-	public MovableVessel getVessel() {
+	public Ship getVessel() {
 		return VESSEL;
 	}
 

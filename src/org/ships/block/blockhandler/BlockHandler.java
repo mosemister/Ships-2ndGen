@@ -1,7 +1,12 @@
 package org.ships.block.blockhandler;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -44,6 +49,12 @@ public interface BlockHandler {
 	public static BlockHandler getBlockHandler(Block block) {
 		//TODO
 		return null;
+	}
+	
+	public static Set<BlockHandler> convert(Collection<Block> blocks){
+		List<BlockHandler> list = new ArrayList<>();
+		blocks.stream().forEach(b -> list.add(getBlockHandler(b)));
+		return new HashSet<>(list);
 	}
 
 }

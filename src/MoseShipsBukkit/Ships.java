@@ -7,19 +7,17 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ships.block.BlockStack;
+import org.ships.block.configuration.MovementInstruction;
 import org.ships.configuration.Config;
 import org.ships.configuration.MaterialsList;
 import org.ships.configuration.Messages;
@@ -37,7 +35,7 @@ import org.ships.event.commands.ShipsCommands.VesselCommand;
 import org.ships.event.commands.gui.ShipsGUICommand;
 
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
 import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.World.Wind.Direction;
@@ -83,11 +81,9 @@ public class Ships extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		for (Vessel vessel : Vessel.getVessels()) {
-			vessel.save();
-		}
+		LoadableShip.getShips().stream().forEach(s -> s.save());
 	}
-
+	
 	public void afterBoot() {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
 
@@ -144,25 +140,24 @@ public class Ships extends JavaPlugin {
 		}
 	}
 
-	public static List<Block> getBaseStructure(Block block) {
+	public static BlockStack getBaseStructure(Block block) {
 		STACK = new BlockStack();
 		count = 0;
-		STACK.addBlock(block);
+		STACK.add(block);
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		int limit = config.getInt("Structure.StructureLimits.trackLimit");
 		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
 				BlockFace.WEST };
 		prototype3(block, faces, limit);
 		if (STACK.isVaild()) {
-			List<Block> stack = STACK.getList();
-			return stack;
+			return STACK;
 		}
-		return new ArrayList<Block>();
+		return new BlockStack();
 	}
 
 	// This gets every block connected, It can be abnormal so the count attempts
 	// to control it. I called it Prototype for a good reason.
-	static void prototype3(Block block, BlockFace[] faces, int limit) {
+	private static void prototype3(Block block, BlockFace[] faces, int limit) {
 		// this /attempts/ to cap the variable scan at 500, I have seen that it
 		// caps the block limit at 500 but the method is still ran afterwards
 		// for a good while. If you find another way to do this that is more
@@ -174,9 +169,9 @@ public class Ships extends JavaPlugin {
 		// List<String> material = new ArrayList<String>();
 		for (BlockFace face : faces) {
 			Block block2 = block.getRelative(face);
-			if ((MaterialsList.getMaterialsList().contains(block2.getType(), true))) {
+			if ((MaterialsList.getMaterialsList().contains(block2.getType(), MovementInstruction.MATERIAL))) {
 				if (!STACK.contains(block2)) {
-					STACK.addBlock(block2);
+					STACK.add(block2);
 					prototype3(block2, faces, limit);
 				}
 			} /*

@@ -14,16 +14,15 @@ import org.ships.configuration.Messages;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
-import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public interface VesselType {
 	public static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
 
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
+	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			 Player player);
 
-	public boolean shouldFall(MovableVessel vessel);
+	public boolean shouldFall(Ship vessel);
 
 	public File getTypeFile();
 	
@@ -31,13 +30,13 @@ public interface VesselType {
 
 	public VesselType createClone();
 
-	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file);
+	public void loadVesselFromFiveFile(Ship vessel, File file);
 
 	public void createConfig();
 
 	public void loadDefault();
 
-	public void save(ProtectedVessel vessel);
+	public void save(Ship vessel);
 
 	public String getName();
 	
@@ -65,7 +64,7 @@ public interface VesselType {
 
 	public void setMaxBlocks(int A);
 
-	public default boolean attemptToMove(MovableVessel vessel, MovementMethod move, List<MovingBlock> blocks,
+	public default boolean attemptToMove(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			OfflinePlayer player) {
 		if (blocks.size() <= getMaxBlocks()) {
 			if (blocks.size() >= getMinBlocks()) {

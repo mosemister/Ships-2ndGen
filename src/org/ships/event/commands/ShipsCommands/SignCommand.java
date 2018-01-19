@@ -19,7 +19,7 @@ import org.ships.block.blockhandler.TextHandler;
 import org.ships.event.commands.CommandLauncher;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 
 public class SignCommand extends CommandLauncher {
 
@@ -27,7 +27,6 @@ public class SignCommand extends CommandLauncher {
 		super("sign", "", "Ships sign commands", "ships.command.sign", true, false);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void playerCommand(Player player, String[] args) {
 		if (args.length == 1) {
@@ -42,7 +41,7 @@ public class SignCommand extends CommandLauncher {
 				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
 					List<Block> blocks = Ships.getBaseStructure(block);
 					final List<BlockHandler> backup = new ArrayList<>();
-					Vessel vessel = Vessel.getVessel(sign);
+					LoadableShip vessel = LoadableShip.getShip(sign);
 					if (vessel != null) {
 						for (Block block2 : blocks) {
 							//MovingBlock mBlock = new MovingBlock(block2, vessel, MovementMethod.MOVE_FORWARD);
@@ -99,8 +98,9 @@ public class SignCommand extends CommandLauncher {
 					if (block.getState() instanceof Sign) {
 						Sign sign = (Sign) block.getState();
 						if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
-							Vessel vessel = Vessel.getVessel(sign);
+							LoadableShip vessel = LoadableShip.getShip(sign);
 							if (vessel != null) {
+								@SuppressWarnings("deprecation")
 								OfflinePlayer user = Bukkit.getOfflinePlayer(args[2]);
 								vessel.setOwner(user);
 							} else {

@@ -9,7 +9,7 @@ import org.ships.event.commands.CommandLauncher;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.AutoPilotData;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 
 public class AutoPilot extends CommandLauncher {
 
@@ -21,7 +21,7 @@ public class AutoPilot extends CommandLauncher {
 	@Override
 	public void playerCommand(Player player, String[] args) {
 		if (args.length >= 4) {
-			Vessel vessel = Vessel.getVessel(args[1]);
+			LoadableShip vessel = LoadableShip.getShip(args[1]);
 			if (vessel == null) {
 				player.sendMessage(Ships.runShipsMessage("No ship found by that name", true));
 				return;
@@ -36,7 +36,7 @@ public class AutoPilot extends CommandLauncher {
 							Location loc = new Location(world, X, Y, Z);
 							AutoPilotData data = new AutoPilotData(vessel, loc,
 									vessel.getVesselType().getDefaultSpeed(), player);
-							vessel.setAutoPilotTo(data);
+							vessel.setAutoPilotData(data);
 							player.sendMessage(
 									Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName()
 											+ " " + loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));
@@ -59,7 +59,7 @@ public class AutoPilot extends CommandLauncher {
 	@Override
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
 		if (args.length >= 4) {
-			Vessel vessel = Vessel.getVessel(args[1]);
+			LoadableShip vessel = LoadableShip.getShip(args[1]);
 			if (vessel == null) {
 				sender.sendMessage(Ships.runShipsMessage("No ship found by that name", true));
 				return;
@@ -73,7 +73,7 @@ public class AutoPilot extends CommandLauncher {
 						Location loc = new Location(world, X, Y, Z);
 						AutoPilotData data = new AutoPilotData(vessel, loc, vessel.getVesselType().getDefaultSpeed(),
 								null);
-						vessel.setAutoPilotTo(data);
+						vessel.setAutoPilotData(data);
 						sender.sendMessage(
 								Ships.runShipsMessage(vessel.getName() + " is moving to " + loc.getWorld().getName()
 										+ " " + loc.getX() + " " + loc.getY() + " " + loc.getZ(), false));

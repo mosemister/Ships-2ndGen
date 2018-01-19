@@ -12,7 +12,7 @@ import org.bukkit.Material;
 
 import MoseShipsBukkit.MovingShip.MovementMethod;
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public abstract class AbstractShipType implements VesselType {
 
@@ -41,7 +41,7 @@ public abstract class AbstractShipType implements VesselType {
 	}
 	
 	@Override
-	public boolean shouldFall(MovableVessel vessel) {
+	public boolean shouldFall(Ship vessel) {
 		Set<MovingBlock> blocks = MovingBlock.convert(vessel, MovementMethod.MOVE_DOWN);
 		if(checkRequirements(vessel, MovementMethod.MOVE_DOWN, blocks, null)) {
 			return true;

@@ -2,10 +2,10 @@ package MoseShipsBukkit.ShipsTypes.HookTypes;
 
 import java.io.File;
 
-import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public interface ClassicVessel {
 
-	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file);
+	public void loadVesselFromClassicFile(Ship vessel, File file);
 
 }

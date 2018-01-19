@@ -24,7 +24,7 @@ import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.StillShip.Vectors.BlockVector;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
 
 public class VesselLoader {
@@ -55,7 +55,6 @@ public class VesselLoader {
 		sender.sendMessage(Ships.runShipsMessage("Loaded the following vessels; " + success, false));
 	}
 
-	@SuppressWarnings("deprecation")
 	public static boolean classicLoader(File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		String sUUID = config.getString("ShipsData.Player.Name");
@@ -69,7 +68,6 @@ public class VesselLoader {
 		String worldS = config.getString("ShipsLocation.world");
 		if (worldS != null) {
 			World world = Bukkit.getWorld(worldS);
-			String name = file.getName().replace(".yml", "");
 			if (world != null) {
 				Location loc = null;
 				for (int x = -boost; x < boost; x++) {
@@ -88,6 +86,7 @@ public class VesselLoader {
 				}
 				if (loc != null) {
 					if (sUUID != null) {
+						@SuppressWarnings("deprecation")
 						OfflinePlayer owner = Bukkit.getOfflinePlayer(sUUID);
 						if (loc.getBlock().getState() instanceof Sign) {
 							Sign sign = (Sign) loc.getBlock().getState();
@@ -100,11 +99,18 @@ public class VesselLoader {
 										type.setDefaultSpeed(engine);
 										type.setMaxBlocks(max);
 										type.setMinBlocks(min);
-										Vessel vessel = new Vessel(sign, name, type, owner, loc);
+										LoadableShip ship = null;
+										try {
+											ship = new LoadableShip(type, sign, loc, owner);
+										}catch(InvalidSignException e) {
+											return false;
+										}
+										/*Vessel vessel = new Vessel(sign, name, type, owner, loc);
 										((ClassicVessel) vessel.getVesselType()).loadVesselFromClassicFile(vessel,
-												file);
+												file);*/
+										((ClassicVessel)ship.getVesselType()).loadVesselFromClassicFile(ship, file);
 										file.delete();
-										vessel.save();
+										ship.save();
 										return true;
 									}
 								} else {
@@ -152,7 +158,13 @@ public class VesselLoader {
 									VesselType vesselType = VesselType.getTypeByName(vesselTypeS);
 									if (vesselType != null) {
 										vesselType = vesselType.createClone();
-										Vessel vessel = new Vessel(sign, name, vesselType, owner, teleport, false);
+										//Vessel vessel = new Vessel(sign, name, vesselType, owner, teleport, false);
+										LoadableShip ship;
+										try {
+											ship = new LoadableShip(vesselType, sign, teleport, owner);
+										}catch(InvalidSignException e) {
+											return false;
+										}
 										vesselType.setDefaultSpeed(engine);
 										vesselType.setMaxBlocks(max);
 										vesselType.setMinBlocks(min);
@@ -165,14 +177,17 @@ public class VesselLoader {
 												int X = Integer.parseInt(uuidArgs[1]);
 												int Y = Integer.parseInt(uuidArgs[2]);
 												int Z = Integer.parseInt(uuidArgs[3]);
-												Block block = vessel.getLocation().getBlock().getRelative(X, Y, Z);
+												/*Block block = vessel.getLocation().getBlock().getRelative(X, Y, Z);
 												BlockVector vector = new BlockVector(vessel.getLocation().getBlock(),
-														block);
+														block);*/
+												Block block1 = ship.getLocation().getBlock();
+												Block block2 = block1.getRelative(X, Y, Z);
+												BlockVector vector = new BlockVector(block1, block2);
 												locationB.put(player2, vector);
 											}
 										}
-										vesselType.loadVesselFromFiveFile(vessel, file);
-										vessel.save();
+										vesselType.loadVesselFromFiveFile(ship, file);
+										ship.save();
 										return true;
 									} else {
 										sender.sendMessage(Ships.runShipsMessage(
@@ -224,7 +239,7 @@ public class VesselLoader {
 		File[] files = new File("plugins/Ships/VesselData/").listFiles();
 		if (files != null) {
 			for (File file : files) {
-				for (Vessel vessel : Vessel.getVessels()) {
+				for (LoadableShip vessel : LoadableShip.getShips()) {
 					if (!vessel.getFile().equals(file)) {
 						files2.add(file);
 					}
@@ -234,7 +249,7 @@ public class VesselLoader {
 		return files2;
 	}
 
-	public static Vessel loadUnloadedVessel(Sign sign) {
+	public static LoadableShip loadUnloadedVessel(Sign sign) {
 		if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
 			VesselType vesselType = VesselType.getTypeByName(sign.getLine(1).replace(ChatColor.BLUE + "", ""));
 			String name = sign.getLine(2).replace(ChatColor.GREEN + "", "");
@@ -251,7 +266,8 @@ public class VesselLoader {
 							OfflinePlayer player = Bukkit.getServer()
 									.getOfflinePlayer(UUID.fromString(config.getString("ShipsData.Player.Name")));
 							try {
-								Vessel vessel = new Vessel(sign, player, teleport);
+								//LoadableShip vessel = new LoadableShip(sign, player, teleport);
+								LoadableShip vessel = new LoadableShip(vesselType, sign, teleport, player);
 								return vessel;
 							} catch (InvalidSignException e) {
 								// TODO Auto-generated catch block

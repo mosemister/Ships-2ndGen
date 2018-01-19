@@ -14,7 +14,7 @@ import org.ships.configuration.MaterialsList;
 import org.ships.event.commands.CommandLauncher;
 
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 
 public class Developer extends CommandLauncher {
 
@@ -87,13 +87,13 @@ public class Developer extends CommandLauncher {
 
 	public void displayLoadedVessels(ConsoleCommandSender sender) {
 		sender.sendMessage("<Name> | <Type> | <Owner> | <Location>");
-		for (Vessel vessel : Vessel.getVessels()) {
+		for (LoadableShip vessel : LoadableShip.getShips()) {
 			sender.sendMessage(vessel.getName() + " | " + vessel.getVesselType().getName() + " | "
 					+ vessel.getOwner().getName() + " | " + (int) vessel.getTeleportLocation().getX() + ","
 					+ (int) vessel.getTeleportLocation().getY() + "," + (int) vessel.getTeleportLocation().getZ() + ","
 					+ vessel.getTeleportLocation().getWorld().getName());
 		}
-		sender.sendMessage("Total number of Vessels loaded: " + Vessel.getVessels().size());
+		sender.sendMessage("Total number of Vessels loaded: " + LoadableShip.getShips().size());
 		return;
 	}
 
@@ -115,7 +115,7 @@ public class Developer extends CommandLauncher {
 
 	public void displayVessel(ConsoleCommandSender sender, String[] args) {
 		if (args.length >= 3) {
-			Vessel vessel = Vessel.getVessel(args[2]);
+			LoadableShip vessel = LoadableShip.getShip(args[2]);
 			if (vessel != null) {
 				ShipsStructure structure = vessel.getStructure();
 				sender.sendMessage("----Special Blocks----");

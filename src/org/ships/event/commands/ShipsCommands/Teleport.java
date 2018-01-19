@@ -17,7 +17,7 @@ import org.ships.event.commands.CommandLauncher;
 import org.ships.event.commands.gui.ShipsGUICommand;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 
 public class Teleport extends CommandLauncher {
 
@@ -37,7 +37,7 @@ public class Teleport extends CommandLauncher {
 						+ "; teleport to your vessel");
 			}
 		} else {
-			Vessel vessel = Vessel.getVessel(args[1]);
+			LoadableShip vessel = LoadableShip.getShip(args[1]);
 			if (vessel == null) {
 				player.sendMessage(Ships.runShipsMessage("Can not find vessel", true));
 			} else {
@@ -69,7 +69,7 @@ public class Teleport extends CommandLauncher {
 		@Override
 		public void onInterfaceBoot(HumanEntity player) {
 			List<ItemStack> stacks = new ArrayList<ItemStack>();
-			for (Vessel vessel : Vessel.getVessels((Player) player)) {
+			for (LoadableShip vessel : LoadableShip.getShips((Player) player)) {
 				ItemStack stack = new ItemStack(Material.ARROW, 1);
 				ItemMeta meta = stack.getItemMeta();
 				meta.setDisplayName(vessel.getName());

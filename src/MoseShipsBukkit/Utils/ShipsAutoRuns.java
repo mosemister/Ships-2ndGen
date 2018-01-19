@@ -12,20 +12,21 @@ import org.ships.configuration.Config;
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.MovingShip.AutoPilotData;
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class ShipsAutoRuns {
 
-	public static HashMap<Vessel, OfflinePlayer> EOTAUTORUN = new HashMap<Vessel, OfflinePlayer>();
+	public static HashMap<Ship, OfflinePlayer> EOTAUTORUN = new HashMap<>();
 
 	public static void fallOutSky() {
 		Bukkit.getScheduler().scheduleSyncRepeatingTask(Ships.getPlugin(), new Runnable() {
 
 			@Override
 			public void run() {
-				for (Vessel vessel : Vessel.getVessels()) {
+				for (Ship vessel : LoadableShip.getShips()) {
 					if (vessel.getVesselType().shouldFall(vessel)) {
-						vessel.syncMoveVessel(MovementMethod.MOVE_DOWN, 1, null);
+						vessel.moveTowards(MovementMethod.MOVE_DOWN, 1, null);
 					}
 				}
 
@@ -40,9 +41,9 @@ public class ShipsAutoRuns {
 
 			@Override
 			public void run() {
-				for (Entry<Vessel, OfflinePlayer> vessel : EOTAUTORUN.entrySet()) {
+				for (Entry<Ship, OfflinePlayer> vessel : EOTAUTORUN.entrySet()) {
 					vessel.getKey().updateStructure();
-					vessel.getKey().syncMoveVessel(MovementMethod.MOVE_FORWARD, 2, vessel.getValue());
+					vessel.getKey().moveTowards(MovementMethod.MOVE_FORWARD, 2, vessel.getValue());
 				}
 			}
 
@@ -55,7 +56,7 @@ public class ShipsAutoRuns {
 
 			@Override
 			public void run() {
-				for (Vessel vessel : Vessel.getVessels()) {
+				for (Ship vessel : LoadableShip.getShips()) {
 					Location loc = vessel.getLocation();
 					AutoPilotData data = vessel.getAutoPilotData();
 					YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
@@ -65,25 +66,25 @@ public class ShipsAutoRuns {
 							Location loc3 = new Location(data.getMovingTo().getWorld(), data.getMovingTo().getX(),
 									loc.getY(), data.getMovingTo().getZ());
 							if ((loc3.getX() == loc.getX()) && (loc3.getZ() == loc.getZ())) {
-								if (!vessel.syncSafelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(),
+								if (!vessel.moveTowardsLocation(data.getMovingTo(), data.getSpeed(),
 										data.getPlayer())) {
 									vessel.getOwner().getPlayer()
 											.sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
-									vessel.setAutoPilotTo(null);
+									vessel.setAutoPilotData(null);
 								}
 							} else {
-								if (!vessel.syncSafelyMoveTowardsLocation(loc3, data.getSpeed(), data.getPlayer())) {
+								if (!vessel.moveTowardsLocation(loc3, data.getSpeed(), data.getPlayer())) {
 									vessel.getOwner().getPlayer()
 											.sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
-									vessel.setAutoPilotTo(null);
+									vessel.setAutoPilotData(null);
 								}
 							}
 						} else {
-							if (!vessel.syncSafelyMoveTowardsLocation(data.getMovingTo(), data.getSpeed(),
+							if (!vessel.moveTowardsLocation(data.getMovingTo(), data.getSpeed(),
 									data.getPlayer())) {
 								vessel.getOwner().getPlayer()
 										.sendMessage(Ships.runShipsMessage("AutoPilot has stopped.", false));
-								vessel.setAutoPilotTo(null);
+								vessel.setAutoPilotData(null);
 							}
 						}
 					}

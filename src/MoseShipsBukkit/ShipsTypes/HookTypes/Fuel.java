@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.bukkit.Material;
 
-import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public interface Fuel {
 
@@ -17,12 +17,12 @@ public interface Fuel {
 	 * 'true' then it will continue the move event
 	 * </p>
 	 */
-	public boolean removeFuel(BaseVessel vessel);
+	public boolean removeFuel(Ship vessel);
 
 	/**
 	 * gets the total amount of fuel
 	 */
-	public int getTotalFuel(BaseVessel vessel);
+	public int getTotalFuel(Ship vessel);
 
 	/**
 	 * gets the fuel consumption

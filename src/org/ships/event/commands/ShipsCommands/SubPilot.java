@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
 import org.ships.event.commands.CommandLauncher;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 
 public class SubPilot extends CommandLauncher {
 
@@ -22,16 +22,16 @@ public class SubPilot extends CommandLauncher {
 				false);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void playerCommand(Player player, String[] args) {
 		Block block = player.getLocation().getBlock().getRelative(0, -1, 0);
-		Vessel vessel = Vessel.getVessel(block, false);
+		LoadableShip vessel = LoadableShip.getShip(block, false);
 		if (vessel == null) {
 			player.sendMessage(Ships.runShipsMessage("must be standing on your vessel", true));
 		} else {
 			if (args.length >= 3) {
 				if (vessel.getOwner().equals(player)) {
+					@SuppressWarnings("deprecation")
 					OfflinePlayer off = Bukkit.getOfflinePlayer(args[2]);
 					if (args[1].equalsIgnoreCase("add")) {
 						vessel.getSubPilots().add(off.getUniqueId());
@@ -51,7 +51,7 @@ public class SubPilot extends CommandLauncher {
 		}
 	}
 
-	public void displayList(Vessel vessel, Player player) {
+	public void displayList(LoadableShip vessel, Player player) {
 		List<String> names = new ArrayList<String>();
 		for (UUID pilot : vessel.getSubPilots()) {
 			names.add(Bukkit.getOfflinePlayer(pilot).getName());

@@ -5,7 +5,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.ships.event.commands.CommandLauncher;
 
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 
 public class VesselCommand extends CommandLauncher {
 
@@ -17,7 +17,7 @@ public class VesselCommand extends CommandLauncher {
 	public void playerCommand(Player player, String[] args) {
 		player.sendMessage(ChatColor.AQUA + "---[Your Vessels]---");
 		player.sendMessage(ChatColor.AQUA + "[Vessel name] | [Vessel type]");
-		for (Vessel vessel : Vessel.getVessels(player)) {
+		for (LoadableShip vessel : LoadableShip.getShips(player)) {
 			player.sendMessage(ChatColor.AQUA + vessel.getName() + " | " + vessel.getVesselType().getName());
 		}
 

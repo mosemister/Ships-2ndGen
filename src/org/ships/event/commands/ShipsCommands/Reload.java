@@ -9,7 +9,7 @@ import org.ships.event.commands.CommandLauncher;
 
 import MoseShipsBukkit.Ships;
 import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
 
 public class Reload extends CommandLauncher {
 
@@ -41,7 +41,7 @@ public class Reload extends CommandLauncher {
 					}
 				});
 			} else {
-				Vessel vessel = Vessel.getVessel(args[1]);
+				LoadableShip vessel = LoadableShip.getShip(args[1]);
 				if (vessel == null) {
 					player.sendMessage(Ships.runShipsMessage("No vessel by that name", true));
 					return;
@@ -68,7 +68,7 @@ public class Reload extends CommandLauncher {
 					}
 				});
 			} else {
-				Vessel vessel = Vessel.getVessel(args[1]);
+				LoadableShip vessel = LoadableShip.getShip(args[1]);
 				if (vessel == null) {
 					sender.sendMessage(Ships.runShipsMessage("No vessel by that name", true));
 					return;

@@ -8,18 +8,18 @@ import org.bukkit.event.HandlerList;
 import org.ships.block.structure.MovingStructure;
 
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class ShipMovingEvent extends Event implements Cancellable {
 
 	OfflinePlayer PLAYER;
-	MovableVessel VESSEL;
+	Ship VESSEL;
 	MovementMethod MOVEMETHOD;
 	MovingStructure MOVINGBLOCKS;
 	boolean CANCELLED;
 	static final HandlerList HANDLERS = new HandlerList();
 
-	public ShipMovingEvent(OfflinePlayer player, MovableVessel vessel, MovementMethod method, MovingStructure blocks) {
+	public ShipMovingEvent(OfflinePlayer player, Ship vessel, MovementMethod method, MovingStructure blocks) {
 		PLAYER = player;
 		VESSEL = vessel;
 		MOVEMETHOD = method;
@@ -34,7 +34,7 @@ public class ShipMovingEvent extends Event implements Cancellable {
 		return PLAYER;
 	}
 
-	public MovableVessel getVessel() {
+	public Ship getVessel() {
 		return VESSEL;
 	}
 

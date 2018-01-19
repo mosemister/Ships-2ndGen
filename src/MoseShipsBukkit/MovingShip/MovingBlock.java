@@ -9,21 +9,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Rotatable;
 import org.ships.block.blockhandler.BlockHandler;
 
 import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class MovingBlock {
 
 	BlockHandler handler;
 	Location MOVETO;
 
-	public MovingBlock(Block block, BaseVessel vessel, MovementMethod move) {
+	public MovingBlock(Block block, Ship vessel, MovementMethod move) {
 		this(BlockHandler.getBlockHandler(block), vessel, move);
 	}
 
-	public MovingBlock(BlockHandler sBlock, BaseVessel vessel, MovementMethod move) {
+	public MovingBlock(BlockHandler sBlock, Ship vessel, MovementMethod move) {
 		handler = sBlock;
 		move(handler.getBlock(), vessel, move);
 	}
@@ -37,8 +39,13 @@ public class MovingBlock {
 		MOVETO = moveTo;
 	}
 
-	private void move(Block block, BaseVessel vessel, MovementMethod move) {
-		BlockFace facing = vessel.getFacingDirection();
+	private void move(Block block, Ship vessel, MovementMethod move) {
+		//BlockFace facing = vessel.getFacingDirection();
+		BlockData data = vessel.getLocation().getBlock().getBlockData();
+		if(!(data instanceof Rotatable)) {
+			return;
+		}
+		BlockFace facing = ((Rotatable)data).getRotation().getOppositeFace();
 		Block block2 = null;
 		switch (move) {
 		case MOVE_FORWARD:
@@ -132,7 +139,7 @@ public class MovingBlock {
 		return handler.getBlock();
 	}
 	
-	public static Set<MovingBlock> convert(BaseVessel vessel, MovementMethod method) {
+	public static Set<MovingBlock> convert(Ship vessel, MovementMethod method) {
 		List<MovingBlock> blocks = new ArrayList<>();
 		vessel.getStructure().getAllBlocks().stream().forEach(b -> blocks.add(new MovingBlock(b.getBlock(), vessel, method)));
 		return new HashSet<>(blocks);

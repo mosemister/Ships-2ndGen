@@ -7,7 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class ShipAboutToMoveEvent extends Event implements Cancellable {
 
@@ -18,12 +18,12 @@ public class ShipAboutToMoveEvent extends Event implements Cancellable {
 
 	MovementMethod METHOD;
 	int SPEED;
-	MovableVessel VESSEL;
+	Ship VESSEL;
 	OfflinePlayer PLAYER;
 	boolean CANCEL;
 	static HandlerList LIST = new HandlerList();
 
-	public ShipAboutToMoveEvent(MovementMethod method, int speed, MovableVessel vessel,
+	public ShipAboutToMoveEvent(MovementMethod method, int speed, Ship vessel,
 			OfflinePlayer player) {
 		METHOD = method;
 		SPEED = speed;
@@ -59,7 +59,7 @@ public class ShipAboutToMoveEvent extends Event implements Cancellable {
 		PLAYER = player;
 	}
 
-	public MovableVessel getVessel() {
+	public Ship getVessel() {
 		return VESSEL;
 	}
 

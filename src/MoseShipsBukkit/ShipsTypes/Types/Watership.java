@@ -25,8 +25,7 @@ import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
-import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class Watership extends AbstractShipType implements RequiredMaterial, ClassicVessel {
 
@@ -39,7 +38,7 @@ public class Watership extends AbstractShipType implements RequiredMaterial, Cla
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
+	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			Player player) {
 		int waterLevel = vessel.getWaterLevel(blocks);
 		if(waterLevel == 0) {
@@ -79,7 +78,7 @@ public class Watership extends AbstractShipType implements RequiredMaterial, Cla
 	}
 
 	@Override
-	public boolean shouldFall(MovableVessel vessel) {
+	public boolean shouldFall(Ship vessel) {
 		return false;
 	}
 
@@ -92,7 +91,7 @@ public class Watership extends AbstractShipType implements RequiredMaterial, Cla
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromClassicFile(Ship vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
 		if (type instanceof Watership) {
@@ -104,7 +103,7 @@ public class Watership extends AbstractShipType implements RequiredMaterial, Cla
 	}
 
 	@Override
-	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromFiveFile(Ship vessel, File file) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		VesselType type = vessel.getVesselType();
 		if (type instanceof Watership) {
@@ -159,7 +158,7 @@ public class Watership extends AbstractShipType implements RequiredMaterial, Cla
 	}
 
 	@Override
-	public void save(ProtectedVessel vessel) {
+	public void save(Ship vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		ShipsWriteEvent event = new ShipsWriteEvent(file, "Ship", percent, getMaxBlocks(), getMinBlocks(),

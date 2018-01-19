@@ -4,23 +4,23 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class AutoPilotData {
 
-	MovableVessel VESSEL;
+	Ship VESSEL;
 	Location GOTO;
 	int SPEED;
 	OfflinePlayer PLAYER;
 
-	public AutoPilotData(MovableVessel vessel, Location goTo, int speed, OfflinePlayer player) {
+	public AutoPilotData(Ship vessel, Location goTo, int speed, OfflinePlayer player) {
 		VESSEL = vessel;
 		GOTO = goTo;
 		SPEED = speed;
 		PLAYER = player;
 	}
 
-	public MovableVessel getVessel() {
+	public Ship getVessel() {
 		return VESSEL;
 	}
 

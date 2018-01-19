@@ -24,8 +24,7 @@ import MoseShipsBukkit.ShipsTypes.VesselType;
 import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
-import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class Marsship extends AbstractShipType implements RequiredMaterial, ClassicVessel {
 
@@ -58,7 +57,7 @@ public class Marsship extends AbstractShipType implements RequiredMaterial, Clas
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
+	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (blocks.size() >= getMinBlocks()) {
@@ -122,12 +121,12 @@ public class Marsship extends AbstractShipType implements RequiredMaterial, Clas
 	}
 
 	@Override
-	public boolean shouldFall(MovableVessel vessel) {
+	public boolean shouldFall(Ship vessel) {
 		return false;
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromClassicFile(Ship vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Marsship) {
@@ -139,7 +138,7 @@ public class Marsship extends AbstractShipType implements RequiredMaterial, Clas
 	}
 
 	@Override
-	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromFiveFile(Ship vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Marsship) {
@@ -194,7 +193,7 @@ public class Marsship extends AbstractShipType implements RequiredMaterial, Clas
 	}
 
 	@Override
-	public void save(ProtectedVessel vessel) {
+	public void save(Ship vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		ShipsWriteEvent event = new ShipsWriteEvent(file, "Marsship", getRequiredPercent(), getMaxBlocks(), getMinBlocks(),

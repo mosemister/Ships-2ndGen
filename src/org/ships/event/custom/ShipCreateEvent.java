@@ -6,17 +6,17 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import MoseShipsBukkit.StillShip.Vessel.Vessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class ShipCreateEvent extends Event implements Cancellable {
 
 	Player PLAYER;
 	Sign SIGN;
-	Vessel VESSEL;
+	Ship VESSEL;
 	boolean CANCELLED;
 	static final HandlerList HANDLERS = new HandlerList();
 
-	public ShipCreateEvent(Player player, Sign sign, Vessel vessel) {
+	public ShipCreateEvent(Player player, Sign sign, Ship vessel) {
 		PLAYER = player;
 		SIGN = sign;
 		VESSEL = vessel;
@@ -30,7 +30,7 @@ public class ShipCreateEvent extends Event implements Cancellable {
 		return SIGN;
 	}
 
-	public Vessel getVessel() {
+	public Ship getVessel() {
 		return VESSEL;
 	}
 

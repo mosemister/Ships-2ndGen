@@ -26,9 +26,7 @@ import MoseShipsBukkit.ShipsTypes.VesselTypeUtils;
 import MoseShipsBukkit.ShipsTypes.HookTypes.ClassicVessel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
 import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
-import MoseShipsBukkit.StillShip.Vessel.MovableVessel;
-import MoseShipsBukkit.StillShip.Vessel.ProtectedVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class Submarine extends AbstractShipType implements Fuel, RequiredMaterial, ClassicVessel {
 
@@ -43,14 +41,14 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 	}
 
 	@Override
-	public boolean removeFuel(BaseVessel vessel) {
+	public boolean removeFuel(Ship vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		boolean ret = util.takeFuel(vessel, getFuelConsumption(), getFuelTypes());
 		return ret;
 	}
 
 	@Override
-	public int getTotalFuel(BaseVessel vessel) {
+	public int getTotalFuel(Ship vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		int ret = util.getTotalAmountOfFuel(vessel, getFuelTypes());
 		return ret;
@@ -62,7 +60,7 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 	}
 
 	@Override
-	public boolean checkRequirements(MovableVessel vessel, MovementMethod move, Collection<MovingBlock> blocks,
+	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
 			Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
 		if (util.isMaterialInMovingTo(blocks, getMoveInMaterials())) {
@@ -109,7 +107,7 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 	}
 
 	@Override
-	public boolean shouldFall(MovableVessel vessel) {
+	public boolean shouldFall(Ship vessel) {
 		return false;
 	}
 
@@ -130,7 +128,7 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 	}
 
 	@Override
-	public void loadVesselFromClassicFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromClassicFile(Ship vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Submarine) {
@@ -153,7 +151,7 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 	}
 
 	@Override
-	public void loadVesselFromFiveFile(ProtectedVessel vessel, File file) {
+	public void loadVesselFromFiveFile(Ship vessel, File file) {
 		VesselType type = vessel.getVesselType();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Submarine) {
@@ -228,7 +226,7 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 	}
 
 	@Override
-	public void save(ProtectedVessel vessel) {
+	public void save(Ship vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration configuration = YamlConfiguration.loadConfiguration(file);
 		ConfigurationSection config = configuration.createSection("ShipsData");

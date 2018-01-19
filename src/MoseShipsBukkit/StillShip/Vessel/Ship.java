@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
@@ -27,17 +28,30 @@ import MoseShipsBukkit.StillShip.Vectors.BlockVector;
 public interface Ship {
 	
 	public OfflinePlayer getOwner();
+	public Ship setOwner(OfflinePlayer player);
+	public Set<UUID> getSubPilots();
+	public Ship registerPilot(UUID uuid);
+	public Ship deregisterPilot(UUID uuid);
 	public VesselType getVesselType();
+	public Ship setVesselType(VesselType type);
 	public Location getLocation();
 	public Location getTeleportLocation();
+	public Ship setTeleportLocation(Location loc);
 	public AutoPilotData getAutoPilotData();
+	public Ship setAutoPilotData(AutoPilotData data);
 	public ShipsStructure getStructure();
+	public Ship setShipsStructure(Sign licence, Location teleport, ShipsStructure structure);
 	public File getFile();
+	public Ship setFile(File ship);
 	public Map<OfflinePlayer, BlockVector> getBlockLocation();
 	public boolean isMoving();
+	public Ship setMoving(boolean check);
 	public boolean isInvincible();
+	public Ship setInvincible(boolean check);
 	public void updateLocation(Location teleport, Sign sign);
-	public void updateStructure();
+	public boolean updateStructure();
+	public boolean updateStructure(Location anyBlock);
+	public boolean updateToMovingStructure(ShipsStructure structure);
 	public void save();
 	public void delete();
 	public void reload();
@@ -66,6 +80,15 @@ public interface Ship {
 		return ChatColor.stripColor(name);
 	}
 	
+	public default void setName(String name) {
+		Sign sign = getSign();
+		if(sign == null) {
+			return;
+		}
+		sign.setLine(2, ChatColor.GREEN + name);
+		sign.update();
+	}
+	
 	public default int getWaterLevel() {
 		int level = 0;
 		for (BlockHandler handler : getStructure().getAllBlocks()){
@@ -86,6 +109,23 @@ public interface Ship {
 			}
 		}
 		return level;
+	}
+	
+	public default Ship registerBlockLocation(Player player) {
+		return registerBlockLocation(player, player.getLocation());
+	}
+	
+	public default Ship registerBlockLocation(OfflinePlayer player, Location loc) {
+		int x = getLocation().getBlockX() - loc.getBlockX();
+		int y = getLocation().getBlockY() - loc.getBlockY();
+		int z = getLocation().getBlockZ() - loc.getBlockZ();
+		BlockVector vector = new BlockVector(x, y, z, this.getLocation().getBlock());
+		getBlockLocation().put(player, vector);
+		return this;
+	}
+	
+	public default void deregisterBlockLocation(OfflinePlayer player) {
+		getBlockLocation().remove(player);
 	}
 	
 	public default Set<Entity> getEntities() {

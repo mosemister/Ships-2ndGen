@@ -1,5 +1,5 @@
 name: Ships
-version: 5.0.1.13
+version: 5.1.0.0
 main: MoseShipsBukkit.Ships
 commands:
   Ships:

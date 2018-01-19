@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.ships.block.blockhandler.BlockHandler;
 
 import MoseShipsBukkit.MovingShip.MovingBlock;
-import MoseShipsBukkit.StillShip.Vessel.BaseVessel;
+import MoseShipsBukkit.StillShip.Vessel.Ship;
 
 public class VesselTypeUtils {
 
@@ -59,7 +59,7 @@ public class VesselTypeUtils {
 	}
 
 	// checks if the vessel has enough fuel to be taken
-	public boolean checkFuel(BaseVessel vessel, int take, Collection<Material> fuels) {
+	public boolean checkFuel(Ship vessel, int take, Collection<Material> fuels) {
 		if(fuels.isEmpty()) {
 			return true;
 		}
@@ -93,7 +93,7 @@ public class VesselTypeUtils {
 		return false;
 	}
 
-	public int getTotalAmountOfFuel(BaseVessel vessel, Collection<Material> fuels) {
+	public int getTotalAmountOfFuel(Ship vessel, Collection<Material> fuels) {
 		if(fuels.isEmpty()) {
 			return 0;
 		}
@@ -118,7 +118,7 @@ public class VesselTypeUtils {
 	}
 
 	// does the same as above only takes the fuel away instead of checking it
-	public boolean takeFuel(BaseVessel vessel, int take, Collection<Material> fuels) {
+	public boolean takeFuel(Ship vessel, int take, Collection<Material> fuels) {
 		if(fuels.isEmpty()) {
 			return false;
 		}
