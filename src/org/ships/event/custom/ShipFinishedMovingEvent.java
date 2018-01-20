@@ -2,8 +2,7 @@ package org.ships.event.custom;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import MoseShipsBukkit.StillShip.Vessel.Ship;
+import org.ships.ship.Ship;
 
 public class ShipFinishedMovingEvent extends Event {
 

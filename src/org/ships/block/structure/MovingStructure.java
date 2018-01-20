@@ -9,10 +9,9 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.ships.block.MovingBlock;
 import org.ships.block.blockhandler.BlockHandler;
 import org.ships.block.blockhandler.BlockPriority;
-
-import MoseShipsBukkit.MovingShip.MovingBlock;
 
 public class MovingStructure implements ShipsStructure {
 

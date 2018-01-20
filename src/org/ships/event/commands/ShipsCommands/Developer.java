@@ -12,9 +12,8 @@ import org.ships.block.configuration.MovementInstruction;
 import org.ships.block.structure.ShipsStructure;
 import org.ships.configuration.MaterialsList;
 import org.ships.event.commands.CommandLauncher;
-
-import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
+import org.ships.ship.LoadableShip;
+import org.ships.ship.type.VesselType;
 
 public class Developer extends CommandLauncher {
 

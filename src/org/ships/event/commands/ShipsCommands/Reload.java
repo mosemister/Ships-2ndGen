@@ -6,10 +6,9 @@ import org.bukkit.entity.Player;
 import org.ships.configuration.Config;
 import org.ships.configuration.MaterialsList;
 import org.ships.event.commands.CommandLauncher;
-
-import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
+import org.ships.plugin.Ships;
+import org.ships.ship.LoadableShip;
+import org.ships.ship.type.VesselType;
 
 public class Reload extends CommandLauncher {
 

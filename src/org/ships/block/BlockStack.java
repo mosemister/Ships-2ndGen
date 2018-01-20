@@ -7,8 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-
-import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
+import org.ships.ship.LoadableShip;
 
 public class BlockStack extends ArrayList<Block>{
 

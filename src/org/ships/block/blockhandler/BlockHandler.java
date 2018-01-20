@@ -12,9 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Attachable;
 import org.bukkit.block.data.Rotatable;
-
-import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.MovingShip.MovementMethod;
+import org.ships.plugin.Ships;
+import org.ships.ship.movement.MovementMethod;
 
 public interface BlockHandler {
 	

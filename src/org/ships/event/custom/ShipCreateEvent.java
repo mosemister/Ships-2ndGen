@@ -5,8 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-
-import MoseShipsBukkit.StillShip.Vessel.Ship;
+import org.ships.ship.Ship;
 
 public class ShipCreateEvent extends Event implements Cancellable {
 

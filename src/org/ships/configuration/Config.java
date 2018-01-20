@@ -5,8 +5,7 @@ import java.io.IOException;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
-
-import MoseShipsBukkit.Ships;
+import org.ships.plugin.Ships;
 
 public class Config {
 

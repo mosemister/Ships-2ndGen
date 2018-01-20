@@ -4,8 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.ships.event.commands.CommandLauncher;
-
-import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
+import org.ships.ship.LoadableShip;
 
 public class VesselCommand extends CommandLauncher {
 

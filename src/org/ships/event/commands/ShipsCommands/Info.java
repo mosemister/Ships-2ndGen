@@ -18,12 +18,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.ships.configuration.Config;
 import org.ships.event.commands.CommandLauncher;
 import org.ships.event.commands.gui.ShipsGUICommand;
-
-import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.ShipsTypes.HookTypes.Fuel;
-import MoseShipsBukkit.ShipsTypes.HookTypes.RequiredMaterial;
-import MoseShipsBukkit.World.Wind.Direction;
+import org.ships.plugin.Ships;
+import org.ships.ship.movement.BoostDirection;
+import org.ships.ship.type.VesselType;
+import org.ships.ship.type.hooks.Fuel;
+import org.ships.ship.type.hooks.RequiredMaterial;
 
 public class Info extends CommandLauncher {
 
@@ -37,7 +36,7 @@ public class Info extends CommandLauncher {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		player.sendMessage(getFormat("Version", Ships.getPlugin().getDescription().getVersion()));
 		player.sendMessage(
-				getFormat("Worlds wind direction", Direction.getDirection(player.getWorld()).getDirection().name()));
+				getFormat("Worlds wind direction", BoostDirection.getDirection(player.getWorld()).getDirection().name()));
 		player.sendMessage(getFormat("Ships track limit", config.getInt("Structure.StructureLimits.trackLimit")));
 		player.sendMessage(
 				getFormat("Submarine air check limit", config.getInt("Structure.StructureLimits.airCheckGap")));
@@ -81,7 +80,7 @@ public class Info extends CommandLauncher {
 		sender.sendMessage(
 				getFormat("Block Break", "" + config.getBoolean("World.ProtectedVessels.EntityProtect.EnderMan")));
 		sender.sendMessage(ChatColor.GOLD + "---[World Wind Directions]---");
-		for (Direction direction : Direction.getDirections()) {
+		for (BoostDirection direction : BoostDirection.getDirections()) {
 			sender.sendMessage(getFormat(direction.getWorld().getName(), direction.getDirection().name()));
 		}
 
@@ -195,7 +194,7 @@ public class Info extends CommandLauncher {
 			ItemMeta worldIM = worldIS.getItemMeta();
 			worldIM.setDisplayName("World");
 			worldIM.setLore(
-					Arrays.asList("WindDirection: " + Direction.getDirection(entity.getWorld()).getDirection().name()));
+					Arrays.asList("WindDirection: " + BoostDirection.getDirection(entity.getWorld()).getDirection().name()));
 			worldIS.setItemMeta(worldIM);
 			items.add(worldIS);
 

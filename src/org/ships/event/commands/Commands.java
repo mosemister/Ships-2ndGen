@@ -5,8 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-
-import MoseShipsBukkit.Ships;
+import org.ships.plugin.Ships;
 
 public class Commands implements CommandExecutor {
 

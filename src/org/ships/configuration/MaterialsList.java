@@ -13,8 +13,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.ships.block.configuration.MaterialConfiguration;
 import org.ships.block.configuration.MovementInstruction;
-
-import MoseShipsBukkit.Ships;
+import org.ships.plugin.Ships;
 
 public class MaterialsList {
 
@@ -81,8 +80,17 @@ public class MaterialsList {
 			configurationOptions.add(new MaterialConfiguration(Material.BROWN_WOOL, MovementInstruction.MATERIAL));
 			configurationOptions.add(new MaterialConfiguration(Material.CYAN_WOOL, MovementInstruction.MATERIAL));
 			configurationOptions.add(new MaterialConfiguration(Material.GRAY_WOOL, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIME_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_WOOL, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_GRAY_WOOL, MovementInstruction.MATERIAL));
 			//ore full blocks
 			configurationOptions.add(new MaterialConfiguration(Material.GOLD_BLOCK, MovementInstruction.MATERIAL));
 			configurationOptions.add(new MaterialConfiguration(Material.IRON_BLOCK, MovementInstruction.MATERIAL));
@@ -135,25 +143,41 @@ public class MaterialsList {
 			//door
 			configurationOptions.add(new MaterialConfiguration(Material.IRON_DOOR, MovementInstruction.MATERIAL));
 			configurationOptions.add(new MaterialConfiguration(Material.ACACIA_DOOR, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BIRCH_DOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.JUNGLE_DOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.OAK_DOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.SPRUCE_DOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.DARK_OAK_DOOR, MovementInstruction.MATERIAL));
 			//lever
 			configurationOptions.add(new MaterialConfiguration(Material.LEVER, MovementInstruction.MATERIAL));
-			
 			//pressure plate
 			configurationOptions.add(new MaterialConfiguration(Material.ACACIA_PRESSURE_PLATE, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BIRCH_PRESSURE_PLATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.JUNGLE_PRESSURE_PLATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.OAK_PRESSURE_PLATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.SPRUCE_PRESSURE_PLATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.STONE_PRESSURE_PLATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.DARK_OAK_PRESSURE_PLATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_WEIGHTED_PRESSURE_PLATE, MovementInstruction.MATERIAL));
 			//button
 			configurationOptions.add(new MaterialConfiguration(Material.ACACIA_BUTTON, MovementInstruction.MATERIAL));
-			///TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BIRCH_BUTTON, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.JUNGLE_BUTTON, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.OAK_BUTTON, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.SPRUCE_BUTTON, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.STONE_BUTTON, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.DARK_OAK_BUTTON, MovementInstruction.MATERIAL));		
 			//jukebox
 			configurationOptions.add(new MaterialConfiguration(Material.JUKEBOX, MovementInstruction.MATERIAL));
 			//fence
 			configurationOptions.add(new MaterialConfiguration(Material.ACACIA_FENCE, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BIRCH_FENCE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.JUNGLE_FENCE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.OAK_FENCE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.SPRUCE_FENCE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.DARK_OAK_FENCE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.NETHER_BRICK_FENCE, MovementInstruction.MATERIAL));
 			///pumpkin
 			configurationOptions.add(new MaterialConfiguration(Material.PUMPKIN, MovementInstruction.MATERIAL));
 			configurationOptions.add(new MaterialConfiguration(Material.JACK_O_LANTERN, MovementInstruction.MATERIAL));
@@ -167,22 +191,53 @@ public class MaterialsList {
 			configurationOptions.add(new MaterialConfiguration(Material.REPEATER, MovementInstruction.MATERIAL));
 			//stained glass
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_STAINED_GLASS, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BLUE_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BROWN_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.CYAN_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GRAY_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_GRAY_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_STAINED_GLASS, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_STAINED_GLASS, MovementInstruction.MATERIAL));			
 			//trapdoor
 			configurationOptions.add(new MaterialConfiguration(Material.ACACIA_TRAPDOOR, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BIRCH_TRAPDOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.IRON_TRAPDOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.JUNGLE_TRAPDOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.OAK_TRAPDOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.SPRUCE_TRAPDOOR, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.DARK_OAK_TRAPDOOR, MovementInstruction.MATERIAL));
 			//iron bars
 			configurationOptions.add(new MaterialConfiguration(Material.IRON_BARS, MovementInstruction.MATERIAL));
 			//glass pane
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BLUE_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BROWN_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.CYAN_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GRAY_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_GRAY_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_STAINED_GLASS_PANE, MovementInstruction.MATERIAL));	
 			//fence gate
 			configurationOptions.add(new MaterialConfiguration(Material.ACACIA_FENCE_GATE, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BIRCH_FENCE_GATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.JUNGLE_FENCE_GATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.OAK_FENCE_GATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.SPRUCE_FENCE_GATE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.DARK_OAK_FENCE_GATE, MovementInstruction.MATERIAL));
 			//enchantment table
 			configurationOptions.add(new MaterialConfiguration(Material.ENCHANTING_TABLE, MovementInstruction.MATERIAL));
 			//cauldron
@@ -247,12 +302,23 @@ public class MaterialsList {
 			configurationOptions.add(new MaterialConfiguration(Material.HAY_BLOCK, MovementInstruction.MATERIAL));
 			//carpet
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_CARPET, MovementInstruction.MATERIAL));
-			//TODO 
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BLUE_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BROWN_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.CYAN_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GRAY_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_GRAY_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_CARPET, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_CARPET, MovementInstruction.MATERIAL));
 			//banner
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_BANNER, MovementInstruction.MATERIAL));
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_WALL_BANNER, MovementInstruction.MATERIAL));
-
 			//end rod
 			configurationOptions.add(new MaterialConfiguration(Material.END_ROD, MovementInstruction.MATERIAL));
 			//purpur
@@ -260,16 +326,71 @@ public class MaterialsList {
 			configurationOptions.add(new MaterialConfiguration(Material.PURPUR_PILLAR, MovementInstruction.MATERIAL));
 			//shulker box
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_SHULKER_BOX, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BLUE_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BROWN_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.CYAN_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GRAY_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_GRAY_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIME_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_SHULKER_BOX, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_SHULKER_BOX, MovementInstruction.MATERIAL));
 			//terracotta
 			configurationOptions.add(new MaterialConfiguration(Material.TERRACOTTA, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BLACK_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BLACK_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BLUE_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BLUE_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BROWN_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BROWN_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.CYAN_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.CYAN_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GRAY_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GRAY_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_GRAY_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIME_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIME_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_GLAZED_TERRACOTTA, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_TERRACOTTA, MovementInstruction.MATERIAL));
 			//concreate
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_CONCRETE, MovementInstruction.MATERIAL));
-			//TODO
-			
+			configurationOptions.add(new MaterialConfiguration(Material.BLUE_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.BROWN_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.CYAN_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GRAY_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.GREEN_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_BLUE_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIGHT_GRAY_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.LIME_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.MAGENTA_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.ORANGE_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PINK_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.PURPLE_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.RED_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.WHITE_CONCRETE, MovementInstruction.MATERIAL));
+			configurationOptions.add(new MaterialConfiguration(Material.YELLOW_CONCRETE, MovementInstruction.MATERIAL));
 			//concrete powder
 			configurationOptions.add(new MaterialConfiguration(Material.BLACK_CONCRETE_POWDER, MovementInstruction.MATERIAL));
 			

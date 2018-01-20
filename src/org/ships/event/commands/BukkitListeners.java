@@ -40,20 +40,19 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.ships.block.Vector.BlockVector;
 import org.ships.configuration.Config;
 import org.ships.event.commands.gui.ShipsGUICommand;
 import org.ships.event.custom.ShipCreateEvent;
 import org.ships.event.custom.ShipsSignCreation;
-
-import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.ShipsTypes.VesselType;
-import MoseShipsBukkit.StillShip.Vectors.BlockVector;
-import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
-import MoseShipsBukkit.Utils.ShipsAutoRuns;
-import MoseShipsBukkit.Utils.VesselLoader;
-import MoseShipsBukkit.Utils.Exceptions.InvalidSignException;
-import MoseShipsBukkit.World.Wind.Direction;
+import org.ships.plugin.InvalidSignException;
+import org.ships.plugin.Ships;
+import org.ships.ship.LoadableShip;
+import org.ships.ship.loader.VesselLoader;
+import org.ships.ship.movement.BoostDirection;
+import org.ships.ship.movement.MovementMethod;
+import org.ships.ship.movement.ShipsAutoRuns;
+import org.ships.ship.type.VesselType;
 
 public class BukkitListeners implements Listener {
 
@@ -455,7 +454,7 @@ public class BukkitListeners implements Listener {
 								vessel.moveTowards(MovementMethod.getMovingDirection(vessel, face),
 										vessel.getVesselType().getDefaultSpeed(), event.getPlayer());
 							} else {
-								if (Direction.getDirection(vessel.getLocation().getWorld()).getDirection().equals(face)) {
+								if (BoostDirection.getDirection(vessel.getLocation().getWorld()).getDirection().equals(face)) {
 									vessel.moveTowards(MovementMethod.getMovingDirection(vessel, face),
 											vessel.getVesselType().getDefaultBoostSpeed(), event.getPlayer());
 								} else {

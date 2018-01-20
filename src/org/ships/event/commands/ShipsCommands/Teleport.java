@@ -15,9 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.ships.event.commands.CommandLauncher;
 import org.ships.event.commands.gui.ShipsGUICommand;
-
-import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
+import org.ships.plugin.Ships;
+import org.ships.ship.LoadableShip;
 
 public class Teleport extends CommandLauncher {
 

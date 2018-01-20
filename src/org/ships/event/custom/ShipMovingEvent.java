@@ -6,9 +6,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.ships.block.structure.MovingStructure;
-
-import MoseShipsBukkit.MovingShip.MovementMethod;
-import MoseShipsBukkit.StillShip.Vessel.Ship;
+import org.ships.ship.Ship;
+import org.ships.ship.movement.MovementMethod;
 
 public class ShipMovingEvent extends Event implements Cancellable {
 

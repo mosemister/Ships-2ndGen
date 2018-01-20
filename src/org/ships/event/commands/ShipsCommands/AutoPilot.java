@@ -6,10 +6,9 @@ import org.bukkit.World;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.ships.event.commands.CommandLauncher;
-
-import MoseShipsBukkit.Ships;
-import MoseShipsBukkit.MovingShip.AutoPilotData;
-import MoseShipsBukkit.StillShip.Vessel.LoadableShip;
+import org.ships.plugin.Ships;
+import org.ships.ship.LoadableShip;
+import org.ships.ship.movement.AutoPilotData;
 
 public class AutoPilot extends CommandLauncher {
 
