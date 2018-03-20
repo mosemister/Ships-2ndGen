@@ -133,6 +133,14 @@ public class Config {
 			if ((curVersion <= 5016) && (latVersion >= 5017)) {
 				config.set("VesselLoading.DeleteFailedLoads", false);
 			}
+			if((curVersion <= 50112) && (latVersion >= 50114)) {
+				config.set("Messages.NameTaken", "%name% taken");
+				config.set("Messages.TypeNotInstalled", "%type% is not installed on this server");
+				config.set("Messages.RecoveredShip", "%ship% recovered! Click again for stats");
+				config.set("Messages.OwnedBy", "%ship% is owned by %owner%");
+				config.set("Messages.RemovedShip", "%ship% was removed");
+				config.set("Messages.CannotFindSign", "Ships sign cannot be found");
+			}
 			// compare version then update
 			config.set("Version", getLatestVersionString());
 			try {

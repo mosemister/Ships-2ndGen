@@ -52,6 +52,7 @@ import MoseShipsBukkit.StillShip.Vessel.Vessel;
 import MoseShipsBukkit.Utils.ShipsAutoRuns;
 import MoseShipsBukkit.Utils.VesselLoader;
 import MoseShipsBukkit.Utils.ConfigLinks.Config;
+import MoseShipsBukkit.Utils.ConfigLinks.Messages;
 import MoseShipsBukkit.World.Wind.Direction;
 
 public class BukkitListeners implements Listener {
@@ -220,10 +221,10 @@ public class BukkitListeners implements Listener {
 						|| (event.getPlayer().hasPermission("ships.*"))) {
 					vessel.remove();
 					event.getPlayer()
-							.sendMessage(Ships.runShipsMessage(vessel.getName() + " has been removed.", false));
+							.sendMessage(Ships.runShipsMessage(Messages.getRemovedShip(vessel.getName()), false));
 				} else {
 					event.getPlayer()
-							.sendMessage(Ships.runShipsMessage(vessel.getName() + "does not belong to you.", true));
+							.sendMessage(Ships.runShipsMessage(Messages.getOwnedBy(vessel.getName(), vessel.getOwner().getName()), true));
 					event.setCancelled(true);
 				}
 			}
@@ -280,14 +281,14 @@ public class BukkitListeners implements Listener {
 							}
 							return;
 						} else {
-							event.getPlayer().sendMessage(Ships.runShipsMessage("Name taken", true));
+							event.getPlayer().sendMessage(Ships.runShipsMessage(Messages.getNameTaken(name), true));
 							event.setCancelled(true);
 							return;
 						}
 					}
 				}
 			} else {
-				event.getPlayer().sendMessage(Ships.runShipsMessage("Vessel type does not exist", true));
+				event.getPlayer().sendMessage(Ships.runShipsMessage(Messages.getTypeNotInstalled(event.getLine(1)), true));
 				event.setCancelled(true);
 				return;
 			}
@@ -487,7 +488,7 @@ public class BukkitListeners implements Listener {
 								sign.getBlock().breakNaturally();
 							} else {
 								event.getPlayer().sendMessage(Ships
-										.runShipsMessage("Recoved losted vessel, click again to get stats.", false));
+										.runShipsMessage(Messages.getRecoveredShip(vessel2.getName()), false));
 								vessel2.updateLocation(vessel2.getTeleportLocation(), sign);
 							}
 						} else {
@@ -495,7 +496,7 @@ public class BukkitListeners implements Listener {
 								vessel.displayInfo(event.getPlayer());
 							} else {
 								event.getPlayer().sendMessage(Ships
-										.runShipsMessage("Vessel is owned by " + vessel.getOwner().getName(), false));
+										.runShipsMessage(Messages.getOwnedBy(vessel.getName(), vessel.getOwner().getName()), false));
 							}
 						}
 					}
