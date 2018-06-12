@@ -17,7 +17,7 @@ import org.spongepowered.api.text.Text;
 
 public class BlockList extends BasicConfig {
 
-	Map<BlockState, ListType> BLOCKS = new HashMap<BlockState, ListType>();
+	Map<BlockType, ListType> BLOCKS = new HashMap<BlockType, ListType>();
 
 	public static final BlockList BLOCK_LIST = new BlockList();
 
@@ -27,11 +27,10 @@ public class BlockList extends BasicConfig {
 	}
 
 	public void reload() {
-		BLOCKS = new HashMap<BlockState, ListType>();
+		BLOCKS = new HashMap<BlockType, ListType>();
 		List<BlockState> list = new ArrayList<>();
 		Collection<BlockType> list2 = Sponge.getRegistry().getAllOf(BlockType.class);
 		list2.stream().forEach(b -> {
-			b.getAllBlockStates().stream().forEach(s -> {
 				String value = get(String.class, s.getId());
 				if (value != null) {
 					ListType type = ListType.valueFrom(value);
@@ -41,7 +40,6 @@ public class BlockList extends BasicConfig {
 						BLOCKS.put(s, type);
 					}
 				}
-			});
 		});
 		if (list.size() != 0) {
 			ConsoleSource console = Sponge.getServer().getConsole();
@@ -53,32 +51,25 @@ public class BlockList extends BasicConfig {
 	public BlockList applyMissing() {
 		Collection<BlockType> list = Sponge.getRegistry().getAllOf(BlockType.class);
 		list.stream().forEach(b -> {
-			b.getAllBlockStates().stream().forEach(s -> {
+				String name = getDefaultValue(s).name();
+				String id = s.getId();
+				if((name == null) || (id == null)) {
+					return;
+				}
 				set(getDefaultValue(s).name(), s.getId());
-			});
 		});
 		save();
 		return this;
 	}
-
-	public ListType resetMaterial(BlockState state, ListType type) {
-		return BLOCKS.replace(state, type);
-	}
 	
 	public ListType resetMaterial(BlockType type, ListType list) {
-		for(BlockState state : type.getAllBlockStates()) {
-			BLOCKS.replace(state, list);
-		}
+		BLOCKS.replace(type, list);
 		return list;
 	}
 
-	public List<BlockState> getBlocks(ListType type) {
-		List<BlockState> states = new ArrayList<BlockState>();
-		for (Entry<BlockState, ListType> entry : BLOCKS.entrySet()) {
-			if (entry.getValue().equals(type)) {
-				states.add(entry.getKey());
-			}
-		}
+	public List<BlockType> getBlocks(ListType type) {
+		List<BlockType> states = new ArrayList<>();
+		BLOCKS.entrySet().stream().filter(e -> e.equals(type)).forEach(e -> states.add(e.getKey()));
 		return states;
 	}
 
@@ -92,134 +83,124 @@ public class BlockList extends BasicConfig {
 		return ListType.NONE;
 	}
 
-	public ListType getDefaultValue(BlockState type) {
-		if (getDefaultMaterialList().stream().anyMatch(b -> b.equals(type))) {
-			return ListType.MATERIALS;
-		}
-		if (getDefaultRamList().stream().anyMatch(b -> b.equals(type))) {
-			return ListType.RAM;
-		}
-		return ListType.NONE;
-	}
-
-	public List<BlockState> getDefaultMaterialList() {
-		List<BlockState> list = new ArrayList<>();
-		list.addAll(BlockTypes.LOG.getAllBlockStates());
-		list.addAll(BlockTypes.LOG2.getAllBlockStates());
-		list.addAll(BlockTypes.PLANKS.getAllBlockStates());
-		list.addAll(BlockTypes.SPONGE.getAllBlockStates());
-		list.addAll(BlockTypes.GLASS.getAllBlockStates());
-		list.addAll(BlockTypes.LAPIS_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.DISPENSER.getAllBlockStates());
-		list.addAll(BlockTypes.NOTEBLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.STICKY_PISTON.getAllBlockStates());
-		list.addAll(BlockTypes.PISTON.getAllBlockStates());
-		list.addAll(BlockTypes.PISTON_EXTENSION.getAllBlockStates());
-		list.addAll(BlockTypes.PISTON_HEAD.getAllBlockStates());
-		list.addAll(BlockTypes.WOOL.getAllBlockStates());
-		list.addAll(BlockTypes.GOLD_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.IRON_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.DOUBLE_STONE_SLAB.getAllBlockStates());
-		list.addAll(BlockTypes.STONE_SLAB.getAllBlockStates());
-		list.addAll(BlockTypes.BRICK_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.TNT.getAllBlockStates());
-		list.addAll(BlockTypes.BOOKSHELF.getAllBlockStates());
-		list.addAll(BlockTypes.MOSSY_COBBLESTONE.getAllBlockStates());
-		list.addAll(BlockTypes.OBSIDIAN.getAllBlockStates());
-		list.addAll(BlockTypes.TORCH.getAllBlockStates());
-		list.addAll(BlockTypes.FIRE.getAllBlockStates());
-		list.addAll(BlockTypes.MOB_SPAWNER.getAllBlockStates());
-		list.addAll(BlockTypes.OAK_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.CHEST.getAllBlockStates());
-		list.addAll(BlockTypes.REDSTONE_WIRE.getAllBlockStates());
-		list.addAll(BlockTypes.DIAMOND_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.CRAFTING_TABLE.getAllBlockStates());
-		list.addAll(BlockTypes.FURNACE.getAllBlockStates());
-		list.addAll(BlockTypes.LIT_FURNACE.getAllBlockStates());
-		list.addAll(BlockTypes.WALL_SIGN.getAllBlockStates());
-		list.addAll(BlockTypes.STANDING_SIGN.getAllBlockStates());
-		list.addAll(BlockTypes.WOODEN_DOOR.getAllBlockStates());
-		list.addAll(BlockTypes.LEVER.getAllBlockStates());
-		list.addAll(BlockTypes.STONE_PRESSURE_PLATE.getAllBlockStates());
-		list.addAll(BlockTypes.IRON_DOOR.getAllBlockStates());
-		list.addAll(BlockTypes.WOODEN_PRESSURE_PLATE.getAllBlockStates());
-		list.addAll(BlockTypes.REDSTONE_TORCH.getAllBlockStates());
-		list.addAll(BlockTypes.UNLIT_REDSTONE_TORCH.getAllBlockStates());
-		list.addAll(BlockTypes.STONE_BUTTON.getAllBlockStates());
-		list.addAll(BlockTypes.JUKEBOX.getAllBlockStates());
-		list.addAll(BlockTypes.FENCE.getAllBlockStates());
-		list.addAll(BlockTypes.NETHERRACK.getAllBlockStates());
-		list.addAll(BlockTypes.CAKE.getAllBlockStates());
-		list.addAll(BlockTypes.POWERED_REPEATER.getAllBlockStates());
-		list.addAll(BlockTypes.UNPOWERED_REPEATER.getAllBlockStates());
-		list.addAll(BlockTypes.STAINED_GLASS.getAllBlockStates());
-		list.addAll(BlockTypes.TRAPDOOR.getAllBlockStates());
-		list.addAll(BlockTypes.MONSTER_EGG.getAllBlockStates());
-		list.addAll(BlockTypes.GLASS_PANE.getAllBlockStates());
-		list.addAll(BlockTypes.VINE.getAllBlockStates());
-		list.addAll(BlockTypes.FENCE_GATE.getAllBlockStates());
-		list.addAll(BlockTypes.BREWING_STAND.getAllBlockStates());
-		list.addAll(BlockTypes.ENCHANTING_TABLE.getAllBlockStates());
-		list.addAll(BlockTypes.CAULDRON.getAllBlockStates());
-		list.addAll(BlockTypes.LIT_REDSTONE_LAMP.getAllBlockStates());
-		list.addAll(BlockTypes.REDSTONE_LAMP.getAllBlockStates());
-		list.addAll(BlockTypes.DOUBLE_WOODEN_SLAB.getAllBlockStates());
-		list.addAll(BlockTypes.WOODEN_SLAB.getAllBlockStates());
-		list.addAll(BlockTypes.SANDSTONE_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.ENDER_CHEST.getAllBlockStates());
-		list.addAll(BlockTypes.TRIPWIRE_HOOK.getAllBlockStates());
-		list.addAll(BlockTypes.EMERALD_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.SPRUCE_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.BIRCH_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.JUNGLE_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.BEACON.getAllBlockStates());
-		list.addAll(BlockTypes.COBBLESTONE_WALL.getAllBlockStates());
-		list.addAll(BlockTypes.FLOWER_POT.getAllBlockStates());
-		list.addAll(BlockTypes.WOODEN_BUTTON.getAllBlockStates());
-		list.addAll(BlockTypes.SKULL.getAllBlockStates());
-		list.addAll(BlockTypes.ANVIL.getAllBlockStates());
-		list.addAll(BlockTypes.TRAPPED_CHEST.getAllBlockStates());
-		list.addAll(BlockTypes.HEAVY_WEIGHTED_PRESSURE_PLATE.getAllBlockStates());
-		list.addAll(BlockTypes.LIGHT_WEIGHTED_PRESSURE_PLATE.getAllBlockStates());
-		list.addAll(BlockTypes.POWERED_COMPARATOR.getAllBlockStates());
-		list.addAll(BlockTypes.UNPOWERED_COMPARATOR.getAllBlockStates());
-		list.addAll(BlockTypes.DAYLIGHT_DETECTOR.getAllBlockStates());
-		list.addAll(BlockTypes.REDSTONE_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.HOPPER.getAllBlockStates());
-		list.addAll(BlockTypes.QUARTZ_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.QUARTZ_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.DROPPER.getAllBlockStates());
-		list.addAll(BlockTypes.STAINED_HARDENED_CLAY.getAllBlockStates());
-		list.addAll(BlockTypes.STAINED_GLASS_PANE.getAllBlockStates());
-		list.addAll(BlockTypes.ACACIA_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.DARK_OAK_STAIRS.getAllBlockStates());
-		list.addAll(BlockTypes.SLIME.getAllBlockStates());
-		list.addAll(BlockTypes.BARRIER.getAllBlockStates());
-		list.addAll(BlockTypes.IRON_TRAPDOOR.getAllBlockStates());
-		list.addAll(BlockTypes.PRISMARINE.getAllBlockStates());
-		list.addAll(BlockTypes.SEA_LANTERN.getAllBlockStates());
-		list.addAll(BlockTypes.HAY_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.CARPET.getAllBlockStates());
-		list.addAll(BlockTypes.HARDENED_CLAY.getAllBlockStates());
-		list.addAll(BlockTypes.COAL_BLOCK.getAllBlockStates());
-		list.addAll(BlockTypes.STANDING_BANNER.getAllBlockStates());
-		list.addAll(BlockTypes.WALL_BANNER.getAllBlockStates());
-		list.addAll(BlockTypes.DAYLIGHT_DETECTOR_INVERTED.getAllBlockStates());
-		list.addAll(BlockTypes.SPRUCE_FENCE_GATE.getAllBlockStates());
-		list.addAll(BlockTypes.BIRCH_FENCE_GATE.getAllBlockStates());
-		list.addAll(BlockTypes.JUNGLE_FENCE_GATE.getAllBlockStates());
-		list.addAll(BlockTypes.DARK_OAK_FENCE_GATE.getAllBlockStates());
-		list.addAll(BlockTypes.ACACIA_FENCE_GATE.getAllBlockStates());
-		list.addAll(BlockTypes.SPRUCE_FENCE.getAllBlockStates());
-		list.addAll(BlockTypes.BIRCH_FENCE.getAllBlockStates());
-		list.addAll(BlockTypes.JUNGLE_DOOR.getAllBlockStates());
-		list.addAll(BlockTypes.DARK_OAK_FENCE.getAllBlockStates());
-		list.addAll(BlockTypes.ACACIA_FENCE.getAllBlockStates());
+	public List<BlockType> getDefaultMaterialList() {
+		List<BlockType> list = new ArrayList<>();
+		list.addAll(BlockTypes.LOG);
+		list.addAll(BlockTypes.LOG2);
+		list.addAll(BlockTypes.PLANKS);
+		list.addAll(BlockTypes.SPONGE);
+		list.addAll(BlockTypes.GLASS);
+		list.addAll(BlockTypes.LAPIS_BLOCK);
+		list.addAll(BlockTypes.DISPENSER);
+		list.addAll(BlockTypes.NOTEBLOCK);
+		list.addAll(BlockTypes.STICKY_PISTON);
+		list.addAll(BlockTypes.PISTON);
+		list.addAll(BlockTypes.PISTON_EXTENSION);
+		list.addAll(BlockTypes.PISTON_HEAD);
+		list.addAll(BlockTypes.WOOL);
+		list.addAll(BlockTypes.GOLD_BLOCK);
+		list.addAll(BlockTypes.IRON_BLOCK);
+		list.addAll(BlockTypes.DOUBLE_STONE_SLAB);
+		list.addAll(BlockTypes.STONE_SLAB);
+		list.addAll(BlockTypes.BRICK_BLOCK);
+		list.addAll(BlockTypes.TNT);
+		list.addAll(BlockTypes.BOOKSHELF);
+		list.addAll(BlockTypes.MOSSY_COBBLESTONE);
+		list.addAll(BlockTypes.OBSIDIAN);
+		list.addAll(BlockTypes.TORCH);
+		list.addAll(BlockTypes.FIRE);
+		list.addAll(BlockTypes.MOB_SPAWNER);
+		list.addAll(BlockTypes.OAK_STAIRS);
+		list.addAll(BlockTypes.CHEST);
+		list.addAll(BlockTypes.REDSTONE_WIRE);
+		list.addAll(BlockTypes.DIAMOND_BLOCK);
+		list.addAll(BlockTypes.CRAFTING_TABLE);
+		list.addAll(BlockTypes.FURNACE);
+		list.addAll(BlockTypes.LIT_FURNACE);
+		list.addAll(BlockTypes.WALL_SIGN);
+		list.addAll(BlockTypes.STANDING_SIGN);
+		list.addAll(BlockTypes.WOODEN_DOOR);
+		list.addAll(BlockTypes.LEVER);
+		list.addAll(BlockTypes.STONE_PRESSURE_PLATE);
+		list.addAll(BlockTypes.IRON_DOOR);
+		list.addAll(BlockTypes.WOODEN_PRESSURE_PLATE);
+		list.addAll(BlockTypes.REDSTONE_TORCH);
+		list.addAll(BlockTypes.UNLIT_REDSTONE_TORCH);
+		list.addAll(BlockTypes.STONE_BUTTON);
+		list.addAll(BlockTypes.JUKEBOX);
+		list.addAll(BlockTypes.FENCE);
+		list.addAll(BlockTypes.NETHERRACK);
+		list.addAll(BlockTypes.CAKE);
+		list.addAll(BlockTypes.POWERED_REPEATER);
+		list.addAll(BlockTypes.UNPOWERED_REPEATER);
+		list.addAll(BlockTypes.STAINED_GLASS);
+		list.addAll(BlockTypes.TRAPDOOR);
+		list.addAll(BlockTypes.MONSTER_EGG);
+		list.addAll(BlockTypes.GLASS_PANE);
+		list.addAll(BlockTypes.VINE);
+		list.addAll(BlockTypes.FENCE_GATE);
+		list.addAll(BlockTypes.BREWING_STAND);
+		list.addAll(BlockTypes.ENCHANTING_TABLE);
+		list.addAll(BlockTypes.CAULDRON);
+		list.addAll(BlockTypes.LIT_REDSTONE_LAMP);
+		list.addAll(BlockTypes.REDSTONE_LAMP);
+		list.addAll(BlockTypes.DOUBLE_WOODEN_SLAB);
+		list.addAll(BlockTypes.WOODEN_SLAB);
+		list.addAll(BlockTypes.SANDSTONE_STAIRS);
+		list.addAll(BlockTypes.ENDER_CHEST);
+		list.addAll(BlockTypes.TRIPWIRE_HOOK);
+		list.addAll(BlockTypes.EMERALD_BLOCK);
+		list.addAll(BlockTypes.SPRUCE_STAIRS);
+		list.addAll(BlockTypes.BIRCH_STAIRS);
+		list.addAll(BlockTypes.JUNGLE_STAIRS);
+		list.addAll(BlockTypes.BEACON);
+		list.addAll(BlockTypes.COBBLESTONE_WALL);
+		list.addAll(BlockTypes.FLOWER_POT);
+		list.addAll(BlockTypes.WOODEN_BUTTON);
+		list.addAll(BlockTypes.SKULL);
+		list.addAll(BlockTypes.ANVIL);
+		list.addAll(BlockTypes.TRAPPED_CHEST);
+		list.addAll(BlockTypes.HEAVY_WEIGHTED_PRESSURE_PLATE);
+		list.addAll(BlockTypes.LIGHT_WEIGHTED_PRESSURE_PLATE);
+		list.addAll(BlockTypes.POWERED_COMPARATOR);
+		list.addAll(BlockTypes.UNPOWERED_COMPARATOR);
+		list.addAll(BlockTypes.DAYLIGHT_DETECTOR);
+		list.addAll(BlockTypes.REDSTONE_BLOCK);
+		list.addAll(BlockTypes.HOPPER);
+		list.addAll(BlockTypes.QUARTZ_BLOCK);
+		list.addAll(BlockTypes.QUARTZ_STAIRS);
+		list.addAll(BlockTypes.DROPPER);
+		list.addAll(BlockTypes.STAINED_HARDENED_CLAY);
+		list.addAll(BlockTypes.STAINED_GLASS_PANE);
+		list.addAll(BlockTypes.ACACIA_STAIRS);
+		list.addAll(BlockTypes.DARK_OAK_STAIRS);
+		list.addAll(BlockTypes.SLIME);
+		list.addAll(BlockTypes.BARRIER);
+		list.addAll(BlockTypes.IRON_TRAPDOOR);
+		list.addAll(BlockTypes.PRISMARINE);
+		list.addAll(BlockTypes.SEA_LANTERN);
+		list.addAll(BlockTypes.HAY_BLOCK);
+		list.addAll(BlockTypes.CARPET);
+		list.addAll(BlockTypes.HARDENED_CLAY);
+		list.addAll(BlockTypes.COAL_BLOCK);
+		list.addAll(BlockTypes.STANDING_BANNER);
+		list.addAll(BlockTypes.WALL_BANNER);
+		list.addAll(BlockTypes.DAYLIGHT_DETECTOR_INVERTED);
+		list.addAll(BlockTypes.SPRUCE_FENCE_GATE);
+		list.addAll(BlockTypes.BIRCH_FENCE_GATE);
+		list.addAll(BlockTypes.JUNGLE_FENCE_GATE);
+		list.addAll(BlockTypes.DARK_OAK_FENCE_GATE);
+		list.addAll(BlockTypes.ACACIA_FENCE_GATE);
+		list.addAll(BlockTypes.SPRUCE_FENCE);
+		list.addAll(BlockTypes.BIRCH_FENCE);
+		list.addAll(BlockTypes.JUNGLE_DOOR);
+		list.addAll(BlockTypes.DARK_OAK_FENCE);
+		list.addAll(BlockTypes.ACACIA_FENCE);
 		return list;
 	}
 
-	public List<BlockState> getDefaultRamList() {
-		List<BlockState> list = new ArrayList<>();
+	public List<BlockType> getDefaultRamList() {
+		List<BlockType> list = new ArrayList<>();
 		list.addAll(BlockTypes.SAPLING.getAllBlockStates());
 		list.addAll(BlockTypes.LEAVES.getAllBlockStates());
 		list.addAll(BlockTypes.WEB.getAllBlockStates());
@@ -275,6 +256,12 @@ public class BlockList extends BasicConfig {
 	@Override
 	public BasicConfig save() {
 		BLOCKS.entrySet().stream().forEach(e -> {
+			String name = e.getValue().name();
+			String key = e.getKey().getId();
+			if((name == null) || (key == null)) {
+				System.err.println("Failed to apply " + e.getKey().getName());
+				return;
+			}
 			set(e.getValue().name(), e.getKey().getId());
 		});
 		return super.save();
