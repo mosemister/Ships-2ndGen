@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.ships.block.blockhandler.BlockHandler;
 import org.ships.ship.Ship;
 
@@ -69,7 +70,7 @@ public class BlockVector {
 	public static List<BlockVector> convert(Ship vessel) {
 		List<BlockVector> vectors = new ArrayList<BlockVector>();
 		Block block2 = vessel.getLocation().getBlock();
-		for (BlockHandler block : vessel.getStructure().getAllBlocks()) {
+		for (BlockHandler<? extends BlockState> block : vessel.getStructure().getAllBlocks()) {
 			BlockVector vector = new BlockVector(block2, block.getBlock());
 			vectors.add(vector);
 		}

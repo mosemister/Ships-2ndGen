@@ -10,6 +10,7 @@ import java.net.URLConnection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -17,6 +18,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ships.block.BlockStack;
+import org.ships.block.blockhandler.BlockHandler;
+import org.ships.block.blockhandler.types.*;
 import org.ships.block.configuration.MovementInstruction;
 import org.ships.configuration.Config;
 import org.ships.configuration.MaterialsList;
@@ -56,6 +59,7 @@ public class Ships extends JavaPlugin {
 		Config.getConfig().updateCheck();
 		new MaterialsList();
 		MaterialsList.getMaterialsList().save();
+		registerHandlers();
 		activateCommands();
 		Messages.refreshMessages();
 		removeOldFiles();
@@ -83,7 +87,7 @@ public class Ships extends JavaPlugin {
 		LoadableShip.getShips().stream().forEach(s -> s.save());
 	}
 	
-	public void afterBoot() {
+	private void afterBoot() {
 		Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
 
 			@Override
@@ -97,7 +101,7 @@ public class Ships extends JavaPlugin {
 		}, 0);
 	}
 
-	public void removeOldFiles() {
+	private void removeOldFiles() {
 		File config = new File("plugins/Ships/config.yml");
 		File messages = new File("plugins/Ships/DebugOptions.yml");
 		File materials = new File("plugins/Ships/Materials.yml");
@@ -116,7 +120,7 @@ public class Ships extends JavaPlugin {
 		}
 	}
 
-	public static void activateCommands() {
+	private void activateCommands() {
 		new Reload();
 		new Developer();
 		new SignCommand();
@@ -125,6 +129,74 @@ public class Ships extends JavaPlugin {
 		new Info();
 		new VesselCommand();
 		new Help();
+	}
+	
+	private void registerHandlers() {
+		BlockHandler.register(Banner.class,
+				Material.BLACK_BANNER, 
+				Material.BLACK_WALL_BANNER, 
+				Material.BLUE_BANNER, 
+				Material.BLUE_WALL_BANNER, 
+				Material.BROWN_BANNER, 
+				Material.BROWN_WALL_BANNER, 
+				Material.CYAN_BANNER, 
+				Material.CYAN_WALL_BANNER, 
+				Material.GRAY_BANNER, 
+				Material.GRAY_WALL_BANNER, 
+				Material.GREEN_BANNER,
+				Material.GREEN_WALL_BANNER, 
+				Material.LIGHT_BLUE_BANNER, 
+				Material.LIGHT_BLUE_WALL_BANNER, 
+				Material.LIGHT_GRAY_BANNER, 
+				Material.LIGHT_GRAY_WALL_BANNER, 
+				Material.LIME_BANNER, 
+				Material.LIME_WALL_BANNER, 
+				Material.MAGENTA_BANNER, 
+				Material.MAGENTA_WALL_BANNER, 
+				Material.ORANGE_BANNER,
+				Material.ORANGE_WALL_BANNER, 
+				Material.PINK_BANNER, 
+				Material.PINK_WALL_BANNER,
+				Material.PURPLE_BANNER, 
+				Material.PURPLE_WALL_BANNER, 
+				Material.RED_BANNER, 
+				Material.RED_WALL_BANNER, 
+				Material.WHITE_BANNER, 
+				Material.WHITE_WALL_BANNER, 
+				Material.YELLOW_BANNER, 
+				Material.YELLOW_WALL_BANNER);
+		BlockHandler.register(Beacon.class, Material.BEACON);
+		BlockHandler.register(Brewing.class, Material.BREWING_STAND);
+		BlockHandler.register(Chest.class, 
+				Material.CHEST, 
+				Material.TRAPPED_CHEST);
+		BlockHandler.register(CommandBlock.class, 
+				Material.COMMAND_BLOCK, 
+				Material.CHAIN_COMMAND_BLOCK, 
+				Material.REPEATING_COMMAND_BLOCK);
+		BlockHandler.register(Dispenser.class, Material.DISPENSER);
+		BlockHandler.register(Dropper.class, Material.DROPPER);
+		BlockHandler.register(EndPortal.class, Material.END_PORTAL);
+		BlockHandler.register(Furnace.class, Material.FURNACE);
+		BlockHandler.register(Head.class, 
+				Material.SKELETON_SKULL, 
+				Material.SKELETON_WALL_SKULL, 
+				Material.WITHER_SKELETON_SKULL, 
+				Material.WITHER_SKELETON_WALL_SKULL);
+		BlockHandler.register(Hopper.class, Material.HOPPER);
+		BlockHandler.register(JukeBox.class, Material.JUKEBOX);
+		BlockHandler.register(MonsterSpawner.class, Material.MOB_SPAWNER);
+		BlockHandler.register(ShulkerBox.class, 
+				Material.SHULKER_BOX, 
+				Material.BLACK_SHULKER_BOX, 
+				Material.BLUE_SHULKER_BOX,
+				Material.BROWN_SHULKER_BOX,
+				Material.CYAN_SHULKER_BOX,
+				Material.GRAY_SHULKER_BOX,
+				Material.GREEN_SHULKER_BOX);
+		BlockHandler.register(Sign.class,
+				Material.SIGN, 
+				Material.WALL_SIGN);
 	}
 
 	public static JavaPlugin getPlugin() {

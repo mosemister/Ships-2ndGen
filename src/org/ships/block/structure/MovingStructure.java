@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.ships.block.MovingBlock;
 import org.ships.block.blockhandler.BlockHandler;
 import org.ships.block.blockhandler.BlockPriority;
@@ -38,42 +39,42 @@ public class MovingStructure implements ShipsStructure {
 	}
 
 	@Override
-	public Set<BlockHandler> getPriorityBlocks() {
-		List<BlockHandler> list = new ArrayList<>();
+	public Set<BlockHandler<? extends BlockState>> getPriorityBlocks() {
+		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
 		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.ATTACHABLE)).forEach(b -> list.add(b.getHandle()));
 		return new HashSet<>(list);
 	}
 
 	@Override
-	public Set<BlockHandler> getStandardBlocks() {
-		List<BlockHandler> list = new ArrayList<>();
+	public Set<BlockHandler<? extends BlockState>> getStandardBlocks() {
+		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
 		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.DEFAULT)).filter(e -> (!e.getBlock().getType().equals(Material.AIR))).forEach(b -> list.add(b.getHandle()));
 		return new HashSet<>(list);
 	}
 
 	@Override
-	public Set<BlockHandler> getSpecialBlocks() {
-		List<BlockHandler> list = new ArrayList<>();
+	public Set<BlockHandler<? extends BlockState>> getSpecialBlocks() {
+		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
 		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.SPECIAL)).forEach(b -> list.add(b.getHandle()));
 		return new HashSet<>(list);
 	}
 
 	@Override
-	public Set<BlockHandler> getAirBlocks() {
-		List<BlockHandler> list = new ArrayList<>();
+	public Set<BlockHandler<? extends BlockState>> getAirBlocks() {
+		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
 		blocks.stream().filter(e -> (!e.getBlock().getType().equals(Material.AIR))).forEach(b -> list.add(b.getHandle()));
 		return new HashSet<>(list);
 	}
 
 	@Override
-	public Set<BlockHandler> getInbetweenAir(Block block) {
+	public Set<BlockHandler<? extends BlockState>> getInbetweenAir(Block block) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Set<BlockHandler> getAllBlocks() {
-		List<BlockHandler> list = new ArrayList<>();
+	public Set<BlockHandler<? extends BlockState>> getAllBlocks() {
+		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
 		blocks.stream().forEach(b -> list.add(b.getHandle()));
 		return new HashSet<>(list);
 	}

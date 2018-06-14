@@ -35,7 +35,7 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 	List<Material> fuelTypes = new ArrayList<>();
 
 	public Submarine() {
-		super(new File(""), "Submarine", 200, 1000, 2, 3, false, Material.WATER, Material.AIR, Material.FLOWING_WATER);
+		super(new File(""), "Submarine", 200, 1000, 2, 3, false, Material.WATER, Material.AIR);
 		loadDefault();
 	}
 
@@ -220,7 +220,6 @@ public class Submarine extends AbstractShipType implements Fuel, RequiredMateria
 		this.setFuelConsumption(take);
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.WATER);
-		moveIn.add(Material.FLOWING_WATER);
 		this.setMoveInMaterials(moveIn);
 	}
 

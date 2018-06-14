@@ -18,14 +18,14 @@ import org.ships.ship.movement.MovementMethod;
 
 public class MovingBlock {
 
-	BlockHandler handler;
+	BlockHandler<? extends org.bukkit.block.BlockState> handler;
 	Location MOVETO;
 
 	public MovingBlock(Block block, Ship vessel, MovementMethod move) {
 		this(BlockHandler.getBlockHandler(block), vessel, move);
 	}
 
-	public MovingBlock(BlockHandler sBlock, Ship vessel, MovementMethod move) {
+	public MovingBlock(BlockHandler<? extends org.bukkit.block.BlockState> sBlock, Ship vessel, MovementMethod move) {
 		handler = sBlock;
 		move(handler.getBlock(), vessel, move);
 	}
@@ -34,7 +34,7 @@ public class MovingBlock {
 		this(BlockHandler.getBlockHandler(block), moveTo);
 	}
 
-	public MovingBlock(BlockHandler sBlock, Location moveTo) {
+	public MovingBlock(BlockHandler<? extends org.bukkit.block.BlockState> sBlock, Location moveTo) {
 		handler = sBlock;
 		MOVETO = moveTo;
 	}
@@ -127,7 +127,7 @@ public class MovingBlock {
 		}
 	}
 
-	public BlockHandler getHandle() {
+	public BlockHandler<? extends org.bukkit.block.BlockState> getHandle() {
 		return handler;
 	}
 

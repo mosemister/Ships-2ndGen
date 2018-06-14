@@ -32,7 +32,7 @@ public class Watership extends AbstractShipType implements RequiredMaterial, Cla
 	protected List<Material> requiredMaterials;
 
 	public Watership() {
-		super(new File("plugins/Ships/Configuration/VesselTypes/WaterShip.yml"), "Ship", 10, 2600, 2, 3, false, Material.AIR, Material.WATER, Material.FLOWING_WATER);
+		super(new File("plugins/Ships/Configuration/VesselTypes/WaterShip.yml"), "Ship", 10, 2600, 2, 3, false, Material.AIR, Material.WATER);
 		loadDefault();
 	}
 
@@ -151,7 +151,6 @@ public class Watership extends AbstractShipType implements RequiredMaterial, Cla
 		}
 		List<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.WATER);
-		moveIn.add(Material.FLOWING_WATER);
 		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
 	}

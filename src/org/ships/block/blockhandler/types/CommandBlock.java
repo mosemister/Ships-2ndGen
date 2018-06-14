@@ -2,14 +2,13 @@ package org.ships.block.blockhandler.types;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.Attachable;
 import org.ships.block.blockhandler.BlockHandler;
 import org.ships.block.blockhandler.BlockPriority;
 
-public class DefaultBlockHandler implements BlockHandler<BlockState> {
+public class CommandBlock implements BlockHandler<org.bukkit.block.CommandBlock>{
 
 	Block block;
+	String command;
 	
 	@Override
 	public Block getBlock() {
@@ -23,19 +22,26 @@ public class DefaultBlockHandler implements BlockHandler<BlockState> {
 
 	@Override
 	public void remove(Material material) {
+		saveCommand();
 		this.block.setType(material);
 	}
 
 	@Override
+	public BlockPriority getPriority() {
+		return BlockPriority.SPECIAL;
+	}
+
+	@Override
 	public void apply() {
+		applyCommand();
 	}
 	
-	@Override
-	public BlockPriority getPriority() {
-		if(getBlock().getBlockData() instanceof Attachable) {
-			return BlockPriority.ATTACHABLE;
-		}
-		return BlockPriority.DEFAULT;
+	public void applyCommand() {
+		getState().setCommand(this.command);
+	}
+	
+	public void saveCommand() {
+		this.command = getState().getCommand();
 	}
 
 }

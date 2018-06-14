@@ -90,7 +90,7 @@ public interface Ship {
 	
 	public default int getWaterLevel() {
 		int level = 0;
-		for (BlockHandler handler : getStructure().getAllBlocks()){
+		for (BlockHandler<? extends BlockState> handler : getStructure().getAllBlocks()){
 			int y = handler.getBlock().getY();
 			if(level < y) {
 				level = y;

@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.ItemStack;
@@ -63,7 +64,7 @@ public class VesselTypeUtils {
 			return true;
 		}
 		int count = 0;
-		for (BlockHandler block : vessel.getStructure().getBlocks(Material.FURNACE)) {
+		for (BlockHandler<? extends BlockState> block : vessel.getStructure().getBlocks(Material.FURNACE)) {
 			Furnace bBlock = (Furnace) block.getBlock().getState();
 			FurnaceInventory inv = bBlock.getInventory();
 			ItemStack item = inv.getFuel();
@@ -97,7 +98,7 @@ public class VesselTypeUtils {
 			return 0;
 		}
 		int count = 0;
-		for (BlockHandler block : vessel.getStructure().getBlocks(Material.FURNACE)) {
+		for (BlockHandler<? extends BlockState> block : vessel.getStructure().getBlocks(Material.FURNACE)) {
 			Furnace bBlock = (Furnace) block.getBlock().getState();
 			FurnaceInventory inv = bBlock.getInventory();
 			ItemStack item = inv.getFuel();
@@ -123,7 +124,7 @@ public class VesselTypeUtils {
 		}
 		int count = 0;
 		while(count != take) {
-			for (BlockHandler block : vessel.getStructure().getBlocks(Material.FURNACE)) {
+			for (BlockHandler<? extends BlockState> block : vessel.getStructure().getBlocks(Material.FURNACE)) {
 				Furnace bBlock = (Furnace)block.getBlock().getState();
 				FurnaceInventory inv = bBlock.getInventory();
 				ItemStack item = inv.getFuel();

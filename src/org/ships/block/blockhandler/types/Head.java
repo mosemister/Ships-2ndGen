@@ -1,19 +1,20 @@
 package org.ships.block.blockhandler.types;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.data.Attachable;
+import org.bukkit.block.Skull;
 import org.ships.block.blockhandler.BlockHandler;
 import org.ships.block.blockhandler.BlockPriority;
 
-public class DefaultBlockHandler implements BlockHandler<BlockState> {
-
-	Block block;
+public class Head implements BlockHandler<Skull>{
 	
+	protected Block block;
+	protected OfflinePlayer owner;
+
 	@Override
 	public Block getBlock() {
-		return this.block;
+		return block;
 	}
 
 	@Override
@@ -23,19 +24,25 @@ public class DefaultBlockHandler implements BlockHandler<BlockState> {
 
 	@Override
 	public void remove(Material material) {
-		this.block.setType(material);
+		saveOwner();
+		block.setType(material);
 	}
-
+	
 	@Override
 	public void apply() {
+		applyOwner();
+	}
+
+	public void saveOwner() {
+		this.owner = getState().getOwningPlayer();
+	}
+
+	public void applyOwner() {
+		getState().setOwningPlayer(this.owner);		
 	}
 	
 	@Override
 	public BlockPriority getPriority() {
-		if(getBlock().getBlockData() instanceof Attachable) {
-			return BlockPriority.ATTACHABLE;
-		}
-		return BlockPriority.DEFAULT;
+		return BlockPriority.ATTACHABLE;
 	}
-
 }

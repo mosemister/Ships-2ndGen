@@ -5,6 +5,7 @@ import java.util.Set;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.ships.block.blockhandler.BlockHandler;
@@ -118,18 +119,18 @@ public class Developer extends CommandLauncher {
 			if (vessel != null) {
 				ShipsStructure structure = vessel.getStructure();
 				sender.sendMessage("----Special Blocks----");
-				for (BlockHandler sBlock : structure.getSpecialBlocks()) {
+				for (BlockHandler<? extends BlockState> sBlock : structure.getSpecialBlocks()) {
 					Block block = sBlock.getBlock();
 					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", "
 							+ block.getZ() + ", " + block.getWorld().getName());
 				}
 				sender.sendMessage("----Priority blocks----");
-				for (BlockHandler block : structure.getPriorityBlocks()) {
+				for (BlockHandler<? extends BlockState> block : structure.getPriorityBlocks()) {
 					sender.sendMessage(block.getBlock().getType().name() + ", " + block.getBlock().getX() + ", " + block.getBlock().getY() + ", "
 							+ block.getBlock().getZ() + ", " + block.getBlock().getWorld().getName());
 				}
 				sender.sendMessage("----Normal blocks----");
-				for (BlockHandler block : structure.getStandardBlocks()) {
+				for (BlockHandler<? extends BlockState> block : structure.getStandardBlocks()) {
 					sender.sendMessage(block.getBlock().getType().name() + ", " + block.getBlock().getX() + ", " + block.getBlock().getY() + ", "
 							+ block.getBlock().getZ() + ", " + block.getBlock().getWorld().getName());
 				}

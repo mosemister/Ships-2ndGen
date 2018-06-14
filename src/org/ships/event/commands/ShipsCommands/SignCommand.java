@@ -10,6 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -39,17 +40,17 @@ public class SignCommand extends CommandLauncher {
 				Sign sign = (Sign) block.getState();
 				if (sign.getLine(0).equals(ChatColor.YELLOW + "[Ships]")) {
 					List<Block> blocks = Ships.getBaseStructure(block);
-					final List<BlockHandler> backup = new ArrayList<>();
+					final List<BlockHandler<? extends BlockState>> backup = new ArrayList<>();
 					LoadableShip vessel = LoadableShip.getShip(sign);
 					if (vessel != null) {
 						for (Block block2 : blocks) {
 							//MovingBlock mBlock = new MovingBlock(block2, vessel, MovementMethod.MOVE_FORWARD);
-							BlockHandler sBlock = BlockHandler.getBlockHandler(block2);
+							BlockHandler<? extends BlockState> sBlock = BlockHandler.getBlockHandler(block2);
 							if (sBlock instanceof InventoryHandler) {
-								((InventoryHandler)sBlock).saveInventory();
+								((InventoryHandler<? extends BlockState>)sBlock).saveInventory();
 							}
 							if(sBlock instanceof TextHandler) {
-								((TextHandler)sBlock).saveText();
+								((TextHandler<? extends BlockState>)sBlock).saveText();
 							}
 							backup.add(sBlock);
 							block2.setType(Material.BEDROCK);
@@ -59,7 +60,7 @@ public class SignCommand extends CommandLauncher {
 
 								@Override
 								public void run() {
-									for (BlockHandler block : backup) {
+									for (BlockHandler<? extends BlockState> block : backup) {
 										block.apply();
 									}
 								}
@@ -71,7 +72,7 @@ public class SignCommand extends CommandLauncher {
 
 									@Override
 									public void run() {
-										for (BlockHandler block : backup) {
+										for (BlockHandler<? extends BlockState> block : backup) {
 											block.apply();
 										}
 									}

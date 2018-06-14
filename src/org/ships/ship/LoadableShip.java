@@ -158,7 +158,7 @@ public class LoadableShip extends AbstractShip implements Ship{
 			}
 		} else {
 			for (LoadableShip vessel : getShips()) {
-				for (BlockHandler block2 : vessel.getStructure().getAllBlocks()) {
+				for (BlockHandler<? extends BlockState> block2 : vessel.getStructure().getAllBlocks()) {
 					if (block2.getBlock().equals(block)) {
 						return vessel;
 					}

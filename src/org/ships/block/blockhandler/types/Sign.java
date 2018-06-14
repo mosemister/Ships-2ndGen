@@ -2,12 +2,13 @@ package org.ships.block.blockhandler.types;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.ships.block.blockhandler.BlockPriority;
 import org.ships.block.blockhandler.TextHandler;
 
-public class Sign implements TextHandler {
+public class Sign implements TextHandler<org.bukkit.block.Sign> {
 	
-	Block block;
-	String[] text = new String[0];
+	protected Block block;
+	protected String[] text = new String[0];
 
 	@Override
 	public Block getBlock() {
@@ -42,5 +43,14 @@ public class Sign implements TextHandler {
 		}
 		
 	}
+	
+	@Override
+	public BlockPriority getPriority() {
+		if(getBlock().getType().equals(Material.WALL_SIGN)) {
+			return BlockPriority.ATTACHABLE;
+		}
+		return BlockPriority.SPECIAL;
+	}
+
 
 }
