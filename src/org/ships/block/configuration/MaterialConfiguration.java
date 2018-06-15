@@ -23,5 +23,10 @@ public class MaterialConfiguration {
 	public MovementInstruction getInstruction() {
 		return instruction;
 	}
+	
+	public MaterialConfiguration setInstruction(MovementInstruction instruction) {
+		this.instruction = instruction;
+		return this;
+	}
 
 }

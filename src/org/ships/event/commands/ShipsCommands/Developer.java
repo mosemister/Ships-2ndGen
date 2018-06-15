@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.ships.block.blockhandler.BlockHandler;
+import org.ships.block.blockhandler.BlockPriority;
 import org.ships.block.configuration.MovementInstruction;
 import org.ships.block.structure.ShipsStructure;
 import org.ships.configuration.MaterialsList;
@@ -94,7 +95,6 @@ public class Developer extends CommandLauncher {
 					+ vessel.getTeleportLocation().getWorld().getName());
 		}
 		sender.sendMessage("Total number of Vessels loaded: " + LoadableShip.getShips().size());
-		return;
 	}
 
 	public void displayCustomVesselTypes(ConsoleCommandSender sender) {
@@ -102,7 +102,6 @@ public class Developer extends CommandLauncher {
 		for (VesselType vessel : VesselType.customValues()) {
 			sender.sendMessage(vessel.getName() + " | " + vessel.getDefaultSpeed());
 		}
-		return;
 	}
 
 	public void displayVesselTypes(ConsoleCommandSender sender) {
@@ -110,30 +109,25 @@ public class Developer extends CommandLauncher {
 		for (VesselType vessel : VesselType.values()) {
 			sender.sendMessage(vessel.getName() + " | " + vessel.getDefaultSpeed());
 		}
-		return;
 	}
 
 	public void displayVessel(ConsoleCommandSender sender, String[] args) {
-		if (args.length >= 3) {
-			LoadableShip vessel = LoadableShip.getShip(args[2]);
-			if (vessel != null) {
-				ShipsStructure structure = vessel.getStructure();
-				sender.sendMessage("----Special Blocks----");
-				for (BlockHandler<? extends BlockState> sBlock : structure.getSpecialBlocks()) {
-					Block block = sBlock.getBlock();
-					sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", "
-							+ block.getZ() + ", " + block.getWorld().getName());
-				}
-				sender.sendMessage("----Priority blocks----");
-				for (BlockHandler<? extends BlockState> block : structure.getPriorityBlocks()) {
-					sender.sendMessage(block.getBlock().getType().name() + ", " + block.getBlock().getX() + ", " + block.getBlock().getY() + ", "
-							+ block.getBlock().getZ() + ", " + block.getBlock().getWorld().getName());
-				}
-				sender.sendMessage("----Normal blocks----");
-				for (BlockHandler<? extends BlockState> block : structure.getStandardBlocks()) {
-					sender.sendMessage(block.getBlock().getType().name() + ", " + block.getBlock().getX() + ", " + block.getBlock().getY() + ", "
-							+ block.getBlock().getZ() + ", " + block.getBlock().getWorld().getName());
-				}
+		if (args.length < 3) {
+			return;
+		}
+		LoadableShip vessel = LoadableShip.getShip(args[2]);
+		if (vessel == null) {
+			return;
+		}
+		ShipsStructure structure = vessel.getStructure();
+		for (BlockPriority pri : BlockPriority.values()) {
+			String name = pri.name().toLowerCase();
+			name = Character.toUpperCase(name.charAt(0)) + name.substring(1, name.length());
+			sender.sendMessage("----" + name + " blocks----");
+			for (BlockHandler<? extends BlockState> sBlock : structure.getBlocks(pri)) {
+				Block block = sBlock.getBlock();
+				sender.sendMessage(block.getType().name() + ", " + block.getX() + ", " + block.getY() + ", "
+						+ block.getZ() + ", " + block.getWorld().getName());
 			}
 		}
 	}

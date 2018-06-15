@@ -15,6 +15,7 @@ import org.ships.block.configuration.MaterialConfiguration;
 import org.ships.block.configuration.MovementInstruction;
 import org.ships.plugin.Ships;
 
+@Deprecated
 public class MaterialsList {
 
 	List<MaterialConfiguration> configurationOptions = new ArrayList<>();
@@ -454,6 +455,9 @@ public class MaterialsList {
 		} else {
 			YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 			for (Material material : Material.values()) {
+				if (material.isLegacy()){
+					continue;
+				}
 				String insS = config.getString("Materials." + material.name() + ".Instruction");
 				if(insS == null) {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "error reading 'Instruction' for " + material.name());

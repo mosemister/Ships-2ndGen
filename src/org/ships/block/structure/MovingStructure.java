@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.ships.block.MovingBlock;
 import org.ships.block.blockhandler.BlockHandler;
@@ -36,40 +35,6 @@ public class MovingStructure implements ShipsStructure {
 	
 	public Set<MovingBlock> getMovingBlocks(){
 		return new HashSet<>(blocks);
-	}
-
-	@Override
-	public Set<BlockHandler<? extends BlockState>> getPriorityBlocks() {
-		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
-		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.ATTACHABLE)).forEach(b -> list.add(b.getHandle()));
-		return new HashSet<>(list);
-	}
-
-	@Override
-	public Set<BlockHandler<? extends BlockState>> getStandardBlocks() {
-		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
-		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.DEFAULT)).filter(e -> (!e.getBlock().getType().equals(Material.AIR))).forEach(b -> list.add(b.getHandle()));
-		return new HashSet<>(list);
-	}
-
-	@Override
-	public Set<BlockHandler<? extends BlockState>> getSpecialBlocks() {
-		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
-		blocks.stream().filter(h -> h.getHandle().getPriority().equals(BlockPriority.SPECIAL)).forEach(b -> list.add(b.getHandle()));
-		return new HashSet<>(list);
-	}
-
-	@Override
-	public Set<BlockHandler<? extends BlockState>> getAirBlocks() {
-		List<BlockHandler<? extends BlockState>> list = new ArrayList<>();
-		blocks.stream().filter(e -> (!e.getBlock().getType().equals(Material.AIR))).forEach(b -> list.add(b.getHandle()));
-		return new HashSet<>(list);
-	}
-
-	@Override
-	public Set<BlockHandler<? extends BlockState>> getInbetweenAir(Block block) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

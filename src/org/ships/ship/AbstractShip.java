@@ -27,12 +27,13 @@ import org.ships.block.BlockStack;
 import org.ships.block.MovingBlock;
 import org.ships.block.Vector.BlockVector;
 import org.ships.block.blockhandler.BlockHandler;
+import org.ships.block.blockhandler.BlockPriority;
 import org.ships.block.configuration.MovementInstruction;
 import org.ships.block.structure.BasicStructure;
 import org.ships.block.structure.MovingStructure;
 import org.ships.block.structure.ShipsStructure;
+import org.ships.configuration.BlockList;
 import org.ships.configuration.Config;
-import org.ships.configuration.MaterialsList;
 import org.ships.configuration.Messages;
 import org.ships.event.custom.ShipAboutToMoveEvent;
 import org.ships.event.custom.ShipFinishedMovingEvent;
@@ -359,15 +360,15 @@ public abstract class AbstractShip implements Ship {
 	@Override
 	public boolean moveTowardsForcefully(MovementMethod move, int speed, OfflinePlayer player) {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		for (BlockHandler<? extends BlockState> block : getStructure().getPriorityBlocks()) {
+		for (BlockHandler<? extends BlockState> block : getStructure().getBlocks(BlockPriority.ATTACHABLE)) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			blocks.add(block2);
 		}
-		for (BlockHandler<? extends BlockState> block : getStructure().getSpecialBlocks()) {
+		for (BlockHandler<? extends BlockState> block : getStructure().getBlocks(BlockPriority.SPECIAL)) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			blocks.add(block2);
 		}
-		for (BlockHandler<? extends BlockState> block : getStructure().getStandardBlocks()) {
+		for (BlockHandler<? extends BlockState> block : getStructure().getBlocks(BlockPriority.DEFAULT)) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			blocks.add(block2);
 		}
@@ -401,7 +402,7 @@ public abstract class AbstractShip implements Ship {
 		return transform(loc, true);
 	}
 	
-	private boolean isMoveInBlock(Location loc) {
+	protected boolean isMoveInBlock(Location loc) {
 		for (Material material : this.getVesselType().getMoveInMaterials()) {
 			if (material.equals(loc.getBlock().getType())) {
 				return true;
@@ -410,7 +411,7 @@ public abstract class AbstractShip implements Ship {
 		return false;
 	}
 	
-	private boolean isPartOfVessel(Location loc) {
+	protected boolean isPartOfVessel(Location loc) {
 		for (BlockHandler<? extends BlockState> block : getStructure().getAllBlocks()) {
 			if (block.getBlock().equals(loc.getBlock())) {
 				return true;
@@ -419,12 +420,12 @@ public abstract class AbstractShip implements Ship {
 		return false;
 	}
 	
-	private boolean isBlocked(MovingBlock block) {
+	protected boolean isBlocked(MovingBlock block) {
 		Location loc = block.getMovingTo();
 		Block block2 = loc.getBlock();
 		if (!isPartOfVessel(loc)) {
-			MaterialsList matList = MaterialsList.getMaterialsList();
-			if (matList.contains(block2.getType(), MovementInstruction.RAM)) {
+			BlockList matList = BlockList.BLOCK_LIST;
+			if (matList.getCurrentWith(block2.getType()).getInstruction().equals(MovementInstruction.RAM)) {
 				return false;
 			} else if (isMoveInBlock(loc)) {
 				return false;
@@ -435,9 +436,9 @@ public abstract class AbstractShip implements Ship {
 		return true;
 	}
 	
-	private List<MovingBlock> sortMovingBlocks(MovementMethod move, OfflinePlayer player) {
+	protected List<MovingBlock> sortMovingBlocks(MovementMethod move, OfflinePlayer player) {
 		List<MovingBlock> blocks = new ArrayList<MovingBlock>();
-		for (BlockHandler<? extends BlockState> block : getStructure().getPriorityBlocks()) {
+		for (BlockHandler<? extends BlockState> block : getStructure().getBlocks(BlockPriority.ATTACHABLE)) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
 				if (player != null) {
@@ -453,7 +454,7 @@ public abstract class AbstractShip implements Ship {
 				blocks.add(block2);
 			}
 		}
-		for (BlockHandler<? extends BlockState> block : getStructure().getSpecialBlocks()) {
+		for (BlockHandler<? extends BlockState> block : getStructure().getBlocks(BlockPriority.SPECIAL)) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
 				if (player != null) {
@@ -469,7 +470,7 @@ public abstract class AbstractShip implements Ship {
 				blocks.add(block2);
 			}
 		}
-		for (BlockHandler<? extends BlockState> block : getStructure().getStandardBlocks()) {
+		for (BlockHandler<? extends BlockState> block : getStructure().getBlocks(BlockPriority.DEFAULT)) {
 			MovingBlock block2 = new MovingBlock(block, this, move);
 			if (isBlocked(block2)) {
 				if (player != null) {
@@ -504,7 +505,7 @@ public abstract class AbstractShip implements Ship {
 		return blocks;
 	}
 	
-	private void moveEntitys(MovementMethod move) {
+	protected void moveEntitys(MovementMethod move) {
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		for (Entity entity : getEntities()) {
 			Inventory inv = null;
@@ -545,7 +546,7 @@ public abstract class AbstractShip implements Ship {
 		}
 	}
 	
-	/*private void setInventory(MovingBlock block) {
+	/*protected void setInventory(MovingBlock block) {
 		BlockHandler sBlock = block.getHandle();
 		Block nBlock = block.getMovingTo().getBlock();
 		if(sBlock instanceof InventoryHandler) {
@@ -629,7 +630,7 @@ public abstract class AbstractShip implements Ship {
 		}
 	}*/
 		
-	private boolean forceMove(MovementMethod move, Collection<MovingBlock> blocks) {
+	protected boolean forceMove(MovementMethod move, Collection<MovingBlock> blocks) {
 		List<MovingBlock> blocks1 = new ArrayList<>(blocks);
 		// remove all blocks (priority first)
 		for (int A = 0; A < blocks.size(); A++) {
@@ -686,7 +687,7 @@ public abstract class AbstractShip implements Ship {
 		return true;
 	}
 	
-	private boolean safeMove(MovementMethod move, OfflinePlayer player, boolean sendEvent) {
+	protected boolean safeMove(MovementMethod move, OfflinePlayer player, boolean sendEvent) {
 		List<MovingBlock> blocks = sortMovingBlocks(move, player);
 		if (blocks == null) {
 			return false;

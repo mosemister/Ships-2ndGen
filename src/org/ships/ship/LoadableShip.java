@@ -21,7 +21,7 @@ import org.ships.plugin.Ships;
 import org.ships.ship.loader.VesselLoader;
 import org.ships.ship.type.VesselType;
 
-public class LoadableShip extends AbstractShip implements Ship{
+public class LoadableShip extends AbstractShipBlockListable implements Ship{
 
 	private static final List<LoadableShip> SHIPS = new ArrayList<>(); 
 	
@@ -62,7 +62,7 @@ public class LoadableShip extends AbstractShip implements Ship{
 	@Override
 	public void save() {
 		// TODO Auto-generated method stub
-		
+		getBlockList().updateAll(getBlockListFile(), getBlockListConfiguration(), true);
 	}
 
 	@Override
