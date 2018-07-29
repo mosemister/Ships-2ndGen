@@ -4,14 +4,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -19,10 +19,31 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.ships.block.BlockStack;
 import org.ships.block.blockhandler.BlockHandler;
-import org.ships.block.blockhandler.types.*;
+import org.ships.block.blockhandler.types.Banner;
+import org.ships.block.blockhandler.types.Beacon;
+import org.ships.block.blockhandler.types.Brewing;
+import org.ships.block.blockhandler.types.Chest;
+import org.ships.block.blockhandler.types.CommandBlock;
+import org.ships.block.blockhandler.types.Dispenser;
+import org.ships.block.blockhandler.types.Dropper;
+import org.ships.block.blockhandler.types.EndPortal;
+import org.ships.block.blockhandler.types.Fire;
+import org.ships.block.blockhandler.types.Furnace;
+import org.ships.block.blockhandler.types.Head;
+import org.ships.block.blockhandler.types.Hopper;
+import org.ships.block.blockhandler.types.JukeBox;
+import org.ships.block.blockhandler.types.MonsterSpawner;
+import org.ships.block.blockhandler.types.ShulkerBox;
+import org.ships.block.blockhandler.types.Sign;
 import org.ships.block.configuration.MovementInstruction;
+import org.ships.block.sign.AltitudeSign;
+import org.ships.block.sign.EngineSign;
+import org.ships.block.sign.LicenceSign;
+import org.ships.block.sign.ShipSign;
+import org.ships.block.sign.ThrustSign;
+import org.ships.block.sign.WheelSign;
+import org.ships.configuration.BlockList;
 import org.ships.configuration.Config;
-import org.ships.configuration.MaterialsList;
 import org.ships.configuration.Messages;
 import org.ships.event.commands.BukkitListeners;
 import org.ships.event.commands.Commands;
@@ -37,39 +58,35 @@ import org.ships.event.commands.ShipsCommands.Teleport;
 import org.ships.event.commands.ShipsCommands.VesselCommand;
 import org.ships.event.commands.gui.ShipsGUICommand;
 import org.ships.ship.LoadableShip;
-import org.ships.ship.loader.VesselLoader;
-import org.ships.ship.movement.BoostDirection;
 import org.ships.ship.movement.ShipsAutoRuns;
 import org.ships.ship.type.VesselType;
 
 public class Ships extends JavaPlugin {
-
-	static JavaPlugin plugin;
-	static BlockStack STACK;
-	static int count;
-
+	private static Ships plugin;
+	private final Set<ShipSign> shipSigns = new HashSet<ShipSign>();
+	private static BlockStack STACK;
+	private static int count;
 	public static final int COMPARE_FIRST_VALUE_IS_GREATER = 1;
 	public static final int COMPARE_SECOND_VALUE_IS_GREATER = 3;
 	public static final int COMPARE_BOTH_VALUES_ARE_THE_SAME = 2;
-	
+
+	@Override
 	public void onEnable() {
 		plugin = this;
-		getCommand("Ships").setExecutor(new Commands());
-		getServer().getPluginManager().registerEvents(new BukkitListeners(), this);
+		this.getCommand("Ships").setExecutor(new Commands());
+		this.getServer().getPluginManager().registerEvents(new BukkitListeners(), this);
 		Config.getConfig().updateCheck();
-		new MaterialsList();
-		MaterialsList.getMaterialsList().save();
-		registerHandlers();
-		activateCommands();
+		BlockList.BLOCK_LIST.load(BlockList.BLOCK_LIST_FILE, BlockList.BLOCK_LIST_YAML);
+		this.registerHandlers();
+		this.activateCommands();
+		this.activateShipSigns();
 		Messages.refreshMessages();
-		removeOldFiles();
+		this.removeOldFiles();
 		ShipsGUICommand.setGUITools();
-		// FlyThrough.activateFlyThrough();
 		for (VesselType type : VesselType.values()) {
 			type.loadDefault();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-
 		if (config.getBoolean("Structure.Signs.AutoPilot.enabled")) {
 			ShipsAutoRuns.AutoMove();
 			new AutoPilot();
@@ -80,25 +97,17 @@ public class Ships extends JavaPlugin {
 		if (config.getBoolean("World.ProtectedVessels.VesselFallOutSky")) {
 			ShipsAutoRuns.fallOutSky();
 		}
-		afterBoot();
 	}
 
+	@Override
 	public void onDisable() {
-		LoadableShip.getShips().stream().forEach(s -> s.save());
+		LoadableShip.getShips().stream().forEach(s -> {
+			s.save();
+		});
 	}
-	
-	private void afterBoot() {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(getPlugin(), new Runnable() {
 
-			@Override
-			public void run() {
-				VesselLoader.loadVessels();
-				for (World world : Bukkit.getWorlds()) {
-					new BoostDirection(world);
-				}
-			}
-
-		}, 0);
+	public Set<ShipSign> getShipSigns() {
+		return new HashSet<ShipSign>(this.shipSigns);
 	}
 
 	private void removeOldFiles() {
@@ -120,6 +129,19 @@ public class Ships extends JavaPlugin {
 		}
 	}
 
+	private void activateShipSigns() {
+		this.shipSigns.add(new LicenceSign());
+		this.shipSigns.add(new ThrustSign());
+		this.shipSigns.add(new WheelSign());
+		this.shipSigns.add(new AltitudeSign());
+		this.shipSigns.add(new EngineSign());
+	}
+
+	/*private void activateNewCommands() {
+		CMDExecutor.register(new ShipsInfoCommand());
+		CMDExecutor.register(new ShipsSignTrackCommand());
+	}*/
+
 	private void activateCommands() {
 		new Reload();
 		new Developer();
@@ -130,85 +152,35 @@ public class Ships extends JavaPlugin {
 		new VesselCommand();
 		new Help();
 	}
-	
+
 	private void registerHandlers() {
-		BlockHandler.register(Banner.class,
-				Material.BLACK_BANNER, 
-				Material.BLACK_WALL_BANNER, 
-				Material.BLUE_BANNER, 
-				Material.BLUE_WALL_BANNER, 
-				Material.BROWN_BANNER, 
-				Material.BROWN_WALL_BANNER, 
-				Material.CYAN_BANNER, 
-				Material.CYAN_WALL_BANNER, 
-				Material.GRAY_BANNER, 
-				Material.GRAY_WALL_BANNER, 
-				Material.GREEN_BANNER,
-				Material.GREEN_WALL_BANNER, 
-				Material.LIGHT_BLUE_BANNER, 
-				Material.LIGHT_BLUE_WALL_BANNER, 
-				Material.LIGHT_GRAY_BANNER, 
-				Material.LIGHT_GRAY_WALL_BANNER, 
-				Material.LIME_BANNER, 
-				Material.LIME_WALL_BANNER, 
-				Material.MAGENTA_BANNER, 
-				Material.MAGENTA_WALL_BANNER, 
-				Material.ORANGE_BANNER,
-				Material.ORANGE_WALL_BANNER, 
-				Material.PINK_BANNER, 
-				Material.PINK_WALL_BANNER,
-				Material.PURPLE_BANNER, 
-				Material.PURPLE_WALL_BANNER, 
-				Material.RED_BANNER, 
-				Material.RED_WALL_BANNER, 
-				Material.WHITE_BANNER, 
-				Material.WHITE_WALL_BANNER, 
-				Material.YELLOW_BANNER, 
-				Material.YELLOW_WALL_BANNER);
+		BlockHandler.register(Fire.class, Material.FIRE);
+		BlockHandler.register(Banner.class, Material.BLACK_BANNER, Material.BLACK_WALL_BANNER, Material.BLUE_BANNER, Material.BLUE_WALL_BANNER, Material.BROWN_BANNER, Material.BROWN_WALL_BANNER, Material.CYAN_BANNER, Material.CYAN_WALL_BANNER, Material.GRAY_BANNER, Material.GRAY_WALL_BANNER, Material.GREEN_BANNER, Material.GREEN_WALL_BANNER, Material.LIGHT_BLUE_BANNER, Material.LIGHT_BLUE_WALL_BANNER, Material.LIGHT_GRAY_BANNER, Material.LIGHT_GRAY_WALL_BANNER, Material.LIME_BANNER, Material.LIME_WALL_BANNER, Material.MAGENTA_BANNER, Material.MAGENTA_WALL_BANNER, Material.ORANGE_BANNER, Material.ORANGE_WALL_BANNER, Material.PINK_BANNER, Material.PINK_WALL_BANNER, Material.PURPLE_BANNER, Material.PURPLE_WALL_BANNER, Material.RED_BANNER, Material.RED_WALL_BANNER, Material.WHITE_BANNER, Material.WHITE_WALL_BANNER, Material.YELLOW_BANNER, Material.YELLOW_WALL_BANNER);
 		BlockHandler.register(Beacon.class, Material.BEACON);
 		BlockHandler.register(Brewing.class, Material.BREWING_STAND);
-		BlockHandler.register(Chest.class, 
-				Material.CHEST, 
-				Material.TRAPPED_CHEST);
-		BlockHandler.register(CommandBlock.class, 
-				Material.COMMAND_BLOCK, 
-				Material.CHAIN_COMMAND_BLOCK, 
-				Material.REPEATING_COMMAND_BLOCK);
+		BlockHandler.register(Chest.class, Material.CHEST, Material.TRAPPED_CHEST);
+		BlockHandler.register(CommandBlock.class, Material.COMMAND_BLOCK, Material.CHAIN_COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK);
 		BlockHandler.register(Dispenser.class, Material.DISPENSER);
 		BlockHandler.register(Dropper.class, Material.DROPPER);
 		BlockHandler.register(EndPortal.class, Material.END_PORTAL);
 		BlockHandler.register(Furnace.class, Material.FURNACE);
-		BlockHandler.register(Head.class, 
-				Material.SKELETON_SKULL, 
-				Material.SKELETON_WALL_SKULL, 
-				Material.WITHER_SKELETON_SKULL, 
-				Material.WITHER_SKELETON_WALL_SKULL);
+		BlockHandler.register(Head.class, Material.SKELETON_SKULL, Material.SKELETON_WALL_SKULL, Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_WALL_SKULL);
 		BlockHandler.register(Hopper.class, Material.HOPPER);
 		BlockHandler.register(JukeBox.class, Material.JUKEBOX);
-		BlockHandler.register(MonsterSpawner.class, Material.MOB_SPAWNER);
-		BlockHandler.register(ShulkerBox.class, 
-				Material.SHULKER_BOX, 
-				Material.BLACK_SHULKER_BOX, 
-				Material.BLUE_SHULKER_BOX,
-				Material.BROWN_SHULKER_BOX,
-				Material.CYAN_SHULKER_BOX,
-				Material.GRAY_SHULKER_BOX,
-				Material.GREEN_SHULKER_BOX);
-		BlockHandler.register(Sign.class,
-				Material.SIGN, 
-				Material.WALL_SIGN);
+		BlockHandler.register(MonsterSpawner.class, Material.SPAWNER);
+		BlockHandler.register(ShulkerBox.class, Material.SHULKER_BOX, Material.BLACK_SHULKER_BOX, Material.BLUE_SHULKER_BOX, Material.BROWN_SHULKER_BOX, Material.CYAN_SHULKER_BOX, Material.GRAY_SHULKER_BOX, Material.GREEN_SHULKER_BOX);
+		BlockHandler.register(Sign.class, Material.SIGN, Material.WALL_SIGN);
 	}
 
-	public static JavaPlugin getPlugin() {
+	public static Ships getPlugin() {
 		return plugin;
 	}
 
 	public static String runShipsMessage(String message, boolean error) {
 		if (error) {
-			return (ChatColor.GOLD + "[Ships] " + ChatColor.RED + message);
-		} else {
-			return (ChatColor.GOLD + "[Ships] " + ChatColor.AQUA + message);
+			return ChatColor.GOLD + "[Ships] " + ChatColor.RED + message;
 		}
+		return ChatColor.GOLD + "[Ships] " + ChatColor.AQUA + message;
 	}
 
 	public static BlockStack getBaseStructure(Block block) {
@@ -217,104 +189,86 @@ public class Ships extends JavaPlugin {
 		STACK.add(block);
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
 		int limit = config.getInt("Structure.StructureLimits.trackLimit");
-		BlockFace[] faces = { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP,
-				BlockFace.WEST };
-		prototype3(block, faces, limit);
+		BlockFace[] faces = new BlockFace[] { BlockFace.DOWN, BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.UP, BlockFace.WEST };
+		Ships.prototype3(block, faces, limit);
 		if (STACK.isVaild()) {
 			return STACK;
 		}
 		return new BlockStack();
 	}
 
-	// This gets every block connected, It can be abnormal so the count attempts
-	// to control it. I called it Prototype for a good reason.
 	private static void prototype3(Block block, BlockFace[] faces, int limit) {
-		// this /attempts/ to cap the variable scan at 500, I have seen that it
-		// caps the block limit at 500 but the method is still ran afterwards
-		// for a good while. If you find another way to do this that is more
-		// efficient then this way, please contact me asap
 		if (count > limit) {
 			return;
 		}
-		count++;
-		// List<String> material = new ArrayList<String>();
+		++count;
 		for (BlockFace face : faces) {
 			Block block2 = block.getRelative(face);
-			if ((MaterialsList.getMaterialsList().contains(block2.getType(), MovementInstruction.MATERIAL))) {
-				if (!STACK.contains(block2)) {
-					STACK.add(block2);
-					prototype3(block2, faces, limit);
-				}
-			} /*
-				 * else{ if (!material.contains(block2.getType().name())){
-				 * material.add(block2.getType().name()); } }
-				 */
+			if (!BlockList.BLOCK_LIST.getCurrentWith(MovementInstruction.MATERIAL).stream().anyMatch(c -> c.getMaterial().equals(block2.getType())) || STACK.contains(block2))
+				continue;
+			STACK.add(block2);
+			Ships.prototype3(block2, faces, limit);
 		}
-		/*
-		 * if (material.size() != 0){ System.out.println(material); }
-		 */
 	}
 
-	// never know when it could be useful ;)
 	public static BlockFace getPlayerFacingDirection(Player player) {
 		float yaw = player.getLocation().getYaw();
-		if ((yaw >= 45) && (yaw < 135)) {
+		if (yaw >= 45.0f && yaw < 135.0f) {
 			return BlockFace.WEST;
-		} else {
-			if (((yaw >= 135) && (yaw <= 180)) || ((yaw >= -180) && (yaw < -135))) {
-				return BlockFace.NORTH;
-			} else {
-				if ((yaw >= -135) && (yaw < -45)) {
-					return BlockFace.EAST;
-				} else {
-					return BlockFace.SOUTH;
-				}
-			}
 		}
+		if (yaw >= 135.0f && yaw <= 180.0f || yaw >= -180.0f && yaw < -135.0f) {
+			return BlockFace.NORTH;
+		}
+		if (yaw >= -135.0f && yaw < -45.0f) {
+			return BlockFace.EAST;
+		}
+		return BlockFace.SOUTH;
 	}
 
-	// fixes a missing part of the bukkit API
 	public static BlockFace getSideFace(BlockFace face, boolean left) {
 		BlockFace ret = null;
 		switch (face) {
-		case NORTH:
-			if (left) {
-				ret = BlockFace.WEST;
-			} else {
+			case NORTH: {
+				if (left) {
+					ret = BlockFace.WEST;
+					break;
+				}
 				ret = BlockFace.EAST;
+				break;
 			}
-			break;
-		case SOUTH:
-			if (left) {
-				ret = BlockFace.EAST;
-			} else {
+			case SOUTH: {
+				if (left) {
+					ret = BlockFace.EAST;
+					break;
+				}
 				ret = BlockFace.WEST;
+				break;
 			}
-			break;
-		case EAST:
-			if (left) {
-				ret = BlockFace.SOUTH;
-			} else {
+			case EAST: {
+				if (left) {
+					ret = BlockFace.SOUTH;
+					break;
+				}
 				ret = BlockFace.NORTH;
+				break;
 			}
-			break;
-		case WEST:
-			if (left) {
-				ret = BlockFace.NORTH;
-			} else {
+			case WEST: {
+				if (left) {
+					ret = BlockFace.NORTH;
+					break;
+				}
 				ret = BlockFace.SOUTH;
+				break;
 			}
-			break;
-		default:
-			new IOException("[SHIPS] Invalid direction: " + face.name());
-			break;
+			default: {
+				new IOException("[SHIPS] Invalid direction: " + face.name());
+			}
 		}
 		return ret;
 	}
 
 	public static String getMinecraftVersion() {
-		String temp = getPlugin().getServer().getVersion();
-		// String version = tempVersion.split("'(MC: ', ')'")[1];
+		String temp = Ships.getPlugin().getServer().getVersion();
 		String[] part1 = temp.split(":");
 		String part2 = part1[1].replace(")", "");
 		String part3 = part2.replace(" ", "");
@@ -325,48 +279,48 @@ public class Ships extends JavaPlugin {
 	public static int getVersion(String version) {
 		String mcVersion = version.replace(".", "");
 		String[] splitMCVersion = version.split(".");
-		for (int A = splitMCVersion.length; A < 4; A++) {
-			mcVersion = (mcVersion + "0");
+		for (int A = splitMCVersion.length; A < 4; ++A) {
+			mcVersion = mcVersion + "0";
 		}
 		int version2 = Integer.parseInt(mcVersion);
 		return version2;
 	}
-	
+
 	public static int[] convertVersion(String version) {
-		int[] mcVersion = new int[4]; 
+		int[] mcVersion = new int[4];
 		String[] splitMCVersion = version.split(".");
-		for(int A = 0; A < splitMCVersion.length; A++) {
+		for (int A = 0; A < splitMCVersion.length; ++A) {
 			mcVersion[A] = Integer.parseInt(splitMCVersion[A]);
 		}
 		return mcVersion;
 	}
-	
+
 	public static int compare(int[] version1, int[] version2) {
 		int maxValue = version1.length;
-		if(version2.length > version1.length) {
+		if (version2.length > version1.length) {
 			maxValue = version2.length;
 		}
-		for(int A = 0; A < maxValue; A++) {
+		for (int A = 0; A < maxValue; ++A) {
 			int value1 = 0;
 			int value2 = 0;
-			if(A <= version1.length) {
+			if (A <= version1.length) {
 				value1 = version1[A];
 			}
-			if(A <= version1.length) {
+			if (A <= version1.length) {
 				value1 = version2[A];
 			}
-			if(value1 > value2) {
-				return COMPARE_FIRST_VALUE_IS_GREATER;
-			}else if(value1 < value2) {
-				return COMPARE_SECOND_VALUE_IS_GREATER;
+			if (value1 > value2) {
+				return 1;
 			}
+			if (value1 >= value2)
+				continue;
+			return 3;
 		}
-		return COMPARE_BOTH_VALUES_ARE_THE_SAME;
+		return 2;
 	}
 
-	// This is used by the config files to copy internal files to outside, I put
-	// this in thinking it would keep the variable notes, sadly it does not
 	public static void copy(InputStream input, File target) throws IOException {
+		int realLength;
 		if (target.exists()) {
 			Bukkit.getConsoleSender().sendMessage("Config file already exists.");
 			return;
@@ -380,8 +334,7 @@ public class Ships extends JavaPlugin {
 			throw new IOException("Failed at creating new empty file!");
 		}
 		byte[] buffer = new byte[1024];
-		OutputStream output = new FileOutputStream(target);
-		int realLength;
+		FileOutputStream output = new FileOutputStream(target);
 		while ((realLength = input.read(buffer)) > 0) {
 			output.write(buffer, 0, realLength);
 		}

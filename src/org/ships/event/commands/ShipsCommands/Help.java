@@ -2,7 +2,6 @@ package org.ships.event.commands.ShipsCommands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,57 +16,49 @@ import org.ships.event.commands.CommandLauncher;
 import org.ships.event.commands.gui.ShipsGUICommand;
 
 public class Help extends CommandLauncher {
-
 	public Help() {
 		super("help", "<page>/GUI", "Displays all commands", null, true, true, HelpGUI.class);
 		new HelpGUI(this);
-
 	}
 
 	@Override
 	public void playerCommand(Player player, String[] args) {
-		if (args.length >= 2) {
-			if (args[1].equalsIgnoreCase("GUI")) {
-				runGUI(player);
-				return;
-			}
+		if (args.length >= 2 && args[1].equalsIgnoreCase("GUI")) {
+			this.runGUI(player);
+			return;
 		}
 		for (CommandLauncher command : CommandLauncher.getCommands()) {
-			if (command.isPlayerCommand()) {
-				if (command.getPermissions() != null) {
-					if (player.hasPermission(command.getPermissions())) {
-						player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs()
-								+ ChatColor.AQUA + ": " + command.getDescription());
-					}
-				} else {
-					player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs()
-							+ ChatColor.AQUA + ": " + command.getDescription());
-				}
+			if (!command.isPlayerCommand())
+				continue;
+			if (command.getPermissions() != null) {
+				if (!player.hasPermission(command.getPermissions()))
+					continue;
+				player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs() + ChatColor.AQUA + ": " + command.getDescription());
+				continue;
 			}
+			player.sendMessage(ChatColor.GOLD + command.getCommand() + " " + command.getExtraArgs() + ChatColor.AQUA + ": " + command.getDescription());
 		}
 	}
 
 	@Override
 	public void consoleCommand(ConsoleCommandSender sender, String[] args) {
 		for (CommandLauncher command : CommandLauncher.getCommands()) {
-			if (command.isConsoleCommand()) {
-				sender.sendMessage(
-						ChatColor.GOLD + command.getCommand() + ChatColor.AQUA + ": " + command.getDescription());
-			}
+			if (!command.isConsoleCommand())
+				continue;
+			sender.sendMessage(ChatColor.GOLD + command.getCommand() + ChatColor.AQUA + ": " + command.getDescription());
 		}
 	}
 
 	public static class HelpGUI extends ShipsGUICommand {
-
 		public HelpGUI(CommandLauncher command) {
 			super(command);
 		}
 
 		@Override
 		public void onScreenClick(HumanEntity player, ItemStack item, Inventory inv, int slot, ClickType type) {
-			if (item != null) {
-				ItemMeta meta = item.getItemMeta();
-				if (meta != null) {
+			block4: {
+				ItemMeta meta;
+				if (item != null && (meta = item.getItemMeta()) != null) {
 					String name = meta.getDisplayName();
 					try {
 						player.closeInventory();
@@ -75,39 +66,35 @@ public class Help extends CommandLauncher {
 						launcher.runGUI(player);
 					} catch (IndexOutOfBoundsException e) {
 						if (item.equals(ShipsGUICommand.FORWARD_BUTTON)) {
-							onInterfaceBoot(player, getPage(inv) + 1);
-						} else if (item.equals(ShipsGUICommand.BACK_BUTTON)) {
-							onInterfaceBoot(player, getPage(inv) - 1);
+							this.onInterfaceBoot(player, this.getPage(inv) + 1);
 						}
+						if (!item.equals(ShipsGUICommand.BACK_BUTTON))
+							break block4;
+						this.onInterfaceBoot(player, this.getPage(inv) - 1);
 					}
 				}
 			}
-
 		}
 
 		public void onInterfaceBoot(HumanEntity player, int page) {
-			List<ItemStack> items = new ArrayList<ItemStack>();
+			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 			for (CommandLauncher launcher : CommandLauncher.getCommands()) {
-				if (launcher.isPlayerCommand()) {
-					if ((launcher.getPermissions() == null) || (player.hasPermission(launcher.getPermissions()))) {
-						if (launcher.hasGUI()) {
-							ItemStack item = new ItemStack(Material.PAPER, 1);
-							ItemMeta data = item.getItemMeta();
-							data.setDisplayName(launcher.getCommand());
-							data.setLore(Arrays.asList(launcher.getDescription()));
-							item.setItemMeta(data);
-							items.add(item);
-						}
-					}
-				}
+				if (!launcher.isPlayerCommand() || launcher.getPermissions() != null && !player.hasPermission(launcher.getPermissions()) || !launcher.hasGUI())
+					continue;
+				ItemStack item = new ItemStack(Material.PAPER, 1);
+				ItemMeta data = item.getItemMeta();
+				data.setDisplayName(launcher.getCommand());
+				data.setLore(Arrays.asList(launcher.getDescription()));
+				item.setItemMeta(data);
+				items.add(item);
 			}
-			Inventory inv = createPageGUI(items, "Help", page, true);
+			Inventory inv = ShipsGUICommand.createPageGUI(items, "Help", page, true);
 			player.openInventory(inv);
 		}
 
 		@Override
 		public void onInterfaceBoot(HumanEntity player) {
-			onInterfaceBoot(player, 1);
+			this.onInterfaceBoot(player, 1);
 		}
 
 		@Override

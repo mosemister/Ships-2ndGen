@@ -17,40 +17,39 @@ import org.ships.ship.movement.MovementMethod;
 import org.ships.ship.type.types.VesselTypes;
 
 public interface VesselType {
-	public static List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
+	public static final List<VesselType> CUSTOMVESSELS = new ArrayList<VesselType>();
 
-	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
-			 Player player);
+	public boolean checkRequirements(Ship var1, MovementMethod var2, Collection<MovingBlock> var3, Player var4);
 
-	public boolean shouldFall(Ship vessel);
+	public boolean shouldFall(Ship var1);
 
 	public File getTypeFile();
-	
-	public void setTypeFile(File file);
+
+	public void setTypeFile(File var1);
 
 	public VesselType createClone();
 
-	public void loadVesselFromFiveFile(Ship vessel, File file);
+	public void loadVesselFromFiveFile(Ship var1, File var2);
 
 	public void createConfig();
 
 	public void loadDefault();
 
-	public void save(Ship vessel);
+	public void save(Ship var1);
 
 	public String getName();
-	
-	public void setName(String name);
+
+	public void setName(String var1);
 
 	public int getDefaultSpeed();
 
 	public Set<Material> getMoveInMaterials();
 
-	public void setMoveInMaterials(Collection<Material> material);
+	public void setMoveInMaterials(Collection<Material> var1);
 
-	public void setDefaultSpeed(int A);
+	public void setDefaultSpeed(int var1);
 
-	public void setDefaultBoostSpeed(int A);
+	public void setDefaultBoostSpeed(int var1);
 
 	public int getDefaultBoostSpeed();
 
@@ -60,67 +59,49 @@ public interface VesselType {
 
 	public int getMaxBlocks();
 
-	public void setMinBlocks(int A);
+	public void setMinBlocks(int var1);
 
-	public void setMaxBlocks(int A);
+	public void setMaxBlocks(int var1);
 
-	public default boolean attemptToMove(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
-			OfflinePlayer player) {
-		if (blocks.size() <= getMaxBlocks()) {
-			if (blocks.size() >= getMinBlocks()) {
-				return checkRequirements(vessel, move, blocks, player.getPlayer());
-			} else {
-				if (player != null) {
-					if (Messages.isEnabled()) {
-						if (player.isOnline()) {
-							player.getPlayer().sendMessage(Ships
-									.runShipsMessage(Messages.getShipTooSmall(blocks.size(), getMinBlocks()), true));
-						}
-					}
-				}
-				return false;
+	default public boolean attemptToMove(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks, OfflinePlayer player) {
+		if (blocks.size() <= this.getMaxBlocks()) {
+			if (blocks.size() >= this.getMinBlocks()) {
+				return this.checkRequirements(vessel, move, blocks, player.getPlayer());
 			}
-		} else {
-			if (player != null) {
-				if (Messages.isEnabled()) {
-					if (player.isOnline()) {
-						player.getPlayer().sendMessage(
-								Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), getMaxBlocks()), true));
-					}
-				}
+			if (player != null && Messages.isEnabled() && player.isOnline()) {
+				player.getPlayer().sendMessage(Ships.runShipsMessage(Messages.getShipTooSmall(blocks.size(), this.getMinBlocks()), true));
 			}
 			return false;
 		}
+		if (player != null && Messages.isEnabled() && player.isOnline()) {
+			player.getPlayer().sendMessage(Ships.runShipsMessage(Messages.getShipTooBig(blocks.size(), this.getMaxBlocks()), true));
+		}
+		return false;
 	}
 
-	// adds custom vessels to Ships (newer method)
-	public default void inject() {
+	default public void inject() {
 		CUSTOMVESSELS.add(this);
 	}
 
-	// gets a vesselType by its name, returns VesselType if found, returns null
-	// in non are found
 	public static VesselType getTypeByName(String name) {
 		for (VesselType type : VesselType.values()) {
-			if (type.getName().equalsIgnoreCase(name)) {
-				return type;
-			}
+			if (!type.getName().equalsIgnoreCase(name))
+				continue;
+			return type;
 		}
 		return null;
 	}
 
-	// gets all the custom vesselTypes
 	public static List<VesselType> customValues() {
 		List<VesselType> types = CUSTOMVESSELS;
 		return types;
 	}
 
-	// gets all vesselTypes no matter if they are custom or not
 	public static List<VesselType> values() {
-		List<VesselType> types = new ArrayList<VesselType>();
+		ArrayList<VesselType> types = new ArrayList<VesselType>();
 		types.addAll(CUSTOMVESSELS);
-		for (VesselTypes type : VesselTypes.values()) {
-			types.add(type.get());
+		for (VesselType type : VesselTypes.values()) {
+			types.add(type);
 		}
 		return types;
 	}

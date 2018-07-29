@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -25,131 +26,170 @@ import org.ships.ship.movement.MovementMethod;
 import org.ships.ship.type.VesselType;
 
 public interface Ship {
-	
 	public OfflinePlayer getOwner();
-	public Ship setOwner(OfflinePlayer player);
+
+	public Ship setOwner(OfflinePlayer var1);
+
 	public Set<UUID> getSubPilots();
-	public Ship registerPilot(UUID uuid);
-	public Ship deregisterPilot(UUID uuid);
+
+	public Ship registerPilot(UUID var1);
+
+	public Ship deregisterPilot(UUID var1);
+
 	public VesselType getVesselType();
-	public Ship setVesselType(VesselType type);
+
+	public Ship setVesselType(VesselType var1);
+
 	public Location getLocation();
+
 	public Location getTeleportLocation();
-	public Ship setTeleportLocation(Location loc);
+
+	public Ship setTeleportLocation(Location var1);
+
 	public AutoPilotData getAutoPilotData();
-	public Ship setAutoPilotData(AutoPilotData data);
+
+	public Ship setAutoPilotData(AutoPilotData var1);
+
 	public ShipsStructure getStructure();
-	public Ship setShipsStructure(Sign licence, Location teleport, ShipsStructure structure);
+
+	public Ship setShipsStructure(Sign var1, Location var2, ShipsStructure var3);
+
 	public File getFile();
-	public Ship setFile(File ship);
+
+	public Ship setFile(File var1);
+
 	public Map<OfflinePlayer, BlockVector> getBlockLocation();
+
 	public boolean isMoving();
-	public Ship setMoving(boolean check);
+
+	public Ship setMoving(boolean var1);
+
 	public boolean isInvincible();
-	public Ship setInvincible(boolean check);
-	public void updateLocation(Location teleport, Sign sign);
+
+	public Ship setInvincible(boolean var1);
+
+	public void updateLocation(Location var1, Sign var2);
+
 	public boolean updateStructure();
-	public boolean updateStructure(Location anyBlock);
-	public boolean updateToMovingStructure(ShipsStructure structure);
+
+	public boolean updateStructure(Location var1);
+
+	public boolean updateToMovingStructure(ShipsStructure var1);
+
 	public void save();
+
 	public void delete();
+
 	public void reload();
-	
-	public boolean transform(Location loc, boolean force);
-	public boolean moveTowards(MovementMethod move, int speed, OfflinePlayer player, boolean fireEvents);
-	public boolean moveTowardsLocation(Location moveTo, int speed, OfflinePlayer player);
-	public boolean moveTowardsForcefully(MovementMethod move, int speed, OfflinePlayer player);
-	public boolean moveTo(Location loc, OfflinePlayer player, boolean fireEvents);
-	public boolean moveToForcefully(Location loc);
-	
-	public default Sign getSign() {
-		BlockState state = getLocation().getBlock().getState();
-		if(state instanceof Sign) {
-			return (Sign)state;
+
+	public boolean transform(Location var1, boolean var2);
+
+	public boolean moveTowards(MovementMethod var1, int var2, OfflinePlayer var3, boolean var4);
+
+	public boolean moveTowardsLocation(Location var1, int var2, OfflinePlayer var3);
+
+	public boolean moveTowardsForcefully(MovementMethod var1, int var2, OfflinePlayer var3);
+
+	public boolean moveTo(Location var1, OfflinePlayer var2, boolean var3);
+
+	public boolean moveToForcefully(Location var1);
+
+	default public Sign getSign() {
+		BlockState state = this.getLocation().getBlock().getState();
+		if (state instanceof Sign) {
+			return (Sign) state;
 		}
 		return null;
 	}
-	
-	public default String getName() {
-		Sign sign = getSign();
-		if(sign == null) {
+
+	default public String getName() {
+		Sign sign = this.getSign();
+		if (sign == null) {
 			return null;
 		}
 		String name = sign.getLine(2);
 		return ChatColor.stripColor(name);
 	}
-	
-	public default void setName(String name) {
-		Sign sign = getSign();
-		if(sign == null) {
+
+	default public void setName(String name) {
+		Sign sign = this.getSign();
+		if (sign == null) {
 			return;
 		}
 		sign.setLine(2, ChatColor.GREEN + name);
 		sign.update();
 	}
-	
-	public default int getWaterLevel() {
+
+	default public int getWaterLevel() {
 		int level = 0;
-		for (BlockHandler<? extends BlockState> handler : getStructure().getAllBlocks()){
-			int y = handler.getBlock().getY();
-			if(level < y) {
+		for (BlockHandler<? extends BlockState> handler : this.getStructure().getAllBlocks()) {
+			for (BlockFace face : new BlockFace[] { BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN }) {
+				int y;
+				Block block = handler.getBlock().getRelative(face);
+				if (!block.getType().equals(Material.WATER) || level >= (y = block.getY()))
+					continue;
 				level = y;
 			}
 		}
 		return level;
 	}
-	
-	public default int getWaterLevel(Collection<MovingBlock> blocks) {
+
+	default public int getWaterLevel(Collection<MovingBlock> blocks) {
 		int level = 0;
-		for (MovingBlock block : blocks){
-			int y = block.getMovingTo().getBlockY();
-			if(level < y) {
+		for (MovingBlock mBlock : blocks) {
+			for (BlockFace face : new BlockFace[] { BlockFace.EAST, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN }) {
+				int y;
+				Block block = mBlock.getMovingTo().getBlock().getRelative(face);
+				if (!block.getType().equals(Material.WATER) || level >= (y = block.getY()))
+					continue;
 				level = y;
 			}
 		}
 		return level;
 	}
-	
-	public default Ship registerBlockLocation(Player player) {
-		return registerBlockLocation(player, player.getLocation());
+
+	default public Ship registerBlockLocation(Player player) {
+		return this.registerBlockLocation(player, player.getLocation());
 	}
-	
-	public default Ship registerBlockLocation(OfflinePlayer player, Location loc) {
-		int x = getLocation().getBlockX() - loc.getBlockX();
-		int y = getLocation().getBlockY() - loc.getBlockY();
-		int z = getLocation().getBlockZ() - loc.getBlockZ();
+
+	default public Ship registerBlockLocation(OfflinePlayer player, Location loc) {
+		int x = this.getLocation().getBlockX() - loc.getBlockX();
+		int y = this.getLocation().getBlockY() - loc.getBlockY();
+		int z = this.getLocation().getBlockZ() - loc.getBlockZ();
 		BlockVector vector = new BlockVector(x, y, z, this.getLocation().getBlock());
-		getBlockLocation().put(player, vector);
+		this.getBlockLocation().put(player, vector);
 		return this;
 	}
-	
-	public default void deregisterBlockLocation(OfflinePlayer player) {
-		getBlockLocation().remove(player);
+
+	default public void deregisterBlockLocation(OfflinePlayer player) {
+		this.getBlockLocation().remove(player);
 	}
-	
-	public default Set<Entity> getEntities() {
-		return getLocation().getWorld().getEntities().stream().filter(e -> {
+
+	default public Set<Entity> getEntities() {
+		return this.getLocation().getWorld().getEntities().stream().filter(e -> {
 			Block block = e.getLocation().getBlock().getRelative(BlockFace.DOWN);
-			return getStructure().getAllBlocks().stream().anyMatch(b -> b.getBlock().equals(block));
+			return this.getStructure().getAllBlocks().stream().anyMatch(b -> b.getBlock().equals(block));
 		}).collect(Collectors.toSet());
 	}
-	
-	public default boolean hasPermissionToMove(Player player) {
-		if (player.hasPermission("ships." + getName() + ".use")) {
+
+	default public boolean hasPermissionToMove(Player player) {
+		if (player.hasPermission("ships." + this.getName() + ".use")) {
 			return true;
-		} else if (player.hasPermission("ships." + getVesselType().getName() + ".use")) {
+		}
+		if (player.hasPermission("ships." + this.getVesselType().getName() + ".use")) {
 			return true;
-		} else if (player.hasPermission("ships.*.use")) {
+		}
+		if (player.hasPermission("ships.*.use")) {
 			return true;
 		}
 		return false;
 	}
-	
-	public default boolean moveTowards(MovementMethod move, int speed, OfflinePlayer player) {
-		return moveTowards(move, speed, player, true);
+
+	default public boolean moveTowards(MovementMethod move, int speed, OfflinePlayer player) {
+		return this.moveTowards(move, speed, player, true);
 	}
-	
-	public default boolean moveTo(Location loc, OfflinePlayer player) {
-		return moveTo(loc, player, true);
+
+	default public boolean moveTo(Location loc, OfflinePlayer player) {
+		return this.moveTo(loc, player, true);
 	}
 }

@@ -5,7 +5,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.ships.plugin.Ships;
 
 public class Messages {
-
 	static String SHIPTOOSMALL;
 	static String SHIPTOOBIG;
 	static String OUTOFFUEL;
@@ -18,10 +17,10 @@ public class Messages {
 		String message = SHIPTOOSMALL;
 		if (message != null) {
 			if (message.contains("%currentSize%")) {
-				message = message.replace("%currentSize%", currentSize + "");
+				message = message.replace("%currentSize%", "" + currentSize + "");
 			}
 			if (message.contains("%minForVessel%")) {
-				message = message.replace("%minForVessel%", min + "");
+				message = message.replace("%minForVessel%", "" + min + "");
 			}
 		}
 		return message;
@@ -31,10 +30,10 @@ public class Messages {
 		String message = SHIPTOOBIG;
 		if (message != null) {
 			if (message.contains("%currentSize%")) {
-				message = message.replace("%currentSize%", currentSize + "");
+				message = message.replace("%currentSize%", "" + currentSize + "");
 			}
 			if (message.contains("%maxForVessel%")) {
-				message = message.replace("%maxForVessel%", max + "");
+				message = message.replace("%maxForVessel%", "" + max + "");
 			}
 		}
 		return message;
@@ -50,20 +49,16 @@ public class Messages {
 
 	public static String getMustBeIn(String material) {
 		String message = MUSTBEIN;
-		if (message != null) {
-			if (message.contains("%material%")) {
-				message = message.replace("%material%", material);
-			}
+		if (message != null && message.contains("%material%")) {
+			message = message.replace("%material%", material);
 		}
 		return message;
 	}
 
 	public static String getNeeds(String needs) {
 		String message = NEEDS;
-		if (message != null) {
-			if (message.contains("%material%")) {
-				message = message.replace("%material%", needs + "");
-			}
+		if (message != null && message.contains("%material%")) {
+			message = message.replace("%material%", needs + "");
 		}
 		return message;
 	}
@@ -72,7 +67,7 @@ public class Messages {
 		String message = OFFBY;
 		if (message != null) {
 			if (message.contains("%amount%")) {
-				message = message.replace("%amount%", f + "");
+				message = message.replace("%amount%", "" + f + "");
 			}
 			if (message.contains("%material%")) {
 				message = message.replace("%material%", material);
@@ -83,6 +78,7 @@ public class Messages {
 
 	public static String getFoundInWay(String material) {
 		String message = FOUNDINWAY;
+		System.out.println("Message: " + message + " | " + material);
 		if (message.contains("%material%")) {
 			message = message.replace("%material%", material);
 		}
@@ -96,21 +92,15 @@ public class Messages {
 	}
 
 	public static void refreshMessages() {
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Ships.getPlugin(), new Runnable() {
-
-			@Override
-			public void run() {
-				YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
-				SHIPTOOSMALL = config.getString("Messages.ShipTooSmall");
-				SHIPTOOBIG = config.getString("Messages.ShipTooBig");
-				OUTOFFUEL = config.getString("Messages.OutOfFuel");
-				MUSTBEIN = config.getString("Messages.MustBeIn");
-				NEEDS = config.getString("Messages.Needs");
-				OFFBY = config.getString("Messages.OffBy");
-				FOUNDINWAY = config.getString("Messages.FoundInWay");
-			}
-
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Ships.getPlugin(), () -> {
+			YamlConfiguration config = YamlConfiguration.loadConfiguration(Config.getConfig().getFile());
+			SHIPTOOSMALL = config.getString("Messages.ShipTooSmall");
+			SHIPTOOBIG = config.getString("Messages.ShipTooBig");
+			OUTOFFUEL = config.getString("Messages.OutOfFuel");
+			MUSTBEIN = config.getString("Messages.MustBeIn");
+			NEEDS = config.getString("Messages.Needs");
+			OFFBY = config.getString("Messages.OffBy");
+			FOUNDINWAY = config.getString("Messages.FoundInWay");
 		}, 0);
 	}
-
 }

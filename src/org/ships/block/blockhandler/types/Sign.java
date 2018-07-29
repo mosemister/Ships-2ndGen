@@ -2,17 +2,18 @@ package org.ships.block.blockhandler.types;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.ships.block.blockhandler.BlockPriority;
 import org.ships.block.blockhandler.TextHandler;
 
 public class Sign implements TextHandler<org.bukkit.block.Sign> {
-	
 	protected Block block;
+	protected BlockData data;
 	protected String[] text = new String[0];
 
 	@Override
 	public Block getBlock() {
-		return block;
+		return this.block;
 	}
 
 	@Override
@@ -21,36 +22,37 @@ public class Sign implements TextHandler<org.bukkit.block.Sign> {
 	}
 
 	@Override
-	public void remove(Material material) {
-		saveText();
-		block.setType(material);
-	}
-	
-	@Override
-	public void apply() {
-		applyText();
+	public boolean isReady() {
+		return this.getBlock().getState() instanceof org.bukkit.block.Sign;
 	}
 
 	@Override
 	public void saveText() {
-		text = ((org.bukkit.block.Sign)block.getState()).getLines();
+		this.text = this.getState().getLines();
 	}
 
 	@Override
-	public void applyText() {
-		for(int A = 0; A < text.length; A++) {
-			((org.bukkit.block.Sign)block.getState()).setLine(A, text[A]);
+	public void applyText(org.bukkit.block.Sign state) {
+		for (int A = 0; A < this.text.length; ++A) {
+			state.setLine(A, this.text[A]);
 		}
-		
 	}
-	
+
 	@Override
 	public BlockPriority getPriority() {
-		if(getBlock().getType().equals(Material.WALL_SIGN)) {
+		if (this.getBlock().getType().equals(Material.WALL_SIGN)) {
 			return BlockPriority.ATTACHABLE;
 		}
 		return BlockPriority.SPECIAL;
 	}
 
+	@Override
+	public void saveBlockData() {
+		this.data = this.getBlock().getBlockData();
+	}
 
+	@Override
+	public void applyBlockData() {
+		this.getBlock().setBlockData(this.data);
+	}
 }

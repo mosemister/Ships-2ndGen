@@ -3,17 +3,18 @@ package org.ships.block.blockhandler.types;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Jukebox;
+import org.bukkit.block.data.BlockData;
 import org.ships.block.blockhandler.BlockHandler;
 import org.ships.block.blockhandler.BlockPriority;
 
-public class JukeBox implements BlockHandler<Jukebox>{
-	
+public class JukeBox implements BlockHandler<Jukebox> {
 	protected Block block;
+	protected BlockData data;
 	protected Material disk;
 
 	@Override
 	public Block getBlock() {
-		return block;
+		return this.block;
 	}
 
 	@Override
@@ -22,27 +23,41 @@ public class JukeBox implements BlockHandler<Jukebox>{
 	}
 
 	@Override
-	public void remove(Material material) {
-		saveDisk();
-		block.setType(material);
-	}
-	
-	@Override
-	public void apply() {
-		applyDisk();
+	public boolean isReady() {
+		return this.getBlock().getState() instanceof Jukebox;
 	}
 
-	public void applyDisk() {
-		getState().setPlaying(disk);
+	@Override
+	public void save(boolean forRemoval) {
+		this.saveBlockData();
+		this.saveDisk();
 	}
-	
+
+	@Override
+	public void apply(Jukebox blockstate) {
+		this.applyDisk(blockstate);
+	}
+
+	public void applyDisk(Jukebox blockstate) {
+		blockstate.setPlaying(this.disk);
+	}
+
 	public void saveDisk() {
-		this.disk = getState().getPlaying();
+		this.disk = this.getState().getPlaying();
 	}
-	
+
 	@Override
 	public BlockPriority getPriority() {
 		return BlockPriority.SPECIAL;
 	}
 
+	@Override
+	public void saveBlockData() {
+		this.data = this.getBlock().getBlockData();
+	}
+
+	@Override
+	public void applyBlockData() {
+		this.getBlock().setBlockData(this.data);
+	}
 }

@@ -9,28 +9,25 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.ships.event.commands.CommandLauncher;
 
 public abstract class ShipsGUICommand {
-
 	public static final ItemStack BACK_BUTTON = new ItemStack(Material.PAPER, 1);
 	public static final ItemStack FORWARD_BUTTON = new ItemStack(Material.PAPER, 1);
-
 	CommandLauncher LAUNCHER;
+	static List<ShipsGUICommand> COMMANDS = new ArrayList<>();
 
-	static List<ShipsGUICommand> COMMANDS = new ArrayList<ShipsGUICommand>();
+	public abstract void onScreenClick(HumanEntity var1, ItemStack var2, Inventory var3, int var4, ClickType var5);
 
-	public abstract void onScreenClick(HumanEntity humanEntity, ItemStack item, Inventory inv, int slot,
-			ClickType type);
-
-	public abstract void onInterfaceBoot(HumanEntity player);
+	public abstract void onInterfaceBoot(HumanEntity var1);
 
 	public abstract String getInventoryName();
 
 	public ShipsGUICommand(CommandLauncher command) {
-		LAUNCHER = command;
+		this.LAUNCHER = command;
 		COMMANDS.add(this);
 	}
 
@@ -47,27 +44,26 @@ public abstract class ShipsGUICommand {
 	}
 
 	public static Inventory createPageGUI(List<ItemStack> items, String name, int page, boolean useAlgorthum) {
-		Inventory inv = Bukkit.createInventory(null, 54, name);
-		int min = ((page - 1) * 45);
+		Inventory inv = Bukkit.createInventory((InventoryHolder) null, 54, name);
+		int min = (page - 1) * 45;
 		inv.setItem(inv.getSize() - 9, BACK_BUTTON);
 		inv.setItem(inv.getSize() - 1, FORWARD_BUTTON);
-		inv.setItem(inv.getSize() - 5, getPageItem(page));
+		inv.setItem(inv.getSize() - 5, ShipsGUICommand.getPageItem(page));
 		if (useAlgorthum) {
 			try {
-				for (int A = 0; A < 45; A++) {
+				for (int A = 0; A < 45; ++A) {
 					inv.setItem(A, items.get(min + A));
 				}
 			} catch (Exception e) {
 				return inv;
 			}
-		} else {
-			try {
-				for (int A = 0; A < 45; A++) {
-					inv.setItem(A, items.get(A));
-				}
-			} catch (Exception e) {
-				return inv;
+		}
+		try {
+			for (int A = 0; A < 45; ++A) {
+				inv.setItem(A, items.get(A));
 			}
+		} catch (Exception e) {
+			return inv;
 		}
 		return inv;
 	}
@@ -83,11 +79,8 @@ public abstract class ShipsGUICommand {
 		ItemMeta backMeta = BACK_BUTTON.getItemMeta();
 		backMeta.setDisplayName("Back");
 		BACK_BUTTON.setItemMeta(backMeta);
-
 		ItemMeta forwardMeta = FORWARD_BUTTON.getItemMeta();
 		forwardMeta.setDisplayName("Forward");
 		FORWARD_BUTTON.setItemMeta(forwardMeta);
-
 	}
-
 }

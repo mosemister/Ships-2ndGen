@@ -9,7 +9,6 @@ import org.ships.block.blockhandler.BlockHandler;
 import org.ships.ship.Ship;
 
 public class BlockVector {
-
 	int X;
 	int Y;
 	int Z;
@@ -17,58 +16,59 @@ public class BlockVector {
 	public BlockVector(Block first, Block second) {
 		this(first.getX(), first.getY(), first.getZ(), second);
 	}
-	
+
 	public BlockVector(int x, int y, int z, Block block) {
 		Block block2 = block.getRelative(x, y, z);
-		X = block.getX() - block2.getX();
-		Y = block.getY() - block2.getY();
-		Z = block.getZ() - block2.getZ();
+		this.X = block.getX() - block2.getX();
+		this.Y = block.getY() - block2.getY();
+		this.Z = block.getZ() - block2.getZ();
 	}
 
 	public BlockVector(int x, int y, int z) {
-		X = x;
-		Y = y;
-		Z = z;
+		this.X = x;
+		this.Y = y;
+		this.Z = z;
 	}
 
 	public int getX() {
-		return X;
+		return this.X;
 	}
 
 	public BlockVector setX(int x) {
-		X = x;
+		this.X = x;
 		return this;
 	}
 
 	public int getY() {
-		return Y;
+		return this.Y;
 	}
 
 	public BlockVector setY(int y) {
-		Y = y;
+		this.Y = y;
 		return this;
 	}
 
 	public int getZ() {
-		return Z;
+		return this.Z;
 	}
 
 	public BlockVector setZ(int z) {
-		Z = z;
+		this.Z = z;
 		return this;
 	}
 
 	public Block getBlock(Block originalLocation) {
-		Block block = originalLocation.getRelative(getX(), getY(), getZ());
+		Block block = originalLocation.getRelative(this.getX(), this.getY(), this.getZ());
 		return block;
 	}
 
+	@Override
 	public String toString() {
-		return getX() + "," + getY() + "," + getZ();
+		return "" + this.getX() + "," + this.getY() + "," + this.getZ();
 	}
 
 	public static List<BlockVector> convert(Ship vessel) {
-		List<BlockVector> vectors = new ArrayList<BlockVector>();
+		ArrayList<BlockVector> vectors = new ArrayList<BlockVector>();
 		Block block2 = vessel.getLocation().getBlock();
 		for (BlockHandler<? extends BlockState> block : vessel.getStructure().getAllBlocks()) {
 			BlockVector vector = new BlockVector(block2, block.getBlock());
@@ -76,5 +76,4 @@ public class BlockVector {
 		}
 		return vectors;
 	}
-
 }

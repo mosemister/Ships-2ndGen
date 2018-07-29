@@ -9,12 +9,6 @@ import org.ships.ship.Ship;
 import org.ships.ship.movement.MovementMethod;
 
 public class ShipAboutToMoveEvent extends Event implements Cancellable {
-
-	/*
-	 * This event is called when a vessel is told to move. The
-	 * ForceMove/ForceTeleport will bypass this activation
-	 */
-
 	MovementMethod METHOD;
 	int SPEED;
 	Ship VESSEL;
@@ -22,55 +16,53 @@ public class ShipAboutToMoveEvent extends Event implements Cancellable {
 	boolean CANCEL;
 	static HandlerList LIST = new HandlerList();
 
-	public ShipAboutToMoveEvent(MovementMethod method, int speed, Ship vessel,
-			OfflinePlayer player) {
-		METHOD = method;
-		SPEED = speed;
-		VESSEL = vessel;
-		PLAYER = player;
+	public ShipAboutToMoveEvent(MovementMethod method, int speed, Ship vessel, OfflinePlayer player) {
+		this.METHOD = method;
+		this.SPEED = speed;
+		this.VESSEL = vessel;
+		this.PLAYER = player;
 	}
 
 	public MovementMethod getMethod() {
-		return METHOD;
+		return this.METHOD;
 	}
 
 	public void setMethod(MovementMethod method) {
-		METHOD = method;
+		this.METHOD = method;
 	}
 
 	public int getSpeed() {
-		return SPEED;
+		return this.SPEED;
 	}
 
 	public void setSpeed(int A) {
-		SPEED = A;
+		this.SPEED = A;
 	}
 
 	public Player getPlayer() {
-		return PLAYER.getPlayer();
+		return this.PLAYER.getPlayer();
 	}
 
 	public OfflinePlayer getOfflinePlayer() {
-		return PLAYER;
+		return this.PLAYER;
 	}
 
 	public void setPlayer(OfflinePlayer player) {
-		PLAYER = player;
+		this.PLAYER = player;
 	}
 
 	public Ship getVessel() {
-		return VESSEL;
+		return this.VESSEL;
 	}
 
 	@Override
 	public boolean isCancelled() {
-		return CANCEL;
+		return this.CANCEL;
 	}
 
 	@Override
 	public void setCancelled(boolean arg0) {
-		CANCEL = arg0;
-
+		this.CANCEL = arg0;
 	}
 
 	@Override
@@ -81,5 +73,4 @@ public class ShipAboutToMoveEvent extends Event implements Cancellable {
 	public static HandlerList getHandlerList() {
 		return LIST;
 	}
-
 }

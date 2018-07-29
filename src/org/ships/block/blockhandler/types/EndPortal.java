@@ -1,17 +1,18 @@
 package org.ships.block.blockhandler.types;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.EndGateway;
+import org.bukkit.block.data.BlockData;
 import org.ships.block.blockhandler.BlockPriority;
 import org.ships.block.blockhandler.TeleportHandler;
 
-public class EndPortal implements TeleportHandler<org.bukkit.block.EndGateway>{
-
+public class EndPortal implements TeleportHandler<EndGateway> {
 	Block block;
+	BlockData data;
 	Location loc;
 	boolean exact;
-	
+
 	@Override
 	public Block getBlock() {
 		return this.block;
@@ -23,9 +24,8 @@ public class EndPortal implements TeleportHandler<org.bukkit.block.EndGateway>{
 	}
 
 	@Override
-	public void remove(Material material) {
-		saveEndLocation();
-		this.block.setType(material);
+	public boolean isReady() {
+		return this.getBlock().getState() instanceof EndGateway;
 	}
 
 	@Override
@@ -34,28 +34,32 @@ public class EndPortal implements TeleportHandler<org.bukkit.block.EndGateway>{
 	}
 
 	@Override
-	public void apply() {
-		applyEndLocation();
+	public void saveBlockData() {
+		this.data = this.getBlock().getBlockData();
 	}
 
 	@Override
-	public void applyEndLocation() {
-		getState().setExitLocation(this.loc);
+	public void applyBlockData() {
+		this.getBlock().setBlockData(this.data);
+	}
+
+	@Override
+	public void applyEndLocation(EndGateway gateway) {
+		gateway.setExitLocation(this.loc);
 	}
 
 	@Override
 	public void saveEndLocation() {
-		this.loc = getState().getExitLocation();
-	} 
+		this.loc = this.getState().getExitLocation();
+	}
 
 	@Override
-	public void applyExactTeleport() {
-		getState().setExactTeleport(this.exact);
+	public void applyExactTeleport(EndGateway gateway) {
+		gateway.setExactTeleport(this.exact);
 	}
-	
+
 	@Override
 	public void saveExactTeleport() {
-		this.exact = getState().isExactTeleport();
+		this.exact = this.getState().isExactTeleport();
 	}
-
 }

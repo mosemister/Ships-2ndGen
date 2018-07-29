@@ -8,7 +8,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ShipsSignCreation extends Event implements Cancellable {
-
 	boolean CANCELLED;
 	JavaPlugin PLUGIN;
 	Player PLAYER;
@@ -19,59 +18,58 @@ public class ShipsSignCreation extends Event implements Cancellable {
 	static HandlerList LIST = new HandlerList();
 
 	public ShipsSignCreation(JavaPlugin plugin, String[] signText, Sign sign) {
-		PLUGIN = plugin;
-		SIGNTEXT = signText;
-		SIGN = sign;
-		RETURN_TEXT = signText;
+		this.PLUGIN = plugin;
+		this.SIGNTEXT = signText;
+		this.SIGN = sign;
+		this.RETURN_TEXT = signText;
 	}
 
 	public ShipsSignCreation(JavaPlugin plugin, String[] signText, Sign sign, Player player, String... playerText) {
-		PLUGIN = plugin;
-		SIGNTEXT = signText;
-		SIGN = sign;
-
-		PLAYER = player;
-		TEXT = playerText;
-		RETURN_TEXT = signText;
+		this.PLUGIN = plugin;
+		this.SIGNTEXT = signText;
+		this.SIGN = sign;
+		this.PLAYER = player;
+		this.TEXT = playerText;
+		this.RETURN_TEXT = signText;
 	}
 
 	public JavaPlugin getCause() {
-		return PLUGIN;
+		return this.PLUGIN;
 	}
 
 	public Player getPlayer() {
-		return PLAYER;
+		return this.PLAYER;
 	}
 
 	public String[] getSignTypeResult() {
-		return SIGNTEXT;
+		return this.SIGNTEXT;
 	}
 
 	public String[] getTypedText() {
-		return TEXT;
+		return this.TEXT;
 	}
 
 	public Sign getSign() {
-		return SIGN;
+		return this.SIGN;
 	}
 
 	public String[] getReturnText() {
-		return RETURN_TEXT;
+		return this.RETURN_TEXT;
 	}
 
 	public ShipsSignCreation setReturnText(String... text) {
-		RETURN_TEXT = text;
+		this.RETURN_TEXT = text;
 		return this;
 	}
 
 	@Override
 	public boolean isCancelled() {
-		return CANCELLED;
+		return this.CANCELLED;
 	}
 
 	@Override
 	public void setCancelled(boolean arg0) {
-		CANCELLED = arg0;
+		this.CANCELLED = arg0;
 	}
 
 	@Override
@@ -82,5 +80,4 @@ public class ShipsSignCreation extends Event implements Cancellable {
 	public static HandlerList getHandlerList() {
 		return LIST;
 	}
-
 }

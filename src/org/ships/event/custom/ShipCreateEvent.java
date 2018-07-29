@@ -8,7 +8,6 @@ import org.bukkit.event.HandlerList;
 import org.ships.ship.Ship;
 
 public class ShipCreateEvent extends Event implements Cancellable {
-
 	Player PLAYER;
 	Sign SIGN;
 	Ship VESSEL;
@@ -16,31 +15,31 @@ public class ShipCreateEvent extends Event implements Cancellable {
 	static final HandlerList HANDLERS = new HandlerList();
 
 	public ShipCreateEvent(Player player, Sign sign, Ship vessel) {
-		PLAYER = player;
-		SIGN = sign;
-		VESSEL = vessel;
+		this.PLAYER = player;
+		this.SIGN = sign;
+		this.VESSEL = vessel;
 	}
 
 	public Player getPlayer() {
-		return PLAYER;
+		return this.PLAYER;
 	}
 
 	public Sign getSign() {
-		return SIGN;
+		return this.SIGN;
 	}
 
 	public Ship getVessel() {
-		return VESSEL;
+		return this.VESSEL;
 	}
 
 	@Override
 	public boolean isCancelled() {
-		return CANCELLED;
+		return this.CANCELLED;
 	}
 
 	@Override
 	public void setCancelled(boolean arg0) {
-		CANCELLED = arg0;
+		this.CANCELLED = arg0;
 	}
 
 	@Override

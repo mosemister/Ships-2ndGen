@@ -8,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.ships.plugin.Ships;
 
 public class Config {
-
 	public static Config CONFIG = new Config();
 	boolean NEEDEDUPDATE;
 
@@ -25,26 +24,25 @@ public class Config {
 	}
 
 	public String[] getConfigVersion() {
-		File file = getFile();
+		File file = this.getFile();
 		if (file.exists()) {
 			YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 			String version = config.getString("Version");
 			String[] args = version.split(".");
 			return args;
-		} else {
-			return null;
 		}
+		return null;
 	}
 
 	public String getConfigVersionString() {
-		File file = getFile();
+		File file = this.getFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		String version = config.getString("Version");
 		return version;
 	}
 
 	public int getConfigVersionInt() {
-		String versionString = getConfigVersionString();
+		String versionString = this.getConfigVersionString();
 		if (versionString == null) {
 			return 0;
 		}
@@ -65,75 +63,72 @@ public class Config {
 	}
 
 	public int getLatestVersionInt() {
-		int version = Integer.parseInt(getLatestVersionString().replace(".", ""));
+		int version = Integer.parseInt(this.getLatestVersionString().replace(".", ""));
 		return version;
 	}
 
 	public boolean containsIgnoreList(int lastest) {
-		Integer[] list = { 5017, 5018, 5019, 50110 };
-		for (int A : list) {
-			if (lastest == A) {
-				return true;
-			}
+		Integer[] arrinteger = new Integer[] { 5017, 5018, 5019, 50110 };
+		int n = arrinteger.length;
+		for (int i = 0; i < n; ++i) {
+			int A = arrinteger[i];
+			if (lastest != A)
+				continue;
+			return true;
 		}
 		return false;
 	}
 
 	public boolean updateCheck() {
-		String current = getConfigVersionString();
-		if (NEEDEDUPDATE) {
+		int currentN;
+		String current = this.getConfigVersionString();
+		if (this.NEEDEDUPDATE) {
 			return true;
 		}
 		if (current == null) {
-			update();
-			NEEDEDUPDATE = true;
+			this.update();
+			this.NEEDEDUPDATE = true;
 			return true;
 		}
-		int latestN = getLatestVersionInt();
-		int currentN = getConfigVersionInt();
-		int result = latestN - currentN;
+		int latestN = this.getLatestVersionInt();
+		int result = latestN - (currentN = this.getConfigVersionInt());
 		if (result == 0) {
 			Bukkit.getConsoleSender().sendMessage("Ships config detected with no issues");
 			return false;
-		} else if (containsIgnoreList(currentN)) {
+		}
+		if (this.containsIgnoreList(currentN)) {
 			try {
 				Bukkit.getConsoleSender().sendMessage("New version of Ships detected. Config does not need a restart");
-				File file2 = getFile();
+				File file2 = this.getFile();
 				YamlConfiguration config2 = YamlConfiguration.loadConfiguration(file2);
-				config2.set("Version", getLatestVersionString());
+				config2.set("Version", this.getLatestVersionString());
 				config2.save(file2);
 				return false;
 			} catch (IOException e) {
 				e.printStackTrace();
 				return false;
 			}
-		} else {
-			Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage(
-					"Your config maybe out of date. \n" + "Ships 5 found the current version of your config to be "
-							+ getConfigVersionString() + " and the latest to be " + getLatestVersionString() + ". \n"
-							+ "Your config is now updating to the latest version, this new config may have some features that you wish to configure, reload the config after making changes if any are made.",
-					true));
-			update();
-			NEEDEDUPDATE = true;
-			return true;
 		}
+		Bukkit.getConsoleSender().sendMessage(Ships.runShipsMessage("Your config maybe out of date. \nShips 5 found the current version of your config to be " + this.getConfigVersionString() + " and the latest to be " + this.getLatestVersionString() + ". \nYour config is now updating to the latest version, this new config may have some features that you wish to configure, reload the config after making changes if any are made.", true));
+		this.update();
+		this.NEEDEDUPDATE = true;
+		return true;
 	}
 
 	void update() {
-		File file = getFile();
+		File file = this.getFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (file.exists()) {
-			int curVersion = getConfigVersionInt();
-			int latVersion = getLatestVersionInt();
-			if ((curVersion <= 5011) && (latVersion >= 5012)) {
+			int curVersion = this.getConfigVersionInt();
+			int latVersion = this.getLatestVersionInt();
+			if (curVersion <= 5011 && latVersion >= 5012) {
 				config.set("Structure.StructureLimits.airCheckGap", 120);
 				config.set("Structure.StructureLimits.trackLimit", 5000);
 			}
-			if ((curVersion <= 5016) && (latVersion >= 5017)) {
+			if (curVersion <= 5016 && latVersion >= 5017) {
 				config.set("VesselLoading.DeleteFailedLoads", false);
 			}
-			// compare version then update
-			config.set("Version", getLatestVersionString());
+			config.set("Version", this.getLatestVersionString());
 			try {
 				config.save(file);
 			} catch (IOException e) {
@@ -141,11 +136,10 @@ public class Config {
 			}
 		} else {
 			try {
-				File file2 = createDefaultFile();
+				File file2 = this.createDefaultFile();
 				YamlConfiguration config2 = YamlConfiguration.loadConfiguration(file2);
-				config2.set("Version", getLatestVersionString());
+				config2.set("Version", this.getLatestVersionString());
 				config2.save(file2);
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -155,5 +149,4 @@ public class Config {
 	public static Config getConfig() {
 		return CONFIG;
 	}
-
 }

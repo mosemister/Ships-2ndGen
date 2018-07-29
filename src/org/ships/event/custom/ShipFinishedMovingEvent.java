@@ -5,16 +5,15 @@ import org.bukkit.event.HandlerList;
 import org.ships.ship.Ship;
 
 public class ShipFinishedMovingEvent extends Event {
-
 	Ship VESSEL;
 	static final HandlerList HANDLERS = new HandlerList();
 
 	public ShipFinishedMovingEvent(Ship vessel) {
-		VESSEL = vessel;
+		this.VESSEL = vessel;
 	}
 
 	public Ship getVessel() {
-		return VESSEL;
+		return this.VESSEL;
 	}
 
 	@Override
@@ -25,5 +24,4 @@ public class ShipFinishedMovingEvent extends Event {
 	public static HandlerList getHandlerList() {
 		return HANDLERS;
 	}
-
 }

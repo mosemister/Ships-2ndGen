@@ -10,11 +10,15 @@ import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.ships.block.MovingBlock;
 import org.ships.configuration.Messages;
+import org.ships.configuration.parsers.LocationParser;
+import org.ships.configuration.parsers.MaterialSetParser;
+import org.ships.configuration.parsers.OfflinePlayerParser;
 import org.ships.event.custom.ShipsWriteEvent;
 import org.ships.plugin.Ships;
 import org.ships.ship.Ship;
@@ -27,126 +31,108 @@ import org.ships.ship.type.hooks.Fuel;
 import org.ships.ship.type.hooks.RequiredMaterial;
 
 public class Airship extends AbstractShipType implements Fuel, RequiredMaterial, ClassicVessel {
-
 	protected float percent;
 	protected int takeAmount;
-	protected List<Material> requiredMaterials;
-	protected List<Material> fuelTypes;
+	protected List<Material> requiredMaterials = new ArrayList<Material>();
+	protected List<Material> fuelTypes = new ArrayList<Material>();
 
 	public Airship() {
 		super(new File("plugins/Ships/Configuration/VesselTypes/Airship.yml"), "Airship", 2, 3, 100, 2500, true, Material.AIR);
-		loadDefault();
+		this.loadDefault();
 	}
-	
+
 	@Override
 	public Set<Material> getRequiredMaterials() {
-		return new HashSet<>(requiredMaterials);
+		return new HashSet<Material>(this.requiredMaterials);
 	}
-	
+
 	@Override
 	public void setRequiredMaterials(Collection<Material> collection) {
-		requiredMaterials.clear();
-		requiredMaterials.addAll(collection);
+		this.requiredMaterials.clear();
+		this.requiredMaterials.addAll(collection);
 	}
 
 	@Override
 	public float getRequiredPercent() {
-		return percent;
+		return this.percent;
 	}
-	
+
 	@Override
 	public void setRequiredPercent(float percent) {
 		this.percent = percent;
 	}
-	
+
 	@Override
 	public int getFuelConsumption() {
-		return takeAmount;
+		return this.takeAmount;
 	}
-	
+
 	@Override
 	public void setFuelConsumption(int consumption) {
 		this.takeAmount = consumption;
 	}
-	
+
 	@Override
 	public Set<Material> getFuelTypes() {
-		return new HashSet<>(fuelTypes);
+		return new HashSet<Material>(this.fuelTypes);
 	}
-	
+
 	@Override
 	public void setFuelTypes(Collection<Material> collection) {
-		fuelTypes.clear();
-		fuelTypes.addAll(collection);
+		this.fuelTypes.clear();
+		this.fuelTypes.addAll(collection);
 	}
 
 	@Override
 	public boolean removeFuel(Ship vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		boolean ret = util.takeFuel(vessel, takeAmount, fuelTypes);
+		boolean ret = util.takeFuel(vessel, this.takeAmount, this.fuelTypes);
 		return ret;
 	}
 
 	@Override
 	public int getTotalFuel(Ship vessel) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		int ret = util.getTotalAmountOfFuel(vessel, fuelTypes);
+		int ret = util.getTotalAmountOfFuel(vessel, this.fuelTypes);
 		return ret;
 	}
 
 	@Override
-	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks,
-			Player player) {
+	public boolean checkRequirements(Ship vessel, MovementMethod move, Collection<MovingBlock> blocks, Player player) {
 		VesselTypeUtils util = new VesselTypeUtils();
-		if (util.isMovingInto(blocks, getMoveInMaterials())) {
-			if (util.isPercentInMovingFrom(blocks, getRequiredMaterials(), getRequiredPercent())) {
+		if (util.isMovingInto(blocks, this.getMoveInMaterials())) {
+			if (util.isPercentInMovingFrom(blocks, this.getRequiredMaterials(), this.getRequiredPercent())) {
 				if (util.isMaterialInMovingFrom(blocks, Material.FIRE)) {
 					if (move.equals(MovementMethod.MOVE_DOWN)) {
 						return true;
-					} else {
-						if (getTotalFuel(vessel) >= takeAmount) {
-							removeFuel(vessel);
-							return true;
-						} else {
-							if (player != null) {
-								if (Messages.isEnabled()) {
-									player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
-								}
-							}
-							return false;
-						}
 					}
-				} else {
-					if (player != null) {
-						if (Messages.isEnabled()) {
-							player.sendMessage(Ships.runShipsMessage(Messages.getNeeds("Burner"), true));
-						}
+					if (this.getTotalFuel(vessel) >= this.takeAmount) {
+						this.removeFuel(vessel);
+						return true;
+					}
+					if (player != null && Messages.isEnabled()) {
+						player.sendMessage(Ships.runShipsMessage(Messages.getOutOfFuel("fuel"), true));
 					}
 					return false;
 				}
-			} else {
-				List<String> materials = new ArrayList<String>();
-				for (Material material : getRequiredMaterials()) {
-					materials.add(material.name());
-				}
-				if (player != null) {
-					if (Messages.isEnabled()) {
-						player.sendMessage(Ships.runShipsMessage(
-								Messages.getOffBy(util.getOffByPercent(blocks, getRequiredMaterials(), getRequiredPercent()),
-										"(of either) " + materials.toString()),
-								true));
-					}
+				if (player != null && Messages.isEnabled()) {
+					player.sendMessage(Ships.runShipsMessage(Messages.getNeeds("Burner"), true));
 				}
 				return false;
 			}
-		} else {
-			if (player != null) {
-				if (Messages.isEnabled()) {
-					player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
-				}
+			ArrayList<String> materials = new ArrayList<String>();
+			for (Material material : this.getRequiredMaterials()) {
+				materials.add(material.name());
+			}
+			if (player != null && Messages.isEnabled()) {
+				player.sendMessage(Ships.runShipsMessage(Messages.getOffBy(util.getOffByPercent(blocks, this.getRequiredMaterials(), this.getRequiredPercent()), "(of either) " + materials.toString()), true));
 			}
 			return false;
 		}
+		if (player != null && Messages.isEnabled()) {
+			player.sendMessage(Ships.runShipsMessage(Messages.getMustBeIn("Air"), true));
+		}
+		return false;
 	}
 
 	@Override
@@ -155,21 +141,12 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		if (type instanceof Airship) {
 			Airship air = (Airship) type;
-			float percent = (float)config.getInt("ShipsData.Config.Block.Percent");
+			float percent = config.getInt("ShipsData.Config.Block.Percent");
 			int consumption = config.getInt("ShipsData.Config.Fuel.Consumption");
-			//List<String> fuelsL = config.getStringList("ShipsData.Config.Fuel.Fuels");
 			air.setMaxBlocks(config.getInt("ShipsData.Config.Block.Max"));
 			air.setMinBlocks(config.getInt("ShipsData.Config.Block.Min"));
 			air.percent = percent;
 			air.takeAmount = consumption;
-			/*if (fuelsL.size() != 0) {
-				Map<Material, Byte> fuels = new HashMap<Material, Byte>();
-				for (String fuelS : fuelsL) {
-					String[] fuelM = fuelS.split(",");
-					fuels.put(Material.getMaterial(Integer.parseInt(fuelM[0])), Byte.parseByte(fuelM[1]));
-				}
-				air.FUEL.addAll(fuels.keySet());
-			}*/
 			vessel.setVesselType(air);
 		}
 	}
@@ -188,11 +165,7 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 			air.percent = percent;
 			air.takeAmount = consumption;
 			if (fuelsL.size() != 0) {
-				List<Material> list = new ArrayList<>();
-				for (String fuelS : fuelsL) {
-					list.add(Material.getMaterial(fuelS));
-				}
-				air.fuelTypes = list;
+				air.fuelTypes = new MaterialSetParser().parse(fuelsL).get();
 			}
 			vessel.setVesselType(air);
 		}
@@ -200,19 +173,16 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 
 	@Override
 	public void createConfig() {
-		File file = getTypeFile();
+		File file = this.getTypeFile();
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		config.set("Speed.Engine", 2);
-		config.set("Speed.Boost", 3);
 		config.set("Blocks.Max", 3750);
 		config.set("Blocks.Min", 1);
 		config.set("Blocks.requiredPercent", 60);
-		List<Integer> requiredBlocks = new ArrayList<Integer>();
-		requiredBlocks.add(35);
-		config.set("Blocks.requiredBlocks", requiredBlocks);
-		List<String> fuel = new ArrayList<String>();
-		fuel.add(Material.COAL.name());
-		config.set("Fuel.Fuels", fuel);
+		config.set("Blocks.requiredBlocks", new MaterialSetParser().toString(new ArrayList<Material>(Tag.WOOL.getValues())));
+		ArrayList<Material> fuel = new ArrayList<Material>();
+		fuel.add(Material.COAL);
+		config.set("Fuel.Fuels", new MaterialSetParser().toString(fuel));
 		config.set("Fuel.TakeAmount", 1);
 		try {
 			config.save(file);
@@ -223,58 +193,46 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 
 	@Override
 	public void loadDefault() {
-		File file = getTypeFile();
+		File file = this.getTypeFile();
 		if (!file.exists()) {
-			createConfig();
+			this.createConfig();
 		}
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 		this.setDefaultSpeed(config.getInt("Speed.Engine"));
 		this.setDefaultBoostSpeed(config.getInt("Speed.Boost"));
-		this.setRequiredPercent((float)config.getDouble("Blocks.requiredPercent"));
+		this.setRequiredPercent((float) config.getDouble("Blocks.requiredPercent"));
 		this.setMaxBlocks(config.getInt("Blocks.Max"));
 		this.setMinBlocks(config.getInt("Blocks.Min"));
-		List<Material> requiredmaterials = new ArrayList<Material>();
-		for (String materialS : config.getStringList("Blocks.requiredBlocks")) {
-			requiredmaterials.add(Material.getMaterial(materialS));
-		}
+		List<Material> requiredmaterials = new MaterialSetParser().parse(config.getStringList("Blocks.requiredBlocks")).get();
 		int take = config.getInt("Fuel.TakeAmount");
-		List<String> fuel = config.getStringList("Fuel.Fuels");
-		List<Material> fuels = new ArrayList<>();
-		fuel.stream().forEach(s -> fuels.add(Material.getMaterial(s)));
+		List<Material> fuels = new MaterialSetParser().parse(config.getStringList("Fuel.Fuels")).get();
 		this.setFuelTypes(fuels);
 		this.setRequiredMaterials(requiredmaterials);
 		this.setFuelConsumption(take);
-		List<Material> moveIn = new ArrayList<Material>();
+		ArrayList<Material> moveIn = new ArrayList<Material>();
 		moveIn.add(Material.AIR);
 		this.setMoveInMaterials(moveIn);
-
 	}
 
 	@Override
 	public void save(Ship vessel) {
 		File file = new File("plugins/Ships/VesselData/" + vessel.getName() + ".yml");
 		YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
-		List<String> fuels = new ArrayList<String>();
-		for (Material fuel : this.fuelTypes) {
-			fuels.add(fuel.name());
-		}
-		ShipsWriteEvent event = new ShipsWriteEvent(file, "Airship", getRequiredPercent(), getMaxBlocks(), getMinBlocks(),
-				getDefaultSpeed(), fuels, getFuelConsumption());
+		List<String> fuels = new MaterialSetParser().toString(this.fuelTypes);
+		ShipsWriteEvent event = new ShipsWriteEvent(file, "Airship", Float.valueOf(this.getRequiredPercent()), this.getMaxBlocks(), this.getMinBlocks(), this.getDefaultSpeed(), fuels, this.getFuelConsumption());
 		if (!event.isCancelled()) {
-			config.set("ShipsData.Player.Name", vessel.getOwner().getUniqueId().toString());
+			config.set("ShipsData.Player.Name", new OfflinePlayerParser().toString(vessel.getOwner()));
 			config.set("ShipsData.Type", "Airship");
-			config.set("ShipsData.Config.Block.Percent", getRequiredPercent());
-			config.set("ShipsData.Config.Block.Max", getMaxBlocks());
-			config.set("ShipsData.Config.Block.Min", getMinBlocks());
+			config.set("ShipsData.Config.Block.Percent", Float.valueOf(this.getRequiredPercent()));
+			config.set("ShipsData.Config.Block.Max", this.getMaxBlocks());
+			config.set("ShipsData.Config.Block.Min", this.getMinBlocks());
 			config.set("ShipsData.Config.Fuel.Fuels", fuels);
-			config.set("ShipsData.Config.Fuel.Consumption", getFuelConsumption());
-			config.set("ShipsData.Config.Speed.Engine", getDefaultSpeed());
+			config.set("ShipsData.Config.Fuel.Consumption", this.getFuelConsumption());
+			config.set("ShipsData.Config.Speed.Engine", this.getDefaultSpeed());
 			Block block = vessel.getLocation().getBlock();
 			Location loc = vessel.getTeleportLocation();
-			config.set("ShipsData.Location.Sign", block.getX() + "," + block.getY() + ","
-					+ block.getZ() + "," + block.getWorld().getName());
-			config.set("ShipsData.Location.Teleport",
-					loc.getX() + "," + loc.getY() + "," + loc.getZ() + "," + loc.getWorld().getName());
+			config.set("ShipsData.Location.Sign", new LocationParser().toString(block.getLocation()));
+			config.set("ShipsData.Location.Teleport", new LocationParser().toString(loc));
 			try {
 				config.save(file);
 			} catch (IOException e) {
@@ -282,7 +240,7 @@ public class Airship extends AbstractShipType implements Fuel, RequiredMaterial,
 			}
 		}
 	}
-	
+
 	@Override
 	public Airship createClone() {
 		Airship air = new Airship();

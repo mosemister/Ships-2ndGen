@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.ships.event.commands.gui.ShipsGUICommand;
 
 public abstract class CommandLauncher {
-
 	String COMMAND;
 	String DESCRIPTION;
 	boolean PLAYERCOMMAND;
@@ -17,79 +16,76 @@ public abstract class CommandLauncher {
 	String PERMISSION;
 	String EXTRAARGS;
 	Class<? extends ShipsGUICommand> GUI;
-
 	static List<CommandLauncher> CLASSES = new ArrayList<CommandLauncher>();
 
-	public abstract void playerCommand(Player player, String[] args);
+	public abstract void playerCommand(Player var1, String[] var2);
 
-	public abstract void consoleCommand(ConsoleCommandSender sender, String[] args);
+	public abstract void consoleCommand(ConsoleCommandSender var1, String[] var2);
 
-	public CommandLauncher(String arg, String extraArgs, String description, String permission, boolean playerCommand,
-			boolean consoleCommand) {
-		COMMAND = arg;
-		DESCRIPTION = description;
-		PLAYERCOMMAND = playerCommand;
-		CONSOLECOMMAND = consoleCommand;
-		PERMISSION = permission;
-		EXTRAARGS = extraArgs;
+	public CommandLauncher(String arg, String extraArgs, String description, String permission, boolean playerCommand, boolean consoleCommand) {
+		this.COMMAND = arg;
+		this.DESCRIPTION = description;
+		this.PLAYERCOMMAND = playerCommand;
+		this.CONSOLECOMMAND = consoleCommand;
+		this.PERMISSION = permission;
+		this.EXTRAARGS = extraArgs;
 		CLASSES.add(this);
 	}
 
-	public CommandLauncher(String arg, String extraArgs, String description, String permission, boolean playerCommand,
-			boolean consoleCommand, Class<? extends ShipsGUICommand> gui) {
-		COMMAND = arg;
-		DESCRIPTION = description;
-		PLAYERCOMMAND = playerCommand;
-		CONSOLECOMMAND = consoleCommand;
-		PERMISSION = permission;
-		EXTRAARGS = extraArgs;
-		GUI = gui;
+	public CommandLauncher(String arg, String extraArgs, String description, String permission, boolean playerCommand, boolean consoleCommand, Class<? extends ShipsGUICommand> gui) {
+		this.COMMAND = arg;
+		this.DESCRIPTION = description;
+		this.PLAYERCOMMAND = playerCommand;
+		this.CONSOLECOMMAND = consoleCommand;
+		this.PERMISSION = permission;
+		this.EXTRAARGS = extraArgs;
+		this.GUI = gui;
 		CLASSES.add(this);
 	}
 
 	public String getCommand() {
-		return COMMAND;
+		return this.COMMAND;
 	}
 
 	public String getDescription() {
-		return DESCRIPTION;
+		return this.DESCRIPTION;
 	}
 
 	public boolean isPlayerCommand() {
-		return PLAYERCOMMAND;
+		return this.PLAYERCOMMAND;
 	}
 
 	public boolean isConsoleCommand() {
-		return CONSOLECOMMAND;
+		return this.CONSOLECOMMAND;
 	}
 
 	public String getPermissions() {
-		return PERMISSION;
+		return this.PERMISSION;
 	}
 
 	public String getExtraArgs() {
-		return EXTRAARGS;
+		return this.EXTRAARGS;
 	}
 
 	public boolean hasGUI() {
-		return (GUI != null);
+		return this.GUI != null;
 	}
 
 	public void runGUI(HumanEntity player) {
 		for (ShipsGUICommand command : ShipsGUICommand.getInterfaces()) {
-			if (command.getClass().equals(GUI)) {
-				command.onInterfaceBoot(player);
-				return;
-			}
+			if (!command.getClass().equals(this.GUI))
+				continue;
+			command.onInterfaceBoot(player);
+			return;
 		}
 	}
 
 	public static List<CommandLauncher> getCommand(String command) {
-		List<CommandLauncher> commands = new ArrayList<CommandLauncher>();
+		ArrayList<CommandLauncher> commands = new ArrayList<CommandLauncher>();
 		for (CommandLauncher launcher : CLASSES) {
-			if (launcher.getCommand().equals(command)) {
-				commands.add(launcher);
-			}
+			if (!launcher.getCommand().equals(command))
+				continue;
+			commands.add(launcher);
 		}
 		return commands;
 	}

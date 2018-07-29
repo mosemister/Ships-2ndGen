@@ -5,7 +5,5 @@ import java.io.File;
 import org.ships.ship.Ship;
 
 public interface ClassicVessel {
-
-	public void loadVesselFromClassicFile(Ship vessel, File file);
-
+	public void loadVesselFromClassicFile(Ship var1, File var2);
 }

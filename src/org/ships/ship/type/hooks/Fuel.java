@@ -7,41 +7,15 @@ import org.bukkit.Material;
 import org.ships.ship.Ship;
 
 public interface Fuel {
+	public boolean removeFuel(Ship var1);
 
-	/**
-	 * removes a set amount of fuel from a vessel.
-	 * 
-	 * <p>
-	 * if this returns 'false' then the move event will be cancelled. If returns
-	 * 'true' then it will continue the move event
-	 * </p>
-	 */
-	public boolean removeFuel(Ship vessel);
+	public int getTotalFuel(Ship var1);
 
-	/**
-	 * gets the total amount of fuel
-	 */
-	public int getTotalFuel(Ship vessel);
-
-	/**
-	 * gets the fuel consumption
-	 */
 	public int getFuelConsumption();
-	
-	/**
-	 * gets the accepted fuel types
-	 */
-	public Set<Material> getFuelTypes();
-	
-	
-	/**
-	 * sets the accepted fuel types
-	 */
-	public void setFuelTypes(Collection<Material> fuels);
-	
-	/**
-	 * sets the fuel consumption amount
-	 */
-	public void setFuelConsumption(int consumption);
 
+	public Set<Material> getFuelTypes();
+
+	public void setFuelTypes(Collection<Material> var1);
+
+	public void setFuelConsumption(int var1);
 }

@@ -7,26 +7,24 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class ShipsWriteEvent extends Event implements Cancellable {
-
 	boolean CANCELLED;
 	File FILE;
 	Object[] WRITE;
-
 	static HandlerList LIST = new HandlerList();
 
 	public ShipsWriteEvent(File file, Object... write) {
-		FILE = file;
-		WRITE = write;
+		this.FILE = file;
+		this.WRITE = write;
 	}
 
 	@Override
 	public boolean isCancelled() {
-		return CANCELLED;
+		return this.CANCELLED;
 	}
 
 	@Override
 	public void setCancelled(boolean arg0) {
-		CANCELLED = true;
+		this.CANCELLED = true;
 	}
 
 	@Override
@@ -37,5 +35,4 @@ public class ShipsWriteEvent extends Event implements Cancellable {
 	public static HandlerList getHandlerList() {
 		return LIST;
 	}
-
 }

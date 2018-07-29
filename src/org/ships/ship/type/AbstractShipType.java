@@ -14,7 +14,6 @@ import org.ships.ship.Ship;
 import org.ships.ship.movement.MovementMethod;
 
 public abstract class AbstractShipType implements VesselType {
-
 	protected File file;
 	protected String name;
 	protected int speed;
@@ -27,7 +26,7 @@ public abstract class AbstractShipType implements VesselType {
 	public AbstractShipType(File file, String name, int speed, int boost, int maxBlocks, int minBlocks, boolean autopilot, Material... movein) {
 		this(file, name, speed, boost, maxBlocks, minBlocks, autopilot, Arrays.asList(movein));
 	}
-	
+
 	public AbstractShipType(File file, String name, int speed, int boost, int maxBlocks, int minBlocks, boolean autopilot, Collection<Material> moveIn) {
 		this.file = file;
 		this.name = name;
@@ -35,14 +34,14 @@ public abstract class AbstractShipType implements VesselType {
 		this.boost = boost;
 		this.max = maxBlocks;
 		this.min = minBlocks;
-		this.material = new ArrayList<>(moveIn);
+		this.material = new ArrayList<Material>(moveIn);
 		this.autoPilot = autopilot;
 	}
-	
+
 	@Override
 	public boolean shouldFall(Ship vessel) {
 		Set<MovingBlock> blocks = MovingBlock.convert(vessel, MovementMethod.MOVE_DOWN);
-		if(checkRequirements(vessel, MovementMethod.MOVE_DOWN, blocks, null)) {
+		if (this.checkRequirements(vessel, MovementMethod.MOVE_DOWN, blocks, null)) {
 			return true;
 		}
 		return false;
@@ -50,7 +49,7 @@ public abstract class AbstractShipType implements VesselType {
 
 	@Override
 	public File getTypeFile() {
-		return file;
+		return this.file;
 	}
 
 	@Override
@@ -70,12 +69,12 @@ public abstract class AbstractShipType implements VesselType {
 
 	@Override
 	public int getDefaultSpeed() {
-		return speed;
+		return this.speed;
 	}
 
 	@Override
 	public Set<Material> getMoveInMaterials() {
-		return new HashSet<>(material);
+		return new HashSet<Material>(this.material);
 	}
 
 	@Override
@@ -101,17 +100,17 @@ public abstract class AbstractShipType implements VesselType {
 
 	@Override
 	public boolean isAutoPilotAllowed() {
-		return autoPilot;
+		return this.autoPilot;
 	}
 
 	@Override
 	public int getMinBlocks() {
-		return min;
+		return this.min;
 	}
 
 	@Override
 	public int getMaxBlocks() {
-		return max;
+		return this.max;
 	}
 
 	@Override
@@ -123,5 +122,4 @@ public abstract class AbstractShipType implements VesselType {
 	public void setMaxBlocks(int A) {
 		this.max = A;
 	}
-
 }

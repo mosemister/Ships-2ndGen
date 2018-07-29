@@ -10,7 +10,6 @@ import org.ships.ship.Ship;
 import org.ships.ship.movement.MovementMethod;
 
 public class ShipMovingEvent extends Event implements Cancellable {
-
 	OfflinePlayer PLAYER;
 	Ship VESSEL;
 	MovementMethod MOVEMETHOD;
@@ -19,45 +18,44 @@ public class ShipMovingEvent extends Event implements Cancellable {
 	static final HandlerList HANDLERS = new HandlerList();
 
 	public ShipMovingEvent(OfflinePlayer player, Ship vessel, MovementMethod method, MovingStructure blocks) {
-		PLAYER = player;
-		VESSEL = vessel;
-		MOVEMETHOD = method;
-		MOVINGBLOCKS = blocks;
+		this.PLAYER = player;
+		this.VESSEL = vessel;
+		this.MOVEMETHOD = method;
+		this.MOVINGBLOCKS = blocks;
 	}
 
 	public Player getPlayer() {
-		return PLAYER.getPlayer();
+		return this.PLAYER.getPlayer();
 	}
 
 	public OfflinePlayer getOfflinePlayer() {
-		return PLAYER;
+		return this.PLAYER;
 	}
 
 	public Ship getVessel() {
-		return VESSEL;
+		return this.VESSEL;
 	}
 
 	public MovementMethod getMovementMethod() {
-		return MOVEMETHOD;
+		return this.MOVEMETHOD;
 	}
 
 	public MovingStructure getStructure() {
-		return MOVINGBLOCKS;
+		return this.MOVINGBLOCKS;
 	}
 
 	public void setMovingBlocks(MovingStructure structure) {
-		MOVINGBLOCKS = structure;
+		this.MOVINGBLOCKS = structure;
 	}
 
 	@Override
 	public boolean isCancelled() {
-		return CANCELLED;
+		return this.CANCELLED;
 	}
 
 	@Override
 	public void setCancelled(boolean arg0) {
-		CANCELLED = arg0;
-
+		this.CANCELLED = arg0;
 	}
 
 	@Override

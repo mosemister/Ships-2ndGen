@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.ships.plugin.Ships;
 
 public class Commands implements CommandExecutor {
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String length, String[] args) {
 		if (sender instanceof Player) {
@@ -17,31 +16,24 @@ public class Commands implements CommandExecutor {
 				CommandLauncher command = CommandLauncher.getCommand("help").get(0);
 				command.playerCommand(player, args);
 				return true;
-			} else {
-				for (CommandLauncher command : CommandLauncher.getCommands()) {
-					if (args[0].equalsIgnoreCase(command.getCommand())) {
-						if (command.isPlayerCommand()) {
-							if (command.getPermissions() == null) {
-								command.playerCommand(player, args);
-								return true;
-							} else {
-								if (player.hasPermission(command.getPermissions())) {
-									command.playerCommand(player, args);
-									return true;
-								} else {
-									player.sendMessage(Ships.runShipsMessage(
-											"Permission miss-match for " + command.getCommand(), true));
-									return true;
-								}
-							}
-						} else {
-							player.sendMessage(Ships.runShipsMessage(
-									"Sorry but this command " + command.getCommand() + " can not be ran by a player",
-									true));
-							return true;
-						}
+			}
+			for (CommandLauncher command : CommandLauncher.getCommands()) {
+				if (!args[0].equalsIgnoreCase(command.getCommand()))
+					continue;
+				if (command.isPlayerCommand()) {
+					if (command.getPermissions() == null) {
+						command.playerCommand(player, args);
+						return true;
 					}
+					if (player.hasPermission(command.getPermissions())) {
+						command.playerCommand(player, args);
+						return true;
+					}
+					player.sendMessage(Ships.runShipsMessage("Permission miss-match for " + command.getCommand(), true));
+					return true;
 				}
+				player.sendMessage(Ships.runShipsMessage("Sorry but this command " + command.getCommand() + " can not be ran by a player", true));
+				return true;
 			}
 		} else if (sender instanceof ConsoleCommandSender) {
 			ConsoleCommandSender console = (ConsoleCommandSender) sender;
@@ -49,16 +41,13 @@ public class Commands implements CommandExecutor {
 				CommandLauncher command = CommandLauncher.getCommand("help").get(0);
 				command.consoleCommand(console, args);
 				return true;
-			} else {
-				for (CommandLauncher command : CommandLauncher.getCommands()) {
-					if (args[0].equalsIgnoreCase(command.getCommand())) {
-						command.consoleCommand(console, args);
-					}
-				}
-				return true;
 			}
-		} else {
-
+			for (CommandLauncher command : CommandLauncher.getCommands()) {
+				if (!args[0].equalsIgnoreCase(command.getCommand()))
+					continue;
+				command.consoleCommand(console, args);
+			}
+			return true;
 		}
 		return false;
 	}

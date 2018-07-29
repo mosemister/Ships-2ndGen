@@ -6,52 +6,50 @@ import org.bukkit.entity.Player;
 import org.ships.ship.Ship;
 
 public class AutoPilotData {
-
 	Ship VESSEL;
 	Location GOTO;
 	int SPEED;
 	OfflinePlayer PLAYER;
 
 	public AutoPilotData(Ship vessel, Location goTo, int speed, OfflinePlayer player) {
-		VESSEL = vessel;
-		GOTO = goTo;
-		SPEED = speed;
-		PLAYER = player;
+		this.VESSEL = vessel;
+		this.GOTO = goTo;
+		this.SPEED = speed;
+		this.PLAYER = player;
 	}
 
 	public Ship getVessel() {
-		return VESSEL;
+		return this.VESSEL;
 	}
 
 	public Location getMovingTo() {
-		return GOTO;
+		return this.GOTO;
 	}
 
 	public int getSpeed() {
-		return SPEED;
+		return this.SPEED;
 	}
 
 	public OfflinePlayer getOfflinePlayer() {
-		return PLAYER;
+		return this.PLAYER;
 	}
 
 	public Player getPlayer() {
-		return PLAYER.getPlayer();
+		return this.PLAYER.getPlayer();
 	}
 
 	public AutoPilotData setGoTo(Location loc) {
-		GOTO = loc;
+		this.GOTO = loc;
 		return this;
 	}
 
 	public AutoPilotData setSpeed(int speed) {
-		SPEED = speed;
+		this.SPEED = speed;
 		return this;
 	}
 
 	public AutoPilotData setPlayer(OfflinePlayer player) {
-		PLAYER = player;
+		this.PLAYER = player;
 		return this;
 	}
-
 }

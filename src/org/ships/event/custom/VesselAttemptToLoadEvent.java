@@ -7,28 +7,26 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 public class VesselAttemptToLoadEvent extends Event implements Cancellable {
-
 	boolean CANCELLED;
 	File FILE;
-
 	static HandlerList LIST = new HandlerList();
 
 	public VesselAttemptToLoadEvent(File file) {
-		FILE = file;
+		this.FILE = file;
 	}
 
 	public File getFile() {
-		return FILE;
+		return this.FILE;
 	}
 
 	@Override
 	public boolean isCancelled() {
-		return CANCELLED;
+		return this.CANCELLED;
 	}
 
 	@Override
 	public void setCancelled(boolean arg0) {
-		CANCELLED = true;
+		this.CANCELLED = true;
 	}
 
 	@Override
@@ -39,5 +37,4 @@ public class VesselAttemptToLoadEvent extends Event implements Cancellable {
 	public static HandlerList getHandlerList() {
 		return LIST;
 	}
-
 }
