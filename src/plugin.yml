@@ -1,6 +1,7 @@
 name: Ships
 version: 5.1.0.0
-main: MoseShipsBukkit.Ships
+main: org.ships.plugin.Ships
+api-version: 1.13
 commands:
   Ships:
     usage: /ships

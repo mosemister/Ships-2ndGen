@@ -86,7 +86,6 @@ public class Info extends CommandLauncher {
 		}
 
 		List<ItemStack> getVesselTypeInfo(VesselType type) {
-			Object type2;
 			ArrayList<String> fuels;
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 			ItemStack name = new ItemStack(Material.CAULDRON, 1);
@@ -107,11 +106,11 @@ public class Info extends CommandLauncher {
 			blockLimits.setItemMeta(blockLimitsMeta);
 			items.add(blockLimits);
 			if (type instanceof Fuel) {
-				type2 = (type);
+				Fuel type2 = (Fuel)type;
 				ItemStack fuelLimits = new ItemStack(Material.CAULDRON, 1);
 				ItemMeta fuelMeta = fuelLimits.getItemMeta();
 				fuelMeta.setDisplayName("Block Limits");
-				fuels = new ArrayList<String>();
+				fuels = new ArrayList<>();
 				for (Material material : type2.getFuelTypes()) {
 					fuels.add(material.name().toLowerCase());
 				}
@@ -120,7 +119,7 @@ public class Info extends CommandLauncher {
 				items.add(fuelLimits);
 			}
 			if (type instanceof RequiredMaterial) {
-				type2 = (type);
+				RequiredMaterial type2 = (RequiredMaterial) type;
 				ItemStack matLimits = new ItemStack(Material.CAULDRON, 1);
 				ItemMeta matMeta = matLimits.getItemMeta();
 				matMeta.setDisplayName("Required Blocks");
